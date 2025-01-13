@@ -1,4 +1,10 @@
-<div style="background-color: #FF00FF; color: #FFFFFF; padding: 20px; text-align: center; display: inline-block;">
-  <p>PRZEKIEROWANIE DLA UTRZYMYWANIA UŻYTKU DOMENY.</p>
-  <img src="https://github.com/KSGROUPPL/KSGROUP.PL/raw/main/KSGROUPLOGO.png" alt="KSGROUP Logo" style="margin-top: 20px;">
-</div>
+<!DOCTYPE html>
+<html lang="pl">
+<body>
+    <picture>
+        <source srcset="http://ksgroup.pl/KSGROUPLOGO.webp" type="image/webp">
+        <source srcset="http://ksgroup.pl/KSGROUPLOGO.png" type="image/png">
+        <img src="http://ksgroup.pl/KSGROUPLOGO.png" alt="KSGROUP LOGO">
+    </picture>
+</body>
+</html>
