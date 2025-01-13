@@ -3,7 +3,6 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="5;url=https://ksgroup.pl/">
     <title>KSGROUP</title>
     <style>
         html, body {
@@ -15,6 +14,10 @@
             justify-content: center;
             align-items: center;
             background-color: #FF00FF;
+            transition: background-color 0.3s ease;
+        }
+        body:hover {
+            background-color: #000000;
         }
         img {
             max-width: 100%;
@@ -22,12 +25,22 @@
             height: auto;
             width: auto;
             object-fit: contain;
+            filter: brightness(0);
+            transition: filter 0.3s ease;
+        }
+        body:hover img {
+            filter: invert(23%) sepia(100%) saturate(7500%) hue-rotate(300deg) brightness(198%) contrast(100%);
+        }
+        img:hover {
+            filter: invert(23%) sepia(100%) saturate(7500%) hue-rotate(300deg) brightness(198%) contrast(100%);
         }
     </style>
 </head>
 <body>
-    <source srcset="https://raw.githubusercontent.com/KSGROUPPL/KSGROUP.PL/refs/heads/main/KSGROUPLOGO.webp" type="image/webp">
-    <source srcset="https://raw.githubusercontent.com/KSGROUPPL/KSGROUP.PL/refs/heads/main/KSGROUPLOGO.png" type="image/png">
-    <img src="https://raw.githubusercontent.com/KSGROUPPL/KSGROUP.PL/refs/heads/main/KSGROUPLOGO.png" alt="Logo KSGROUP">
+    <picture>
+        <source srcset="https://raw.githubusercontent.com/KSGROUPPL/KSGROUP.PL/refs/heads/main/KSGROUPLOGO.webp" type="image/webp">
+        <source srcset="https://raw.githubusercontent.com/KSGROUPPL/KSGROUP.PL/refs/heads/main/KSGROUPLOGO.png" type="image/png">
+        <img src="https://raw.githubusercontent.com/KSGROUPPL/KSGROUP.PL/refs/heads/main/KSGROUPLOGO.png" alt="Logo KSGROUP">
+    </picture>
 </body>
 </html>
