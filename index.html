@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="4;url=https://ksgroup.pl/">
+    <meta http-equiv="refresh" content="5;url=https://ksgroup.pl/">
     <title>KSGROUP</title>
     <style>
         html, body {
@@ -29,22 +29,15 @@
             filter: brightness(0);
             transition: filter 0.3s ease;
         }
-        body.hover-active img, img:hover {
+        body.hover-active img,
+        img:hover {
             filter: invert(23%) sepia(100%) saturate(7500%) hue-rotate(300deg) brightness(198%) contrast(100%);
         }
         @media (max-width: 768px) {
-            html, body {
-                justify-content: center;
-                align-items: center;
-            }
             img {
                 max-width: 100%;
                 max-height: 100%;
                 object-fit: contain;
-                display: block;
-            }
-            body.hover-active img, img:hover {
-                filter: invert(23%) sepia(100%) saturate(7500%) hue-rotate(300deg) brightness(198%) contrast(100%);
             }
         }
     </style>
@@ -58,23 +51,26 @@
     <script>
         const body = document.body;
         const img = document.getElementById('KSGROUPLOGO');
+        function resetImage() {
+            body.classList.remove('hover-active');
+            img.style.filter = 'brightness(0)';
+        }
         function activateEffect() {
             body.classList.add('hover-active');
-        }
-        function deactivateEffect() {
-            body.classList.remove('hover-active');
+            img.style.filter = 'brightness(1) invert(1)';
         }
         img.addEventListener('touchstart', function() {
-            activateEffect();
-        });
-        img.addEventListener('touchend', function() {
-            setTimeout(deactivateEffect, 200);
+            if (body.classList.contains('hover-active')) {
+                resetImage();
+            } else {
+                activateEffect();
+            }
         });
         body.addEventListener('mouseover', function() {
             activateEffect();
         });
         body.addEventListener('mouseout', function() {
-            deactivateEffect();
+            resetImage();
         });
     </script>
 </body>
