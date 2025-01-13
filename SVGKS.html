@@ -14,30 +14,24 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #FF00FF; /* Początkowe tło różowe */
+            background-color: #FF00FF;
             transition: background-color 0.3s ease;
         }
-
-        /* Zmiana tła na czarne po najechaniu */
         body.hover-active {
-            background-color: #000000; /* Tło czarne */
+            background-color: #000000;
         }
-
         svg {
             max-width: 90%;
             max-height: 90%;
             height: auto;
             width: auto;
-            filter: brightness(0); /* Początkowy SVG czarny */
+            filter: brightness(0);
             transition: filter 0.3s ease;
         }
-
-        /* Zmiana koloru SVG na różowy po najechaniu */
         body.hover-active svg,
         svg:hover {
             filter: brightness(1) invert(23%) sepia(198%) saturate(5000%) hue-rotate(300deg);
         }
-
         @media (max-width: 768px) {
             svg {
                 max-width: 100%;
@@ -81,18 +75,14 @@
     <script>
         const body = document.body;
         const svg = document.getElementById('svg1');
-
         function resetEffect() {
             body.classList.remove('hover-active');
             svg.style.filter = 'brightness(0)';
         }
-
         function activateEffect() {
             body.classList.add('hover-active');
             svg.style.filter = 'brightness(1) invert(23%) sepia(198%) saturate(5000%) hue-rotate(300deg)';
         }
-
-        // Obsługuje dotknięcie na urządzeniach mobilnych
         svg.addEventListener('touchstart', function () {
             if (body.classList.contains('hover-active')) {
                 resetEffect();
@@ -100,13 +90,9 @@
                 activateEffect();
             }
         });
-
-        // Obsługuje najechanie myszką
         body.addEventListener('mouseover', function () {
             activateEffect();
         });
-
-        // Obsługuje wyjście myszką
         body.addEventListener('mouseout', function () {
             resetEffect();
         });
