@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="5;url=https://ksgroup.pl/">
+    <meta http-equiv="refresh" content="4;url=https://ksgroup.pl/">
     <title>KSGROUP</title>
     <style>
         html, body {
@@ -17,7 +17,7 @@
             background-color: #FF00FF;
             transition: background-color 0.3s ease;
         }
-        body:hover {
+        body.hover-active {
             background-color: #000000;
         }
         img {
@@ -29,39 +29,40 @@
             filter: brightness(0);
             transition: filter 0.3s ease;
         }
-        body:hover img, img:hover {
+        body.hover-active img, img:hover {
             filter: invert(23%) sepia(100%) saturate(7500%) hue-rotate(300deg) brightness(198%) contrast(100%);
         }
         @media (max-width: 768px) {
-            body:active {
-                background-color: #000000;
-            }
-            img:active {
-                filter: invert(23%) sepia(100%) saturate(7500%) hue-rotate(300deg) brightness(198%) contrast(100%);
+            html, body {
+                justify-content: center;
+                align-items: center;
             }
             img {
-                max-width: 80%;
-                max-height: 80%;
+                max-width: 100%;
+                max-height: 100%;
+                object-fit: contain;
+                display: block;
+            }
+            body.hover-active img, img:hover {
+                filter: invert(23%) sepia(100%) saturate(7500%) hue-rotate(300deg) brightness(198%) contrast(100%);
             }
         }
     </style>
 </head>
 <body>
     <picture>
-        <source srcset="https://raw.githubusercontent.com/KSGROUPPL/KSGROUP.PL/refs/heads/main/KSGROUPLOGO.webp" type="image/webp">
-        <source srcset="https://raw.githubusercontent.com/KSGROUPPL/KSGROUP.PL/refs/heads/main/KSGROUPLOGO.png" type="image/png">
-        <img src="https://raw.githubusercontent.com/KSGROUPPL/KSGROUP.PL/refs/heads/main/KSGROUPLOGO.png" alt="KSGROUP LOGO">
+        <source srcset="https://ksgroup.pl/KSGROUPLOGO.webp" type="image/webp">
+        <source srcset="https://ksgroup.pl/KSGROUPLOGO.png" type="image/png">
+        <img src="https://ksgroup.pl/KSGROUPLOGO.png" alt="KSGROUP LOGO" id="KSGROUPLOGO">
     </picture>
     <script>
         const body = document.body;
-        const img = document.querySelector('img');
+        const img = document.getElementById('KSGROUPLOGO');
         function activateEffect() {
-            body.style.backgroundColor = '#000000';
-            img.style.filter = 'invert(23%) sepia(100%) saturate(7500%) hue-rotate(300deg) brightness(198%) contrast(100%)';
+            body.classList.add('hover-active');
         }
         function deactivateEffect() {
-            body.style.backgroundColor = '#FF00FF';
-            img.style.filter = 'brightness(0)';
+            body.classList.remove('hover-active');
         }
         img.addEventListener('touchstart', function() {
             activateEffect();
