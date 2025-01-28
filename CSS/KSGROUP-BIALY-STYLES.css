@@ -1,0 +1,43 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #FFFFFF;
+    transition: background-color 0.3s ease;
+    overflow: hidden;
+}
+body.hover-active {
+    background-color: #000000;
+}
+#KSGROUP-STRONA {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#KSGROUP-LOGO-SVG-WEBP {
+    max-width: 90%;
+    max-height: 90%;
+    height: auto;
+    width: auto;
+    filter: brightness(0);
+    transition: filter 0.3s ease;
+}
+body.hover-active #KSGROUP-LOGO-SVG-WEBP,
+#KSGROUP-LOGO-SVG-WEBP:hover {
+    filter: brightness(1) invert(1);
+}
+@media (max-width: 768px) {
+    #KSGROUP-LOGO-SVG-WEBP {
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
