@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>X:SVG</title>
+    <style>
+        body {
+            background-color: #FF00FF;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            transition: background-color 0.3s ease;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            transition: filter 0.3s ease;
+        }
+        @media only screen and (max-width: 600px) {
+            .desktop-image {
+                display: none;
+            }
+            .mobile-image {
+                display: block;
+            }
+        }
+        @media only screen and (min-width: 601px) {
+            .desktop-image {
+                display: block;
+            }
+            .mobile-image {
+                display: none;
+            }
+        }
+        body:hover {
+            background-color: #000000;
+        }
+        body:hover img {
+            filter: brightness(0) invert(1);
+        }
+        @media (hover: none) {
+            body:active {
+                background-color: #000000;
+            }
+            body:active img {
+                filter: brightness(0) invert(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="X.svg" alt="X:DESKTOP" class="desktop-image">
+    <img src="X.webp" alt="X:MOBILE" class="mobile-image">
+</body>
+</html>
