@@ -23,7 +23,7 @@ body.hover-active {
     top: 0;
     left: 0;
 }
-#KSGROUP-LOGO-SVGP {
+#KSGROUP-LOGO-SVG {
     max-width: 90%;
     max-height: 90%;
     height: auto;
@@ -32,7 +32,7 @@ body.hover-active {
     transition: filter 0.3s ease;
 }
 body.hover-active #KSGROUP-LOGO-SVG,
-#KSGROUP-LOGO-SVG-WEBP:hover {
+#KSGROUP-LOGO-SVG:hover {
     filter: brightness(1) invert(1);
 }
 @media (max-width: 768px) {
