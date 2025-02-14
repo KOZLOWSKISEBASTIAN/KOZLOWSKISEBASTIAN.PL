@@ -1,5 +1,5 @@
 const body = document.body;
-const imageContainer = document.getElementById('KSGROUP-LOGO-SVG-WEBP');
+const imageContainer = document.getElementById('KSGROUP-LOGO-SVG');
 function isMobileDevice() {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     return /android|ipad|iphone|ipod|blackberry|bb10|windows phone|mobile/i.test(userAgent);
