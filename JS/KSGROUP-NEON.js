@@ -1,18 +1,11 @@
 const body = document.body;
-const imageContainer = document.getElementById('KSGROUP-LOGO-SVG-WEBP');
+const imageContainer = document.getElementById('KSGROUP-LOGO-SVG');
 const STRONADOLNAContainer = document.getElementById('KSGROUP-STRONA-DOLNA');
 const liniaElement = document.getElementById('KSGROUP-LINIA');
 const napisElement = document.getElementById('KSGROUP-NAPIS');
 function isMobileDevice() {
     const userAgent = navigator.userAgent || navigator.vendor || window.opera;
     return /android|ipad|iphone|ipod|blackberry|bb10|windows phone|mobile/i.test(userAgent);
-}
-function setImage() {
-    const isMobile = isMobileDevice();
-    const imageUrl = isMobile
-        ? "https://kozlowskisebastian.pl/GRAFIKA/KSGROUP-BIALY-WEBP.webp"
-        : "https://kozlowskisebastian.pl/GRAFIKA/KSGROUP-BIALY-SVG.svg";
-    imageContainer.setAttribute("src", imageUrl);
 }
 function resetEffect() {
     body.classList.remove('hover-active');
