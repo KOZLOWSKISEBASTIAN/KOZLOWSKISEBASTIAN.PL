@@ -36,27 +36,6 @@ body.hover-active #KSGROUP-LOGO-SVG,
 #KSGROUP-LOGO-SVG:hover {
     filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
 }
-#KSGROUP-STRONA-DOLNA {
-    display: none;
-    text-align: center;
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-}
-#KSGROUP-LINIA {
-    width: 100%;
-    max-width: 90%;
-    height: 10px;
-    background-color: #ff00ff;
-    margin: 20px auto;
-}
-#KSGROUP-NAPIS {
-    color: #ff00ff;
-    font-size: 20px;
-    font-family: Arial, sans-serif;
-    margin-top: 10px;
-    display: inline-block;
-}
 @media (max-width: 768px) {
     #KSGROUP-LOGO-SVG {
         max-width: 100%;
