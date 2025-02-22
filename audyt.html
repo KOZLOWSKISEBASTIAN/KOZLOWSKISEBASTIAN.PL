@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsywna Strona z Wyszukiwaniem i Wyróżnieniem</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Wyśrodkowanie w pionie */
+            align-items: center; /* Wyśrodkowanie w poziomie */
+            min-height: 100vh; /* Pełna wysokość ekranu */
+        }
+
+        .dark-mode {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .button-container {
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            background-color: #444; /* Ciemnoszare tło */
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            position: fixed; /* Przyklejenie belki do góry i dołu */
+        }
+
+        .button-container:hover {
+            background-color: #555; /* Jaśniejszy odcień po najechaniu */
+        }
+
+        .button-container.top {
+            top: 0;
+        }
+
+        .button-container.bottom {
+            bottom: 0;
+        }
+
+        .search-container {
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            background-color: #555; /* Ciemniejsze tło dla pola wyszukiwania */
+            position: fixed;
+        }
+
+        .search-container.top {
+            top: 40px; /* Przesunięcie poniżej belki górnej */
+        }
+
+        .search-container.bottom {
+            bottom: 40px; /* Przesunięcie powyżej belki dolnej */
+        }
+
+        .search-container input {
+            padding: 5px;
+            width: 80%;
+            max-width: 300px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .content {
+            text-align: center;
+            padding: 20px;
+            margin-top: 100px; /* Odstęp od góry */
+            margin-bottom: 100px; /* Odstęp od dołu */
+        }
+
+        .list {
+            list-style-type: none; /* Usunięcie numeracji */
+            padding: 0;
+            margin: 0;
+        }
+
+        .list li {
+            cursor: pointer;
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .list li.active {
+            background-color: #f0f0f0; /* Tło wyróżniające w trybie jasnym */
+        }
+
+        .dark-mode .list li.active {
+            background-color: #555; /* Tło wyróżniające w trybie ciemnym */
+        }
+
+        .hidden-text {
+            display: none;
+            margin-top: 10px;
+            padding-left: 20px;
+            border-left: 2px solid #007BFF;
+        }
+
+        .hidden-text a {
+            display: block; /* Każdy link w nowej linii */
+            color: #007BFF;
+            text-decoration: none;
+            margin-top: 5px;
+        }
+
+        .hidden-text a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            .button-container {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container top" onclick="toggleDarkMode()">
+        Zmień kolor na ciemny/jasny
+    </div>
+
+    <div class="search-container top">
+        <input type="text" id="searchTop" placeholder="Szukaj na stronie...">
+    </div>
+
+    <div class="content">
+        <ul class="list">
+            <li onclick="toggleText(1)">
+                teskt 1
+                <div id="text1" class="hidden-text">
+                    To jest ukryty tekst pod pierwszym punktem. Możesz tu dodać więcej informacji.
+                    <a href="https://www.google.com" target="_blank">Google</a>
+                    <a href="https://www.wikipedia.org" target="_blank">Wikipedia</a>
+                </div>
+            </li>
+            <li onclick="toggleText(2)">
+                teskt 2
+                <div id="text2" class="hidden-text">
+                    To jest ukryty tekst pod drugim punktem. Możesz tu dodać więcej informacji.
+                    <a href="https://www.github.com" target="_blank">GitHub</a>
+                    <a href="https://www.stackoverflow.com" target="_blank">Stack Overflow</a>
+                </div>
+            </li>
+            <li onclick="toggleText(3)">
+                teskt 3
+                <div id="text3" class="hidden-text">
+                    To jest ukryty tekst pod trzecim punktem. Możesz tu dodać więcej informacji.
+                    <a href="https://www.youtube.com" target="_blank">YouTube</a>
+                    <a href="https://www.reddit.com" target="_blank">Reddit</a>
+                </div>
+            </li>
+            <li onclick="toggleText(4)">
+                teskt 4
+                <div id="text4" class="hidden-text">
+                    To jest ukryty tekst pod czwartym punktem. Możesz tu dodać więcej informacji.
+                    <a href="https://www.twitter.com" target="_blank">Twitter</a>
+                    <a href="https://www.linkedin.com" target="_blank">LinkedIn</a>
+                </div>
+            </li>
+            <li onclick="toggleText(5)">
+                teskt 5
+                <div id="text5" class="hidden-text">
+                    To jest ukryty tekst pod piątym punktem. Możesz tu dodać więcej informacji.
+                    <a href="https://www.instagram.com" target="_blank">Instagram</a>
+                    <a href="https://www.facebook.com" target="_blank">Facebook</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <div class="search-container bottom">
+        <input type="text" id="searchBottom" placeholder="Szukaj na stronie...">
+    </div>
+
+    <div class="button-container bottom" onclick="toggleDarkMode()">
+        Zmień kolor na ciemny/jasny
+    </div>
+
+    <script>
+        function toggleDarkMode() {
+            const body = document.body;
+            body.classList.toggle('dark-mode');
+        }
+
+        function toggleText(id) {
+            const hiddenText = document.getElementById(`text${id}`);
+            const listItem = hiddenText.parentElement;
+
+            // Zamknij wszystkie inne rozwinięte teksty
+            document.querySelectorAll('.hidden-text').forEach((text) => {
+                if (text !== hiddenText) {
+                    text.style.display = "none";
+                    text.parentElement.classList.remove('active');
+                }
+            });
+
+            // Przełącz widoczność tekstu i dodaj/usuń klasę aktywną
+            if (hiddenText.style.display === "none" || hiddenText.style.display === "") {
+                hiddenText.style.display = "block";
+                listItem.classList.add('active');
+            } else {
+                hiddenText.style.display = "none";
+                listItem.classList.remove('active');
+            }
+        }
+
+        // Funkcja do wyszukiwania
+        function search(query) {
+            const items = document.querySelectorAll('.list li');
+            items.forEach((item) => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(query.toLowerCase())) {
+                    item.style.display = "block";
+                } else {
+                    item.style.display = "none";
+                }
+            });
+        }
+
+        // Obsługa pól wyszukiwania
+        document.getElementById('searchTop').addEventListener('input', (e) => {
+            search(e.target.value);
+        });
+
+        document.getElementById('searchBottom').addEventListener('input', (e) => {
+            search(e.target.value);
+        });
+    </script>
+</body>
+</html>
