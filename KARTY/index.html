@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ODSYŁACZ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            background-color: #000000;
+            color: #222222;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            transition: background 0.3s;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            transition: opacity 0.3s;
+        }
+        .fullscreen-mode .container {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .row {
+            margin: 20px 0;
+            text-align: center;
+            width: 100%;
+        }
+        .links {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .links li {
+            margin: 5px 0;
+        }
+        .links a {
+            text-decoration: none;
+            padding: 10px 15px;
+            color: #FF00FF;
+            background: #333333;
+            border-radius: 5px;
+            transition: background 0.3s, filter 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80px;
+            min-width: 120px;
+            box-sizing: border-box;
+            cursor: pointer;
+        }
+        .links a:hover {
+            background: #222222;
+        }
+        .links a img {
+            max-height: 30px;
+            width: auto;
+            filter: grayscale(100%) brightness(50%);
+            transition: filter 0.3s;
+            margin-bottom: 5px;
+        }
+        .links a:hover img {
+            filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
+        }
+        .links a .label {
+            font-size: 12px;
+            color: #FF00FF;
+            margin-top: 5px;
+        }
+        .fullscreen-mode {
+            background-color: #000;
+            padding: 0;
+            box-sizing: border-box;
+            position: relative;
+        }
+        
+        /* Obrócone tło z marginesami */
+        .fullscreen-mode::after {
+            content: "";
+            position: fixed;
+            top: 130px; /* Zwiększony margines górny */
+            left: 50px; /* Zwiększony margines lewy */
+            right: 50px; /* Zwiększony margines prawy */
+            bottom: 130px; /* Zwiększony margines dolny */
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3R7ZOhw2NPYoOjS4vEg5XVfOwkBK1N80w7PkxZaZ_w&usqp=CAE&s');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center center;
+            transform: rotate(90deg);
+            z-index: -1;
+            border: 0px solid #FF00FF; /* Dodana ramka w kolorze różowym */
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5); /* Dodany cień dla lepszego efektu */
+        }
+        
+        /* Dla mniejszych ekranów zmniejszamy marginesy */
+        @media (max-width: 768px) {
+            .fullscreen-mode::after {
+                top: 20px;
+                left: 20px;
+                right: 20px;
+                bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <ul class="links">
+                <li><a class="link-btn">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg">
+                    <span class="label">KOZPL</span>
+                </a></li>
+                <li><a class="link-btn">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg">
+                </a></li>
+                <li><a class="link-btn">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg">
+                </a></li>
+                <li><a class="link-btn">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg">
+                    <span class="label">KOZPL</span>
+                </a></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Zmienna śledząca stan pełnego ekranu
+        let isFullscreen = false;
+        
+        // Obsługa kliknięcia na przyciski/linki
+        document.querySelectorAll('.link-btn').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Zapobiegaj domyślnej akcji tylko dla zdjęcia
+                if (!this.classList.contains('chrome-link')) {
+                    e.preventDefault();
+                    
+                    // Przełącz tryb pełnoekranowy
+                    isFullscreen = !isFullscreen;
+                    
+                    if (isFullscreen) {
+                        // Pokaż zdjęcie na pełnym ekranie
+                        document.body.classList.add('fullscreen-mode');
+                    } else {
+                        // Ukryj zdjęcie
+                        document.body.classList.remove('fullscreen-mode');
+                    }
+                }
+            });
+        });
+
+        // Obsługa kliknięcia na tło w trybie pełnoekranowym
+        document.body.addEventListener('click', function(e) {
+            if (isFullscreen && e.target === document.body) {
+                isFullscreen = false;
+                document.body.classList.remove('fullscreen-mode');
+            }
+        });
+    </script>
+</body>
+</html>
