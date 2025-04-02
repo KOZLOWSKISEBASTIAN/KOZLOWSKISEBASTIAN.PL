@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KARTY</title>
+    <title>ODSYŁACZ</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <style>
         body {
@@ -26,11 +26,11 @@
             width: 100%;
             transition: opacity 0.3s;
             position: relative;
-            z-index: 2; /* Wyższy priorytet niż fullscreen-image */
+            z-index: 2;
         }
         .fullscreen-mode .container {
             opacity: 0;
-            pointer-events: none; /* Wyłącza interakcję w trybie pełnoekranowym */
+            pointer-events: none;
         }
         .row {
             margin: 20px 0;
@@ -84,36 +84,37 @@
             margin-top: 5px;
         }
         .fullscreen-mode {
-            background-color: #000;
+            background-color: #fff; /* Białe tło dla kontrastu */
             padding: 0;
             box-sizing: border-box;
             position: relative;
             width: 100%;
             height: 100vh;
         }
-        
-        /* Obrócone tło z marginesami */
         .fullscreen-image {
             position: fixed;
             top: 130px;
             left: 50px;
             right: 50px;
             bottom: 130px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center center;
-            transform: rotate(90deg);
-            z-index: 1; /* Niższy priorytet niż container */
+            z-index: 1;
             opacity: 0;
             transition: opacity 0.3s;
-            pointer-events: none; /* Nie blokuje kliknięć poza trybem */
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .fullscreen-image img {
+            max-width: 100%;
+            max-height: 100%;
+            transform: rotate(90deg);
+            object-fit: contain;
         }
         .fullscreen-mode .fullscreen-image {
             opacity: 1;
-            pointer-events: auto; /* Włącza interakcję w trybie pełnoekranowym */
+            pointer-events: auto;
         }
-        
-        /* Dla mniejszych ekranów zmniejszamy marginesy */
         @media (max-width: 768px) {
             .fullscreen-image {
                 top: 20px;
@@ -135,50 +136,46 @@
                 <li><a class="link-btn" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3R7ZOhw2NPYoOjS4vEg5XVfOwkBK1N80w7PkxZaZ_w&usqp=CAE&s">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg">
                 </a></li>
-                <li><a class="link-btn" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3R7ZOhw2NPYoOjS4vEg5XVfOwkBK1N80w7PkxZaZ_w&usqp=CAE&s">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg">
-                </a></li>
-                <li><a class="link-btn" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3R7ZOhw2NPYoOjS4vEg5XVfOwkBK1N80w7PkxZaZ_w&usqp=CAE&s">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg">
-                    <span class="label">KOZPL</span>
-                </a></li>
             </ul>
         </div>
     </div>
-    <div class="fullscreen-image"></div>
+    <div class="fullscreen-image">
+        <img id="fullscreen-img" src="" alt="Fullscreen Image">
+    </div>
 
     <script>
-        // Zmienna śledząca stan pełnego ekranu
         let isFullscreen = false;
         const fullscreenImage = document.querySelector('.fullscreen-image');
+        const fullscreenImg = document.getElementById('fullscreen-img');
 
-        // Obsługa kliknięcia na przyciski/linki
         document.querySelectorAll('.link-btn').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
-                
-                // Przełącz tryb pełnoekranowy
+                console.log('Kliknięto przycisk, data-image:', this.getAttribute('data-image')); // Debug 1
                 isFullscreen = !isFullscreen;
                 
                 if (isFullscreen) {
-                    // Pokaż zdjęcie na pełnym ekranie
                     document.body.classList.add('fullscreen-mode');
                     const imageUrl = this.getAttribute('data-image');
-                    fullscreenImage.style.backgroundImage = `url(${imageUrl})`;
+                    console.log('Ustawiam src na:', imageUrl); // Debug 2
+                    fullscreenImg.src = imageUrl;
+                    console.log('Aktualne src:', fullscreenImg.src); // Debug 3
+                    fullscreenImg.onerror = () => console.error('Błąd ładowania obrazu:', imageUrl); // Debug 4
+                    fullscreenImg.onload = () => console.log('Obraz załadowany:', imageUrl); // Debug 5
                 } else {
-                    // Ukryj zdjęcie
                     document.body.classList.remove('fullscreen-mode');
-                    fullscreenImage.style.backgroundImage = 'none';
+                    fullscreenImg.src = '';
+                    console.log('Wyczyszczono src'); // Debug 6
                 }
             });
         });
 
-        // Obsługa kliknięcia na tło w trybie pełnoekranowym
         document.body.addEventListener('click', function(e) {
-            if (isFullscreen && (e.target === document.body || e.target === fullscreenImage)) {
+            if (isFullscreen && (e.target === document.body || e.target === fullscreenImage || e.target === fullscreenImg)) {
                 isFullscreen = false;
                 document.body.classList.remove('fullscreen-mode');
-                fullscreenImage.style.backgroundImage = 'none';
+                fullscreenImg.src = '';
+                console.log('Zamknięto tryb pełnoekranowy'); // Debug 7
             }
         });
     </script>
