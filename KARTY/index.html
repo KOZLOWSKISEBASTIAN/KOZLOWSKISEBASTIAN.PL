@@ -18,41 +18,23 @@
             margin: 0;
             transition: background 0.3s;
         }
-        .search-bar {
+        .search-bar, .sort-bar {
             width: 100%;
             padding: 10px;
-            background-color: #333333;
+            background-color: #333333; /* Jednolite tło dla obu pasków */
             display: flex;
             justify-content: center;
             position: fixed;
-            top: 0;
             left: 0;
             z-index: 3;
         }
-        .search-bar input {
-            width: 80%;
-            max-width: 500px;
-            padding: 8px;
-            font-size: 16px;
-            font-family: 'Montserrat', sans-serif;
-            border: none;
-            border-radius: 5px;
-            background-color: #fff;
-            color: #000;
-            outline: none;
+        .search-bar {
+            top: 0;
         }
         .sort-bar {
-            width: 100%;
-            padding: 10px;
-            background-color: #444444;
-            display: flex;
-            justify-content: center;
-            position: fixed;
             top: 50px; /* Pod paskiem wyszukiwania */
-            left: 0;
-            z-index: 3;
         }
-        .sort-bar select {
+        .search-bar input, .sort-bar select {
             padding: 8px;
             font-size: 16px;
             font-family: 'Montserrat', sans-serif;
@@ -61,6 +43,20 @@
             background-color: #fff;
             color: #000;
             outline: none;
+            width: 100%; /* Domyślnie pełna szerokość komórki */
+            box-sizing: border-box;
+        }
+        /* Szerokość na desktopie */
+        @media (min-width: 769px) {
+            .search-bar input, .sort-bar select {
+                width: 300px; /* Stała szerokość 300px na desktopie */
+            }
+        }
+        /* Dopasowanie szerokości do komórki na mobile */
+        @media (max-width: 768px) {
+            .search-bar input, .sort-bar select {
+                width: 120px; /* Szerokość równa min-width komórki (przycisku) */
+            }
         }
         .container {
             display: flex;
@@ -70,7 +66,7 @@
             transition: opacity 0.3s;
             position: relative;
             z-index: 2;
-            margin-top: 100px; /* Miejsce na pasek wyszukiwania i sortowania */
+            margin-top: 100px; /* Miejsce na paski */
         }
         .fullscreen-mode .container {
             opacity: 0;
@@ -108,7 +104,7 @@
             align-items: center;
             justify-content: center;
             height: 80px;
-            min-width: 120px;
+            min-width: 120px; /* Minimalna szerokość komórki */
             box-sizing: border-box;
             cursor: pointer;
         }
@@ -230,10 +226,9 @@
                 sortedArray = itemsArray.sort((a, b) => 
                     Number(a.getAttribute('data-usage')) - Number(b.getAttribute('data-usage')));
             } else {
-                sortedArray = itemsArray; // Domyślne, bez sortowania
+                sortedArray = itemsArray;
             }
 
-            // Ponowne wstawienie posortowanych elementów
             sortedArray.forEach(item => linksList.appendChild(item));
         }
 
@@ -243,7 +238,6 @@
                 e.preventDefault();
                 console.log('Kliknięto przycisk, data-image:', this.getAttribute('data-image'));
                 
-                // Zwiększenie licznika użycia
                 const parentLi = this.parentElement;
                 let usageCount = Number(parentLi.getAttribute('data-usage')) + 1;
                 parentLi.setAttribute('data-usage', usageCount);
