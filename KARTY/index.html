@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KARTY</title>
+    <title>ODSYŁACZ</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <style>
         body {
@@ -14,10 +14,53 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             min-height: 100vh;
             margin: 0;
             transition: background 0.3s;
+        }
+        .search-bar {
+            width: 100%;
+            padding: 10px;
+            background-color: #333333;
+            display: flex;
+            justify-content: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 3;
+        }
+        .search-bar input {
+            width: 80%;
+            max-width: 500px;
+            padding: 8px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #000;
+            outline: none;
+        }
+        .sort-bar {
+            width: 100%;
+            padding: 10px;
+            background-color: #444444;
+            display: flex;
+            justify-content: center;
+            position: fixed;
+            top: 50px; /* Pod paskiem wyszukiwania */
+            left: 0;
+            z-index: 3;
+        }
+        .sort-bar select {
+            padding: 8px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            border-radius: 5px;
+            background-color: #fff;
+            color: #000;
+            outline: none;
         }
         .container {
             display: flex;
@@ -27,6 +70,7 @@
             transition: opacity 0.3s;
             position: relative;
             z-index: 2;
+            margin-top: 100px; /* Miejsce na pasek wyszukiwania i sortowania */
         }
         .fullscreen-mode .container {
             opacity: 0;
@@ -48,6 +92,9 @@
         }
         .links li {
             margin: 5px 0;
+        }
+        .links li.hidden {
+            display: none;
         }
         .links a {
             text-decoration: none;
@@ -84,7 +131,7 @@
             margin-top: 5px;
         }
         .fullscreen-mode {
-            background-color: #fff; /* Białe tło dla kontrastu */
+            background-color: #fff;
             padding: 0;
             box-sizing: border-box;
             position: relative;
@@ -126,15 +173,28 @@
     </style>
 </head>
 <body>
+    <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Wyszukaj przycisk...">
+    </div>
+    <div class="sort-bar">
+        <select id="sort-select">
+            <option value="default">Domyślne</option>
+            <option value="name-asc">Nazwa (A-Z)</option>
+            <option value="name-desc">Nazwa (Z-A)</option>
+            <option value="usage-desc">Częstotliwość użycia (malejąco)</option>
+            <option value="usage-asc">Częstotliwość użycia (rosnąco)</option>
+        </select>
+    </div>
     <div class="container">
         <div class="row">
             <ul class="links">
-                <li><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li data-name="Biedronka" data-usage="0"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
-                    <span class="label">BIEDRONKA PL</span>
+                    <span class="label">Biedronka</span>
                 </a></li>
-                <li><a class="link-btn" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3R7ZOhw2NPYoOjS4vEg5XVfOwkBK1N80w7PkxZaZ_w&usqp=CAE&s">
+                <li data-name="Hasła" data-usage="0"><a class="link-btn" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3R7ZOhw2NPYoOjS4vEg5XVfOwkBK1N80w7PkxZaZ_w&usqp=CAE&s">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg">
+                    <span class="label">Hasła</span>
                 </a></li>
             </ul>
         </div>
@@ -147,11 +207,48 @@
         let isFullscreen = false;
         const fullscreenImage = document.querySelector('.fullscreen-image');
         const fullscreenImg = document.getElementById('fullscreen-img');
+        const searchInput = document.getElementById('search-input');
+        const sortSelect = document.getElementById('sort-select');
+        const linksList = document.querySelector('.links');
+        const linkItems = document.querySelectorAll('.links li');
 
+        // Funkcja sortowania
+        function sortButtons(criteria) {
+            const itemsArray = Array.from(linkItems);
+            let sortedArray;
+
+            if (criteria === 'name-asc') {
+                sortedArray = itemsArray.sort((a, b) => 
+                    a.getAttribute('data-name').localeCompare(b.getAttribute('data-name')));
+            } else if (criteria === 'name-desc') {
+                sortedArray = itemsArray.sort((a, b) => 
+                    b.getAttribute('data-name').localeCompare(a.getAttribute('data-name')));
+            } else if (criteria === 'usage-desc') {
+                sortedArray = itemsArray.sort((a, b) => 
+                    Number(b.getAttribute('data-usage')) - Number(a.getAttribute('data-usage')));
+            } else if (criteria === 'usage-asc') {
+                sortedArray = itemsArray.sort((a, b) => 
+                    Number(a.getAttribute('data-usage')) - Number(b.getAttribute('data-usage')));
+            } else {
+                sortedArray = itemsArray; // Domyślne, bez sortowania
+            }
+
+            // Ponowne wstawienie posortowanych elementów
+            sortedArray.forEach(item => linksList.appendChild(item));
+        }
+
+        // Obsługa kliknięcia na przyciski
         document.querySelectorAll('.link-btn').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 console.log('Kliknięto przycisk, data-image:', this.getAttribute('data-image'));
+                
+                // Zwiększenie licznika użycia
+                const parentLi = this.parentElement;
+                let usageCount = Number(parentLi.getAttribute('data-usage')) + 1;
+                parentLi.setAttribute('data-usage', usageCount);
+                console.log('Nowa częstotliwość użycia:', parentLi.getAttribute('data-name'), usageCount);
+
                 isFullscreen = !isFullscreen;
                 
                 if (isFullscreen) {
@@ -159,10 +256,9 @@
                     const imageUrl = this.getAttribute('data-image');
                     console.log('Ustawiam src na:', imageUrl);
                     fullscreenImg.src = imageUrl;
-                    console.log('Aktualne src:', fullscreenImg.src);
                     fullscreenImg.onerror = () => {
                         console.error('Błąd ładowania obrazu:', imageUrl);
-                        fullscreenImg.src = 'https://via.placeholder.com/800x600?text=Obraz+niedostępny'; // Fallback
+                        fullscreenImg.src = 'https://via.placeholder.com/800x600?text=Obraz+niedostępny';
                     };
                     fullscreenImg.onload = () => console.log('Obraz załadowany:', imageUrl);
                 } else {
@@ -173,6 +269,7 @@
             });
         });
 
+        // Obsługa kliknięcia na tło w trybie pełnoekranowym
         document.body.addEventListener('click', function(e) {
             if (isFullscreen && (e.target === document.body || e.target === fullscreenImage || e.target === fullscreenImg)) {
                 isFullscreen = false;
@@ -180,6 +277,26 @@
                 fullscreenImg.src = '';
                 console.log('Zamknięto tryb pełnoekranowy');
             }
+        });
+
+        // Obsługa wyszukiwania
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.trim().toLowerCase();
+            linkItems.forEach(item => {
+                const name = item.getAttribute('data-name').toLowerCase();
+                if (name.includes(searchTerm)) {
+                    item.classList.remove('hidden');
+                } else {
+                    item.classList.add('hidden');
+                }
+            });
+        });
+
+        // Obsługa sortowania
+        sortSelect.addEventListener('change', function() {
+            const sortValue = this.value;
+            console.log('Sortowanie według:', sortValue);
+            sortButtons(sortValue);
         });
     </script>
 </body>
