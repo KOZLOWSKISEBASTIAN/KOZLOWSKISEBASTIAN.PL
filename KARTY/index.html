@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ODSYŁACZ</title>
+    <title>KARTY</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <style>
         body {
@@ -25,10 +25,12 @@
             align-items: center;
             width: 100%;
             transition: opacity 0.3s;
+            position: relative;
+            z-index: 2; /* Wyższy priorytet niż fullscreen-image */
         }
         .fullscreen-mode .container {
             opacity: 0;
-            pointer-events: none;
+            pointer-events: none; /* Wyłącza interakcję w trybie pełnoekranowym */
         }
         .row {
             margin: 20px 0;
@@ -86,29 +88,34 @@
             padding: 0;
             box-sizing: border-box;
             position: relative;
+            width: 100%;
+            height: 100vh;
         }
         
         /* Obrócone tło z marginesami */
-        .fullscreen-mode::after {
-            content: "";
+        .fullscreen-image {
             position: fixed;
-            top: 130px; /* Zwiększony margines górny */
-            left: 50px; /* Zwiększony margines lewy */
-            right: 50px; /* Zwiększony margines prawy */
-            bottom: 130px; /* Zwiększony margines dolny */
-            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3R7ZOhw2NPYoOjS4vEg5XVfOwkBK1N80w7PkxZaZ_w&usqp=CAE&s');
+            top: 130px;
+            left: 50px;
+            right: 50px;
+            bottom: 130px;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center center;
             transform: rotate(90deg);
-            z-index: -1;
-            border: 0px solid #FF00FF; /* Dodana ramka w kolorze różowym */
-            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5); /* Dodany cień dla lepszego efektu */
+            z-index: 1; /* Niższy priorytet niż container */
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none; /* Nie blokuje kliknięć poza trybem */
+        }
+        .fullscreen-mode .fullscreen-image {
+            opacity: 1;
+            pointer-events: auto; /* Włącza interakcję w trybie pełnoekranowym */
         }
         
         /* Dla mniejszych ekranów zmniejszamy marginesy */
         @media (max-width: 768px) {
-            .fullscreen-mode::after {
+            .fullscreen-image {
                 top: 20px;
                 left: 20px;
                 right: 20px;
@@ -121,54 +128,57 @@
     <div class="container">
         <div class="row">
             <ul class="links">
-                <li><a class="link-btn">
+                <li><a class="link-btn" data-image="http://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg">
                     <span class="label">KOZPL</span>
                 </a></li>
-                <li><a class="link-btn">
+                <li><a class="link-btn" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3R7ZOhw2NPYoOjS4vEg5XVfOwkBK1N80w7PkxZaZ_w&usqp=CAE&s">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg">
                 </a></li>
-                <li><a class="link-btn">
+                <li><a class="link-btn" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3R7ZOhw2NPYoOjS4vEg5XVfOwkBK1N80w7PkxZaZ_w&usqp=CAE&s">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg">
                 </a></li>
-                <li><a class="link-btn">
+                <li><a class="link-btn" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3R7ZOhw2NPYoOjS4vEg5XVfOwkBK1N80w7PkxZaZ_w&usqp=CAE&s">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg">
                     <span class="label">KOZPL</span>
                 </a></li>
             </ul>
         </div>
     </div>
+    <div class="fullscreen-image"></div>
 
     <script>
         // Zmienna śledząca stan pełnego ekranu
         let isFullscreen = false;
-        
+        const fullscreenImage = document.querySelector('.fullscreen-image');
+
         // Obsługa kliknięcia na przyciski/linki
         document.querySelectorAll('.link-btn').forEach(link => {
             link.addEventListener('click', function(e) {
-                // Zapobiegaj domyślnej akcji tylko dla zdjęcia
-                if (!this.classList.contains('chrome-link')) {
-                    e.preventDefault();
-                    
-                    // Przełącz tryb pełnoekranowy
-                    isFullscreen = !isFullscreen;
-                    
-                    if (isFullscreen) {
-                        // Pokaż zdjęcie na pełnym ekranie
-                        document.body.classList.add('fullscreen-mode');
-                    } else {
-                        // Ukryj zdjęcie
-                        document.body.classList.remove('fullscreen-mode');
-                    }
+                e.preventDefault();
+                
+                // Przełącz tryb pełnoekranowy
+                isFullscreen = !isFullscreen;
+                
+                if (isFullscreen) {
+                    // Pokaż zdjęcie na pełnym ekranie
+                    document.body.classList.add('fullscreen-mode');
+                    const imageUrl = this.getAttribute('data-image');
+                    fullscreenImage.style.backgroundImage = `url(${imageUrl})`;
+                } else {
+                    // Ukryj zdjęcie
+                    document.body.classList.remove('fullscreen-mode');
+                    fullscreenImage.style.backgroundImage = 'none';
                 }
             });
         });
 
         // Obsługa kliknięcia na tło w trybie pełnoekranowym
         document.body.addEventListener('click', function(e) {
-            if (isFullscreen && e.target === document.body) {
+            if (isFullscreen && (e.target === document.body || e.target === fullscreenImage)) {
                 isFullscreen = false;
                 document.body.classList.remove('fullscreen-mode');
+                fullscreenImage.style.backgroundImage = 'none';
             }
         });
     </script>
