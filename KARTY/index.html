@@ -18,23 +18,40 @@
             margin: 0;
             transition: background 0.3s;
         }
-        .search-bar, .sort-bar {
+        .header {
             width: 100%;
-            padding: 10px;
-            background-color: #333333; /* Jednolite tło dla obu pasków */
-            display: flex;
-            justify-content: center;
             position: fixed;
+            top: 0;
             left: 0;
             z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #333333;
+        }
+        .search-bar, .sort-bar, .image-link-bar {
+            width: 100%;
+            padding: 5px 0;
+            display: flex;
+            justify-content: center;
         }
         .search-bar {
-            top: 0;
+            order: 1;
         }
         .sort-bar {
-            top: 50px; /* Pod paskiem wyszukiwania */
+            order: 2;
         }
-        .search-bar input, .sort-bar select {
+        .image-link-bar {
+            order: 3;
+            display: none; /* Domyślnie ukryta */
+        }
+        .fullscreen-mode .image-link-bar {
+            display: flex; /* Pokazana w trybie pełnoekranowym */
+        }
+        .fullscreen-mode .search-bar, .fullscreen-mode .sort-bar {
+            display: none; /* Ukrycie wyszukiwania i sortowania w trybie pełnoekranowym */
+        }
+        .search-bar input, .sort-bar select, .image-link-bar a {
             padding: 8px;
             font-size: 16px;
             font-family: 'Montserrat', sans-serif;
@@ -43,19 +60,24 @@
             background-color: #fff;
             color: #000;
             outline: none;
-            width: 100%; /* Domyślnie pełna szerokość komórki */
+            width: 100%;
             box-sizing: border-box;
+            margin: 5px 0;
         }
-        /* Szerokość na desktopie */
+        .image-link-bar a {
+            text-decoration: underline;
+            color: #FF00FF;
+            text-align: center;
+            display: block;
+        }
         @media (min-width: 769px) {
-            .search-bar input, .sort-bar select {
-                width: 300px; /* Stała szerokość 300px na desktopie */
+            .search-bar input, .sort-bar select, .image-link-bar a {
+                width: 300px;
             }
         }
-        /* Dopasowanie szerokości do komórki na mobile */
         @media (max-width: 768px) {
-            .search-bar input, .sort-bar select {
-                width: 120px; /* Szerokość równa min-width komórki (przycisku) */
+            .search-bar input, .sort-bar select, .image-link-bar a {
+                width: 120px;
             }
         }
         .container {
@@ -66,7 +88,7 @@
             transition: opacity 0.3s;
             position: relative;
             z-index: 2;
-            margin-top: 100px; /* Miejsce na paski */
+            margin-top: 120px;
         }
         .fullscreen-mode .container {
             opacity: 0;
@@ -104,7 +126,7 @@
             align-items: center;
             justify-content: center;
             height: 80px;
-            min-width: 120px; /* Minimalna szerokość komórki */
+            min-width: 120px;
             box-sizing: border-box;
             cursor: pointer;
         }
@@ -169,28 +191,32 @@
     </style>
 </head>
 <body>
-    <div class="search-bar">
-        <input type="text" id="search-input" placeholder="Wyszukaj przycisk...">
-    </div>
-    <div class="sort-bar">
-        <select id="sort-select">
-            <option value="default">Domyślne</option>
-            <option value="name-asc">Nazwa (A-Z)</option>
-            <option value="name-desc">Nazwa (Z-A)</option>
-            <option value="usage-desc">Częstotliwość użycia (malejąco)</option>
-            <option value="usage-asc">Częstotliwość użycia (rosnąco)</option>
-        </select>
+    <div class="header">
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Wyszukaj przycisk...">
+        </div>
+        <div class="sort-bar">
+            <select id="sort-select">
+                <option value="default">Domyślne</option>
+                <option value="name-asc">Nazwa (A-Z)</option>
+                <option value="name-desc">Nazwa (Z-A)</option>
+                <option value="usage-desc">Częstotliwość użycia (malejąco)</option>
+                <option value="usage-asc">Częstotliwość użycia (rosnąco)</option>
+            </select>
+        </div>
+        <div class="image-link-bar">
+            <a id="image-link" href="" target="_blank">Pobierz grafikę</a>
+        </div>
     </div>
     <div class="container">
         <div class="row">
             <ul class="links">
-                <li data-name="Biedronka" data-usage="0"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li data-name="BIEDRONKA" data-usage="0"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="label">PL</span>
                 </a></li>
-                <li data-name="Hasła" data-usage="0"><a class="link-btn" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3R7ZOhw2NPYoOjS4vEg5XVfOwkBK1N80w7PkxZaZ_w&usqp=CAE&s">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg">
-                    <span class="label">Hasła</span>
+                <li data-name="CHATA POLSKA" data-usage="0"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
                 </a></li>
             </ul>
         </div>
@@ -203,6 +229,8 @@
         let isFullscreen = false;
         const fullscreenImage = document.querySelector('.fullscreen-image');
         const fullscreenImg = document.getElementById('fullscreen-img');
+        const imageLink = document.getElementById('image-link');
+        const imageLinkBar = document.querySelector('.image-link-bar');
         const searchInput = document.getElementById('search-input');
         const sortSelect = document.getElementById('sort-select');
         const linksList = document.querySelector('.links');
@@ -250,14 +278,18 @@
                     const imageUrl = this.getAttribute('data-image');
                     console.log('Ustawiam src na:', imageUrl);
                     fullscreenImg.src = imageUrl;
+                    imageLink.href = imageUrl;
+                    imageLinkBar.style.display = 'flex';
                     fullscreenImg.onerror = () => {
                         console.error('Błąd ładowania obrazu:', imageUrl);
                         fullscreenImg.src = 'https://via.placeholder.com/800x600?text=Obraz+niedostępny';
+                        imageLink.href = fullscreenImg.src;
                     };
                     fullscreenImg.onload = () => console.log('Obraz załadowany:', imageUrl);
                 } else {
                     document.body.classList.remove('fullscreen-mode');
                     fullscreenImg.src = '';
+                    imageLinkBar.style.display = 'none';
                     console.log('Wyczyszczono src');
                 }
             });
@@ -269,6 +301,7 @@
                 isFullscreen = false;
                 document.body.classList.remove('fullscreen-mode');
                 fullscreenImg.src = '';
+                imageLinkBar.style.display = 'none';
                 console.log('Zamknięto tryb pełnoekranowy');
             }
         });
