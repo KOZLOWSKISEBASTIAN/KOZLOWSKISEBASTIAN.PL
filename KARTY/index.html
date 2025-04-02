@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ODSYŁACZ</title>
+    <title>KARTY</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <style>
         body {
@@ -129,9 +129,9 @@
     <div class="container">
         <div class="row">
             <ul class="links">
-                <li><a class="link-btn" data-image="http://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
-                    <span class="label">KOZPL</span>
+                    <span class="label"BIEDRONKA PL</span>
                 </a></li>
                 <li><a class="link-btn" data-image="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTd3R7ZOhw2NPYoOjS4vEg5XVfOwkBK1N80w7PkxZaZ_w&usqp=CAE&s">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg">
@@ -151,21 +151,24 @@
         document.querySelectorAll('.link-btn').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
-                console.log('Kliknięto przycisk, data-image:', this.getAttribute('data-image')); // Debug 1
+                console.log('Kliknięto przycisk, data-image:', this.getAttribute('data-image'));
                 isFullscreen = !isFullscreen;
                 
                 if (isFullscreen) {
                     document.body.classList.add('fullscreen-mode');
                     const imageUrl = this.getAttribute('data-image');
-                    console.log('Ustawiam src na:', imageUrl); // Debug 2
+                    console.log('Ustawiam src na:', imageUrl);
                     fullscreenImg.src = imageUrl;
-                    console.log('Aktualne src:', fullscreenImg.src); // Debug 3
-                    fullscreenImg.onerror = () => console.error('Błąd ładowania obrazu:', imageUrl); // Debug 4
-                    fullscreenImg.onload = () => console.log('Obraz załadowany:', imageUrl); // Debug 5
+                    console.log('Aktualne src:', fullscreenImg.src);
+                    fullscreenImg.onerror = () => {
+                        console.error('Błąd ładowania obrazu:', imageUrl);
+                        fullscreenImg.src = 'https://via.placeholder.com/800x600?text=Obraz+niedostępny'; // Fallback
+                    };
+                    fullscreenImg.onload = () => console.log('Obraz załadowany:', imageUrl);
                 } else {
                     document.body.classList.remove('fullscreen-mode');
                     fullscreenImg.src = '';
-                    console.log('Wyczyszczono src'); // Debug 6
+                    console.log('Wyczyszczono src');
                 }
             });
         });
@@ -175,7 +178,7 @@
                 isFullscreen = false;
                 document.body.classList.remove('fullscreen-mode');
                 fullscreenImg.src = '';
-                console.log('Zamknięto tryb pełnoekranowy'); // Debug 7
+                console.log('Zamknięto tryb pełnoekranowy');
             }
         });
     </script>
