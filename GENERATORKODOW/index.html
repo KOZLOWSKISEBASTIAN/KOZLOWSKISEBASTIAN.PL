@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GENERATOR KODÓW</title>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bwip-js@3.1.0/dist/bwip-js-min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #000000;
+            color: #FF00FF;
+        }
+        .container {
+            background: #333333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .input-section {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background: #fff;
+            color: #000;
+        }
+        button {
+            background: #333333;
+            color: #FF00FF;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        button:hover {
+            background: #222222;
+        }
+        .code-container {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .code-title {
+            color: #FF00FF;
+            margin: 10px 0;
+        }
+        .error {
+            color: #FF0000;
+            font-size: 14px;
+        }
+        .code-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        svg {
+            max-width: 100%;
+            height: auto;
+        }
+        .save-button {
+            background: #333333;
+            color: #FF00FF;
+            margin-top: 10px;
+            padding: 8px 16px;
+            width: auto;
+            display: block;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .save-button:hover {
+            background: #222222;
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+            .container {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><center>GENERATOR KODÓW</center></h1>
+		<h2><center>DO PLIKU WEKTOROWEGO SVG</center></h2>
+        <div class="input-section">
+            <input type="text" id="cardNumber" value="9956428594335" placeholder="WPROWADŹ NUMER KARTY">
+            <button onclick="generateCodes()">Generuj</button>
+        </div>
+      </div>
+      <div>
+        <div class="code-container"><h3 class="code-title">Aztec</h3><div id="aztec"></div></div>
+        <div class="code-container"><h3 class="code-title">Code 39</h3><div id="code39"></div></div>
+        <div class="code-container"><h3 class="code-title">Code 93</h3><div id="code93"></div></div>
+        <div class="code-container"><h3 class="code-title">Code 128</h3><div id="code128"></div></div>
+        <div class="code-container"><h3 class="code-title">Codabar</h3><div id="codabar"></div></div>
+        <div class="code-container"><h3 class="code-title">Data Matrix</h3><div id="datamatrix"></div></div>
+        <div class="code-container"><h3 class="code-title">EAN 8</h3><div id="ean8"></div></div>
+        <div class="code-container"><h3 class="code-title">EAN 13</h3><div id="ean13"></div></div>
+        <div class="code-container"><h3 class="code-title">ITF (Przeplatany 2 z 5)</h3><div id="itf"></div></div>
+        <div class="code-container"><h3 class="code-title">PDF 417</h3><div id="pdf417"></div></div>
+        <div class="code-container"><h3 class="code-title">QR Code</h3><div id="qrcode"></div></div>
+        <div class="code-container"><h3 class="code-title">UPC A</h3><div id="upca"></div></div>
+        <div class="code-container"><h3 class="code-title">UPC E</h3><div id="upce"></div></div>
+        <div class="code-container"><h3 class="code-title">MSI Plessey</h3><div id="msi"></div></div>
+        <div class="code-container"><h3 class="code-title">Code 11</h3><div id="code11"></div></div>
+        <div class="code-container"><h3 class="code-title">ISBN</h3><div id="isbn"></div></div>
+        <div class="code-container"><h3 class="code-title">ISSN</h3><div id="issn"></div></div>
+        <div class="code-container"><h3 class="code-title">EAN-14 (GTIN-14)</h3><div id="ean14"></div></div>
+        <div class="code-container"><h3 class="code-title">EAN-18 (SSCC-18)</h3><div id="ean18"></div></div>
+        <div class="code-container"><h3 class="code-title">EAN-128 (GS1-128)</h3><div id="ean128"></div></div>
+        <div class="code-container"><h3 class="code-title">DataBar (RSS-14)</h3><div id="databar"></div></div>
+        <div class="code-container"><h3 class="code-title">DataBar Spiętrzony (RSS-14 Stacked)</h3><div id="databarstacked"></div></div>
+        <div class="code-container"><h3 class="code-title">DataBar Ograniczony (RSS Limited)</h3><div id="databarlimited"></div></div>
+        <div class="code-container"><h3 class="code-title">Code-32</h3><div id="code32"></div></div>
+        <div class="code-container"><h3 class="code-title">Standard 2 z 5</h3><div id="standard2of5"></div></div>
+        <div class="code-container"><h3 class="code-title">ITF-14</h3><div id="itf14"></div></div>
+        <div class="code-container"><h3 class="code-title">Pharmacode Two Track</h3><div id="pharmacodetwotrack"></div></div>
+        <div class="code-container"><h3 class="code-title">Postnet</h3><div id="postnet"></div></div>
+        <div class="code-container"><h3 class="code-title">Planet</h3><div id="planet"></div></div>
+        <div class="code-container"><h3 class="code-title">Royalmail (RM4SCC)</h3><div id="rm4scc"></div></div>
+        <div class="code-container"><h3 class="code-title">Code 16K</h3><div id="code16k"></div></div>
+        <div class="code-container"><h3 class="code-title">Identcode</h3><div id="identcode"></div></div>
+        <div class="code-container"><h3 class="code-title">Leitcode</h3><div id="leitcode"></div></div>
+        <div class="code-container"><h3 class="code-title">Pharmacode One Track</h3><div id="pharmacodeonetrack"></div></div>
+        <div class="code-container"><h3 class="code-title">Codabar Rationalized</h3><div id="codabarrationalized"></div></div>
+    </div>
+    <script>
+        window.onload = function() {
+            if (typeof bwipjs === 'undefined') {
+                console.error('Biblioteka bwip-js nie załadowała się!');
+                alert('Błąd: bwip-js nie załadowane.');
+                return;
+            }
+            if (typeof QRCode === 'undefined') {
+                console.error('Biblioteka QRCode.js nie załadowała się!');
+                alert('Błąd: QRCode.js nie załadowane.');
+                return;
+            }
+            if (typeof JsBarcode === 'undefined') {
+                console.error('Biblioteka JsBarcode nie załadowała się!');
+                alert('Błąd: JsBarcode nie załadowane.');
+                return;
+            }
+            console.log('Biblioteki załadowane poprawnie.');
+        };
+        function generateCodes() {
+            const cardNumber = document.getElementById('cardNumber').value.trim();
+            
+            if (!cardNumber) {
+                alert('Proszę wprowadzić numer karty!');
+                return;
+            }
+            console.log('Generowanie kodów dla:', cardNumber);
+            function clearElement(id) {
+                const element = document.getElementById(id);
+                element.innerHTML = '';
+            }
+            function clearErrors() {
+                document.querySelectorAll('.error').forEach(el => el.remove());
+            }
+            function saveSvg(svgContent, fileName) {
+                const blob = new Blob([svgContent], { type: 'image/svg+xml' });
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `${fileName}.svg`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
+            }
+            function generateJsBarcode(id, format, text, validation = () => true, errorMessage = `${format} wymaga specyficznego formatu`) {
+                clearElement(id);
+                console.log(`Próba generowania ${format} dla ${text} z JsBarcode`);
+                if (!validation(text)) {
+                    document.getElementById(id).innerHTML = `<span class="error">${errorMessage}</span>`;
+                    console.log(`${format}: Walidacja nieudana - ${errorMessage}`);
+                    return;
+                }
+                try {
+                    const svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                    JsBarcode(svgElement, text, {
+                        format: format.toUpperCase().replace(' ', ''),
+                        width: 2,
+                        height: 100,
+                        displayValue: true,
+                        textColor: '#000000',
+                        lineColor: '#000000',
+                        background: '#FFFFFF'
+                    });
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'code-wrapper';
+                    wrapper.appendChild(svgElement);
+                    const saveButton = document.createElement('button');
+                    saveButton.textContent = 'ZAPISZ';
+                    saveButton.className = 'save-button';
+                    saveButton.onclick = () => {
+                        const highResSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                        JsBarcode(highResSvg, text, {
+                            format: format.toUpperCase().replace(' ', ''),
+                            width: 4,
+                            height: 200,
+                            displayValue: true,
+                            textColor: '#000000',
+                            lineColor: '#000000',
+                            background: '#FFFFFF'
+                        });
+                        highResSvg.setAttribute('width', '1000');
+                        highResSvg.setAttribute('height', highResSvg.getBBox().height);
+                        saveSvg(new XMLSerializer().serializeToString(highResSvg), `${id}_KSGROUP`);
+                    };
+                    wrapper.appendChild(saveButton);
+                    document.getElementById(id).appendChild(wrapper);
+                    console.log(`${format}: Wygenerowano natywne SVG z JsBarcode`);
+                } catch (e) {
+                    document.getElementById(id).innerHTML = `<span class="error">Błąd generowania ${format}: ${e.message}</span>`;
+                    console.error(`${format}: Błąd - ${e.message}`);
+                }
+            }
+            function generateBarcode(id, format, text, validation = () => true, errorMessage = `${format} wymaga specyficznego formatu`) {
+                clearElement(id);
+                console.log(`Próba generowania ${format} dla ${text} z bwip-js`);
+                if (!validation(text)) {
+                    document.getElementById(id).innerHTML = `<span class="error">${errorMessage}</span>`;
+                    console.log(`${format}: Walidacja nieudana - ${errorMessage}`);
+                    return;
+                }
+                try {
+                    const svgString = bwipjs.toBuffer({
+                        bcid: format.toLowerCase().replace(' ', ''),
+                        text: text,
+                        scale: 2,
+                        height: 10,
+                        includetext: true,
+                        textxalign: 'center',
+                        textcolor: '000000',
+                        barcolor: '000000',
+                        backgroundcolor: 'FFFFFF',
+                        format: 'svg' // Generowanie SVG zamiast PNG
+                    });
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'code-wrapper';
+                    wrapper.innerHTML = svgString;
+                    const saveButton = document.createElement('button');
+                    saveButton.textContent = 'ZAPISZ';
+                    saveButton.className = 'save-button';
+                    saveButton.onclick = () => {
+                        const highResSvgString = bwipjs.toBuffer({
+                            bcid: format.toLowerCase().replace(' ', ''),
+                            text: text,
+                            scale: 4,
+                            height: 20,
+                            includetext: true,
+                            textxalign: 'center',
+                            textcolor: '000000',
+                            barcolor: '000000',
+                            backgroundcolor: 'FFFFFF',
+                            format: 'svg'
+                        });
+                        const parser = new DOMParser();
+                        const highResSvgDoc = parser.parseFromString(highResSvgString, 'image/svg+xml');
+                        const highResSvg = highResSvgDoc.documentElement;
+                        const bbox = highResSvg.viewBox.baseVal;
+                        highResSvg.setAttribute('width', '1000');
+                        highResSvg.setAttribute('height', (bbox.height / bbox.width) * 1000); // Zachowanie proporcji
+                        saveSvg(new XMLSerializer().serializeToString(highResSvg), `${id}_KSGROUP`);
+                    };
+                    wrapper.appendChild(saveButton);
+                    document.getElementById(id).appendChild(wrapper);
+                    console.log(`${format}: Wygenerowano natywne SVG z bwip-js`);
+                } catch (e) {
+                    document.getElementById(id).innerHTML = `<span class="error">Błąd generowania ${format}: ${e.message}</span>`;
+                    console.error(`${format}: Błąd - ${e.message}`);
+                }
+            }
+            function generateQRCode(id, text) {
+                clearElement(id);
+                console.log('Próba generowania QR Code');
+                try {
+                    QRCode.toString(text, { 
+                        type: 'svg', 
+                        width: 200, 
+                        margin: 1, 
+                        color: { dark: '#000000', light: '#FFFFFF' }
+                    }, function (error, svg) {
+                        if (error) {
+                            document.getElementById(id).innerHTML = `<span class="error">Błąd generowania QR Code: ${error.message}</span>`;
+                            console.error('QR Code: Błąd - ' + error.message);
+                        } else {
+                            const wrapper = document.createElement('div');
+                            wrapper.className = 'code-wrapper';
+                            wrapper.innerHTML = svg;
+                            const saveButton = document.createElement('button');
+                            saveButton.textContent = 'ZAPISZ';
+                            saveButton.className = 'save-button';
+                            saveButton.onclick = () => {
+                                QRCode.toString(text, { 
+                                    type: 'svg', 
+                                    width: 1000, 
+                                    margin: 1, 
+                                    color: { dark: '#000000', light: '#FFFFFF' }
+                                }, function (error, highResSvg) {
+                                    if (!error) {
+                                        saveSvg(highResSvg, `${id}_KSGROUP`);
+                                    }
+                                });
+                            };
+                            wrapper.appendChild(saveButton);
+                            document.getElementById(id).appendChild(wrapper);
+                            console.log('QR Code: Wygenerowano natywne SVG');
+                        }
+                    });
+                } catch (e) {
+                    document.getElementById(id).innerHTML = `<span class="error">Błąd generowania QR Code: ${e.message}</span>`;
+                    console.error('QR Code: Wyjątek - ' + e.message);
+                }
+            }
+            clearErrors();
+            generateBarcode('aztec', 'azteccode', cardNumber);
+            generateJsBarcode('code39', 'CODE39', cardNumber);
+            generateBarcode('code93', 'code93', cardNumber);
+            generateJsBarcode('code128', 'CODE128', cardNumber);
+            generateJsBarcode('codabar', 'CODABAR', cardNumber);
+            generateBarcode('datamatrix', 'datamatrix', cardNumber);
+            generateJsBarcode('ean8', 'EAN8', cardNumber, (text) => text.length === 8, 'Numer musi mieć 8 cyfr dla EAN8');
+            generateJsBarcode('ean13', 'EAN13', cardNumber, (text) => text.length === 12 || text.length === 13, 'Numer musi mieć 12 lub 13 cyfr dla EAN13');
+            generateJsBarcode('itf', 'ITF', cardNumber, (text) => text.length % 2 === 0, 'Numer musi mieć parzystą liczbę cyfr dla ITF');
+            generateBarcode('pdf417', 'pdf417', cardNumber);
+            generateQRCode('qrcode', cardNumber);
+            generateJsBarcode('upca', 'UPCA', cardNumber, (text) => text.length === 11 || text.length === 12, 'Numer musi mieć 11 lub 12 cyfr dla UPC-A');
+            generateJsBarcode('upce', 'UPCE', cardNumber, (text) => text.length >= 6 && text.length <= 8, 'Numer musi mieć 6-8 cyfr dla UPC-E');
+            generateJsBarcode('msi', 'MSI', cardNumber);
+            generateBarcode('code11', 'code11', cardNumber);
+            generateJsBarcode('isbn', 'EAN13', cardNumber, (text) => text.length === 13 && (text.startsWith('978') || text.startsWith('979')), 'Numer musi mieć 13 cyfr i zaczynać się od 978 lub 979 dla ISBN');
+            generateBarcode('issn', 'ean13', '977' + cardNumber.slice(0, 7) + '00', (text) => text.length >= 8, 'Numer musi mieć co najmniej 8 cyfr dla ISSN');
+            generateBarcode('ean14', 'ean14', '(01)' + cardNumber, (text) => text.length === 13 || text.length === 14, 'Numer musi mieć 13 lub 14 cyfr dla EAN-14');
+            generateBarcode('ean18', 'sscc18', cardNumber, (text) => text.length === 17 || text.length === 18, 'Numer musi mieć 17 lub 18 cyfr dla EAN-18');
+            generateBarcode('ean128', 'gs1-128', '(01)' + cardNumber.padStart(14, '0'), (text) => text.length >= 14, 'Numer musi mieć co najmniej 14 cyfr po (01) dla EAN-128');
+            generateBarcode('databar', 'gs1databar', '(01)' + cardNumber, (text) => text.length <= 14, 'Numer nie może przekraczać 14 cyfr dla DataBar');
+            generateBarcode('databarstacked', 'gs1databarstacked', '(01)' + cardNumber, (text) => text.length <= 14, 'Numer nie może przekraczać 14 cyfr dla DataBar Stacked');
+            generateBarcode('databarlimited', 'databarlimited', cardNumber, (text) => text.length <= 14 && parseInt(text) <= 1999999999999, 'Numer musi mieć max 14 cyfr i być mniejszy niż 2 biliony dla DataBar Limited');
+            generateBarcode('code32', 'code32', cardNumber, (text) => text.length === 9, 'Numer musi mieć 9 cyfr dla Code-32');
+            generateBarcode('standard2of5', 'code2of5', cardNumber);
+            generateBarcode('itf14', 'itf14', cardNumber, (text) => text.length === 14, 'Numer musi mieć 14 cyfr dla ITF-14');
+            generateBarcode('pharmacodetwotrack', 'pharmacode2', cardNumber, (text) => /^[0-1]+$/.test(text), 'Numer musi zawierać tylko 0 i 1 dla Pharmacode Two Track');
+            generateBarcode('postnet', 'postnet', cardNumber, (text) => text.length === 5 || text.length === 9 || text.length === 11, 'Numer musi mieć 5, 9 lub 11 cyfr dla Postnet');
+            generateBarcode('planet', 'planet', cardNumber, (text) => text.length === 11 || text.length === 13, 'Numer musi mieć 11 lub 13 cyfr dla Planet');
+            generateBarcode('rm4scc', 'royalmail', cardNumber);
+            generateBarcode('code16k', 'code16k', cardNumber);
+            generateBarcode('identcode', 'identcode', cardNumber, (text) => text.length === 11 || text.length === 12, 'Numer musi mieć 11 lub 12 cyfr dla Identcode');
+            generateBarcode('leitcode', 'leitcode', cardNumber, (text) => text.length === 13 || text.length === 14, 'Numer musi mieć 13 lub 14 cyfr dla Leitcode');
+            generateBarcode('pharmacodeonetrack', 'pharmacode', cardNumber, (text) => /^[0-1]+$/.test(text), 'Numer musi zawierać tylko 0 i 1 dla Pharmacode One Track');
+            generateJsBarcode('codabarrationalized', 'CODABAR', cardNumber);
+        }
+    </script>
+</body>
+</html>
