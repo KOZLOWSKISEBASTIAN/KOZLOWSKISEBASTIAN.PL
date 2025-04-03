@@ -11,16 +11,18 @@
             font-weight: 300;
             background-color: #000000;
             color: #222222;
+            padding: 20px;
+
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
+            margin: 0 auto;
             transition: background 0.3s;
         }
         .header {
-            width: 100%;
-            position: fixed;
+            max-width: 720px;
+            position: center;
             top: 0;
             left: 0;
             z-index: 3;
@@ -28,6 +30,10 @@
             flex-direction: column;
             align-items: center;
             background-color: #333333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+			
         }
         .search-bar, .sort-bar, .image-link-bar {
             width: 100%;
@@ -43,13 +49,13 @@
         }
         .image-link-bar {
             order: 3;
-            display: none; /* Domyślnie ukryta */
+            display: none;
         }
         .fullscreen-mode .image-link-bar {
-            display: flex; /* Pokazana w trybie pełnoekranowym */
+            display: flex;
         }
         .fullscreen-mode .search-bar, .fullscreen-mode .sort-bar {
-            display: none; /* Ukrycie wyszukiwania i sortowania w trybie pełnoekranowym */
+            display: none;
         }
         .search-bar input, .sort-bar select, .image-link-bar a {
             padding: 8px;
@@ -193,19 +199,10 @@
 <body>
     <div class="header">
         <div class="search-bar">
-            <input type="text" id="search-input" placeholder="Wyszukaj przycisk...">
-        </div>
-        <div class="sort-bar">
-            <select id="sort-select">
-                <option value="default">Domyślne</option>
-                <option value="name-asc">Nazwa (A-Z)</option>
-                <option value="name-desc">Nazwa (Z-A)</option>
-                <option value="usage-desc">Częstotliwość użycia (malejąco)</option>
-                <option value="usage-asc">Częstotliwość użycia (rosnąco)</option>
-            </select>
+            <input type="text" id="search-input" placeholder="WYSZUKAJ KARTĘ">
         </div>
         <div class="image-link-bar">
-            <a id="image-link" href="" target="_blank">Pobierz grafikę</a>
+            <a id="image-link" href="" target="_blank">POBIERZ KARTĘ</a>
         </div>
     </div>
     <div class="container">
@@ -218,13 +215,15 @@
                 <li data-name="CHATA POLSKA" data-usage="0"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
                 </a></li>
+                <li data-name="INTERMARCHE" data-usage="0"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
             </ul>
         </div>
     </div>
     <div class="fullscreen-image">
         <img id="fullscreen-img" src="" alt="Fullscreen Image">
     </div>
-
     <script>
         let isFullscreen = false;
         const fullscreenImage = document.querySelector('.fullscreen-image');
@@ -235,12 +234,9 @@
         const sortSelect = document.getElementById('sort-select');
         const linksList = document.querySelector('.links');
         const linkItems = document.querySelectorAll('.links li');
-
-        // Funkcja sortowania
         function sortButtons(criteria) {
             const itemsArray = Array.from(linkItems);
             let sortedArray;
-
             if (criteria === 'name-asc') {
                 sortedArray = itemsArray.sort((a, b) => 
                     a.getAttribute('data-name').localeCompare(b.getAttribute('data-name')));
@@ -256,23 +252,17 @@
             } else {
                 sortedArray = itemsArray;
             }
-
             sortedArray.forEach(item => linksList.appendChild(item));
         }
-
-        // Obsługa kliknięcia na przyciski
         document.querySelectorAll('.link-btn').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 console.log('Kliknięto przycisk, data-image:', this.getAttribute('data-image'));
-                
                 const parentLi = this.parentElement;
                 let usageCount = Number(parentLi.getAttribute('data-usage')) + 1;
                 parentLi.setAttribute('data-usage', usageCount);
                 console.log('Nowa częstotliwość użycia:', parentLi.getAttribute('data-name'), usageCount);
-
                 isFullscreen = !isFullscreen;
-                
                 if (isFullscreen) {
                     document.body.classList.add('fullscreen-mode');
                     const imageUrl = this.getAttribute('data-image');
@@ -294,8 +284,6 @@
                 }
             });
         });
-
-        // Obsługa kliknięcia na tło w trybie pełnoekranowym
         document.body.addEventListener('click', function(e) {
             if (isFullscreen && (e.target === document.body || e.target === fullscreenImage || e.target === fullscreenImg)) {
                 isFullscreen = false;
@@ -306,7 +294,6 @@
             }
         });
 
-        // Obsługa wyszukiwania
         searchInput.addEventListener('input', function() {
             const searchTerm = this.value.trim().toLowerCase();
             linkItems.forEach(item => {
@@ -317,13 +304,6 @@
                     item.classList.add('hidden');
                 }
             });
-        });
-
-        // Obsługa sortowania
-        sortSelect.addEventListener('change', function() {
-            const sortValue = this.value;
-            console.log('Sortowanie według:', sortValue);
-            sortButtons(sortValue);
         });
     </script>
 </body>
