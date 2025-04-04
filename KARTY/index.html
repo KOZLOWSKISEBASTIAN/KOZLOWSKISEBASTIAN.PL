@@ -307,18 +307,6 @@
             background-color: rgba(0, 0, 0, 0.8);
         }
 
-        .close-modal {
-            color: #FF00FF;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .close-modal:hover {
-            color: #fff;
-        }
-
         #lista-zakupow {
             list-style-type: none;
             padding: 0;
@@ -455,7 +443,6 @@
     
     <div id="lista-zakupow-modal" class="modal">
         <div class="modal-content">
-            <span class="close-modal">&times;</span>
             <div class="input-container">
                 <input type="text" id="nowy-produkt" placeholder="DODAJ NOWY PRODUKT">
                 <div class="modal-buttons-container">
@@ -482,7 +469,6 @@
         const listaKart = document.getElementById('lista-kart');
         const wszystkieKarty = Array.from(listaKart.children);
         const modal = document.getElementById('lista-zakupow-modal');
-        const closeModal = document.querySelector('.close-modal');
         const listaZakupow = document.getElementById('lista-zakupow');
         const dodajDoListyBtn = document.getElementById('dodaj-do-listy');
         const powrotDoKartBtn = document.getElementById('powrot-do-kart');
@@ -606,10 +592,6 @@
             modal.style.display = 'block';
         });
         
-        closeModal.addEventListener('click', function() {
-            modal.style.display = 'none';
-        });
-
         powrotDoKartBtn.addEventListener('click', function() {
             modal.style.display = 'none';
         });
