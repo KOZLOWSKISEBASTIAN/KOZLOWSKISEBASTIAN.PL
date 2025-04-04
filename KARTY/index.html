@@ -33,32 +33,32 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .wyszukiwarka-normal, .wyszukiwarka-fullscreen {
+        .KSGROUP-WYSZUKIWARKA-NORMALNA, .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN {
             display: flex;
             align-items: center;
             width: 80%;
             justify-content: center;
         }
-        .search-bar, .image-link-bar {
+        .KSGROUP-PASEK-WYSZUKIWANIA, .KSGROUP-PASEK-LINKU-OBRAZU {
             width: 80%;
             padding: 5px 0;
             display: flex;
             justify-content: center;
         }
-        .search-bar {
+        .KSGROUP-PASEK-WYSZUKIWANIA {
             order: 1;
         }
-        .image-link-bar {
+        .KSGROUP-PASEK-LINKU-OBRAZU {
             order: 3;
             display: none;
         }
-        .fullscreen-mode .wyszukiwarka-normal {
+        .fullscreen-mode .KSGROUP-WYSZUKIWARKA-NORMALNA {
             display: none;
         }
-        .fullscreen-mode .wyszukiwarka-fullscreen .image-link-bar {
+        .fullscreen-mode .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN .KSGROUP-PASEK-LINKU-OBRAZU {
             display: flex;
         }
-        .search-bar input, .image-link-bar a {
+        .KSGROUP-PASEK-WYSZUKIWANIA input, .KSGROUP-PASEK-LINKU-OBRAZU a {
             padding: 8px;
             font-size: 16px;
             font-family: 'Montserrat', sans-serif;
@@ -71,19 +71,19 @@
             box-sizing: border-box;
             margin: 5px 0;
         }
-        .image-link-bar a {
+        .KSGROUP-PASEK-LINKU-OBRAZU a {
             text-decoration: none;
             color: #fff;
             text-align: center;
             display: block;
         }
         @media (min-width: 769px) {
-            .search-bar input, .image-link-bar a {
+            .KSGROUP-PASEK-WYSZUKIWANIA input, .KSGROUP-PASEK-LINKU-OBRAZU a {
                 width: 300px;
             }
         }
         @media (max-width: 768px) {
-            .search-bar input, .image-link-bar a {
+            .KSGROUP-PASEK-WYSZUKIWANIA input, .KSGROUP-PASEK-LINKU-OBRAZU a {
                 width: 120px;
             }
         }
@@ -205,34 +205,115 @@
                 bottom: 20px;
             }
         }
-        .przelacz-rzadkie {
+        .przelacz-rzadkie, .lista-zakupow-btn {
             cursor: pointer;
-            margin-left: 0px;
+            margin-left: 10px;
             width: 24px;
             height: 24px;
             filter: grayscale(100%) brightness(50%);
             transition: filter 0.3s;
         }
-        .przelacz-rzadkie:hover {
+        .przelacz-rzadkie:hover, .lista-zakupow-btn:hover {
             filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
         }
-        .przelacz-rzadkie.aktywny {
+        .przelacz-rzadkie.aktywny, .lista-zakupow-btn.aktywny {
             filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
+        }
+        .buttons-container {
+            display: flex;
+            align-items: center;
+            margin-left: 10px;
+        }
+        
+        /* Modal listy zakupów */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .modal-content {
+            background-color: #333;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            color: #fff;
+        }
+        .close-modal {
+            color: #FF00FF;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-modal:hover {
+            color: #fff;
+        }
+        #lista-zakupow {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        #lista-zakupow li {
+            padding: 10px;
+            border-bottom: 1px solid #444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #lista-zakupow li:last-child {
+            border-bottom: none;
+        }
+        .usun-z-listy {
+            color: #FF00FF;
+            cursor: pointer;
+        }
+        .usun-z-listy:hover {
+            color: #fff;
+        }
+        #dodaj-do-listy {
+            background-color: #FF00FF;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        #dodaj-do-listy:hover {
+            background-color: #e600e6;
+        }
+        #nowy-produkt {
+            width: 70%;
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+            background-color: #222;
+            color: #fff;
         }
     </style>
 </head>
 <body>
     <div class="header">
         <!-- Wyszukiwarka w trybie normalnym -->
-        <div class="wyszukiwarka-normal">
-            <div class="search-bar">
+        <div class="KSGROUP-WYSZUKIWARKA-NORMALNA">
+            <div class="KSGROUP-PASEK-WYSZUKIWANIA">
                 <input type="text" id="wyszukaj-input" placeholder="WYSZUKAJ KARTĘ">
             </div>
-            <img src="http://kozlowskisebastian.pl/GRAFIKA/ZAMKNIJ.svg" class="przelacz-rzadkie" id="przelacz-rzadkie" title="Pokaż rzadko używane karty">
+            <div class="buttons-container">
+                <img src="http://kozlowskisebastian.pl/GRAFIKA/ZAMKNIJ.svg" class="przelacz-rzadkie" id="przelacz-rzadkie" title="Pokaż rzadko używane karty">
+                <img src="http://kozlowskisebastian.pl/GRAFIKA/ZAMKNIJ.svg" class="lista-zakupow-btn" id="lista-zakupow-btn" title="Lista zakupów">
+            </div>
         </div>
         <!-- Wyszukiwarka w trybie pełnoekranowym -->
-        <div class="wyszukiwarka-fullscreen">
-            <div class="image-link-bar">
+        <div class="KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN">
+            <div class="KSGROUP-PASEK-LINKU-OBRAZU">
                 <a id="image-link" href="" target="_blank">ZAPISZ</a>
             </div>
         </div>
@@ -240,17 +321,17 @@
     <div class="container">
         <div class="row">
             <ul class="karty" id="lista-kart">
-                <li data-name="BIEDRONKA" data-usage="0"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
                 </a></li>
-                <li data-name="CHATA POLSKA" data-usage="0"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
                 </a></li>
-                <li data-name="INTERMARCHE" data-usage="5"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
                 </a></li>
-                <li data-name="INTERMARCHE" data-usage="5"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
                 </a></li>
             </ul>
@@ -259,17 +340,40 @@
     <div class="fullscreen-image">
         <img id="fullscreen-img" src="" alt="Pełny ekran">
     </div>
+    
+    <!-- Modal listy zakupów -->
+    <div id="lista-zakupow-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Lista Zakupów</h2>
+            <div>
+                <input type="text" id="nowy-produkt" placeholder="Dodaj nowy produkt">
+                <button id="dodaj-do-listy">Dodaj</button>
+            </div>
+            <ul id="lista-zakupow"></ul>
+        </div>
+    </div>
+
     <script>
         let pelnyEkran = false;
         let pokazRzadkie = false;
         const fullscreenImage = document.querySelector('.fullscreen-image');
         const fullscreenImg = document.getElementById('fullscreen-img');
         const imageLink = document.getElementById('image-link');
-        const imageLinkBar = document.querySelector('.wyszukiwarka-fullscreen .image-link-bar');
+        const imageLinkBar = document.querySelector('.KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN .KSGROUP-PASEK-LINKU-OBRAZU');
         const wyszukajInput = document.getElementById('wyszukaj-input');
         const przelaczRzadkieBtn = document.getElementById('przelacz-rzadkie');
+        const listaZakupowBtn = document.getElementById('lista-zakupow-btn');
         const listaKart = document.getElementById('lista-kart');
         const wszystkieKarty = Array.from(listaKart.children);
+        const modal = document.getElementById('lista-zakupow-modal');
+        const closeModal = document.querySelector('.close-modal');
+        const listaZakupow = document.getElementById('lista-zakupow');
+        const dodajDoListyBtn = document.getElementById('dodaj-do-listy');
+        const nowyProduktInput = document.getElementById('nowy-produkt');
+        
+        // Inicjalizacja listy zakupów z localStorage
+        let zakupy = JSON.parse(localStorage.getItem('listaZakupow')) || [];
         
         // Oznacz rzadko używane karty (data-usage="0")
         function oznaczRzadkieKarty() {
@@ -311,9 +415,33 @@
             }
         }
         
+        // Wyświetl listę zakupów
+        function wyswietlListeZakupow() {
+            listaZakupow.innerHTML = '';
+            zakupy.forEach((produkt, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    ${produkt}
+                    <span class="usun-z-listy" data-index="${index}">✕</span>
+                `;
+                listaZakupow.appendChild(li);
+            });
+            
+            // Dodaj obsługę usuwania produktów
+            document.querySelectorAll('.usun-z-listy').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    zakupy.splice(index, 1);
+                    localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                    wyswietlListeZakupow();
+                });
+            });
+        }
+        
         // Inicjalizacja
         oznaczRzadkieKarty();
         aktualizujWidocznoscKart();
+        wyswietlListeZakupow();
         
         // Przełącz widoczność rzadko używanych kart
         przelaczRzadkieBtn.addEventListener('click', function() {
@@ -329,6 +457,39 @@
                 }
                 
                 aktualizujWidocznoscKart();
+            }
+        });
+
+        // Otwórz/zamknij modal listy zakupów
+        listaZakupowBtn.addEventListener('click', function() {
+            modal.style.display = 'block';
+        });
+        
+        closeModal.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+        
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // Dodaj nowy produkt do listy
+        dodajDoListyBtn.addEventListener('click', function() {
+            const produkt = nowyProduktInput.value.trim();
+            if (produkt) {
+                zakupy.push(produkt);
+                localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                nowyProduktInput.value = '';
+                wyswietlListeZakupow();
+            }
+        });
+        
+        // Dodawanie produktu po naciśnięciu Enter
+        nowyProduktInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                dodajDoListyBtn.click();
             }
         });
 
