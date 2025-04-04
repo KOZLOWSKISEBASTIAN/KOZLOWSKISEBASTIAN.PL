@@ -104,7 +104,7 @@
             padding: 8px 15px;
             border-radius: 5px;
             font-weight: bold;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
             font-family: 'Montserrat', sans-serif;
             font-size: 16px;
             outline: none;
@@ -116,6 +116,8 @@
 
         .KSGROUP-PASEK-LINKU-OBRAZU a:hover {
             background-color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         .container {
@@ -178,7 +180,7 @@
             color: #FF00FF;
             background: #333333;
             border-radius: 5px;
-            transition: background 0.3s, filter 0.3s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -187,28 +189,42 @@
             min-width: 120px;
             box-sizing: border-box;
             cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .karty a:hover {
             background: #222222;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .karty a:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
         .karty a img {
             max-height: 30px;
             width: auto;
             filter: grayscale(100%) brightness(50%);
-            transition: filter 0.3s;
+            transition: all 0.3s;
             margin-bottom: 5px;
         }
 
         .karty a:hover img {
             filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
+            transform: scale(1.1);
         }
 
         .karty a .nazwa {
             font-size: 12px;
             color: #FF00FF;
             margin-top: 5px;
+            transition: color 0.3s;
+        }
+
+        .karty a:hover .nazwa {
+            color: #ff66ff;
         }
 
         .fullscreen-mode {
@@ -240,11 +256,16 @@
             max-height: 100%;
             transform: rotate(90deg);
             object-fit: contain;
+            transition: transform 0.5s ease;
         }
 
         .fullscreen-mode .fullscreen-image {
             opacity: 1;
             pointer-events: auto;
+        }
+
+        .fullscreen-mode .fullscreen-image img:hover {
+            transform: rotate(90deg) scale(1.05);
         }
 
         .card-number {
@@ -258,10 +279,7 @@
             z-index: 2;
             display: none;
             font-weight: bold;
-        }
-
-        .fullscreen-mode .card-number {
-            display: block;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .buttons-container {
@@ -283,11 +301,12 @@
             font-weight: bold;
             font-family: 'Montserrat', sans-serif;
             font-size: 14px;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
             white-space: nowrap;
             flex: 1;
             box-sizing: border-box;
             text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .przelacz-rzadkie:hover, 
@@ -295,6 +314,16 @@
         .powrot-do-kart:hover,
         .dodaj-produkt:hover {
             background-color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .przelacz-rzadkie:active, 
+        .lista-zakupow-btn:active,
+        .powrot-do-kart:active,
+        .dodaj-produkt:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
         .modal {
@@ -306,6 +335,12 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         #lista-zakupow {
@@ -313,6 +348,23 @@
             padding: 0;
             margin-top: 20px;
             width: 100%;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
         }
 
         #lista-zakupow li {
@@ -327,11 +379,15 @@
             cursor: grab;
             user-select: none;
             touch-action: none;
-            transition: transform 0.1s, background-color 0.2s;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            animation: slideIn 0.3s ease-out forwards;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         #lista-zakupow li:hover {
             background-color: #222;
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         #lista-zakupow li:active {
@@ -340,19 +396,34 @@
         }
 
         #lista-zakupow li.dragging {
-            opacity: 0.8;
-            transform: scale(1.02);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            opacity: 0.9;
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
             background-color: #222;
+            z-index: 10;
         }
 
         #lista-zakupow li.placeholder {
-            background-color: rgba(255, 0, 255, 0.1);
-            border: 1px dashed #FF00FF;
+            background: linear-gradient(90deg, transparent, rgba(255,0,255,0.2), transparent);
+            border: none;
+            height: 3px;
+            margin: 10px 0;
+            padding: 0;
+            border-radius: 3px;
+            animation: none;
         }
 
         #lista-zakupow li:last-child {
             border-bottom: none;
+        }
+
+        .produkt-text {
+            flex-grow: 1;
+            transition: color 0.2s;
+        }
+
+        #lista-zakupow li:hover .produkt-text {
+            color: #ff66ff;
         }
 
         .usun-z-listy {
@@ -361,11 +432,20 @@
             margin-left: 10px;
             padding: 5px;
             font-weight: bold;
-            transition: color 0.2s;
+            transition: all 0.2s;
+        }
+
+        #lista-zakupow li:hover .usun-z-listy {
+            animation: pulse 0.5s ease-in-out;
         }
 
         .usun-z-listy:hover {
             color: #fff;
+            transform: scale(1.2);
+        }
+
+        .usun-z-listy:active {
+            transform: scale(0.9);
         }
 
         .input-container {
@@ -380,6 +460,11 @@
 
         #nowy-produkt {
             flex-grow: 1;
+            transition: all 0.3s;
+        }
+
+        #nowy-produkt:focus {
+            box-shadow: 0 0 0 2px #FF00FF;
         }
 
         .modal-buttons-container {
@@ -403,10 +488,18 @@
             font-weight: bold;
             z-index: 1000;
             display: none;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         #installButton:hover {
             background-color: #cc00cc;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        #installButton:active {
+            transform: scale(0.98);
         }
 
         @media (max-width: 768px) {
@@ -428,6 +521,16 @@
             .buttons-container,
             .modal-buttons-container {
                 max-width: none;
+            }
+            
+            .karty a {
+                height: 70px;
+                min-width: 100px;
+                padding: 8px 12px;
+            }
+            
+            #lista-zakupow li.dragging {
+                transform: scale(1.08);
             }
         }
     </style>
@@ -517,6 +620,12 @@
             e.preventDefault();
             deferredPrompt = e;
             installButton.style.display = 'block';
+            
+            // Animacja przycisku instalacji
+            installButton.style.animation = 'pulse 2s infinite';
+            setTimeout(() => {
+                installButton.style.animation = '';
+            }, 2000);
         });
 
         installButton.addEventListener('click', async () => {
@@ -586,32 +695,39 @@
         function wyswietlListeZakupow() {
             listaZakupow.innerHTML = '';
             zakupy.forEach((produkt, index) => {
-                const li = document.createElement('li');
-                li.setAttribute('data-index', index);
-                li.draggable = true;
-                li.innerHTML = `
-                    <span class="produkt-text">${produkt}</span>
-                    <span class="usun-z-listy" data-index="${index}">✕</span>
-                `;
-                listaZakupow.appendChild(li);
-                
-                // Dodajemy obsługę przeciągania
-                li.addEventListener('dragstart', handleDragStart);
-                li.addEventListener('dragover', handleDragOver);
-                li.addEventListener('dragenter', handleDragEnter);
-                li.addEventListener('dragleave', handleDragLeave);
-                li.addEventListener('dragend', handleDragEnd);
-                li.addEventListener('drop', handleDrop);
-            });
-            
-            document.querySelectorAll('.usun-z-listy').forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const index = parseInt(this.getAttribute('data-index'));
-                    zakupy.splice(index, 1);
-                    localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
-                    wyswietlListeZakupow();
-                });
+                setTimeout(() => {
+                    const li = document.createElement('li');
+                    li.setAttribute('data-index', index);
+                    li.draggable = true;
+                    li.innerHTML = `
+                        <span class="produkt-text">${produkt}</span>
+                        <span class="usun-z-listy" data-index="${index}">✕</span>
+                    `;
+                    listaZakupow.appendChild(li);
+                    
+                    // Dodajemy obsługę przeciągania
+                    li.addEventListener('dragstart', handleDragStart);
+                    li.addEventListener('dragover', handleDragOver);
+                    li.addEventListener('dragenter', handleDragEnter);
+                    li.addEventListener('dragleave', handleDragLeave);
+                    li.addEventListener('dragend', handleDragEnd);
+                    li.addEventListener('drop', handleDrop);
+                    
+                    // Dodajemy obsługę kliknięcia usuwania
+                    li.querySelector('.usun-z-listy').addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const index = parseInt(this.getAttribute('data-index'));
+                        zakupy.splice(index, 1);
+                        localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                        
+                        // Animacja usuwania
+                        li.style.transform = 'translateX(100%)';
+                        li.style.opacity = '0';
+                        setTimeout(() => {
+                            wyswietlListeZakupow();
+                        }, 300);
+                    });
+                }, index * 50);
             });
         }
 
@@ -624,7 +740,12 @@
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text/html', this.innerHTML);
             
-            // Dodajemy klasę podczas przeciągania
+            if ('ontouchstart' in window) {
+                this.style.transform = 'scale(1.05)';
+                this.style.boxShadow = '0 5px 20px rgba(0,0,0,0.4)';
+                this.style.transition = 'none';
+            }
+
             setTimeout(() => {
                 this.classList.add('dragging');
             }, 0);
@@ -680,6 +801,12 @@
         function handleDragEnd() {
             this.classList.remove('dragging');
             
+            if ('ontouchstart' in window) {
+                this.style.transform = '';
+                this.style.boxShadow = '';
+                this.style.transition = 'all 0.3s';
+            }
+            
             // Usuwamy placeholder jeśli istnieje
             if (placeholder && placeholder.parentNode) {
                 placeholder.parentNode.removeChild(placeholder);
@@ -729,8 +856,10 @@
                 
                 if (pokazRzadkie) {
                     document.body.classList.add('pokaz-rzadkie');
+                    this.style.backgroundColor = '#333';
                 } else {
                     document.body.classList.remove('pokaz-rzadkie');
+                    this.style.backgroundColor = '#222';
                 }
                 
                 aktualizujWidocznoscKart();
@@ -739,10 +868,20 @@
 
         listaZakupowBtn.addEventListener('click', function() {
             modal.style.display = 'block';
+            // Animacja przycisku
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
         });
         
         powrotDoKartBtn.addEventListener('click', function() {
             modal.style.display = 'none';
+            // Animacja przycisku
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
         });
         
         window.addEventListener('click', function(event) {
@@ -757,7 +896,20 @@
                 zakupy.push(produkt);
                 localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
                 nowyProduktInput.value = '';
+                
+                // Animacja przycisku
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+                
                 wyswietlListeZakupow();
+            } else {
+                // Animacja błędu
+                nowyProduktInput.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    nowyProduktInput.style.animation = '';
+                }, 500);
             }
         });
         
@@ -771,6 +923,7 @@
             if (this.value.trim() !== '') {
                 document.body.classList.remove('pokaz-rzadkie');
                 pokazRzadkie = false;
+                przelaczRzadkieBtn.style.backgroundColor = '#222';
             }
             aktualizujWidocznoscKart();
         });
@@ -813,6 +966,17 @@
                 cardNumberElement.textContent = '';
             }
         });
+
+        // Animacja shake dla błędów
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                20%, 60% { transform: translateX(-5px); }
+                40%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
 
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
