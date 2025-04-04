@@ -33,13 +33,13 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .wyszukiwarka {
+        .wyszukiwarka-normal, .wyszukiwarka-fullscreen {
             display: flex;
             align-items: center;
             width: 80%;
             justify-content: center;
         }
-        .search-bar, .sort-bar, .image-link-bar {
+        .search-bar, .image-link-bar {
             width: 80%;
             padding: 5px 0;
             display: flex;
@@ -48,20 +48,17 @@
         .search-bar {
             order: 1;
         }
-        .sort-bar {
-            order: 2;
-        }
         .image-link-bar {
             order: 3;
             display: none;
         }
-        .fullscreen-mode .image-link-bar {
-            display: flex;
-        }
-        .fullscreen-mode .search-bar, .fullscreen-mode .sort-bar {
+        .fullscreen-mode .wyszukiwarka-normal {
             display: none;
         }
-        .search-bar input, .sort-bar select, .image-link-bar a {
+        .fullscreen-mode .wyszukiwarka-fullscreen .image-link-bar {
+            display: flex;
+        }
+        .search-bar input, .image-link-bar a {
             padding: 8px;
             font-size: 16px;
             font-family: 'Montserrat', sans-serif;
@@ -81,12 +78,12 @@
             display: block;
         }
         @media (min-width: 769px) {
-            .search-bar input, .sort-bar select, .image-link-bar a {
+            .search-bar input, .image-link-bar a {
                 width: 300px;
             }
         }
         @media (max-width: 768px) {
-            .search-bar input, .sort-bar select, .image-link-bar a {
+            .search-bar input, .image-link-bar a {
                 width: 120px;
             }
         }
@@ -226,14 +223,18 @@
 </head>
 <body>
     <div class="header">
-        <div class="wyszukiwarka">
+        <!-- Wyszukiwarka w trybie normalnym -->
+        <div class="wyszukiwarka-normal">
             <div class="search-bar">
                 <input type="text" id="wyszukaj-input" placeholder="WYSZUKAJ KARTĘ">
             </div>
             <img src="http://kozlowskisebastian.pl/GRAFIKA/ZAMKNIJ.svg" class="przelacz-rzadkie" id="przelacz-rzadkie" title="Pokaż rzadko używane karty">
         </div>
-        <div class="image-link-bar">
-            <a id="image-link" href="" target="_blank">ZAPISZ</a>
+        <!-- Wyszukiwarka w trybie pełnoekranowym -->
+        <div class="wyszukiwarka-fullscreen">
+            <div class="image-link-bar">
+                <a id="image-link" href="" target="_blank">ZAPISZ</a>
+            </div>
         </div>
     </div>
     <div class="container">
@@ -264,7 +265,7 @@
         const fullscreenImage = document.querySelector('.fullscreen-image');
         const fullscreenImg = document.getElementById('fullscreen-img');
         const imageLink = document.getElementById('image-link');
-        const imageLinkBar = document.querySelector('.image-link-bar');
+        const imageLinkBar = document.querySelector('.wyszukiwarka-fullscreen .image-link-bar');
         const wyszukajInput = document.getElementById('wyszukaj-input');
         const przelaczRzadkieBtn = document.getElementById('przelacz-rzadkie');
         const listaKart = document.getElementById('lista-kart');
@@ -286,19 +287,21 @@
             const fraza = wyszukajInput.value.trim().toLowerCase();
             
             if (fraza !== '') {
-                // Tryb wyszukiwania - pokaż wszystkie pasujące karty
                 wszystkieKarty.forEach(karta => {
                     const nazwa = karta.getAttribute('data-name').toLowerCase();
                     const czyPasuje = nazwa.includes(fraza);
                     
-                    // Tymczasowo pokaż wszystkie pasujące karty
-                    karta.style.display = czyPasuje ? 'block' : 'none';
-                    karta.classList.remove('ukryta');
+                    if (czyPasuje) {
+                        karta.style.display = 'block';
+                        karta.classList.remove('ukryta');
+                    } else {
+                        karta.style.display = 'none';
+                        karta.classList.add('ukryta');
+                    }
                 });
             } else {
-                // Tryb normalny - zastosuj standardowe filtry
                 wszystkieKarty.forEach(karta => {
-                    karta.style.display = ''; // Resetuj styl display
+                    karta.style.display = '';
                     if (pokazRzadkie) {
                         karta.classList.toggle('ukryta', !karta.classList.contains('rzadko-uzywana'));
                     } else {
@@ -312,7 +315,7 @@
         oznaczRzadkieKarty();
         aktualizujWidocznoscKart();
         
-        // Przełącz widoczność rzadko używanych kart (tylko gdy wyszukiwanie jest puste)
+        // Przełącz widoczność rzadko używanych kart
         przelaczRzadkieBtn.addEventListener('click', function() {
             if (wyszukajInput.value.trim() === '') {
                 pokazRzadkie = !pokazRzadkie;
@@ -331,7 +334,6 @@
 
         // Obsługa wyszukiwania
         wyszukajInput.addEventListener('input', function() {
-            // Wyłącz tryb rzadko używanych podczas wyszukiwania
             if (this.value.trim() !== '') {
                 document.body.classList.remove('pokaz-rzadkie');
                 przelaczRzadkieBtn.classList.remove('aktywny');
@@ -345,7 +347,6 @@
             link.addEventListener('click', function(e) {
                 e.preventDefault();
                 
-                // Pełnoekranowy podgląd
                 pelnyEkran = !pelnyEkran;
                 if (pelnyEkran) {
                     document.body.classList.add('fullscreen-mode');
