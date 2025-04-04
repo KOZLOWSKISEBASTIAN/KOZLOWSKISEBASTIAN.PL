@@ -300,11 +300,7 @@
             background-color: #333;
         }
 
-        .przelacz-rzadkie.aktywny, .lista-zakupow-btn.aktywny {
-            background-color: #333;
-            color: #FF00FF;
-        }
-
+        /* Usunięto klasę .aktywny dla przycisku INNE */
         .buttons-container {
             display: flex;
             align-items: center;
@@ -421,7 +417,7 @@
                 <input type="text" id="wyszukaj-input" placeholder="WYSZUKAJ KARTĘ">
             </div>
             <div class="buttons-container">
-                <button class="przelacz-rzadkie" id="przelacz-rzadkie" title="Pokaż rzadko używane karty">RZADKIE</button>
+                <button class="przelacz-rzadkie" id="przelacz-rzadkie" title="Pokaż inne karty">INNE</button>
                 <button class="lista-zakupow-btn" id="lista-zakupow-btn" title="Lista zakupów">LISTA</button>
             </div>
         </div>
@@ -595,10 +591,8 @@
                 
                 if (pokazRzadkie) {
                     document.body.classList.add('pokaz-rzadkie');
-                    przelaczRzadkieBtn.classList.add('aktywny');
                 } else {
                     document.body.classList.remove('pokaz-rzadkie');
-                    przelaczRzadkieBtn.classList.remove('aktywny');
                 }
                 
                 aktualizujWidocznoscKart();
@@ -638,7 +632,6 @@
         wyszukajInput.addEventListener('input', function() {
             if (this.value.trim() !== '') {
                 document.body.classList.remove('pokaz-rzadkie');
-                przelaczRzadkieBtn.classList.remove('aktywny');
                 pokazRzadkie = false;
             }
             aktualizujWidocznoscKart();
