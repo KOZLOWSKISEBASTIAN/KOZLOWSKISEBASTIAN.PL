@@ -21,6 +21,7 @@
         }
         .header {
             max-width: 80%;
+            width: 100%;
             position: center;
             top: 0;
             left: 0;
@@ -33,6 +34,7 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             transition: background-color 0.3s;
+            margin-bottom: 20px;
         }
         .fullscreen-mode .header {
             background-color: transparent !important;
@@ -41,11 +43,11 @@
         .KSGROUP-WYSZUKIWARKA-NORMALNA, .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN {
             display: flex;
             align-items: center;
-            width: 80%;
+            width: 100%;
             justify-content: center;
         }
         .KSGROUP-PASEK-WYSZUKIWANIA, .KSGROUP-PASEK-LINKU-OBRAZU {
-            width: 80%;
+            width: 100%;
             padding: 5px 0;
             display: flex;
             justify-content: center;
@@ -72,7 +74,7 @@
             background-color: #222;
             color: #fff;
             outline: none;
-            width: 80%;
+            width: 100%;
             box-sizing: border-box;
             margin: 5px 0;
         }
@@ -89,7 +91,7 @@
             font-family: 'Montserrat', sans-serif;
             font-size: 16px;
             outline: none;
-            width: 80%;
+            width: 100%;
             box-sizing: border-box;
             margin: 5px 0;
         }
@@ -98,12 +100,19 @@
         }
         @media (min-width: 769px) {
             .KSGROUP-PASEK-WYSZUKIWANIA input, .KSGROUP-PASEK-LINKU-OBRAZU a {
-                width: 300px;
+                max-width: 500px;
+            }
+            .header {
+                max-width: 800px;
             }
         }
         @media (max-width: 768px) {
             .KSGROUP-PASEK-WYSZUKIWANIA input, .KSGROUP-PASEK-LINKU-OBRAZU a {
-                width: 120px;
+                width: 100%;
+            }
+            .header {
+                width: calc(100% - 40px);
+                padding: 15px;
             }
         }
         .container {
@@ -111,10 +120,11 @@
             flex-direction: column;
             align-items: center;
             width: 80%;
+            max-width: 800px;
             transition: opacity 0.3s;
             position: relative;
             z-index: 2;
-            margin-top: 120px;
+            margin-top: 20px;
         }
         .fullscreen-mode .container {
             opacity: 0;
@@ -272,22 +282,18 @@
         }
         .modal-content {
             background-color: #333;
-            margin: 10% auto;
+            margin: 20px auto;
             padding: 20px;
             border-radius: 8px;
             color: #FF00FF;
-        }
-        @media (min-width: 769px) {
-            .modal-content {
-                width: 80%;
-                max-width: 800px;
-                margin: 5% auto;
-            }
+            width: 80%;
+            max-width: 800px;
+            box-sizing: border-box;
         }
         @media (max-width: 768px) {
             .modal-content {
-                width: calc(100% - 20px);
-                margin: 10px auto;
+                width: calc(100% - 40px);
+                margin: 20px auto;
                 padding: 15px;
             }
         }
@@ -332,17 +338,24 @@
             cursor: pointer;
             margin-top: 10px;
             font-weight: bold;
+            white-space: nowrap;
         }
         #dodaj-do-listy:hover {
             background-color: #333;
         }
         #nowy-produkt {
-            width: 70%;
+            width: 100%;
             padding: 8px;
             border-radius: 5px;
             border: none;
             background-color: #222;
             color: #FF00FF;
+            box-sizing: border-box;
+        }
+        .input-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -396,7 +409,7 @@
         <div class="modal-content">
             <span class="close-modal">&times;</span>
             <h2>LISTA ZAKUPÓW</h2>
-            <div>
+            <div class="input-container">
                 <input type="text" id="nowy-produkt" placeholder="DODAJ NOWY PRODUKT">
                 <button id="dodaj-do-listy">DODAJ</button>
             </div>
