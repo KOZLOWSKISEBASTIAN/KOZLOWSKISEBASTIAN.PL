@@ -178,7 +178,7 @@
             top: 130px;
             left: 50px;
             right: 50px;
-            bottom: 130px;
+            bottom: 160px;
             z-index: 1;
             opacity: 0;
             transition: opacity 0.3s;
@@ -197,12 +197,27 @@
             opacity: 1;
             pointer-events: auto;
         }
+        .card-number {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: #000;
+            font-size: 18px;
+            z-index: 2;
+            display: none;
+            font-weight: bold;
+        }
+        .fullscreen-mode .card-number {
+            display: block;
+        }
         @media (max-width: 768px) {
             .fullscreen-image {
                 top: 20px;
                 left: 20px;
                 right: 20px;
-                bottom: 20px;
+                bottom: 100px;
             }
         }
         .przelacz-rzadkie, .lista-zakupow-btn {
@@ -225,7 +240,7 @@
             margin-left: 10px;
         }
         
-        /* Modal listy zakupów - ZMIENIONE KOLORY */
+        /* Modal listy zakupów */
         .modal {
             display: none;
             position: fixed;
@@ -243,7 +258,7 @@
             border-radius: 8px;
             width: 80%;
             max-width: 500px;
-            color: #FF00FF; /* Kolor tekstu zmieniony na #FF00FF */
+            color: #FF00FF;
         }
         .close-modal {
             color: #FF00FF;
@@ -278,8 +293,8 @@
             color: #fff;
         }
         #dodaj-do-listy {
-            background-color: #333; /* Kolor przycisku zmieniony na #333 */
-            color: #FF00FF; /* Kolor tekstu na przycisku zmieniony na #FF00FF */
+            background-color: #222;
+            color: #FF00FF;
             border: none;
             padding: 8px 15px;
             border-radius: 5px;
@@ -288,7 +303,7 @@
             font-weight: bold;
         }
         #dodaj-do-listy:hover {
-            background-color: #444; /* Nieco jaśniejszy odcień na hover */
+            background-color: #333;
         }
         #nowy-produkt {
             width: 70%;
@@ -296,7 +311,7 @@
             border-radius: 5px;
             border: none;
             background-color: #222;
-            color: #FF00FF; /* Kolor tekstu w polu input zmieniony na #FF00FF */
+            color: #FF00FF;
         }
     </style>
 </head>
@@ -322,17 +337,17 @@
     <div class="container">
         <div class="row">
             <ul class="karty" id="lista-kart">
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
                 </a></li>
-                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
                 </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
                 </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
                 </a></li>
             </ul>
@@ -341,15 +356,16 @@
     <div class="fullscreen-image">
         <img id="fullscreen-img" src="" alt="Pełny ekran">
     </div>
+    <div class="card-number" id="card-number"></div>
     
     <!-- Modal listy zakupów -->
     <div id="lista-zakupow-modal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
-            <h2>Lista Zakupów</h2>
+            <h2>LISTA ZAKUPÓW</h2>
             <div>
-                <input type="text" id="nowy-produkt" placeholder="Dodaj nowy produkt">
-                <button id="dodaj-do-listy">Dodaj</button>
+                <input type="text" id="nowy-produkt" placeholder="DODAJ NOWY PRODUKT">
+                <button id="dodaj-do-listy">DODAJ</button>
             </div>
             <ul id="lista-zakupow"></ul>
         </div>
@@ -372,9 +388,21 @@
         const listaZakupow = document.getElementById('lista-zakupow');
         const dodajDoListyBtn = document.getElementById('dodaj-do-listy');
         const nowyProduktInput = document.getElementById('nowy-produkt');
+        const cardNumberElement = document.getElementById('card-number');
         
         // Inicjalizacja listy zakupów z localStorage
         let zakupy = JSON.parse(localStorage.getItem('listaZakupow')) || [];
+        
+        // Funkcja do wyciągania numeru karty z klasy
+        function getCardNumber(element) {
+            const classList = element.parentElement.classList;
+            for (let className of classList) {
+                if (/^\d+$/.test(className)) {
+                    return className;
+                }
+            }
+            return 'BRAK NUMERU';
+        }
         
         // Oznacz rzadko używane karty (data-usage="0")
         function oznaczRzadkieKarty() {
@@ -516,14 +544,21 @@
                     fullscreenImg.src = imageUrl;
                     imageLink.href = imageUrl;
                     imageLinkBar.style.display = 'flex';
+                    
+                    // Pobierz numer karty z klasy
+                    const cardNumber = getCardNumber(this);
+                    cardNumberElement.textContent = `${cardNumber}`;
+                    
                     fullscreenImg.onerror = () => {
                         fullscreenImg.src = 'https://via.placeholder.com/800x600?text=Obraz+niedostępny';
                         imageLink.href = fullscreenImg.src;
+                        cardNumberElement.textContent = 'BRAK NUMERU KARTY';
                     };
                 } else {
                     document.body.classList.remove('fullscreen-mode');
                     fullscreenImg.src = '';
                     imageLinkBar.style.display = 'none';
+                    cardNumberElement.textContent = '';
                 }
             });
         });
@@ -535,6 +570,7 @@
                 document.body.classList.remove('fullscreen-mode');
                 fullscreenImg.src = '';
                 imageLinkBar.style.display = 'none';
+                cardNumberElement.textContent = '';
             }
         });
     </script>
