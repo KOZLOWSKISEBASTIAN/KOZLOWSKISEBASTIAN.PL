@@ -26,7 +26,7 @@
 
         .header, .modal-content {
             width: calc(100% - 40px);
-            max-width: 500px;
+            max-width: 520px;
             margin: 10px auto;
             background-color: #333333;
             padding: 10px 15px;
@@ -336,6 +336,7 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.8);
             animation: fadeIn 0.3s;
+            overflow-y: auto;
         }
 
         @keyframes fadeIn {
@@ -343,11 +344,39 @@
             to { opacity: 1; }
         }
 
+        .modal-content {
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+        }
+
         #lista-zakupow {
             list-style-type: none;
             padding: 0;
             margin-top: 20px;
             width: 100%;
+            overflow-y: auto;
+            flex-grow: 1;
+            max-height: calc(80vh - 150px);
+        }
+
+        /* Stylowanie paska przewijania */
+        #lista-zakupow::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #lista-zakupow::-webkit-scrollbar-track {
+            background: #222;
+            border-radius: 4px;
+        }
+
+        #lista-zakupow::-webkit-scrollbar-thumb {
+            background: #FF00FF;
+            border-radius: 4px;
+        }
+
+        #lista-zakupow::-webkit-scrollbar-thumb:hover {
+            background: #ff66ff;
         }
 
         @keyframes slideIn {
@@ -513,6 +542,14 @@
             .header, .modal-content, .container {
                 width: calc(100% - 40px);
                 padding: 12px;
+            }
+            
+            .modal-content {
+                max-height: 90vh;
+            }
+            
+            #lista-zakupow {
+                max-height: calc(90vh - 150px);
             }
             
             .KSGROUP-PASEK-WYSZUKIWANIA input,
