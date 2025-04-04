@@ -10,43 +10,60 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 720px;
+            max-width: 420px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 10px;
             background: #000000;
             color: #FF00FF;
         }
         .container {
             background: #333333;
-            padding: 20px;
+            padding: 10px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .input-section {
-            margin-bottom: 20px;
+            margin-bottom: 0px;
         }
         input[type="text"] {
             width: 100%;
             padding: 10px;
             margin: 10px 0;
-            border: 1px solid #ddd;
+            border: 0px solid #222;
             border-radius: 4px;
             box-sizing: border-box;
-            background: #fff;
-            color: #000;
-        }
-        button {
-            background: #333333;
+            background: #222;
             color: #FF00FF;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 100%;
         }
-        button:hover {
+    button {
+        background: #333333;
+        color: #FF00FF;
+        border: none;
+        padding: 10px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+        box-sizing: border-box;
+    }
+            button:hover {
             background: #222222;
         }
+    .save-button {
+        background: #333333;
+        color: #FF00FF;
+        margin-top: 10px;
+        padding: 10px 10px;
+        width: 100%;
+        display: block;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        box-sizing: border-box;
+    }
+        .save-button:hover {
+            background: #222222;
+        }
+
         .code-container {
             margin: 20px 0;
             text-align: center;
@@ -54,6 +71,7 @@
         .code-title {
             color: #FF00FF;
             margin: 10px 0;
+            text-transform: uppercase;
         }
         .error {
             color: #FF0000;
@@ -63,31 +81,37 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            background: #333333;
+            padding: 10px;
+            border-radius: 4px;
+            width: 100%;
+            box-sizing: border-box;
         }
         svg {
             max-width: 100%;
             height: auto;
-        }
-        .save-button {
             background: #333333;
-            color: #FF00FF;
-            margin-top: 10px;
-            padding: 8px 16px;
+        }
+        .barcode-svg {
             width: auto;
-            display: block;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
+            height: auto;
+            max-height: 150px;
+            background: white;
         }
-        .save-button:hover {
-            background: #222222;
+        .qrcode-svg {
+            width: auto;
+            height: auto;
+            max-width: 200px;
+            max-height: 200px;
+            background: white;
         }
+
         @media (max-width: 600px) {
             body {
                 padding: 10px;
             }
             .container {
-                padding: 15px;
+                padding: 10px;
             }
         }
     </style>
@@ -95,48 +119,47 @@
 <body>
     <div class="container">
         <h1><center>GENERATOR KODÓW</center></h1>
-		<h2><center>DO PLIKU WEKTOROWEGO SVG</center></h2>
         <div class="input-section">
-            <input type="text" id="cardNumber" value="9956428594335" placeholder="WPROWADŹ NUMER KARTY">
-            <button onclick="generateCodes()">Generuj</button>
+            <input type="text" id="cardNumber" value="" placeholder="WPROWADŹ NUMER KARTY">
+            <button onclick="generateCodes()">GENERUJ</button>
         </div>
       </div>
       <div>
-        <div class="code-container"><h3 class="code-title">Aztec</h3><div id="aztec"></div></div>
-        <div class="code-container"><h3 class="code-title">Code 39</h3><div id="code39"></div></div>
-        <div class="code-container"><h3 class="code-title">Code 93</h3><div id="code93"></div></div>
-        <div class="code-container"><h3 class="code-title">Code 128</h3><div id="code128"></div></div>
-        <div class="code-container"><h3 class="code-title">Codabar</h3><div id="codabar"></div></div>
-        <div class="code-container"><h3 class="code-title">Data Matrix</h3><div id="datamatrix"></div></div>
+        <div class="code-container"><h3 class="code-title">AZTEC</h3><div id="aztec"></div></div>
+        <div class="code-container"><h3 class="code-title">CODE 39</h3><div id="code39"></div></div>
+        <div class="code-container"><h3 class="code-title">CODE 93</h3><div id="code93"></div></div>
+        <div class="code-container"><h3 class="code-title">CODE 128</h3><div id="code128"></div></div>
+        <div class="code-container"><h3 class="code-title">CODABAR</h3><div id="codabar"></div></div>
+        <div class="code-container"><h3 class="code-title">DATA MATRIX</h3><div id="datamatrix"></div></div>
         <div class="code-container"><h3 class="code-title">EAN 8</h3><div id="ean8"></div></div>
         <div class="code-container"><h3 class="code-title">EAN 13</h3><div id="ean13"></div></div>
-        <div class="code-container"><h3 class="code-title">ITF (Przeplatany 2 z 5)</h3><div id="itf"></div></div>
+        <div class="code-container"><h3 class="code-title">ITF (PRZEPLATANY 2 Z 5)</h3><div id="itf"></div></div>
         <div class="code-container"><h3 class="code-title">PDF 417</h3><div id="pdf417"></div></div>
-        <div class="code-container"><h3 class="code-title">QR Code</h3><div id="qrcode"></div></div>
+        <div class="code-container"><h3 class="code-title">QR CODE</h3><div id="qrcode"></div></div>
         <div class="code-container"><h3 class="code-title">UPC A</h3><div id="upca"></div></div>
         <div class="code-container"><h3 class="code-title">UPC E</h3><div id="upce"></div></div>
-        <div class="code-container"><h3 class="code-title">MSI Plessey</h3><div id="msi"></div></div>
-        <div class="code-container"><h3 class="code-title">Code 11</h3><div id="code11"></div></div>
+        <div class="code-container"><h3 class="code-title">MSI PLESSEY</h3><div id="msi"></div></div>
+        <div class="code-container"><h3 class="code-title">CODE 11</h3><div id="code11"></div></div>
         <div class="code-container"><h3 class="code-title">ISBN</h3><div id="isbn"></div></div>
         <div class="code-container"><h3 class="code-title">ISSN</h3><div id="issn"></div></div>
         <div class="code-container"><h3 class="code-title">EAN-14 (GTIN-14)</h3><div id="ean14"></div></div>
         <div class="code-container"><h3 class="code-title">EAN-18 (SSCC-18)</h3><div id="ean18"></div></div>
         <div class="code-container"><h3 class="code-title">EAN-128 (GS1-128)</h3><div id="ean128"></div></div>
-        <div class="code-container"><h3 class="code-title">DataBar (RSS-14)</h3><div id="databar"></div></div>
-        <div class="code-container"><h3 class="code-title">DataBar Spiętrzony (RSS-14 Stacked)</h3><div id="databarstacked"></div></div>
-        <div class="code-container"><h3 class="code-title">DataBar Ograniczony (RSS Limited)</h3><div id="databarlimited"></div></div>
-        <div class="code-container"><h3 class="code-title">Code-32</h3><div id="code32"></div></div>
-        <div class="code-container"><h3 class="code-title">Standard 2 z 5</h3><div id="standard2of5"></div></div>
+        <div class="code-container"><h3 class="code-title">DATABAR (RSS-14)</h3><div id="databar"></div></div>
+        <div class="code-container"><h3 class="code-title">DATABAR SPIĘTRZONY (RSS-14 STACKED)</h3><div id="databarstacked"></div></div>
+        <div class="code-container"><h3 class="code-title">DATABAR OGRANICZONY (RSS LIMITED)</h3><div id="databarlimited"></div></div>
+        <div class="code-container"><h3 class="code-title">CODE-32</h3><div id="code32"></div></div>
+        <div class="code-container"><h3 class="code-title">STANDARD 2 Z 5</h3><div id="standard2of5"></div></div>
         <div class="code-container"><h3 class="code-title">ITF-14</h3><div id="itf14"></div></div>
-        <div class="code-container"><h3 class="code-title">Pharmacode Two Track</h3><div id="pharmacodetwotrack"></div></div>
-        <div class="code-container"><h3 class="code-title">Postnet</h3><div id="postnet"></div></div>
-        <div class="code-container"><h3 class="code-title">Planet</h3><div id="planet"></div></div>
-        <div class="code-container"><h3 class="code-title">Royalmail (RM4SCC)</h3><div id="rm4scc"></div></div>
-        <div class="code-container"><h3 class="code-title">Code 16K</h3><div id="code16k"></div></div>
-        <div class="code-container"><h3 class="code-title">Identcode</h3><div id="identcode"></div></div>
-        <div class="code-container"><h3 class="code-title">Leitcode</h3><div id="leitcode"></div></div>
-        <div class="code-container"><h3 class="code-title">Pharmacode One Track</h3><div id="pharmacodeonetrack"></div></div>
-        <div class="code-container"><h3 class="code-title">Codabar Rationalized</h3><div id="codabarrationalized"></div></div>
+        <div class="code-container"><h3 class="code-title">PHARMACODE TWO TRACK</h3><div id="pharmacodetwotrack"></div></div>
+        <div class="code-container"><h3 class="code-title">POSTNET</h3><div id="postnet"></div></div>
+        <div class="code-container"><h3 class="code-title">PLANET</h3><div id="planet"></div></div>
+        <div class="code-container"><h3 class="code-title">ROYALMAIL (RM4SCC)</h3><div id="rm4scc"></div></div>
+        <div class="code-container"><h3 class="code-title">CODE 16K</h3><div id="code16k"></div></div>
+        <div class="code-container"><h3 class="code-title">IDENTCODE</h3><div id="identcode"></div></div>
+        <div class="code-container"><h3 class="code-title">LEITCODE</h3><div id="leitcode"></div></div>
+        <div class="code-container"><h3 class="code-title">PHARMACODE ONE TRACK</h3><div id="pharmacodeonetrack"></div></div>
+        <div class="code-container"><h3 class="code-title">CODABAR RATIONALIZED</h3><div id="codabarrationalized"></div></div>
     </div>
     <script>
         window.onload = function() {
@@ -161,7 +184,7 @@
             const cardNumber = document.getElementById('cardNumber').value.trim();
             
             if (!cardNumber) {
-                alert('Proszę wprowadzić numer karty!');
+                alert('PROSZĘ WPROWADZIĆ NUMER KARTY!');
                 return;
             }
             console.log('Generowanie kodów dla:', cardNumber);
@@ -183,7 +206,7 @@
                 document.body.removeChild(link);
                 URL.revokeObjectURL(url);
             }
-            function generateJsBarcode(id, format, text, validation = () => true, errorMessage = `${format} wymaga specyficznego formatu`) {
+            function generateJsBarcode(id, format, text, validation = () => true, errorMessage = `${format} WYMAGA SPECYFICZNEGO FORMATU`) {
                 clearElement(id);
                 console.log(`Próba generowania ${format} dla ${text} z JsBarcode`);
                 if (!validation(text)) {
@@ -196,12 +219,15 @@
                     JsBarcode(svgElement, text, {
                         format: format.toUpperCase().replace(' ', ''),
                         width: 2,
-                        height: 100,
+                        height: 50,
                         displayValue: true,
                         textColor: '#000000',
                         lineColor: '#000000',
-                        background: '#FFFFFF'
+                        background: '#ffffff'
                     });
+                    
+                    svgElement.classList.add('barcode-svg');
+                    
                     const wrapper = document.createElement('div');
                     wrapper.className = 'code-wrapper';
                     wrapper.appendChild(svgElement);
@@ -213,25 +239,24 @@
                         JsBarcode(highResSvg, text, {
                             format: format.toUpperCase().replace(' ', ''),
                             width: 4,
-                            height: 200,
+                            height: 100,
                             displayValue: true,
                             textColor: '#000000',
                             lineColor: '#000000',
-                            background: '#FFFFFF'
+                            background: '#ffffff'
                         });
-                        highResSvg.setAttribute('width', '1000');
-                        highResSvg.setAttribute('height', highResSvg.getBBox().height);
+                        
                         saveSvg(new XMLSerializer().serializeToString(highResSvg), `${id}_KSGROUP`);
                     };
                     wrapper.appendChild(saveButton);
                     document.getElementById(id).appendChild(wrapper);
                     console.log(`${format}: Wygenerowano natywne SVG z JsBarcode`);
                 } catch (e) {
-                    document.getElementById(id).innerHTML = `<span class="error">Błąd generowania ${format}: ${e.message}</span>`;
+                    document.getElementById(id).innerHTML = `<span class="error">BŁĄD GENEROWANIA ${format}: ${e.message}</span>`;
                     console.error(`${format}: Błąd - ${e.message}`);
                 }
             }
-            function generateBarcode(id, format, text, validation = () => true, errorMessage = `${format} wymaga specyficznego formatu`) {
+            function generateBarcode(id, format, text, validation = () => true, errorMessage = `${format} WYMAGA SPECYFICZNEGO FORMATU`) {
                 clearElement(id);
                 console.log(`Próba generowania ${format} dla ${text} z bwip-js`);
                 if (!validation(text)) {
@@ -240,7 +265,8 @@
                     return;
                 }
                 try {
-                    const svgString = bwipjs.toBuffer({
+                    const canvas = document.createElement('canvas');
+                    bwipjs.toCanvas(canvas, {
                         bcid: format.toLowerCase().replace(' ', ''),
                         text: text,
                         scale: 2,
@@ -249,17 +275,67 @@
                         textxalign: 'center',
                         textcolor: '000000',
                         barcolor: '000000',
-                        backgroundcolor: 'FFFFFF',
-                        format: 'svg' // Generowanie SVG zamiast PNG
+                        backgroundcolor: 'ffffff'
                     });
+                    
+                    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                    svg.setAttribute('width', canvas.width);
+                    svg.setAttribute('height', canvas.height);
+                    svg.setAttribute('viewBox', `0 0 ${canvas.width} ${canvas.height}`);
+                    svg.classList.add('barcode-svg');
+                    
+                    const bgRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                    bgRect.setAttribute('width', '100%');
+                    bgRect.setAttribute('height', '100%');
+                    bgRect.setAttribute('fill', '#ffffff');
+                    svg.appendChild(bgRect);
+                    
+                    const ctx = canvas.getContext('2d');
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const data = imageData.data;
+                    
+                    const barsGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                    barsGroup.setAttribute('fill', '#000000');
+                    
+                    const textGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                    textGroup.setAttribute('fill', '#000000');
+                    
+                    for (let y = 0; y < canvas.height; y++) {
+                        for (let x = 0; x < canvas.width; x++) {
+                            const index = (y * canvas.width + x) * 4;
+                            const r = data[index];
+                            const g = data[index + 1];
+                            const b = data[index + 2];
+                            
+                            if (r < 50 && g < 50 && b < 50) {
+                                const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                                rect.setAttribute('x', x);
+                                rect.setAttribute('y', y);
+                                rect.setAttribute('width', 1);
+                                rect.setAttribute('height', 1);
+                                
+                                if (y > canvas.height * 0.7) {
+                                    textGroup.appendChild(rect);
+                                } else {
+                                    barsGroup.appendChild(rect);
+                                }
+                            }
+                        }
+                    }
+                    
+                    svg.appendChild(barsGroup);
+                    svg.appendChild(textGroup);
+                    
                     const wrapper = document.createElement('div');
                     wrapper.className = 'code-wrapper';
-                    wrapper.innerHTML = svgString;
+                    wrapper.appendChild(svg);
+                    
                     const saveButton = document.createElement('button');
                     saveButton.textContent = 'ZAPISZ';
                     saveButton.className = 'save-button';
                     saveButton.onclick = () => {
-                        const highResSvgString = bwipjs.toBuffer({
+                        const highResCanvas = document.createElement('canvas');
+                        bwipjs.toCanvas(highResCanvas, {
                             bcid: format.toLowerCase().replace(' ', ''),
                             text: text,
                             scale: 4,
@@ -268,22 +344,64 @@
                             textxalign: 'center',
                             textcolor: '000000',
                             barcolor: '000000',
-                            backgroundcolor: 'FFFFFF',
-                            format: 'svg'
+                            backgroundcolor: 'ffffff'
                         });
-                        const parser = new DOMParser();
-                        const highResSvgDoc = parser.parseFromString(highResSvgString, 'image/svg+xml');
-                        const highResSvg = highResSvgDoc.documentElement;
-                        const bbox = highResSvg.viewBox.baseVal;
-                        highResSvg.setAttribute('width', '1000');
-                        highResSvg.setAttribute('height', (bbox.height / bbox.width) * 1000); // Zachowanie proporcji
+                        
+                        const highResSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                        highResSvg.setAttribute('width', highResCanvas.width);
+                        highResSvg.setAttribute('height', highResCanvas.height);
+                        highResSvg.setAttribute('viewBox', `0 0 ${highResCanvas.width} ${highResCanvas.height}`);
+                        
+                        const highResBgRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                        highResBgRect.setAttribute('width', '100%');
+                        highResBgRect.setAttribute('height', '100%');
+                        highResBgRect.setAttribute('fill', '#ffffff');
+                        highResSvg.appendChild(highResBgRect);
+                        
+                        const highResCtx = highResCanvas.getContext('2d');
+                        const highResImageData = highResCtx.getImageData(0, 0, highResCanvas.width, highResCanvas.height);
+                        const highResData = highResImageData.data;
+                        
+                        const highResBarsGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                        highResBarsGroup.setAttribute('fill', '#000000');
+                        
+                        const highResTextGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                        highResTextGroup.setAttribute('fill', '#000000');
+                        
+                        for (let y = 0; y < highResCanvas.height; y++) {
+                            for (let x = 0; x < highResCanvas.width; x++) {
+                                const index = (y * highResCanvas.width + x) * 4;
+                                const r = highResData[index];
+                                const g = highResData[index + 1];
+                                const b = highResData[index + 2];
+                                
+                                if (r < 50 && g < 50 && b < 50) {
+                                    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+                                    rect.setAttribute('x', x);
+                                    rect.setAttribute('y', y);
+                                    rect.setAttribute('width', 1);
+                                    rect.setAttribute('height', 1);
+                                    
+                                    if (y > highResCanvas.height * 0.7) {
+                                        highResTextGroup.appendChild(rect);
+                                    } else {
+                                        highResBarsGroup.appendChild(rect);
+                                    }
+                                }
+                            }
+                        }
+                        
+                        highResSvg.appendChild(highResBarsGroup);
+                        highResSvg.appendChild(highResTextGroup);
+                        
                         saveSvg(new XMLSerializer().serializeToString(highResSvg), `${id}_KSGROUP`);
                     };
+                    
                     wrapper.appendChild(saveButton);
                     document.getElementById(id).appendChild(wrapper);
-                    console.log(`${format}: Wygenerowano natywne SVG z bwip-js`);
+                    console.log(`${format}: Wygenerowano kod z bwip-js jako SVG`);
                 } catch (e) {
-                    document.getElementById(id).innerHTML = `<span class="error">Błąd generowania ${format}: ${e.message}</span>`;
+                    document.getElementById(id).innerHTML = `<span class="error">BŁĄD GENEROWANIA ${format}: ${e.message}</span>`;
                     console.error(`${format}: Błąd - ${e.message}`);
                 }
             }
@@ -295,15 +413,18 @@
                         type: 'svg', 
                         width: 200, 
                         margin: 1, 
-                        color: { dark: '#000000', light: '#FFFFFF' }
+                        color: { dark: '#000000', light: '#ffffff' }
                     }, function (error, svg) {
                         if (error) {
-                            document.getElementById(id).innerHTML = `<span class="error">Błąd generowania QR Code: ${error.message}</span>`;
+                            document.getElementById(id).innerHTML = `<span class="error">BŁĄD GENEROWANIA QR CODE: ${error.message}</span>`;
                             console.error('QR Code: Błąd - ' + error.message);
                         } else {
                             const wrapper = document.createElement('div');
                             wrapper.className = 'code-wrapper';
                             wrapper.innerHTML = svg;
+                            const svgElement = wrapper.querySelector('svg');
+                            svgElement.classList.add('qrcode-svg');
+                            
                             const saveButton = document.createElement('button');
                             saveButton.textContent = 'ZAPISZ';
                             saveButton.className = 'save-button';
@@ -312,7 +433,7 @@
                                     type: 'svg', 
                                     width: 1000, 
                                     margin: 1, 
-                                    color: { dark: '#000000', light: '#FFFFFF' }
+                                    color: { dark: '#000000', light: '#ffffff' }
                                 }, function (error, highResSvg) {
                                     if (!error) {
                                         saveSvg(highResSvg, `${id}_KSGROUP`);
@@ -325,7 +446,7 @@
                         }
                     });
                 } catch (e) {
-                    document.getElementById(id).innerHTML = `<span class="error">Błąd generowania QR Code: ${e.message}</span>`;
+                    document.getElementById(id).innerHTML = `<span class="error">BŁĄD GENEROWANIA QR CODE: ${e.message}</span>`;
                     console.error('QR Code: Wyjątek - ' + e.message);
                 }
             }
@@ -336,34 +457,34 @@
             generateJsBarcode('code128', 'CODE128', cardNumber);
             generateJsBarcode('codabar', 'CODABAR', cardNumber);
             generateBarcode('datamatrix', 'datamatrix', cardNumber);
-            generateJsBarcode('ean8', 'EAN8', cardNumber, (text) => text.length === 8, 'Numer musi mieć 8 cyfr dla EAN8');
-            generateJsBarcode('ean13', 'EAN13', cardNumber, (text) => text.length === 12 || text.length === 13, 'Numer musi mieć 12 lub 13 cyfr dla EAN13');
-            generateJsBarcode('itf', 'ITF', cardNumber, (text) => text.length % 2 === 0, 'Numer musi mieć parzystą liczbę cyfr dla ITF');
+            generateJsBarcode('ean8', 'EAN8', cardNumber, (text) => text.length === 8, 'NUMER MUSI MIEĆ 8 CYFR DLA EAN8');
+            generateJsBarcode('ean13', 'EAN13', cardNumber, (text) => text.length === 12 || text.length === 13, 'NUMER MUSI MIEĆ 12 LUB 13 CYFR DLA EAN13');
+            generateJsBarcode('itf', 'ITF', cardNumber, (text) => text.length % 2 === 0, 'NUMER MUSI MIEĆ PARZYSTĄ LICZBĘ CYFR DLA ITF');
             generateBarcode('pdf417', 'pdf417', cardNumber);
             generateQRCode('qrcode', cardNumber);
-            generateJsBarcode('upca', 'UPCA', cardNumber, (text) => text.length === 11 || text.length === 12, 'Numer musi mieć 11 lub 12 cyfr dla UPC-A');
-            generateJsBarcode('upce', 'UPCE', cardNumber, (text) => text.length >= 6 && text.length <= 8, 'Numer musi mieć 6-8 cyfr dla UPC-E');
+            generateJsBarcode('upca', 'UPCA', cardNumber, (text) => text.length === 11 || text.length === 12, 'NUMER MUSI MIEĆ 11 LUB 12 CYFR DLA UPC-A');
+            generateJsBarcode('upce', 'UPCE', cardNumber, (text) => text.length >= 6 && text.length <= 8, 'NUMER MUSI MIEĆ 6-8 CYFR DLA UPC-E');
             generateJsBarcode('msi', 'MSI', cardNumber);
             generateBarcode('code11', 'code11', cardNumber);
-            generateJsBarcode('isbn', 'EAN13', cardNumber, (text) => text.length === 13 && (text.startsWith('978') || text.startsWith('979')), 'Numer musi mieć 13 cyfr i zaczynać się od 978 lub 979 dla ISBN');
-            generateBarcode('issn', 'ean13', '977' + cardNumber.slice(0, 7) + '00', (text) => text.length >= 8, 'Numer musi mieć co najmniej 8 cyfr dla ISSN');
-            generateBarcode('ean14', 'ean14', '(01)' + cardNumber, (text) => text.length === 13 || text.length === 14, 'Numer musi mieć 13 lub 14 cyfr dla EAN-14');
-            generateBarcode('ean18', 'sscc18', cardNumber, (text) => text.length === 17 || text.length === 18, 'Numer musi mieć 17 lub 18 cyfr dla EAN-18');
-            generateBarcode('ean128', 'gs1-128', '(01)' + cardNumber.padStart(14, '0'), (text) => text.length >= 14, 'Numer musi mieć co najmniej 14 cyfr po (01) dla EAN-128');
-            generateBarcode('databar', 'gs1databar', '(01)' + cardNumber, (text) => text.length <= 14, 'Numer nie może przekraczać 14 cyfr dla DataBar');
-            generateBarcode('databarstacked', 'gs1databarstacked', '(01)' + cardNumber, (text) => text.length <= 14, 'Numer nie może przekraczać 14 cyfr dla DataBar Stacked');
-            generateBarcode('databarlimited', 'databarlimited', cardNumber, (text) => text.length <= 14 && parseInt(text) <= 1999999999999, 'Numer musi mieć max 14 cyfr i być mniejszy niż 2 biliony dla DataBar Limited');
-            generateBarcode('code32', 'code32', cardNumber, (text) => text.length === 9, 'Numer musi mieć 9 cyfr dla Code-32');
+            generateJsBarcode('isbn', 'EAN13', cardNumber, (text) => text.length === 13 && (text.startsWith('978') || text.startsWith('979')), 'NUMER MUSI MIEĆ 13 CYFR I ZACZYNAĆ SIĘ OD 978 LUB 979 DLA ISBN');
+            generateBarcode('issn', 'ean13', '977' + cardNumber.slice(0, 7) + '00', (text) => text.length >= 8, 'NUMER MUSI MIEĆ CO NAJMNIEJ 8 CYFR DLA ISSN');
+            generateBarcode('ean14', 'ean14', '(01)' + cardNumber, (text) => text.length === 13 || text.length === 14, 'NUMER MUSI MIEĆ 13 LUB 14 CYFR DLA EAN-14');
+            generateBarcode('ean18', 'sscc18', cardNumber, (text) => text.length === 17 || text.length === 18, 'NUMER MUSI MIEĆ 17 LUB 18 CYFR DLA EAN-18');
+            generateBarcode('ean128', 'gs1-128', '(01)' + cardNumber.padStart(14, '0'), (text) => text.length >= 14, 'NUMER MUSI MIEĆ CO NAJMNIEJ 14 CYFR PO (01) DLA EAN-128');
+            generateBarcode('databar', 'gs1databar', '(01)' + cardNumber, (text) => text.length <= 14, 'NUMER NIE MOŻE PRZEKRACZAĆ 14 CYFR DLA DATABAR');
+            generateBarcode('databarstacked', 'gs1databarstacked', '(01)' + cardNumber, (text) => text.length <= 14, 'NUMER NIE MOŻE PRZEKRACZAĆ 14 CYFR DLA DATABAR STACKED');
+            generateBarcode('databarlimited', 'databarlimited', cardNumber, (text) => text.length <= 14 && parseInt(text) <= 1999999999999, 'NUMER MUSI MIEĆ MAX 14 CYFR I BYĆ MNIEJSZY NIŻ 2 BILIONY DLA DATABAR LIMITED');
+            generateBarcode('code32', 'code32', cardNumber, (text) => text.length === 9, 'NUMER MUSI MIEĆ 9 CYFR DLA CODE-32');
             generateBarcode('standard2of5', 'code2of5', cardNumber);
-            generateBarcode('itf14', 'itf14', cardNumber, (text) => text.length === 14, 'Numer musi mieć 14 cyfr dla ITF-14');
-            generateBarcode('pharmacodetwotrack', 'pharmacode2', cardNumber, (text) => /^[0-1]+$/.test(text), 'Numer musi zawierać tylko 0 i 1 dla Pharmacode Two Track');
-            generateBarcode('postnet', 'postnet', cardNumber, (text) => text.length === 5 || text.length === 9 || text.length === 11, 'Numer musi mieć 5, 9 lub 11 cyfr dla Postnet');
-            generateBarcode('planet', 'planet', cardNumber, (text) => text.length === 11 || text.length === 13, 'Numer musi mieć 11 lub 13 cyfr dla Planet');
+            generateBarcode('itf14', 'itf14', cardNumber, (text) => text.length === 14, 'NUMER MUSI MIEĆ 14 CYFR DLA ITF-14');
+            generateBarcode('pharmacodetwotrack', 'pharmacode2', cardNumber, (text) => /^[0-1]+$/.test(text), 'NUMER MUSI ZAWIERAĆ TYLKO 0 I 1 DLA PHARMACODE TWO TRACK');
+            generateBarcode('postnet', 'postnet', cardNumber, (text) => text.length === 5 || text.length === 9 || text.length === 11, 'NUMER MUSI MIEĆ 5, 9 LUB 11 CYFR DLA POSTNET');
+            generateBarcode('planet', 'planet', cardNumber, (text) => text.length === 11 || text.length === 13, 'NUMER MUSI MIEĆ 11 LUB 13 CYFR DLA PLANET');
             generateBarcode('rm4scc', 'royalmail', cardNumber);
             generateBarcode('code16k', 'code16k', cardNumber);
-            generateBarcode('identcode', 'identcode', cardNumber, (text) => text.length === 11 || text.length === 12, 'Numer musi mieć 11 lub 12 cyfr dla Identcode');
-            generateBarcode('leitcode', 'leitcode', cardNumber, (text) => text.length === 13 || text.length === 14, 'Numer musi mieć 13 lub 14 cyfr dla Leitcode');
-            generateBarcode('pharmacodeonetrack', 'pharmacode', cardNumber, (text) => /^[0-1]+$/.test(text), 'Numer musi zawierać tylko 0 i 1 dla Pharmacode One Track');
+            generateBarcode('identcode', 'identcode', cardNumber, (text) => text.length === 11 || text.length === 12, 'NUMER MUSI MIEĆ 11 LUB 12 CYFR DLA IDENTCODE');
+            generateBarcode('leitcode', 'leitcode', cardNumber, (text) => text.length === 13 || text.length === 14, 'NUMER MUSI MIEĆ 13 LUB 14 CYFR DLA LEITCODE');
+            generateBarcode('pharmacodeonetrack', 'pharmacode', cardNumber, (text) => /^[0-1]+$/.test(text), 'NUMER MUSI ZAWIERAĆ TYLKO 0 I 1 DLA PHARMACODE ONE TRACK');
             generateJsBarcode('codabarrationalized', 'CODABAR', cardNumber);
         }
     </script>
