@@ -23,7 +23,6 @@
             transition: background 0.3s;
         }
 
-        /* Wspólne style dla nagłówka i modala */
         .header, .modal-content {
             width: calc(100% - 40px);
             max-width: 600px;
@@ -40,7 +39,6 @@
             box-shadow: none !important;
         }
 
-        /* Wspólne style dla inputów */
         .KSGROUP-PASEK-WYSZUKIWANIA input,
         #nowy-produkt {
             width: 100%;
@@ -72,15 +70,12 @@
             width: 100%;
         }
 
-        .KSGROUP-PASEK-WYSZUKIWANIA, .KSGROUP-PASEK-LINKU-OBRAZU {
-            width: 100%;
-            padding: 5px 0;
-            display: flex;
-            justify-content: center;
-        }
-
         .KSGROUP-PASEK-WYSZUKIWANIA {
             order: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
         }
 
         .KSGROUP-PASEK-LINKU-OBRAZU {
@@ -265,26 +260,6 @@
             display: block;
         }
 
-        @media (max-width: 768px) {
-            .fullscreen-image {
-                top: 20px;
-                left: 20px;
-                right: 20px;
-                bottom: 100px;
-            }
-            
-            .header, .modal-content, .container {
-                width: calc(100% - 40px);
-            }
-            
-            .KSGROUP-PASEK-WYSZUKIWANIA input,
-            #nowy-produkt,
-            .KSGROUP-PASEK-LINKU-OBRAZU a {
-                max-width: none;
-            }
-        }
-
-        /* Style dla przycisków */
         .przelacz-rzadkie, .lista-zakupow-btn {
             background-color: #222;
             color: #FF00FF;
@@ -295,11 +270,9 @@
             font-weight: bold;
             font-family: 'Montserrat', sans-serif;
             font-size: 14px;
-            margin: 10px 5px 0 5px;
+            margin: 5px;
             transition: background-color 0.3s;
             white-space: nowrap;
-            text-decoration: none;
-            display: inline-block;
         }
 
         .przelacz-rzadkie:hover, .lista-zakupow-btn:hover {
@@ -313,7 +286,6 @@
             margin-top: 10px;
         }
 
-        /* Modal listy zakupów */
         .modal {
             display: none;
             position: fixed;
@@ -394,7 +366,6 @@
             flex-grow: 1;
         }
 
-        /* Przycisk instalacji PWA */
         #installButton {
             position: fixed;
             bottom: 20px;
@@ -414,6 +385,25 @@
         #installButton:hover {
             background-color: #cc00cc;
         }
+
+        @media (max-width: 768px) {
+            .fullscreen-image {
+                top: 20px;
+                left: 20px;
+                right: 20px;
+                bottom: 100px;
+            }
+            
+            .header, .modal-content, .container {
+                width: calc(100% - 40px);
+            }
+            
+            .KSGROUP-PASEK-WYSZUKIWANIA input,
+            #nowy-produkt,
+            .KSGROUP-PASEK-LINKU-OBRAZU a {
+                max-width: none;
+            }
+        }
     </style>
 </head>
 <body>
@@ -421,10 +411,10 @@
         <div class="KSGROUP-WYSZUKIWARKA-NORMALNA">
             <div class="KSGROUP-PASEK-WYSZUKIWANIA">
                 <input type="text" id="wyszukaj-input" placeholder="WYSZUKAJ KARTĘ">
-            </div>
-            <div class="buttons-container">
-                <button class="przelacz-rzadkie" id="przelacz-rzadkie" title="Pokaż inne karty">INNE</button>
-                <button class="lista-zakupow-btn" id="lista-zakupow-btn" title="Lista zakupów">LISTA</button>
+                <div class="buttons-container">
+                    <button class="przelacz-rzadkie" id="przelacz-rzadkie" title="Pokaż inne karty">INNE</button>
+                    <button class="lista-zakupow-btn" id="lista-zakupow-btn" title="Lista zakupów">LISTA</button>
+                </div>
             </div>
         </div>
     </div>
@@ -438,112 +428,6 @@
     <div class="container">
         <div class="row">
             <ul class="karty" id="lista-kart">
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
-                    <span class="nazwa">PL</span>
-                </a></li>
-                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
-                </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
-                    <span class="nazwa">PL</span>
-                </a></li>
-                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
-                </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
-                    <span class="nazwa">PL</span>
-                </a></li>
-                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
-                </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
-                    <span class="nazwa">PL</span>
-                </a></li>
-                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
-                </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
-                    <span class="nazwa">PL</span>
-                </a></li>
-                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
-                </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
-                </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
-                </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
-                    <span class="nazwa">PL</span>
-                </a></li>
-                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
-                </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
-                </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
-                </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
-                    <span class="nazwa">PL</span>
-                </a></li>
-                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
-                </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
-                </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
-                </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
-                    <span class="nazwa">PL</span>
-                </a></li>
-                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
-                </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
-                </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
-                </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
-                    <span class="nazwa">PL</span>
-                </a></li>
-                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
-                </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
-                </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
-                </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
-                    <span class="nazwa">PL</span>
-                </a></li>
-                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
-                </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
-                </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
-                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
-                </a></li>
                 <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
@@ -601,7 +485,6 @@
         let zakupy = JSON.parse(localStorage.getItem('listaZakupow')) || [];
         let deferredPrompt;
         
-        // Obsługa instalacji PWA
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
@@ -788,7 +671,6 @@
             }
         });
 
-        // Rejestracja Service Worker dla PWA
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js').then(registration => {
