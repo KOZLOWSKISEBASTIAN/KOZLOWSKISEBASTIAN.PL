@@ -19,53 +19,29 @@
             margin: 0 auto;
             transition: background 0.3s;
         }
-        .header {
-            max-width: 80%;
-            width: 100%;
-            position: center;
-            top: 0;
-            left: 0;
-            z-index: 3;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+
+        /* Wspólne style dla nagłówka i modala */
+        .header, .modal-content {
+            width: 90%;
+            max-width: 600px;
+            margin: 20px auto;
             background-color: #333333;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            transition: background-color 0.3s;
-            margin-bottom: 20px;
+            box-sizing: border-box;
         }
+
         .fullscreen-mode .header {
             background-color: transparent !important;
             box-shadow: none !important;
         }
-        .KSGROUP-WYSZUKIWARKA-NORMALNA, .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN {
-            display: flex;
-            align-items: center;
+
+        /* Wspólne style dla inputów */
+        .KSGROUP-PASEK-WYSZUKIWANIA input,
+        #nowy-produkt {
             width: 100%;
-            justify-content: center;
-        }
-        .KSGROUP-PASEK-WYSZUKIWANIA, .KSGROUP-PASEK-LINKU-OBRAZU {
-            width: 100%;
-            padding: 5px 0;
-            display: flex;
-            justify-content: center;
-        }
-        .KSGROUP-PASEK-WYSZUKIWANIA {
-            order: 1;
-        }
-        .KSGROUP-PASEK-LINKU-OBRAZU {
-            order: 3;
-            display: none;
-        }
-        .fullscreen-mode .KSGROUP-WYSZUKIWARKA-NORMALNA {
-            display: none;
-        }
-        .fullscreen-mode .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN .KSGROUP-PASEK-LINKU-OBRAZU {
-            display: flex;
-        }
-        .KSGROUP-PASEK-WYSZUKIWANIA input {
+            max-width: 500px;
             padding: 8px;
             font-size: 16px;
             font-family: 'Montserrat', sans-serif;
@@ -74,10 +50,43 @@
             background-color: #222;
             color: #fff;
             outline: none;
-            width: 100%;
             box-sizing: border-box;
-            margin: 5px 0;
+            margin: 5px auto;
+            display: block;
         }
+
+        .KSGROUP-WYSZUKIWARKA-NORMALNA, .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .KSGROUP-PASEK-WYSZUKIWANIA, .KSGROUP-PASEK-LINKU-OBRAZU {
+            width: 100%;
+            padding: 5px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .KSGROUP-PASEK-WYSZUKIWANIA {
+            order: 1;
+        }
+
+        .KSGROUP-PASEK-LINKU-OBRAZU {
+            order: 3;
+            display: none;
+        }
+
+        .fullscreen-mode .KSGROUP-WYSZUKIWARKA-NORMALNA {
+            display: none;
+        }
+
+        .fullscreen-mode .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN .KSGROUP-PASEK-LINKU-OBRAZU {
+            display: flex;
+        }
+
         .KSGROUP-PASEK-LINKU-OBRAZU a {
             text-decoration: none;
             color: #FF00FF;
@@ -94,47 +103,36 @@
             width: 100%;
             box-sizing: border-box;
             margin: 5px 0;
+            max-width: 500px;
         }
+
         .KSGROUP-PASEK-LINKU-OBRAZU a:hover {
             background-color: #333;
         }
-        @media (min-width: 769px) {
-            .KSGROUP-PASEK-WYSZUKIWANIA input, .KSGROUP-PASEK-LINKU-OBRAZU a {
-                max-width: 500px;
-            }
-            .header {
-                max-width: 800px;
-            }
-        }
-        @media (max-width: 768px) {
-            .KSGROUP-PASEK-WYSZUKIWANIA input, .KSGROUP-PASEK-LINKU-OBRAZU a {
-                width: 100%;
-            }
-            .header {
-                width: calc(100% - 40px);
-                padding: 15px;
-            }
-        }
+
         .container {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 80%;
-            max-width: 800px;
+            width: 90%;
+            max-width: 600px;
             transition: opacity 0.3s;
             position: relative;
             z-index: 2;
             margin-top: 20px;
         }
+
         .fullscreen-mode .container {
             opacity: 0;
             pointer-events: none;
         }
+
         .row {
             margin: 20px 0;
             text-align: center;
             width: 100%;
         }
+
         .karty {
             list-style: none;
             padding: 0;
@@ -144,22 +142,28 @@
             justify-content: center;
             margin-bottom: 10px;
         }
+
         .karty li {
             margin: 5px 0;
             transition: all 0.3s ease;
         }
+
         .karty li.ukryta {
             display: none !important;
         }
+
         .karty li.rzadko-uzywana {
             display: none;
         }
+
         body.pokaz-rzadkie .karty li.rzadko-uzywana {
             display: block;
         }
+
         body.pokaz-rzadkie .karty li:not(.rzadko-uzywana) {
             display: none;
         }
+
         .karty a {
             text-decoration: none;
             padding: 10px 15px;
@@ -176,9 +180,11 @@
             box-sizing: border-box;
             cursor: pointer;
         }
+
         .karty a:hover {
             background: #222222;
         }
+
         .karty a img {
             max-height: 30px;
             width: auto;
@@ -186,14 +192,17 @@
             transition: filter 0.3s;
             margin-bottom: 5px;
         }
+
         .karty a:hover img {
             filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
         }
+
         .karty a .nazwa {
             font-size: 12px;
             color: #FF00FF;
             margin-top: 5px;
         }
+
         .fullscreen-mode {
             background-color: #fff;
             padding: 0;
@@ -202,6 +211,7 @@
             width: 100%;
             height: 100vh;
         }
+
         .fullscreen-image {
             position: fixed;
             top: 130px;
@@ -216,16 +226,19 @@
             align-items: center;
             justify-content: center;
         }
+
         .fullscreen-image img {
             max-width: 100%;
             max-height: 100%;
             transform: rotate(90deg);
             object-fit: contain;
         }
+
         .fullscreen-mode .fullscreen-image {
             opacity: 1;
             pointer-events: auto;
         }
+
         .card-number {
             position: fixed;
             bottom: 20px;
@@ -238,9 +251,11 @@
             display: none;
             font-weight: bold;
         }
+
         .fullscreen-mode .card-number {
             display: block;
         }
+
         @media (max-width: 768px) {
             .fullscreen-image {
                 top: 20px;
@@ -248,7 +263,18 @@
                 right: 20px;
                 bottom: 100px;
             }
+            
+            .header, .modal-content, .container {
+                width: calc(100% - 40px);
+            }
+            
+            .KSGROUP-PASEK-WYSZUKIWANIA input,
+            #nowy-produkt,
+            .KSGROUP-PASEK-LINKU-OBRAZU a {
+                max-width: none;
+            }
         }
+
         .przelacz-rzadkie, .lista-zakupow-btn {
             cursor: pointer;
             margin-left: 10px;
@@ -257,18 +283,21 @@
             filter: grayscale(100%) brightness(50%);
             transition: filter 0.3s;
         }
+
         .przelacz-rzadkie:hover, .lista-zakupow-btn:hover {
             filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
         }
+
         .przelacz-rzadkie.aktywny, .lista-zakupow-btn.aktywny {
             filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
         }
+
         .buttons-container {
             display: flex;
             align-items: center;
             margin-left: 10px;
         }
-        
+
         /* Modal listy zakupów */
         .modal {
             display: none;
@@ -280,23 +309,7 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.8);
         }
-        .modal-content {
-            background-color: #333;
-            margin: 20px auto;
-            padding: 20px;
-            border-radius: 8px;
-            color: #FF00FF;
-            width: 80%;
-            max-width: 800px;
-            box-sizing: border-box;
-        }
-        @media (max-width: 768px) {
-            .modal-content {
-                width: calc(100% - 40px);
-                margin: 20px auto;
-                padding: 15px;
-            }
-        }
+
         .close-modal {
             color: #FF00FF;
             float: right;
@@ -304,14 +317,17 @@
             font-weight: bold;
             cursor: pointer;
         }
+
         .close-modal:hover {
             color: #fff;
         }
+
         #lista-zakupow {
             list-style-type: none;
             padding: 0;
             margin-top: 20px;
         }
+
         #lista-zakupow li {
             padding: 10px;
             border-bottom: 1px solid #444;
@@ -319,16 +335,20 @@
             justify-content: space-between;
             align-items: center;
         }
+
         #lista-zakupow li:last-child {
             border-bottom: none;
         }
+
         .usun-z-listy {
             color: #FF00FF;
             cursor: pointer;
         }
+
         .usun-z-listy:hover {
             color: #fff;
         }
+
         #dodaj-do-listy {
             background-color: #222;
             color: #FF00FF;
@@ -340,28 +360,28 @@
             font-weight: bold;
             white-space: nowrap;
         }
+
         #dodaj-do-listy:hover {
             background-color: #333;
         }
-        #nowy-produkt {
-            width: 100%;
-            padding: 8px;
-            border-radius: 5px;
-            border: none;
-            background-color: #222;
-            color: #FF00FF;
-            box-sizing: border-box;
-        }
+
         .input-container {
             display: flex;
             gap: 10px;
             margin-top: 10px;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #nowy-produkt {
+            flex-grow: 1;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <!-- Wyszukiwarka w trybie normalnym -->
         <div class="KSGROUP-WYSZUKIWARKA-NORMALNA">
             <div class="KSGROUP-PASEK-WYSZUKIWANIA">
                 <input type="text" id="wyszukaj-input" placeholder="WYSZUKAJ KARTĘ">
@@ -373,7 +393,6 @@
         </div>
     </div>
     
-    <!-- Wyszukiwarka w trybie pełnoekranowym -->
     <div class="KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN">
         <div class="KSGROUP-PASEK-LINKU-OBRAZU">
             <a id="image-link" href="" target="_blank">ZAPISZ</a>
@@ -404,7 +423,6 @@
     </div>
     <div class="card-number" id="card-number"></div>
     
-    <!-- Modal listy zakupów -->
     <div id="lista-zakupow-modal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
@@ -436,10 +454,8 @@
         const nowyProduktInput = document.getElementById('nowy-produkt');
         const cardNumberElement = document.getElementById('card-number');
         
-        // Inicjalizacja listy zakupów z localStorage
         let zakupy = JSON.parse(localStorage.getItem('listaZakupow')) || [];
         
-        // Funkcja do wyciągania numeru karty z klasy
         function getCardNumber(element) {
             const classList = element.parentElement.classList;
             for (let className of classList) {
@@ -450,7 +466,6 @@
             return 'BRAK NUMERU';
         }
         
-        // Oznacz rzadko używane karty (data-usage="0")
         function oznaczRzadkieKarty() {
             wszystkieKarty.forEach(karta => {
                 if (karta.getAttribute('data-usage') === "0") {
@@ -461,7 +476,6 @@
             });
         }
         
-        // Aktualizuj widoczność kart
         function aktualizujWidocznoscKart() {
             const fraza = wyszukajInput.value.trim().toLowerCase();
             
@@ -490,7 +504,6 @@
             }
         }
         
-        // Wyświetl listę zakupów
         function wyswietlListeZakupow() {
             listaZakupow.innerHTML = '';
             zakupy.forEach((produkt, index) => {
@@ -502,7 +515,6 @@
                 listaZakupow.appendChild(li);
             });
             
-            // Dodaj obsługę usuwania produktów
             document.querySelectorAll('.usun-z-listy').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const index = parseInt(this.getAttribute('data-index'));
@@ -513,12 +525,10 @@
             });
         }
         
-        // Inicjalizacja
         oznaczRzadkieKarty();
         aktualizujWidocznoscKart();
         wyswietlListeZakupow();
         
-        // Przełącz widoczność rzadko używanych kart
         przelaczRzadkieBtn.addEventListener('click', function() {
             if (wyszukajInput.value.trim() === '') {
                 pokazRzadkie = !pokazRzadkie;
@@ -535,7 +545,6 @@
             }
         });
 
-        // Otwórz/zamknij modal listy zakupów
         listaZakupowBtn.addEventListener('click', function() {
             modal.style.display = 'block';
         });
@@ -550,7 +559,6 @@
             }
         });
         
-        // Dodaj nowy produkt do listy
         dodajDoListyBtn.addEventListener('click', function() {
             const produkt = nowyProduktInput.value.trim();
             if (produkt) {
@@ -561,14 +569,12 @@
             }
         });
         
-        // Dodawanie produktu po naciśnięciu Enter
         nowyProduktInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 dodajDoListyBtn.click();
             }
         });
 
-        // Obsługa wyszukiwania
         wyszukajInput.addEventListener('input', function() {
             if (this.value.trim() !== '') {
                 document.body.classList.remove('pokaz-rzadkie');
@@ -578,7 +584,6 @@
             aktualizujWidocznoscKart();
         });
         
-        // Obsługa kliknięcia w kartę
         document.querySelectorAll('.link-btn').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -591,7 +596,6 @@
                     imageLink.href = imageUrl;
                     imageLinkBar.style.display = 'flex';
                     
-                    // Pobierz numer karty z klasy
                     const cardNumber = getCardNumber(this);
                     cardNumberElement.textContent = `${cardNumber}`;
                     
@@ -609,7 +613,6 @@
             });
         });
         
-        // Zamknięcie pełnego ekranu po kliknięciu w tło
         document.body.addEventListener('click', function(e) {
             if (pelnyEkran && (e.target === document.body || e.target === fullscreenImage || e.target === fullscreenImg)) {
                 pelnyEkran = false;
