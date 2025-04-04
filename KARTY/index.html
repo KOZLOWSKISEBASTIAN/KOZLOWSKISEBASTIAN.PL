@@ -12,7 +12,6 @@
             background-color: #000000;
             color: #222222;
             padding: 20px;
-
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -33,7 +32,12 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-			
+        }
+        .wyszukiwarka {
+            display: flex;
+            align-items: center;
+            width: 80%;
+            justify-content: center;
         }
         .search-bar, .sort-bar, .image-link-bar {
             width: 80%;
@@ -105,7 +109,7 @@
             text-align: center;
             width: 100%;
         }
-        .links {
+        .karty {
             list-style: none;
             padding: 0;
             display: flex;
@@ -114,13 +118,22 @@
             justify-content: center;
             margin-bottom: 10px;
         }
-        .links li {
+        .karty li {
             margin: 5px 0;
         }
-        .links li.hidden {
+        .karty li.ukryta {
+            display: none !important;
+        }
+        .karty li.rzadko-uzywana {
             display: none;
         }
-        .links a {
+        body.pokaz-rzadkie .karty li.rzadko-uzywana {
+            display: block;
+        }
+        body.pokaz-rzadkie .karty li:not(.rzadko-uzywana) {
+            display: none;
+        }
+        .karty a {
             text-decoration: none;
             padding: 10px 15px;
             color: #FF00FF;
@@ -136,20 +149,20 @@
             box-sizing: border-box;
             cursor: pointer;
         }
-        .links a:hover {
+        .karty a:hover {
             background: #222222;
         }
-        .links a img {
+        .karty a img {
             max-height: 30px;
             width: auto;
             filter: grayscale(100%) brightness(50%);
             transition: filter 0.3s;
             margin-bottom: 5px;
         }
-        .links a:hover img {
+        .karty a:hover img {
             filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
         }
-        .links a .label {
+        .karty a .nazwa {
             font-size: 12px;
             color: #FF00FF;
             margin-top: 5px;
@@ -194,12 +207,29 @@
                 bottom: 20px;
             }
         }
+        .przelacz-rzadkie {
+            cursor: pointer;
+            margin-left: 10px;
+            width: 24px;
+            height: 24px;
+            filter: grayscale(100%) brightness(50%);
+            transition: filter 0.3s;
+        }
+        .przelacz-rzadkie:hover {
+            filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
+        }
+        .przelacz-rzadkie.aktywny {
+            filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <div class="search-bar">
-            <input type="text" id="search-input" placeholder="WYSZUKAJ">
+        <div class="wyszukiwarka">
+            <div class="search-bar">
+                <input type="text" id="wyszukaj-input" placeholder="WYSZUKAJ KARTĘ">
+            </div>
+            <img src="http://kozlowskisebastian.pl/GRAFIKA/ZAMKNIJ.svg" class="przelacz-rzadkie" id="przelacz-rzadkie" title="Pokaż rzadko używane karty">
         </div>
         <div class="image-link-bar">
             <a id="image-link" href="" target="_blank">ZAPISZ</a>
@@ -207,103 +237,123 @@
     </div>
     <div class="container">
         <div class="row">
-            <ul class="links">
+            <ul class="karty" id="lista-kart">
                 <li data-name="BIEDRONKA" data-usage="0"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
-                    <span class="label">PL</span>
+                    <span class="nazwa">PL</span>
                 </a></li>
                 <li data-name="CHATA POLSKA" data-usage="0"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
                 </a></li>
-                <li data-name="INTERMARCHE" data-usage="0"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                <li data-name="INTERMARCHE" data-usage="5"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="INTERMARCHE" data-usage="5"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
                 </a></li>
             </ul>
         </div>
     </div>
     <div class="fullscreen-image">
-        <img id="fullscreen-img" src="" alt="Fullscreen Image">
+        <img id="fullscreen-img" src="" alt="Pełny ekran">
     </div>
     <script>
-        let isFullscreen = false;
+        let pelnyEkran = false;
+        let pokazRzadkie = false;
         const fullscreenImage = document.querySelector('.fullscreen-image');
         const fullscreenImg = document.getElementById('fullscreen-img');
         const imageLink = document.getElementById('image-link');
         const imageLinkBar = document.querySelector('.image-link-bar');
-        const searchInput = document.getElementById('search-input');
-        const sortSelect = document.getElementById('sort-select');
-        const linksList = document.querySelector('.links');
-        const linkItems = document.querySelectorAll('.links li');
-        function sortButtons(criteria) {
-            const itemsArray = Array.from(linkItems);
-            let sortedArray;
-            if (criteria === 'name-asc') {
-                sortedArray = itemsArray.sort((a, b) => 
-                    a.getAttribute('data-name').localeCompare(b.getAttribute('data-name')));
-            } else if (criteria === 'name-desc') {
-                sortedArray = itemsArray.sort((a, b) => 
-                    b.getAttribute('data-name').localeCompare(a.getAttribute('data-name')));
-            } else if (criteria === 'usage-desc') {
-                sortedArray = itemsArray.sort((a, b) => 
-                    Number(b.getAttribute('data-usage')) - Number(a.getAttribute('data-usage')));
-            } else if (criteria === 'usage-asc') {
-                sortedArray = itemsArray.sort((a, b) => 
-                    Number(a.getAttribute('data-usage')) - Number(b.getAttribute('data-usage')));
-            } else {
-                sortedArray = itemsArray;
-            }
-            sortedArray.forEach(item => linksList.appendChild(item));
+        const wyszukajInput = document.getElementById('wyszukaj-input');
+        const przelaczRzadkieBtn = document.getElementById('przelacz-rzadkie');
+        const listaKart = document.getElementById('lista-kart');
+        const wszystkieKarty = Array.from(listaKart.children);
+        
+        // Oznacz rzadko używane karty (data-usage="0")
+        function oznaczRzadkieKarty() {
+            wszystkieKarty.forEach(karta => {
+                if (karta.getAttribute('data-usage') === "0") {
+                    karta.classList.add('rzadko-uzywana');
+                } else {
+                    karta.classList.remove('rzadko-uzywana');
+                }
+            });
         }
+        
+        // Aktualizuj widoczność kart
+        function aktualizujWidocznoscKart() {
+            const fraza = wyszukajInput.value.trim().toLowerCase();
+            
+            wszystkieKarty.forEach(karta => {
+                const nazwa = karta.getAttribute('data-name').toLowerCase();
+                const czyPasujeDoWyszukiwania = nazwa.includes(fraza);
+                const czyRzadka = karta.classList.contains('rzadko-uzywana');
+                
+                if (pokazRzadkie) {
+                    karta.classList.toggle('ukryta', !(czyRzadka && czyPasujeDoWyszukiwania));
+                } else {
+                    karta.classList.toggle('ukryta', !czyPasujeDoWyszukiwania);
+                }
+            });
+        }
+        
+        // Inicjalizacja
+        oznaczRzadkieKarty();
+        aktualizujWidocznoscKart();
+        
+        // Przełącz widoczność rzadko używanych kart
+        przelaczRzadkieBtn.addEventListener('click', function() {
+            pokazRzadkie = !pokazRzadkie;
+            
+            if (pokazRzadkie) {
+                document.body.classList.add('pokaz-rzadkie');
+                przelaczRzadkieBtn.classList.add('aktywny');
+            } else {
+                document.body.classList.remove('pokaz-rzadkie');
+                przelaczRzadkieBtn.classList.remove('aktywny');
+            }
+            
+            aktualizujWidocznoscKart();
+        });
+
+        // Obsługa wyszukiwania
+        wyszukajInput.addEventListener('input', function() {
+            aktualizujWidocznoscKart();
+        });
+        
+        // Obsługa kliknięcia w kartę (bez zmiany data-usage)
         document.querySelectorAll('.link-btn').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
-                console.log('Kliknięto przycisk, data-image:', this.getAttribute('data-image'));
-                const parentLi = this.parentElement;
-                let usageCount = Number(parentLi.getAttribute('data-usage')) + 1;
-                parentLi.setAttribute('data-usage', usageCount);
-                console.log('Nowa częstotliwość użycia:', parentLi.getAttribute('data-name'), usageCount);
-                isFullscreen = !isFullscreen;
-                if (isFullscreen) {
+                
+                // Pełnoekranowy podgląd
+                pelnyEkran = !pelnyEkran;
+                if (pelnyEkran) {
                     document.body.classList.add('fullscreen-mode');
                     const imageUrl = this.getAttribute('data-image');
-                    console.log('Ustawiam src na:', imageUrl);
                     fullscreenImg.src = imageUrl;
                     imageLink.href = imageUrl;
                     imageLinkBar.style.display = 'flex';
                     fullscreenImg.onerror = () => {
-                        console.error('Błąd ładowania obrazu:', imageUrl);
                         fullscreenImg.src = 'https://via.placeholder.com/800x600?text=Obraz+niedostępny';
                         imageLink.href = fullscreenImg.src;
                     };
-                    fullscreenImg.onload = () => console.log('Obraz załadowany:', imageUrl);
                 } else {
                     document.body.classList.remove('fullscreen-mode');
                     fullscreenImg.src = '';
                     imageLinkBar.style.display = 'none';
-                    console.log('Wyczyszczono src');
                 }
             });
         });
+        
+        // Zamknięcie pełnego ekranu po kliknięciu w tło
         document.body.addEventListener('click', function(e) {
-            if (isFullscreen && (e.target === document.body || e.target === fullscreenImage || e.target === fullscreenImg)) {
-                isFullscreen = false;
+            if (pelnyEkran && (e.target === document.body || e.target === fullscreenImage || e.target === fullscreenImg)) {
+                pelnyEkran = false;
                 document.body.classList.remove('fullscreen-mode');
                 fullscreenImg.src = '';
                 imageLinkBar.style.display = 'none';
-                console.log('Zamknięto tryb pełnoekranowy');
             }
-        });
-
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.trim().toLowerCase();
-            linkItems.forEach(item => {
-                const name = item.getAttribute('data-name').toLowerCase();
-                if (name.includes(searchTerm)) {
-                    item.classList.remove('hidden');
-                } else {
-                    item.classList.add('hidden');
-                }
-            });
         });
     </script>
 </body>
