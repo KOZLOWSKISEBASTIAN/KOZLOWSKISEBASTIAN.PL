@@ -21,14 +21,15 @@
             min-height: 100vh;
             margin: 0 auto;
             transition: background 0.3s;
+            touch-action: pan-y;
         }
 
         .header, .modal-content {
             width: calc(100% - 40px);
-            max-width: 600px;
+            max-width: 500px;
             margin: 10px auto;
             background-color: #333333;
-            padding: 15px;
+            padding: 10px 15px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             box-sizing: border-box;
@@ -311,14 +312,43 @@
             list-style-type: none;
             padding: 0;
             margin-top: 20px;
+            width: 100%;
         }
 
         #lista-zakupow li {
-            padding: 10px;
+            padding: 12px 15px;
             border-bottom: 1px solid #444;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            background-color: #333;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            transition: transform 0.1s, background-color 0.2s;
+        }
+
+        #lista-zakupow li:hover {
+            background-color: #222;
+        }
+
+        #lista-zakupow li:active {
+            cursor: grabbing;
+            background-color: #222;
+        }
+
+        #lista-zakupow li.dragging {
+            opacity: 0.8;
+            transform: scale(1.02);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            background-color: #222;
+        }
+
+        #lista-zakupow li.placeholder {
+            background-color: rgba(255, 0, 255, 0.1);
+            border: 1px dashed #FF00FF;
         }
 
         #lista-zakupow li:last-child {
@@ -328,6 +358,10 @@
         .usun-z-listy {
             color: #FF00FF;
             cursor: pointer;
+            margin-left: 10px;
+            padding: 5px;
+            font-weight: bold;
+            transition: color 0.2s;
         }
 
         .usun-z-listy:hover {
@@ -404,8 +438,8 @@
             <div class="KSGROUP-PASEK-WYSZUKIWANIA">
                 <input type="text" id="wyszukaj-input" placeholder="WYSZUKAJ KARTĘ">
                 <div class="buttons-container">
-                    <button class="przelacz-rzadkie" id="przelacz-rzadkie" title="Pokaż inne karty">INNE</button>
-                    <button class="lista-zakupow-btn" id="lista-zakupow-btn" title="Lista zakupów">LISTA</button>
+                    <button class="przelacz-rzadkie" id="przelacz-rzadkie" title="INNE">INNE</button>
+                    <button class="lista-zakupow-btn" id="lista-zakupow-btn" title="LISTA">LISTA</button>
                 </div>
             </div>
         </div>
@@ -437,14 +471,14 @@
         </div>
     </div>
     <div class="fullscreen-image">
-        <img id="fullscreen-img" src="" alt="Pełny ekran">
+        <img id="fullscreen-img" src="" alt="PEŁNY EKRAN">
     </div>
     <div class="card-number" id="card-number"></div>
     
     <div id="lista-zakupow-modal" class="modal">
         <div class="modal-content">
             <div class="input-container">
-                <input type="text" id="nowy-produkt" placeholder="DODAJ NOWY PRODUKT">
+                <input type="text" id="nowy-produkt" placeholder="DODAJ PRODUKT">
                 <div class="modal-buttons-container">
                     <button class="powrot-do-kart" id="powrot-do-kart">KARTY</button>
                     <button class="dodaj-produkt" id="dodaj-do-listy">DODAJ</button>
@@ -454,7 +488,7 @@
         </div>
     </div>
 
-    <button id="installButton">Zainstaluj aplikację</button>
+    <button id="installButton">ZAINSTALUJ APLIKACJĘ</button>
 
     <script>
         let pelnyEkran = false;
@@ -553,21 +587,136 @@
             listaZakupow.innerHTML = '';
             zakupy.forEach((produkt, index) => {
                 const li = document.createElement('li');
+                li.setAttribute('data-index', index);
+                li.draggable = true;
                 li.innerHTML = `
-                    ${produkt}
+                    <span class="produkt-text">${produkt}</span>
                     <span class="usun-z-listy" data-index="${index}">✕</span>
                 `;
                 listaZakupow.appendChild(li);
+                
+                // Dodajemy obsługę przeciągania
+                li.addEventListener('dragstart', handleDragStart);
+                li.addEventListener('dragover', handleDragOver);
+                li.addEventListener('dragenter', handleDragEnter);
+                li.addEventListener('dragleave', handleDragLeave);
+                li.addEventListener('dragend', handleDragEnd);
+                li.addEventListener('drop', handleDrop);
             });
             
             document.querySelectorAll('.usun-z-listy').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
                     const index = parseInt(this.getAttribute('data-index'));
                     zakupy.splice(index, 1);
                     localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
                     wyswietlListeZakupow();
                 });
             });
+        }
+
+        // Funkcje do obsługi przeciągania
+        let draggedItem = null;
+        let placeholder = null;
+
+        function handleDragStart(e) {
+            draggedItem = this;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+            
+            // Dodajemy klasę podczas przeciągania
+            setTimeout(() => {
+                this.classList.add('dragging');
+            }, 0);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            
+            // Pomijamy jeśli to ten sam element
+            if (draggedItem === this) return;
+            
+            const rect = this.getBoundingClientRect();
+            const middleY = rect.top + rect.height / 2;
+            
+            // Sprawdzamy czy przeciągamy nad górną czy dolną połową elementu
+            if (e.clientY < middleY) {
+                // Wstawiamy placeholder przed obecnym elementem
+                if (placeholder && placeholder.nextSibling === this) {
+                    return;
+                }
+                if (!placeholder) {
+                    placeholder = document.createElement('li');
+                    placeholder.className = 'placeholder';
+                    listaZakupow.insertBefore(placeholder, this);
+                } else {
+                    listaZakupow.insertBefore(placeholder, this);
+                }
+            } else {
+                // Wstawiamy placeholder po obecnym elemencie
+                if (placeholder && placeholder.previousSibling === this) {
+                    return;
+                }
+                if (!placeholder) {
+                    placeholder = document.createElement('li');
+                    placeholder.className = 'placeholder';
+                    listaZakupow.insertBefore(placeholder, this.nextSibling);
+                } else {
+                    listaZakupow.insertBefore(placeholder, this.nextSibling);
+                }
+            }
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            this.classList.add('over');
+        }
+
+        function handleDragLeave() {
+            this.classList.remove('over');
+        }
+
+        function handleDragEnd() {
+            this.classList.remove('dragging');
+            
+            // Usuwamy placeholder jeśli istnieje
+            if (placeholder && placeholder.parentNode) {
+                placeholder.parentNode.removeChild(placeholder);
+            }
+            placeholder = null;
+            
+            // Resetujemy style
+            document.querySelectorAll('#lista-zakupow li').forEach(li => {
+                li.classList.remove('over');
+            });
+        }
+
+        function handleDrop(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            if (draggedItem !== this) {
+                // Usuwamy placeholder
+                if (placeholder && placeholder.parentNode) {
+                    placeholder.parentNode.removeChild(placeholder);
+                }
+                placeholder = null;
+                
+                // Pobieramy indeksy
+                const fromIndex = parseInt(draggedItem.getAttribute('data-index'));
+                const toIndex = parseInt(this.getAttribute('data-index'));
+                
+                // Aktualizujemy kolejność w tablicy
+                const [removed] = zakupy.splice(fromIndex, 1);
+                zakupy.splice(toIndex, 0, removed);
+                
+                // Zapisujemy i odświeżamy
+                localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                wyswietlListeZakupow();
+            }
+            
+            return false;
         }
         
         oznaczRzadkieKarty();
