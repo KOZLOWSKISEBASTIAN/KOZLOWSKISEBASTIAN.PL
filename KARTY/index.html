@@ -51,7 +51,7 @@
             border: none;
             border-radius: 5px;
             background-color: #222;
-            color: #FF00FF;
+            color: #fff;
             outline: none;
             box-sizing: border-box;
             margin: 5px auto;
@@ -278,21 +278,31 @@
             }
         }
 
+        /* Nowe style dla przycisków tekstowych */
         .przelacz-rzadkie, .lista-zakupow-btn {
+            background-color: #222;
+            color: #FF00FF;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
             cursor: pointer;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
             margin-left: 10px;
-            width: 24px;
-            height: 24px;
-            filter: grayscale(100%) brightness(50%);
-            transition: filter 0.3s;
+            transition: background-color 0.3s;
+            white-space: nowrap;
+            text-decoration: none;
+            display: inline-block;
         }
 
         .przelacz-rzadkie:hover, .lista-zakupow-btn:hover {
-            filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
+            background-color: #333;
         }
 
         .przelacz-rzadkie.aktywny, .lista-zakupow-btn.aktywny {
-            filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
+            background-color: #333;
+            color: #FF00FF;
         }
 
         .buttons-container {
@@ -322,7 +332,7 @@
         }
 
         .close-modal:hover {
-            color: #FF00FF;
+            color: #fff;
         }
 
         #lista-zakupow {
@@ -349,7 +359,7 @@
         }
 
         .usun-z-listy:hover {
-            color: #FF00FF;
+            color: #fff;
         }
 
         #dodaj-do-listy {
@@ -359,9 +369,9 @@
             padding: 8px 15px;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px;
             font-weight: bold;
             white-space: nowrap;
+            transition: background-color 0.3s;
         }
 
         #dodaj-do-listy:hover {
@@ -411,8 +421,8 @@
                 <input type="text" id="wyszukaj-input" placeholder="WYSZUKAJ KARTĘ">
             </div>
             <div class="buttons-container">
-                <img src="http://kozlowskisebastian.pl/GRAFIKA/ZAMKNIJ.svg" class="przelacz-rzadkie" id="przelacz-rzadkie" title="Pokaż rzadko używane karty">
-                <img src="http://kozlowskisebastian.pl/GRAFIKA/ZAMKNIJ.svg" class="lista-zakupow-btn" id="lista-zakupow-btn" title="Lista zakupów">
+                <button class="przelacz-rzadkie" id="przelacz-rzadkie" title="Pokaż rzadko używane karty">RZADKIE</button>
+                <button class="lista-zakupow-btn" id="lista-zakupow-btn" title="Lista zakupów">LISTA</button>
             </div>
         </div>
     </div>
