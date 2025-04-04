@@ -271,7 +271,8 @@
             gap: 10px;
         }
 
-        .przelacz-rzadkie, .lista-zakupow-btn {
+        .przelacz-rzadkie, .lista-zakupow-btn,
+        .powrot-do-kart, .dodaj-produkt {
             background-color: #222;
             color: #FF00FF;
             border: none;
@@ -288,7 +289,10 @@
             text-align: center;
         }
 
-        .przelacz-rzadkie:hover, .lista-zakupow-btn:hover {
+        .przelacz-rzadkie:hover, 
+        .lista-zakupow-btn:hover,
+        .powrot-do-kart:hover,
+        .dodaj-produkt:hover {
             background-color: #333;
         }
 
@@ -342,26 +346,10 @@
             color: #fff;
         }
 
-        #dodaj-do-listy {
-            background-color: #222;
-            color: #FF00FF;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            white-space: nowrap;
-            transition: background-color 0.3s;
-        }
-
-        #dodaj-do-listy:hover {
-            background-color: #333;
-        }
-
         .input-container {
             display: flex;
+            flex-direction: column;
             gap: 10px;
-            margin-top: 10px;
             width: 100%;
             max-width: 500px;
             margin-left: auto;
@@ -370,6 +358,13 @@
 
         #nowy-produkt {
             flex-grow: 1;
+        }
+
+        .modal-buttons-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 10px;
         }
 
         #installButton {
@@ -408,7 +403,8 @@
             .KSGROUP-PASEK-WYSZUKIWANIA input,
             #nowy-produkt,
             .KSGROUP-PASEK-LINKU-OBRAZU a,
-            .buttons-container {
+            .buttons-container,
+            .modal-buttons-container {
                 max-width: none;
             }
         }
@@ -462,7 +458,10 @@
             <span class="close-modal">&times;</span>
             <div class="input-container">
                 <input type="text" id="nowy-produkt" placeholder="DODAJ NOWY PRODUKT">
-                <button id="dodaj-do-listy">DODAJ</button>
+                <div class="modal-buttons-container">
+                    <button class="powrot-do-kart" id="powrot-do-kart">KARTY</button>
+                    <button class="dodaj-produkt" id="dodaj-do-listy">DODAJ</button>
+                </div>
             </div>
             <ul id="lista-zakupow"></ul>
         </div>
@@ -486,6 +485,7 @@
         const closeModal = document.querySelector('.close-modal');
         const listaZakupow = document.getElementById('lista-zakupow');
         const dodajDoListyBtn = document.getElementById('dodaj-do-listy');
+        const powrotDoKartBtn = document.getElementById('powrot-do-kart');
         const nowyProduktInput = document.getElementById('nowy-produkt');
         const cardNumberElement = document.getElementById('card-number');
         const installButton = document.getElementById('installButton');
@@ -607,6 +607,10 @@
         });
         
         closeModal.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        powrotDoKartBtn.addEventListener('click', function() {
             modal.style.display = 'none';
         });
         
