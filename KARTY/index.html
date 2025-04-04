@@ -14,7 +14,7 @@
             font-weight: 300;
             background-color: #000000;
             color: #FF00FF;
-            padding: 20px;
+            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -25,7 +25,7 @@
 
         /* Wspólne style dla nagłówka i modala */
         .header, .modal-content {
-            width: 90%;
+            width: calc(100% - 40px);
             max-width: 600px;
             margin: 20px auto;
             background-color: #333333;
@@ -117,12 +117,12 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 90%;
+            width: calc(100% - 40px);
             max-width: 600px;
             transition: opacity 0.3s;
             position: relative;
             z-index: 2;
-            margin-top: 20px;
+            margin: 0 auto 20px;
         }
 
         .fullscreen-mode .container {
@@ -131,7 +131,7 @@
         }
 
         .row {
-            margin: 20px 0;
+            margin: 0;
             text-align: center;
             width: 100%;
         }
@@ -300,7 +300,6 @@
             background-color: #333;
         }
 
-        /* Usunięto klasę .aktywny dla przycisku INNE */
         .buttons-container {
             display: flex;
             align-items: center;
