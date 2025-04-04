@@ -58,7 +58,7 @@
         .fullscreen-mode .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN .KSGROUP-PASEK-LINKU-OBRAZU {
             display: flex;
         }
-        .KSGROUP-PASEK-WYSZUKIWANIA input, .KSGROUP-PASEK-LINKU-OBRAZU a {
+        .KSGROUP-PASEK-WYSZUKIWANIA input {
             padding: 8px;
             font-size: 16px;
             font-family: 'Montserrat', sans-serif;
@@ -73,9 +73,23 @@
         }
         .KSGROUP-PASEK-LINKU-OBRAZU a {
             text-decoration: none;
-            color: #fff;
+            color: #FF00FF;
             text-align: center;
             display: block;
+            background-color: #222;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            outline: none;
+            width: 80%;
+            box-sizing: border-box;
+            margin: 5px 0;
+        }
+        .KSGROUP-PASEK-LINKU-OBRAZU a:hover {
+            background-color: #333;
         }
         @media (min-width: 769px) {
             .KSGROUP-PASEK-WYSZUKIWANIA input, .KSGROUP-PASEK-LINKU-OBRAZU a {
@@ -327,13 +341,15 @@
                 <img src="http://kozlowskisebastian.pl/GRAFIKA/ZAMKNIJ.svg" class="lista-zakupow-btn" id="lista-zakupow-btn" title="Lista zakupów">
             </div>
         </div>
-        <!-- Wyszukiwarka w trybie pełnoekranowym -->
-        <div class="KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN">
-            <div class="KSGROUP-PASEK-LINKU-OBRAZU">
-                <a id="image-link" href="" target="_blank">ZAPISZ</a>
-            </div>
+    </div>
+    
+    <!-- Wyszukiwarka w trybie pełnoekranowym -->
+    <div class="KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN">
+        <div class="KSGROUP-PASEK-LINKU-OBRAZU">
+            <a id="image-link" href="" target="_blank">ZAPISZ</a>
         </div>
     </div>
+
     <div class="container">
         <div class="row">
             <ul class="karty" id="lista-kart">
