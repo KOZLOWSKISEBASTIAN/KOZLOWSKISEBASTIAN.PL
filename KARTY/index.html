@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KARTY</title>
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Aplikacja do zarządzania kartami i listą zakupów">
+    <link rel="manifest" href="/manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
             font-weight: 300;
             background-color: #000000;
-            color: #222222;
+            color: #FF00FF;
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -48,7 +51,7 @@
             border: none;
             border-radius: 5px;
             background-color: #222;
-            color: #fff;
+            color: #FF00FF;
             outline: none;
             box-sizing: border-box;
             margin: 5px auto;
@@ -319,7 +322,7 @@
         }
 
         .close-modal:hover {
-            color: #fff;
+            color: #FF00FF;
         }
 
         #lista-zakupow {
@@ -346,7 +349,7 @@
         }
 
         .usun-z-listy:hover {
-            color: #fff;
+            color: #FF00FF;
         }
 
         #dodaj-do-listy {
@@ -377,6 +380,27 @@
 
         #nowy-produkt {
             flex-grow: 1;
+        }
+
+        /* Przycisk instalacji PWA */
+        #installButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #FF00FF;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+        }
+
+        #installButton:hover {
+            background-color: #cc00cc;
         }
     </style>
 </head>
@@ -426,7 +450,6 @@
     <div id="lista-zakupow-modal" class="modal">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
-            <h2>LISTA ZAKUPÓW</h2>
             <div class="input-container">
                 <input type="text" id="nowy-produkt" placeholder="DODAJ NOWY PRODUKT">
                 <button id="dodaj-do-listy">DODAJ</button>
@@ -434,6 +457,8 @@
             <ul id="lista-zakupow"></ul>
         </div>
     </div>
+
+    <button id="installButton">Zainstaluj aplikację</button>
 
     <script>
         let pelnyEkran = false;
@@ -453,8 +478,33 @@
         const dodajDoListyBtn = document.getElementById('dodaj-do-listy');
         const nowyProduktInput = document.getElementById('nowy-produkt');
         const cardNumberElement = document.getElementById('card-number');
+        const installButton = document.getElementById('installButton');
         
         let zakupy = JSON.parse(localStorage.getItem('listaZakupow')) || [];
+        let deferredPrompt;
+        
+        // Obsługa instalacji PWA
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installButton.style.display = 'block';
+        });
+
+        installButton.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    installButton.style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installButton.style.display = 'none';
+            deferredPrompt = null;
+        });
         
         function getCardNumber(element) {
             const classList = element.parentElement.classList;
@@ -622,6 +672,17 @@
                 cardNumberElement.textContent = '';
             }
         });
+
+        // Rejestracja Service Worker dla PWA
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful');
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
     </script>
 </body>
 </html>
