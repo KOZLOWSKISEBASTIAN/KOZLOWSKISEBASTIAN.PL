@@ -120,6 +120,7 @@
         }
         .karty li {
             margin: 5px 0;
+            transition: all 0.3s ease;
         }
         .karty li.ukryta {
             display: none !important;
@@ -209,7 +210,7 @@
         }
         .przelacz-rzadkie {
             cursor: pointer;
-            margin-left: 10px;
+            margin-left: 0px;
             width: 24px;
             height: 24px;
             filter: grayscale(100%) brightness(50%);
@@ -284,44 +285,62 @@
         function aktualizujWidocznoscKart() {
             const fraza = wyszukajInput.value.trim().toLowerCase();
             
-            wszystkieKarty.forEach(karta => {
-                const nazwa = karta.getAttribute('data-name').toLowerCase();
-                const czyPasujeDoWyszukiwania = nazwa.includes(fraza);
-                const czyRzadka = karta.classList.contains('rzadko-uzywana');
-                
-                if (pokazRzadkie) {
-                    karta.classList.toggle('ukryta', !(czyRzadka && czyPasujeDoWyszukiwania));
-                } else {
-                    karta.classList.toggle('ukryta', !czyPasujeDoWyszukiwania);
-                }
-            });
+            if (fraza !== '') {
+                // Tryb wyszukiwania - pokaż wszystkie pasujące karty
+                wszystkieKarty.forEach(karta => {
+                    const nazwa = karta.getAttribute('data-name').toLowerCase();
+                    const czyPasuje = nazwa.includes(fraza);
+                    
+                    // Tymczasowo pokaż wszystkie pasujące karty
+                    karta.style.display = czyPasuje ? 'block' : 'none';
+                    karta.classList.remove('ukryta');
+                });
+            } else {
+                // Tryb normalny - zastosuj standardowe filtry
+                wszystkieKarty.forEach(karta => {
+                    karta.style.display = ''; // Resetuj styl display
+                    if (pokazRzadkie) {
+                        karta.classList.toggle('ukryta', !karta.classList.contains('rzadko-uzywana'));
+                    } else {
+                        karta.classList.toggle('ukryta', karta.classList.contains('rzadko-uzywana'));
+                    }
+                });
+            }
         }
         
         // Inicjalizacja
         oznaczRzadkieKarty();
         aktualizujWidocznoscKart();
         
-        // Przełącz widoczność rzadko używanych kart
+        // Przełącz widoczność rzadko używanych kart (tylko gdy wyszukiwanie jest puste)
         przelaczRzadkieBtn.addEventListener('click', function() {
-            pokazRzadkie = !pokazRzadkie;
-            
-            if (pokazRzadkie) {
-                document.body.classList.add('pokaz-rzadkie');
-                przelaczRzadkieBtn.classList.add('aktywny');
-            } else {
-                document.body.classList.remove('pokaz-rzadkie');
-                przelaczRzadkieBtn.classList.remove('aktywny');
+            if (wyszukajInput.value.trim() === '') {
+                pokazRzadkie = !pokazRzadkie;
+                
+                if (pokazRzadkie) {
+                    document.body.classList.add('pokaz-rzadkie');
+                    przelaczRzadkieBtn.classList.add('aktywny');
+                } else {
+                    document.body.classList.remove('pokaz-rzadkie');
+                    przelaczRzadkieBtn.classList.remove('aktywny');
+                }
+                
+                aktualizujWidocznoscKart();
             }
-            
-            aktualizujWidocznoscKart();
         });
 
         // Obsługa wyszukiwania
         wyszukajInput.addEventListener('input', function() {
+            // Wyłącz tryb rzadko używanych podczas wyszukiwania
+            if (this.value.trim() !== '') {
+                document.body.classList.remove('pokaz-rzadkie');
+                przelaczRzadkieBtn.classList.remove('aktywny');
+                pokazRzadkie = false;
+            }
             aktualizujWidocznoscKart();
         });
         
-        // Obsługa kliknięcia w kartę (bez zmiany data-usage)
+        // Obsługa kliknięcia w kartę
         document.querySelectorAll('.link-btn').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
