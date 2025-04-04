@@ -32,6 +32,11 @@
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        .fullscreen-mode .header {
+            background-color: transparent !important;
+            box-shadow: none !important;
         }
         .KSGROUP-WYSZUKIWARKA-NORMALNA, .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN {
             display: flex;
@@ -270,9 +275,21 @@
             margin: 10% auto;
             padding: 20px;
             border-radius: 8px;
-            width: 80%;
-            max-width: 500px;
             color: #FF00FF;
+        }
+        @media (min-width: 769px) {
+            .modal-content {
+                width: 80%;
+                max-width: 800px;
+                margin: 5% auto;
+            }
+        }
+        @media (max-width: 768px) {
+            .modal-content {
+                width: calc(100% - 20px);
+                margin: 10px auto;
+                padding: 15px;
+            }
         }
         .close-modal {
             color: #FF00FF;
