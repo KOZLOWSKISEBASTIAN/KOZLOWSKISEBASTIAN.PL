@@ -58,12 +58,18 @@
             display: block;
         }
 
-        .KSGROUP-WYSZUKIWARKA-NORMALNA, .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN {
+        .KSGROUP-WYSZUKIWARKA-NORMALNA {
             display: flex;
+            flex-direction: column;
             align-items: center;
             width: 100%;
-            justify-content: center;
-            flex-wrap: wrap;
+        }
+
+        .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
         }
 
         .KSGROUP-PASEK-WYSZUKIWANIA, .KSGROUP-PASEK-LINKU-OBRAZU {
@@ -278,7 +284,7 @@
             }
         }
 
-        /* Nowe style dla przycisków tekstowych */
+        /* Style dla przycisków */
         .przelacz-rzadkie, .lista-zakupow-btn {
             background-color: #222;
             color: #FF00FF;
@@ -289,7 +295,7 @@
             font-weight: bold;
             font-family: 'Montserrat', sans-serif;
             font-size: 14px;
-            margin-left: 10px;
+            margin: 10px 5px 0 5px;
             transition: background-color 0.3s;
             white-space: nowrap;
             text-decoration: none;
@@ -302,8 +308,9 @@
 
         .buttons-container {
             display: flex;
-            align-items: center;
-            margin-left: 10px;
+            justify-content: center;
+            width: 100%;
+            margin-top: 10px;
         }
 
         /* Modal listy zakupów */
@@ -431,6 +438,112 @@
     <div class="container">
         <div class="row">
             <ul class="karty" id="lista-kart">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
                 <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
