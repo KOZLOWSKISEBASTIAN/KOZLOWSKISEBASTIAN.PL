@@ -478,6 +478,7 @@ filter: brightness(1) invert(1);
             color: #FFFFFF;
             flex-grow: 1;
             transition: color 0.2s;
+            cursor: pointer;
         }
 
         #lista-zakupow li:hover .produkt-text {
@@ -884,7 +885,7 @@ filter: brightness(1) invert(1);
                     li.setAttribute('data-index', index);
                     li.draggable = true;
                     li.innerHTML = `
-                        <span class="produkt-text">${produkt}</span>
+                        <span class="produkt-text" data-index="${index}">${produkt}</span>
                         <span class="usun-z-listy" data-index="${index}">✕</span>
                     `;
                     listaZakupow.appendChild(li);
@@ -911,6 +912,17 @@ filter: brightness(1) invert(1);
                         setTimeout(() => {
                             wyswietlListeZakupow();
                         }, 300);
+                    });
+                    
+                    li.querySelector('.produkt-text').addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const index = parseInt(this.getAttribute('data-index'));
+                        const nowyTekst = prompt('Edytuj produkt:', zakupy[index]);
+                        if (nowyTekst !== null && nowyTekst.trim() !== '') {
+                            zakupy[index] = nowyTekst.trim();
+                            localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                            wyswietlListeZakupow();
+                        }
                     });
                 }, index * 50);
             });
@@ -1269,4 +1281,4 @@ filter: brightness(1) invert(1);
         }
     </script>
 </body>
-</html> 
+</html>
