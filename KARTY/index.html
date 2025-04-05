@@ -233,7 +233,7 @@
         .karty a img {
             max-height: 30px;
             width: auto;
-            filter: grayscale(100%) brightness(50%);
+filter: brightness(1) invert(1);
             transition: all 0.3s;
             margin-bottom: 5px;
         }
@@ -308,7 +308,7 @@
         .przelacz-rzadkie, .lista-zakupow-btn,
         .powrot-do-kart, .dodaj-produkt {
             background-color: #222;
-            color: #FF00FF;
+            color: #FFFFFF;
             border: none;
             padding: 8px 8px;
             border-radius: 5px;
@@ -329,6 +329,7 @@
         .powrot-do-kart:hover,
         .dodaj-produkt:hover {
             background-color: #333;
+            color: #FF00FF;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
@@ -398,12 +399,12 @@
         }
 
         #lista-zakupow::-webkit-scrollbar-thumb {
-            background: #FF00FF;
+            background: #FFFFFF;
             border-radius: 4px;
         }
 
         #lista-zakupow::-webkit-scrollbar-thumb:hover {
-            background: #FFFFFF;
+            background: #FF00FF;
         }
 
         @keyframes slideIn {
@@ -484,7 +485,7 @@
         }
 
         .usun-z-listy {
-            color: #FF00FF;
+            color: #FFFFFF;
             cursor: pointer;
             margin-left: 10px;
             padding: 8px;
@@ -497,7 +498,7 @@
         }
 
         .usun-z-listy:hover {
-            color: #fff;
+            color: #FF00FF;
             transform: scale(1.2);
         }
 
