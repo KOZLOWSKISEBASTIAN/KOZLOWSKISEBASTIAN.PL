@@ -92,7 +92,6 @@
 
         button:hover {
             background-color: #333;
-            color: #FF00FF;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
@@ -101,11 +100,11 @@
             transform: scale(0.95);
         }
 
-        .operator {
+        .operator, #equals, #clear, .decimal {
             color: #FF00FF;
         }
 
-        .operator:hover {
+        .operator:hover, #equals:hover, #clear:hover, .decimal:hover {
             color: #FFFFFF;
         }
 
@@ -163,7 +162,7 @@
             <button>3</button>
             <button class="operator">+</button>
             <button>0</button>
-            <button>.</button>
+            <button class="decimal">.</button>
             <button id="equals">=</button>
         </div>
     </div>
@@ -176,57 +175,78 @@
         let operation = null;
         let resetScreen = false;
 
+        // Mapowanie klawiszy klawiatury
+        const keyMap = {
+            '0': '0', '1': '1', '2': '2', '3': '3', '4': '4',
+            '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+            '.': '.', '+': '+', '-': '-', '*': '*', '/': '/',
+            'Enter': '=', '=': '=', 'Escape': 'KASUJ', 'Backspace': 'KASUJ',
+            'Delete': 'KASUJ'
+        };
+
+        // Obsługa kliknięć przycisków
         document.querySelectorAll('button').forEach(button => {
             button.addEventListener('click', function() {
-                const value = this.textContent;
-
-                if (value === 'KASUJ') {
-                    currentInput = '';
-                    previousInput = '';
-                    operation = null;
-                    operationDisplay.value = '';
-                    resultDisplay.value = '';
-                }
-                else if (value === '=') {
-                    if (previousInput && currentInput && operation) {
-                        const operationText = `${previousInput} ${operation} ${currentInput} =`;
-                        operationDisplay.value = operationText;
-                        const result = calculate(parseFloat(previousInput), parseFloat(currentInput), operation);
-                        resultDisplay.value = result;
-                        currentInput = result.toString();
-                        previousInput = '';
-                        operation = null;
-                        resetScreen = true;
-                    }
-                }
-                else if (['+', '-', '*', '/'].includes(value)) {
-                    if (currentInput) {
-                        if (previousInput && operation) {
-                            const result = calculate(parseFloat(previousInput), parseFloat(currentInput), operation);
-                            previousInput = result.toString();
-                            operationDisplay.value = `${previousInput} ${value}`;
-                        } else {
-                            previousInput = currentInput;
-                            operationDisplay.value = `${previousInput} ${value}`;
-                        }
-                        currentInput = '';
-                        operation = value;
-                        resetScreen = false;
-                    }
-                }
-                else {
-                    if (resetScreen) {
-                        currentInput = '';
-                        operationDisplay.value = '';
-                        resetScreen = false;
-                    }
-                    if (currentInput.length < 15) {
-                        currentInput += value;
-                        resultDisplay.value = currentInput;
-                    }
-                }
+                handleInput(this.textContent);
             });
         });
+
+        // Obsługa klawiatury
+        document.addEventListener('keydown', function(event) {
+            const key = event.key;
+            if (keyMap.hasOwnProperty(key)) {
+                event.preventDefault();
+                handleInput(keyMap[key]);
+            }
+        });
+
+        function handleInput(value) {
+            if (value === 'KASUJ') {
+                currentInput = '';
+                previousInput = '';
+                operation = null;
+                operationDisplay.value = '';
+                resultDisplay.value = '';
+            }
+            else if (value === '=') {
+                if (previousInput && currentInput && operation) {
+                    const operationText = `${previousInput} ${operation} ${currentInput} =`;
+                    operationDisplay.value = operationText;
+                    const result = calculate(parseFloat(previousInput), parseFloat(currentInput), operation);
+                    resultDisplay.value = result;
+                    currentInput = result.toString();
+                    previousInput = '';
+                    operation = null;
+                    resetScreen = true;
+                }
+            }
+            else if (['+', '-', '*', '/'].includes(value)) {
+                if (currentInput) {
+                    if (previousInput && operation) {
+                        const result = calculate(parseFloat(previousInput), parseFloat(currentInput), operation);
+                        previousInput = result.toString();
+                        operationDisplay.value = `${previousInput} ${value}`;
+                    } else {
+                        previousInput = currentInput;
+                        operationDisplay.value = `${previousInput} ${value}`;
+                    }
+                    currentInput = '';
+                    operation = value;
+                    resetScreen = false;
+                }
+            }
+            else {
+                if (resetScreen) {
+                    currentInput = '';
+                    operationDisplay.value = '';
+                    resetScreen = false;
+                }
+                if (currentInput.length < 15) {
+                    currentInput += value;
+                    resultDisplay.value = currentInput;
+                }
+            }
+        }
 
         function calculate(num1, num2, op) {
             switch (op) {
