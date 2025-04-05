@@ -1146,19 +1146,19 @@
         function handleOrientationChange() {
             if (window.matchMedia("(max-width: 768px)").matches) {
                 if (window.orientation === 0 || window.orientation === 180) {
-                    fullscreenImg.style.transform = 'rotate(0deg)';
+                    fullscreenImg.style.transform = 'rotate(90deg)';
                     fullscreenImg.style.maxWidth = '100vh';
                     fullscreenImg.style.maxHeight = '100vw';
-                    fullscreenCardNumber.style.top = '50%';
-                    fullscreenCardNumber.style.left = '20px';
-                    fullscreenCardNumber.style.transform = 'translateY(-50%) rotate(90deg)';
+                    fullscreenCardNumber.style.top = '30px';
+                    fullscreenCardNumber.style.left = '50%';
+                    fullscreenCardNumber.style.transform = 'translateY(-50%)';
                     fullscreenCardNumber.style.transformOrigin = 'left top';
                     fullscreenCardNumber.style.whiteSpace = 'nowrap';
                 } else {
                     fullscreenImg.style.transform = 'rotate(0)';
                     fullscreenImg.style.maxWidth = '100%';
                     fullscreenImg.style.maxHeight = '100%';
-                    fullscreenCardNumber.style.top = '80px';
+                    fullscreenCardNumber.style.top = '30px';
                     fullscreenCardNumber.style.left = '50%';
                     fullscreenCardNumber.style.transform = 'translateX(-50%)';
                     fullscreenCardNumber.style.transformOrigin = '';
