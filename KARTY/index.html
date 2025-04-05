@@ -30,7 +30,7 @@
             max-width: 520px;
             margin: 10px auto;
             background-color: #333333;
-            padding: 10px 10px;
+            padding: 8px 8px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             box-sizing: border-box;
@@ -75,7 +75,7 @@
             align-items: center;
             width: 100%;
             position: fixed;
-            top: 20px;
+            top: 10px;
             left: 0;
             right: 0;
             z-index: 10;
@@ -100,9 +100,9 @@
             flex-direction: column;
             align-items: center;
             gap: 10px;
-            width: 100%;
+            width: 80%;
             max-width: 520px;
-            margin: 0 auto;
+            margin: 0 0;
         }
 
         .KSGROUP-PASEK-LINKU-OBRAZU a {
@@ -203,7 +203,7 @@
 
         .karty a {
             text-decoration: none;
-            padding: 10px 10px;
+            padding: 8px 8px;
             color: #FF00FF;
             background: #333333;
             border-radius: 5px;
@@ -365,7 +365,7 @@
             max-width: 520px;
             margin: 10px auto;
             background-color: #333333;
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             box-sizing: border-box;
@@ -424,7 +424,7 @@
         }
 
         #lista-zakupow li {
-            padding: 12px 15px;
+            padding: 8px 8px;
             border-bottom: 1px solid #444;
             display: flex;
             justify-content: space-between;
@@ -486,7 +486,7 @@
             color: #FF00FF;
             cursor: pointer;
             margin-left: 10px;
-            padding: 5px;
+            padding: 8px;
             font-weight: bold;
             transition: all 0.2s;
         }
@@ -537,7 +537,7 @@
             background-color: #FF00FF;
             color: white;
             border: none;
-            padding: 10px 15px;
+            padding: 8px 8px;
             border-radius: 5px;
             cursor: pointer;
             font-family: 'Montserrat', sans-serif;
@@ -558,16 +558,49 @@
             transform: scale(0.98);
         }
 
+        /* Style dla obracania obrazu na urządzeniach mobilnych */
+        .fullscreen-image-content {
+            transition: transform 0.3s ease;
+        }
+
+        @media (max-width: 768px) and (orientation: portrait) {
+            .fullscreen-image-content {
+                transform: rotate(90deg);
+                max-width: 100vh;
+                max-height: 100vw;
+            }
+            
+            .card-number-fullscreen {
+                top: 50%;
+                left: 20px;
+                transform: translateY(-50%) rotate(90deg);
+                transform-origin: left top;
+                white-space: nowrap;
+            }
+        }
+
+        @media (max-width: 768px) and (orientation: landscape) {
+            .fullscreen-image-content {
+                transform: rotate(0);
+            }
+            
+            .card-number-fullscreen {
+                top: 80px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
         @media (max-width: 768px) {
             .header, .container {
                 width: calc(100% - 24px);
-                padding: 12px;
+                padding: 8px;
             }
             
             .modal-content {
                 max-height: 90vh;
                 margin: 10px auto;
-                padding: 12px;
+                padding: 8px;
                 width: calc(100% - 24px);
             }
             
@@ -586,7 +619,7 @@
             .karty a {
                 height: 70px;
                 min-width: 100px;
-                padding: 8px 12px;
+                padding: 8px 8px;
             }
             
             #lista-zakupow li.dragging {
@@ -724,7 +757,7 @@
         </div>
     </div>
     <div class="fullscreen-image">
-        <img id="fullscreen-img" src="" alt="PEŁNY EKRAN">
+        <img id="fullscreen-img" src="" alt="PEŁNY EKRAN" class="fullscreen-image-content">
     </div>
     
     <div id="lista-zakupow-modal" class="modal">
@@ -1048,9 +1081,41 @@
             isDragging = false;
         }, { passive: false });
         
+        function handleOrientationChange() {
+            if (window.matchMedia("(max-width: 768px)").matches) {
+                if (window.orientation === 0 || window.orientation === 180) {
+                    // Portrait mode
+                    fullscreenImg.style.transform = 'rotate(90deg)';
+                    fullscreenImg.style.maxWidth = '100vh';
+                    fullscreenImg.style.maxHeight = '100vw';
+                    fullscreenCardNumber.style.top = '50%';
+                    fullscreenCardNumber.style.left = '20px';
+                    fullscreenCardNumber.style.transform = 'translateY(-50%) rotate(90deg)';
+                    fullscreenCardNumber.style.transformOrigin = 'left top';
+                    fullscreenCardNumber.style.whiteSpace = 'nowrap';
+                } else {
+                    // Landscape mode
+                    fullscreenImg.style.transform = 'rotate(0)';
+                    fullscreenImg.style.maxWidth = '100%';
+                    fullscreenImg.style.maxHeight = '100%';
+                    fullscreenCardNumber.style.top = '80px';
+                    fullscreenCardNumber.style.left = '50%';
+                    fullscreenCardNumber.style.transform = 'translateX(-50%)';
+                    fullscreenCardNumber.style.transformOrigin = '';
+                    fullscreenCardNumber.style.whiteSpace = '';
+                }
+            }
+        }
+        
         oznaczRzadkieKarty();
         aktualizujWidocznoscKart();
         wyswietlListeZakupow();
+        
+        // Initial check
+        handleOrientationChange();
+        
+        // Add event listener for orientation changes
+        window.addEventListener('orientationchange', handleOrientationChange);
         
         przelaczRzadkieBtn.addEventListener('click', function() {
             if (wyszukajInput.value.trim() === '') {
@@ -1140,6 +1205,9 @@
                     // Pobierz numer karty z klasy rodzica (elementu li)
                     const cardNumber = this.parentElement.classList[0];
                     fullscreenCardNumber.textContent = `Numer karty: ${cardNumber}`;
+                    
+                    // Aktualizuj orientację po otwarciu pełnego ekranu
+                    handleOrientationChange();
                     
                     fullscreenImg.onerror = () => {
                         fullscreenImg.src = 'https://via.placeholder.com/800x600?text=Obraz+niedostępny';
