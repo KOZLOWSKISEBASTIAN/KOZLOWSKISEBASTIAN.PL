@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KARTY</title>
+    <title>KARTY1</title>
     <meta name="theme-color" content="#000000">
     <meta name="description" content="Aplikacja do zarządzania kartami i listą zakupów">
     <link rel="manifest" href="/manifest.json">
@@ -357,7 +357,7 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             box-sizing: border-box;
             max-height: 100%;
-			height: calc(100% - 20px);
+            height: calc(100% - 20px);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -372,6 +372,7 @@
             flex-grow: 1;
             -webkit-overflow-scrolling: touch;
             overscroll-behavior: contain;
+            touch-action: pan-y; /* Dodane dla lepszego scrollowania na Androidzie */
         }
 
         /* Stylowanie paska przewijania */
@@ -861,6 +862,11 @@
                     `;
                     listaZakupow.appendChild(li);
                     
+                    // Dodajemy obsługę touch dla Android
+                    li.addEventListener('touchstart', handleTouchStart, { passive: false });
+                    li.addEventListener('touchmove', handleTouchMove, { passive: false });
+                    li.addEventListener('touchend', handleTouchEnd, { passive: false });
+                    
                     li.addEventListener('dragstart', handleDragStart);
                     li.addEventListener('dragover', handleDragOver);
                     li.addEventListener('dragenter', handleDragEnter);
@@ -886,6 +892,45 @@
 
         let draggedItem = null;
         let placeholder = null;
+        let startY = 0;
+        let scrollTop = 0;
+        let isDragging = false;
+
+        // Obsługa touch dla Android
+        function handleTouchStart(e) {
+            if (e.touches.length !== 1) return;
+            
+            const touch = e.touches[0];
+            const li = e.currentTarget;
+            
+            // Sprawdzamy, czy dotknięto przycisku usuwania
+            if (touch.target.classList.contains('usun-z-listy')) {
+                return;
+            }
+            
+            e.preventDefault();
+            
+            // Jeśli dotknięto elementu listy, rozpoczynamy przewijanie
+            if (!isDragging) {
+                isDragging = true;
+                startY = touch.pageY;
+                scrollTop = listaZakupow.scrollTop;
+            }
+        }
+
+        function handleTouchMove(e) {
+            if (!isDragging || e.touches.length !== 1) return;
+            e.preventDefault();
+            
+            const touch = e.touches[0];
+            const y = touch.pageY;
+            const walk = (y - startY) * -1; // odwracamy kierunek
+            listaZakupow.scrollTop = scrollTop + walk;
+        }
+
+        function handleTouchEnd() {
+            isDragging = false;
+        }
 
         function handleDragStart(e) {
             draggedItem = this;
@@ -987,6 +1032,35 @@
             
             return false;
         }
+        
+        // Dodajemy obsługę touch dla całej listy zakupów
+        listaZakupow.addEventListener('touchstart', function(e) {
+            if (e.touches.length !== 1) return;
+            
+            const touch = e.touches[0];
+            const li = touch.target.closest('li');
+            
+            // Jeśli nie dotknięto elementu listy, rozpoczynamy przewijanie
+            if (!li) {
+                isDragging = true;
+                startY = touch.pageY;
+                scrollTop = this.scrollTop;
+            }
+        }, { passive: false });
+
+        listaZakupow.addEventListener('touchmove', function(e) {
+            if (!isDragging || e.touches.length !== 1) return;
+            e.preventDefault();
+            
+            const touch = e.touches[0];
+            const y = touch.pageY;
+            const walk = (y - startY) * -1; // odwracamy kierunek
+            this.scrollTop = scrollTop + walk;
+        }, { passive: false });
+
+        listaZakupow.addEventListener('touchend', function() {
+            isDragging = false;
+        }, { passive: false });
         
         oznaczRzadkieKarty();
         aktualizujWidocznoscKart();
