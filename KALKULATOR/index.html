@@ -32,18 +32,42 @@
             box-sizing: border-box;
         }
 
-        #display {
-            width: 100%;
+        .display-container {
+            background-color: #222;
+            border-radius: 5px;
             padding: 15px;
-            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        #operation-display {
+            width: 100%;
+            font-size: 18px;
             font-family: 'Montserrat', sans-serif;
             border: none;
-            border-radius: 5px;
-            background-color: #222;
+            background-color: transparent;
             color: #B0B0B0;
             outline: none;
             box-sizing: border-box;
-            margin-bottom: 20px;
+            text-align: right;
+            margin-bottom: 5px;
+            min-height: 24px;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #444;
+            margin: 5px 0;
+        }
+
+        #result-display {
+            width: 100%;
+            font-size: 24px;
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            background-color: transparent;
+            color: #B0B0B0;
+            outline: none;
+            box-sizing: border-box;
             text-align: right;
         }
 
@@ -106,16 +130,23 @@
                 font-size: 16px;
             }
 
-            #display {
+            #operation-display {
+                font-size: 16px;
+            }
+
+            #result-display {
                 font-size: 20px;
-                padding: 12px;
             }
         }
     </style>
 </head>
 <body>
     <div class="calculator">
-        <input type="text" id="display" readonly>
+        <div class="display-container">
+            <input type="text" id="operation-display" readonly>
+            <div class="divider"></div>
+            <input type="text" id="result-display" readonly>
+        </div>
         <div class="buttons">
             <button id="clear">KASUJ</button>
             <button class="operator">/</button>
@@ -138,7 +169,8 @@
     </div>
 
     <script>
-        const display = document.getElementById('display');
+        const operationDisplay = document.getElementById('operation-display');
+        const resultDisplay = document.getElementById('result-display');
         let currentInput = '';
         let previousInput = '';
         let operation = null;
@@ -152,13 +184,15 @@
                     currentInput = '';
                     previousInput = '';
                     operation = null;
-                    display.value = '';
+                    operationDisplay.value = '';
+                    resultDisplay.value = '';
                 }
                 else if (value === '=') {
                     if (previousInput && currentInput && operation) {
-                        display.value += value;
+                        const operationText = `${previousInput} ${operation} ${currentInput} =`;
+                        operationDisplay.value = operationText;
                         const result = calculate(parseFloat(previousInput), parseFloat(currentInput), operation);
-                        display.value = result;
+                        resultDisplay.value = result;
                         currentInput = result.toString();
                         previousInput = '';
                         operation = null;
@@ -167,13 +201,13 @@
                 }
                 else if (['+', '-', '*', '/'].includes(value)) {
                     if (currentInput) {
-                        display.value += value;
                         if (previousInput && operation) {
                             const result = calculate(parseFloat(previousInput), parseFloat(currentInput), operation);
                             previousInput = result.toString();
-                            display.value = previousInput + value;
+                            operationDisplay.value = `${previousInput} ${value}`;
                         } else {
                             previousInput = currentInput;
+                            operationDisplay.value = `${previousInput} ${value}`;
                         }
                         currentInput = '';
                         operation = value;
@@ -183,13 +217,12 @@
                 else {
                     if (resetScreen) {
                         currentInput = '';
+                        operationDisplay.value = '';
                         resetScreen = false;
                     }
                     if (currentInput.length < 15) {
                         currentInput += value;
-                        display.value = previousInput 
-                            ? previousInput + operation + currentInput 
-                            : currentInput;
+                        resultDisplay.value = currentInput;
                     }
                 }
             });
