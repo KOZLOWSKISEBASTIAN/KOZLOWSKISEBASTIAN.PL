@@ -37,8 +37,7 @@
         }
 
         .fullscreen-mode .header {
-            background-color: transparent !important;
-            box-shadow: none !important;
+            display: none;
         }
 
         .KSGROUP-PASEK-WYSZUKIWANIA input,
@@ -66,11 +65,24 @@
             gap: 10px;
         }
 
+        .fullscreen-mode .KSGROUP-WYSZUKIWARKA-NORMALNA {
+            display: none;
+        }
+
         .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN {
-            display: flex;
+            display: none;
             flex-direction: column;
             align-items: center;
             width: 100%;
+            position: fixed;
+            top: 20px;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        .fullscreen-mode .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN {
+            display: flex;
         }
 
         .KSGROUP-PASEK-WYSZUKIWANIA {
@@ -84,19 +96,13 @@
         }
 
         .KSGROUP-PASEK-LINKU-OBRAZU {
-            order: 3;
-            display: none;
+            display: flex;
             flex-direction: column;
             align-items: center;
             gap: 10px;
-        }
-
-        .fullscreen-mode .KSGROUP-WYSZUKIWARKA-NORMALNA {
-            display: none;
-        }
-
-        .fullscreen-mode .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN .KSGROUP-PASEK-LINKU-OBRAZU {
-            display: flex;
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
         }
 
         .KSGROUP-PASEK-LINKU-OBRAZU a {
@@ -114,19 +120,25 @@
             outline: none;
             width: 100%;
             box-sizing: border-box;
-            margin: 5px 0;
-            max-width: 500px;
+            margin: 0px 0px;
+            max-width: 520px;
         }
 
         .card-number-fullscreen {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
             color: #000;
             font-size: 18px;
             font-weight: bold;
             text-align: center;
-            margin-top: 10px;
             background-color: rgba(255,255,255,0.7);
-            padding: 5px 10px;
+            padding: 0px 0px;
             border-radius: 5px;
+            z-index: 11;
+            max-width: 90%;
+            box-sizing: border-box;
         }
 
         .KSGROUP-PASEK-LINKU-OBRAZU a:hover {
@@ -246,17 +258,19 @@
             background-color: #fff;
             padding: 0;
             box-sizing: border-box;
-            position: relative;
+            position: fixed;
             width: 100%;
             height: 100vh;
+            top: 0;
+            left: 0;
         }
 
         .fullscreen-image {
             position: fixed;
-            top: 130px;
-            left: 50px;
-            right: 50px;
-            bottom: 160px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             z-index: 1;
             opacity: 0;
             transition: opacity 0.3s;
@@ -264,14 +278,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .fullscreen-image img {
-            max-width: 100%;
-            max-height: 100%;
-            transform: rotate(90deg);
-            object-fit: contain;
-            transition: transform 0.5s ease;
+            background-color: #fff;
         }
 
         .fullscreen-mode .fullscreen-image {
@@ -279,22 +286,15 @@
             pointer-events: auto;
         }
 
-        .fullscreen-mode .fullscreen-image img:hover {
-            transform: rotate(90deg) scale(1.05);
+        .fullscreen-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.5s ease;
         }
 
-        .card-number {
-            position: fixed;
-            bottom: 20px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            color: #000;
-            font-size: 18px;
-            z-index: 2;
-            display: none;
-            font-weight: bold;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        .fullscreen-image img:hover {
+            transform: scale(1.05);
         }
 
         .buttons-container {
@@ -559,13 +559,6 @@
         }
 
         @media (max-width: 768px) {
-            .fullscreen-image {
-                top: 20px;
-                left: 20px;
-                right: 20px;
-                bottom: 100px;
-            }
-            
             .header, .container {
                 width: calc(100% - 24px);
                 padding: 12px;
@@ -733,7 +726,6 @@
     <div class="fullscreen-image">
         <img id="fullscreen-img" src="" alt="PEŁNY EKRAN">
     </div>
-    <div class="card-number" id="card-number"></div>
     
     <div id="lista-zakupow-modal" class="modal">
         <div class="modal-content">
@@ -756,7 +748,7 @@
         const fullscreenImage = document.querySelector('.fullscreen-image');
         const fullscreenImg = document.getElementById('fullscreen-img');
         const imageLink = document.getElementById('image-link');
-        const imageLinkBar = document.querySelector('.KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN .KSGROUP-PASEK-LINKU-OBRAZU');
+        const imageLinkBar = document.querySelector('.KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN');
         const wyszukajInput = document.getElementById('wyszukaj-input');
         const przelaczRzadkieBtn = document.getElementById('przelacz-rzadkie');
         const listaZakupowBtn = document.getElementById('lista-zakupow-btn');
@@ -767,7 +759,6 @@
         const dodajDoListyBtn = document.getElementById('dodaj-do-listy');
         const powrotDoKartBtn = document.getElementById('powrot-do-kart');
         const nowyProduktInput = document.getElementById('nowy-produkt');
-        const cardNumberElement = document.getElementById('card-number');
         const fullscreenCardNumber = document.getElementById('fullscreen-card-number');
         const installButton = document.getElementById('installButton');
         
@@ -1145,24 +1136,19 @@
                     const imageUrl = this.getAttribute('data-image');
                     fullscreenImg.src = imageUrl;
                     imageLink.href = imageUrl;
-                    imageLinkBar.style.display = 'flex';
                     
                     // Pobierz numer karty z klasy rodzica (elementu li)
                     const cardNumber = this.parentElement.classList[0];
                     fullscreenCardNumber.textContent = `Numer karty: ${cardNumber}`;
-                    cardNumberElement.textContent = `${cardNumber}`;
                     
                     fullscreenImg.onerror = () => {
                         fullscreenImg.src = 'https://via.placeholder.com/800x600?text=Obraz+niedostępny';
                         imageLink.href = fullscreenImg.src;
-                        cardNumberElement.textContent = 'BRAK NUMERU KARTY';
                         fullscreenCardNumber.textContent = 'BRAK NUMERU KARTY';
                     };
                 } else {
                     document.body.classList.remove('fullscreen-mode');
                     fullscreenImg.src = '';
-                    imageLinkBar.style.display = 'none';
-                    cardNumberElement.textContent = '';
                     fullscreenCardNumber.textContent = '';
                 }
             });
@@ -1173,8 +1159,6 @@
                 pelnyEkran = false;
                 document.body.classList.remove('fullscreen-mode');
                 fullscreenImg.src = '';
-                imageLinkBar.style.display = 'none';
-                cardNumberElement.textContent = '';
                 fullscreenCardNumber.textContent = '';
             }
         });
