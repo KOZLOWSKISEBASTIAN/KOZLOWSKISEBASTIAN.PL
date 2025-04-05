@@ -100,7 +100,7 @@
             flex-direction: column;
             align-items: center;
             gap: 10px;
-            width: 80%;
+            width: 90%;
             max-width: 520px;
             margin: 0 0;
         }
@@ -126,7 +126,7 @@
 
         .card-number-fullscreen {
             position: fixed;
-            top: 80px;
+            top: 50px;
             left: 50%;
             transform: translateX(-50%);
             color: #000;
@@ -137,7 +137,7 @@
             padding: 0px 0px;
             border-radius: 5px;
             z-index: 11;
-            max-width: 90%;
+            max-width: 80%;
             box-sizing: border-box;
         }
 
@@ -563,35 +563,29 @@
             transition: transform 0.3s ease;
         }
 
-        /* New style for rotated CHATAPOLSKA image */
-        .rotated-image-container {
-            transform: rotate(90deg);
-            display: inline-block;
-        }
-
         @media (max-width: 768px) and (orientation: portrait) {
             .fullscreen-image-content {
-                transform: rotate(90deg);
                 max-width: 100vh;
                 max-height: 100vw;
+                transform: rotate(0);
             }
             
             .card-number-fullscreen {
-                top: 50%;
-                left: 20px;
-                transform: translateY(-50%) rotate(90deg);
-                transform-origin: left top;
-                white-space: nowrap;
+                top: 30px;
+                left: 50%;
+                transform: translateX(-50%);
             }
         }
 
         @media (max-width: 768px) and (orientation: landscape) {
             .fullscreen-image-content {
+                max-width: 100vh;
+                max-height: 100vw;
                 transform: rotate(0);
             }
             
             .card-number-fullscreen {
-                top: 80px;
+                top: 30px;
                 left: 50%;
                 transform: translateX(-50%);
             }
@@ -679,92 +673,84 @@
     <div class="container">
         <div class="row">
             <ul class="karty" id="lista-kart">
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
                 </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
                 </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
                 </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
                 </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
                 </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
                 </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
                 </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
                 </a></li>
                 <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
-                    <div class="rotated-image-container">
-                        <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
-                    </div>
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
                 </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="0" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="0" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
                 </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="0" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="0" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
                 </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
                 </a></li>
                 <li data-name="KSGROUP-CHATA POLSKA" data-usage="5" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
-                    <div class="rotated-image-container">
-                        <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
-                    </div>
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
                 </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
                 </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
                 </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="5" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="5" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
                 </a></li>
                 <li data-name="KSGROUP-CHATA POLSKA" data-usage="5" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
-                    <div class="rotated-image-container">
-                        <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
-                    </div>
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
                 </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
                 </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
                 </a></li>
-                <li data-name="KSGROUP-BIEDRONKA" data-usage="5" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/BIEDRONKAPL.png">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="5" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
                 </a></li>
                 <li data-name="KSGROUP-CHATA POLSKA" data-usage="5" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
-                    <div class="rotated-image-container">
-                        <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
-                    </div>
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
                 </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
                 </a></li>
-                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/INTERMARCHE.png">
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
                 </a></li>
             </ul>
@@ -1281,4 +1267,4 @@
         }
     </script>
 </body>
-</html>
+</html> 
