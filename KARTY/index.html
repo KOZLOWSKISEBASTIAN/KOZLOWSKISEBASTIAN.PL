@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KARTY1</title>
+    <title>KARTY</title>
     <meta name="theme-color" content="#000000">
     <meta name="description" content="Aplikacja do zarządzania kartami i listą zakupów">
     <link rel="manifest" href="/manifest.json">
@@ -86,6 +86,9 @@
         .KSGROUP-PASEK-LINKU-OBRAZU {
             order: 3;
             display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
         }
 
         .fullscreen-mode .KSGROUP-WYSZUKIWARKA-NORMALNA {
@@ -113,6 +116,17 @@
             box-sizing: border-box;
             margin: 5px 0;
             max-width: 500px;
+        }
+
+        .card-number-fullscreen {
+            color: #000;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 10px;
+            background-color: rgba(255,255,255,0.7);
+            padding: 5px 10px;
+            border-radius: 5px;
         }
 
         .KSGROUP-PASEK-LINKU-OBRAZU a:hover {
@@ -324,7 +338,6 @@
         .powrot-do-kart:active,
         .dodaj-produkt:active {
             transform: scale(0.98);
-            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
         }
 
         .modal {
@@ -372,10 +385,9 @@
             flex-grow: 1;
             -webkit-overflow-scrolling: touch;
             overscroll-behavior: contain;
-            touch-action: pan-y; /* Dodane dla lepszego scrollowania na Androidzie */
+            touch-action: pan-y;
         }
 
-        /* Stylowanie paska przewijania */
         #lista-zakupow::-webkit-scrollbar {
             width: 8px;
         }
@@ -589,7 +601,6 @@
             }
         }
 
-        /* Poprawki dla iOS */
         @supports (-webkit-touch-callout: none) {
             .modal-content {
                 max-height: -webkit-fill-available;
@@ -629,6 +640,7 @@
     <div class="KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN">
         <div class="KSGROUP-PASEK-LINKU-OBRAZU">
             <a id="image-link" href="" target="_blank">ZAPISZ</a>
+            <div id="fullscreen-card-number" class="card-number-fullscreen"></div>
         </div>
     </div>
 
@@ -756,18 +768,17 @@
         const powrotDoKartBtn = document.getElementById('powrot-do-kart');
         const nowyProduktInput = document.getElementById('nowy-produkt');
         const cardNumberElement = document.getElementById('card-number');
+        const fullscreenCardNumber = document.getElementById('fullscreen-card-number');
         const installButton = document.getElementById('installButton');
         
         let zakupy = JSON.parse(localStorage.getItem('listaZakupow')) || [];
         let deferredPrompt;
         
-        // Funkcja do wykrywania iOS
         function isIOS() {
             return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
                   (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         }
         
-        // Inicjalizacja dla iOS
         if (isIOS()) {
             document.body.style.height = '100%';
             document.documentElement.style.height = '100%';
@@ -800,16 +811,6 @@
             installButton.style.display = 'none';
             deferredPrompt = null;
         });
-        
-        function getCardNumber(element) {
-            const classList = element.parentElement.classList;
-            for (let className of classList) {
-                if (/^\d+$/.test(className)) {
-                    return className;
-                }
-            }
-            return 'BRAK NUMERU';
-        }
         
         function oznaczRzadkieKarty() {
             wszystkieKarty.forEach(karta => {
@@ -862,7 +863,6 @@
                     `;
                     listaZakupow.appendChild(li);
                     
-                    // Dodajemy obsługę touch dla Android
                     li.addEventListener('touchstart', handleTouchStart, { passive: false });
                     li.addEventListener('touchmove', handleTouchMove, { passive: false });
                     li.addEventListener('touchend', handleTouchEnd, { passive: false });
@@ -896,21 +896,18 @@
         let scrollTop = 0;
         let isDragging = false;
 
-        // Obsługa touch dla Android
         function handleTouchStart(e) {
             if (e.touches.length !== 1) return;
             
             const touch = e.touches[0];
             const li = e.currentTarget;
             
-            // Sprawdzamy, czy dotknięto przycisku usuwania
             if (touch.target.classList.contains('usun-z-listy')) {
                 return;
             }
             
             e.preventDefault();
             
-            // Jeśli dotknięto elementu listy, rozpoczynamy przewijanie
             if (!isDragging) {
                 isDragging = true;
                 startY = touch.pageY;
@@ -924,7 +921,7 @@
             
             const touch = e.touches[0];
             const y = touch.pageY;
-            const walk = (y - startY) * -1; // odwracamy kierunek
+            const walk = (y - startY) * -1;
             listaZakupow.scrollTop = scrollTop + walk;
         }
 
@@ -1033,14 +1030,12 @@
             return false;
         }
         
-        // Dodajemy obsługę touch dla całej listy zakupów
         listaZakupow.addEventListener('touchstart', function(e) {
             if (e.touches.length !== 1) return;
             
             const touch = e.touches[0];
             const li = touch.target.closest('li');
             
-            // Jeśli nie dotknięto elementu listy, rozpoczynamy przewijanie
             if (!li) {
                 isDragging = true;
                 startY = touch.pageY;
@@ -1054,7 +1049,7 @@
             
             const touch = e.touches[0];
             const y = touch.pageY;
-            const walk = (y - startY) * -1; // odwracamy kierunek
+            const walk = (y - startY) * -1;
             this.scrollTop = scrollTop + walk;
         }, { passive: false });
 
@@ -1152,19 +1147,23 @@
                     imageLink.href = imageUrl;
                     imageLinkBar.style.display = 'flex';
                     
-                    const cardNumber = getCardNumber(this);
+                    // Pobierz numer karty z klasy rodzica (elementu li)
+                    const cardNumber = this.parentElement.classList[0];
+                    fullscreenCardNumber.textContent = `Numer karty: ${cardNumber}`;
                     cardNumberElement.textContent = `${cardNumber}`;
                     
                     fullscreenImg.onerror = () => {
                         fullscreenImg.src = 'https://via.placeholder.com/800x600?text=Obraz+niedostępny';
                         imageLink.href = fullscreenImg.src;
                         cardNumberElement.textContent = 'BRAK NUMERU KARTY';
+                        fullscreenCardNumber.textContent = 'BRAK NUMERU KARTY';
                     };
                 } else {
                     document.body.classList.remove('fullscreen-mode');
                     fullscreenImg.src = '';
                     imageLinkBar.style.display = 'none';
                     cardNumberElement.textContent = '';
+                    fullscreenCardNumber.textContent = '';
                 }
             });
         });
@@ -1176,10 +1175,10 @@
                 fullscreenImg.src = '';
                 imageLinkBar.style.display = 'none';
                 cardNumberElement.textContent = '';
+                fullscreenCardNumber.textContent = '';
             }
         });
 
-        // Poprawka dla touch na iOS
         document.addEventListener('touchmove', function(e) {
             if (modal.style.display === 'block') {
                 const isScrollable = e.target.closest('#lista-zakupow');
@@ -1189,14 +1188,12 @@
             }
         }, { passive: false });
 
-        // Zapobieganie podwójnemu kliknięciu (double-tap zoom) na iOS
         document.addEventListener('dblclick', function(e) {
             if (isIOS()) {
                 e.preventDefault();
             }
         }, { passive: false });
 
-        // Animacja shake dla błędów
         const style = document.createElement('style');
         style.textContent = `
             @keyframes shake {
