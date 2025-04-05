@@ -1067,42 +1067,45 @@
             isDragging = false;
         }, { passive: false });
         
-        function handleOrientationChange() {
-            if (window.matchMedia("(max-width: 768px)").matches) {
-                if (window.orientation === 0 || window.orientation === 180) {
-                    // Portrait mode
-                    fullscreenImg.style.transform = 'rotate(90deg)';
-                    fullscreenImg.style.maxWidth = '100vh';
-                    fullscreenImg.style.maxHeight = '100vw';
-                    fullscreenCardNumber.style.top = '50%';
-                    fullscreenCardNumber.style.left = '20px';
-                    fullscreenCardNumber.style.transform = 'translateY(-50%) rotate(90deg)';
-                    fullscreenCardNumber.style.transformOrigin = 'left top';
-                    fullscreenCardNumber.style.whiteSpace = 'nowrap';
-                } else {
-                    // Landscape mode
-                    fullscreenImg.style.transform = 'rotate(0)';
-                    fullscreenImg.style.maxWidth = '100%';
-                    fullscreenImg.style.maxHeight = '100%';
-                    fullscreenCardNumber.style.top = '80px';
-                    fullscreenCardNumber.style.left = '50%';
-                    fullscreenCardNumber.style.transform = 'translateX(-50%)';
-                    fullscreenCardNumber.style.transformOrigin = '';
-                    fullscreenCardNumber.style.whiteSpace = '';
-                }
-            }
+function handleOrientationChange() {
+    const fullscreenImg = document.querySelector('.fullscreen-image-content');
+    if (window.matchMedia("(max-width: 768px)").matches) {
+        if (window.orientation === 0 || window.orientation === 180) {
+            // Portrait mode
+            fullscreenImg.style.transform = 'rotate(90deg)';
+            fullscreenImg.style.maxWidth = '100vh';
+            fullscreenImg.style.maxHeight = '100vw';
+        } else {
+            // Landscape mode
+            fullscreenImg.style.transform = 'rotate(0)';
+            fullscreenImg.style.maxWidth = '100%';
+            fullscreenImg.style.maxHeight = '100%';
         }
-        
-        oznaczRzadkieKarty();
-        aktualizujWidocznoscKart();
-        wyswietlListeZakupow();
-        
-        // Initial check
-        handleOrientationChange();
-        
-        // Add event listener for orientation changes
-        window.addEventListener('orientationchange', handleOrientationChange);
-        
+    }
+}
+
+function handleOrientationChange() {
+    const fullscreenImg = document.querySelector('.fullscreen-image-content');
+    if (window.matchMedia("(max-width: 768px)").matches) {
+        if (window.orientation === 0 || window.orientation === 180) {
+            // Portrait mode
+            fullscreenImg.style.transform = 'rotate(90deg)';
+            fullscreenImg.style.maxWidth = '100vh';
+            fullscreenImg.style.maxHeight = '100vw';
+        } else {
+            // Landscape mode
+            fullscreenImg.style.transform = 'rotate(0)';
+            fullscreenImg.style.maxWidth = '100%';
+            fullscreenImg.style.maxHeight = '100%';
+        }
+    }
+}
+
+// Initial check
+handleOrientationChange();
+
+// Add event listener for orientation changes
+window.addEventListener('orientationchange', handleOrientationChange);
         przelaczRzadkieBtn.addEventListener('click', function() {
             if (wyszukajInput.value.trim() === '') {
                 pokazRzadkie = !pokazRzadkie;
@@ -1254,3 +1257,6 @@
     </script>
 </body>
 </html>
+
+
+
