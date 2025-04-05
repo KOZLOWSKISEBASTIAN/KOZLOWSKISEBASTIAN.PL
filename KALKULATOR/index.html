@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KALKULATOR</title>
+    <meta name="theme-color" content="#000000">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="KALKULATOR.css">
+</head>
+<body>
+    <div class="KSGROUP-KALKULATOR">
+        <div class="KSGROUP-WYSWIETLACZ">
+            <input type="text" id="KSGROUP-OPERACJE" readonly>
+            <div class="KSGROUP-ROZDZIELACZ"></div>
+            <input type="text" id="KSGROUP-WYNIK" readonly>
+        </div>
+        <div class="KSGROUP-PRZYCISKI">
+            <button id="KSGROUP-WYCZYSC" class="KSGROUP-PRZYCISK"><i class="fas fa-trash-alt"></i></button>
+            <button id="KSGROUP-COFNIJ" class="KSGROUP-PRZYCISK"><i class="fas fa-backspace"></i></button>
+            <button id="KSGROUP-ZNAK" class="KSGROUP-PRZYCISK"><i class="fas fa-plus-minus"></i></button>
+            <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-divide"></i></button>
+            <button class="KSGROUP-PRZYCISK"><i class="fas fa-7"></i></button>
+            <button class="KSGROUP-PRZYCISK"><i class="fas fa-8"></i></button>
+            <button class="KSGROUP-PRZYCISK"><i class="fas fa-9"></i></button>
+            <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-times"></i></button>
+            <button class="KSGROUP-PRZYCISK"><i class="fas fa-4"></i></button>
+            <button class="KSGROUP-PRZYCISK"><i class="fas fa-5"></i></button>
+            <button class="KSGROUP-PRZYCISK"><i class="fas fa-6"></i></button>
+            <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-minus"></i></button>
+            <button class="KSGROUP-PRZYCISK"><i class="fas fa-1"></i></button>
+            <button class="KSGROUP-PRZYCISK"><i class="fas fa-2"></i></button>
+            <button class="KSGROUP-PRZYCISK"><i class="fas fa-3"></i></button>
+            <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-plus"></i></button>
+            <button class="KSGROUP-PRZYCISK"><i class="fas fa-0"></i></button>
+            <button class="KSGROUP-PRZYCISK KSGROUP-DZIESIETNY"><i class="fas fa-circle" style="font-size: 5px;"></i></button>
+            <button id="KSGROUP-ROWNA-SIE" class="KSGROUP-PRZYCISK"><i class="fas fa-equals"></i></button>
+        </div>
+    </div>
+    <script src="KALKULATOR.js"></script>
+</body>
+</html>
