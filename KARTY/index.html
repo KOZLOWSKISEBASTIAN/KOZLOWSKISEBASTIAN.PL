@@ -600,7 +600,7 @@
             background-color: #333333;
             padding: 0px;
             border-radius: 8px;
-
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             box-sizing: border-box;
             margin: 10px auto;
         }
@@ -608,7 +608,7 @@
         .KSGROUP-WYSWIETLACZ {
             background-color: #222;
             border-radius: 5px;
-            padding: 0px;
+            padding: 8px;
             margin-bottom: 10px;
         }
 
@@ -623,7 +623,7 @@
             box-sizing: border-box;
             text-align: right;
             margin-bottom: 5px;
-            min-height: 0px;
+            min-height: 24px;
         }
 
         .KSGROUP-ROZDZIELACZ {
@@ -1114,7 +1114,7 @@
                     li.innerHTML = `
                         <span class="produkt-text" contenteditable="false">${produkt}</span>
                         <span class="edit-btn" data-index="${index}">EDYTUJ</span>
-                        <span class="usun-z-listy" data-index="${index}">USUŃ</span>
+                        <span class="usun-z-listy" data-index="${index}"><i class="fas fa-trash-alt"></i></span>
                     `;
                     listaZakupow.appendChild(li);
                     
@@ -1497,6 +1497,15 @@
                 przelaczRzadkieBtn.style.backgroundColor = '#222';
             }
             aktualizujWidocznoscKart();
+        });
+        
+        // Allow all keyboard input in search and product input fields
+        wyszukajInput.addEventListener('keydown', function(e) {
+            e.stopPropagation();
+        });
+        
+        nowyProduktInput.addEventListener('keydown', function(e) {
+            e.stopPropagation();
         });
         
         document.querySelectorAll('.link-btn').forEach(link => {
