@@ -30,7 +30,7 @@
             max-width: 520px;
             margin: 10px auto;
             background-color: #333333;
-            padding: 8px 8px;
+            padding: 8px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             box-sizing: border-box;
@@ -111,7 +111,7 @@
             text-align: center;
             display: block;
             background-color: #222;
-            padding: 8px 8px;
+            padding: 8px;
             border-radius: 5px;
             font-weight: bold;
             transition: all 0.3s;
@@ -203,7 +203,7 @@
 
         .karty a {
             text-decoration: none;
-            padding: 8px 8px;
+            padding: 8px;
             color: #FF00FF;
             background: #333333;
             border-radius: 5px;
@@ -233,14 +233,14 @@
         .karty a img {
             max-height: 30px;
             width: auto;
-filter: brightness(1) invert(1);
+            filter: brightness(1) invert(1);
             transition: all 0.3s;
             margin-bottom: 5px;
         }
 
         .karty a:hover img {
             filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
-            transform: scale(1.1);
+            transform: scale(1. Seats1);
         }
 
         .karty a .nazwa {
@@ -310,7 +310,7 @@ filter: brightness(1) invert(1);
             background-color: #222;
             color: #FFFFFF;
             border: none;
-            padding: 8px 8px;
+            padding: 8px;
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
@@ -425,7 +425,7 @@ filter: brightness(1) invert(1);
         }
 
         #lista-zakupow li {
-            padding: 8px 8px;
+            padding: 8px;
             border-bottom: 1px solid #444;
             display: flex;
             justify-content: space-between;
@@ -485,6 +485,10 @@ filter: brightness(1) invert(1);
             color: #FF00FF;
         }
 
+        #lista-zakupow li:active .produkt-text {
+            color: #FF00FF;
+        }
+
         .usun-z-listy {
             color: #FFFFFF;
             cursor: pointer;
@@ -498,13 +502,10 @@ filter: brightness(1) invert(1);
             animation: pulse 0.5s ease-in-out;
         }
 
-        .usun-z-listy:hover {
+        .usun-z-listy:hover,
+        .usun-z-listy:active {
             color: #FF00FF;
             transform: scale(1.2);
-        }
-
-        .usun-z-listy:active {
-            transform: scale(0.9);
         }
 
         .input-container {
@@ -540,7 +541,7 @@ filter: brightness(1) invert(1);
             background-color: #FF00FF;
             color: white;
             border: none;
-            padding: 8px 8px;
+            padding: 8px;
             border-radius: 5px;
             cursor: pointer;
             font-family: 'Montserrat', sans-serif;
@@ -561,9 +562,88 @@ filter: brightness(1) invert(1);
             transform: scale(0.98);
         }
 
-        /* Style dla obracania obrazu na urządzeniach mobilnych */
-        .fullscreen-image-content {
-            transition: transform 0.3s ease;
+        /* Style dla urządzeń mobilnych */
+        @media (max-width: 768px) {
+            .header, .container {
+                width: calc(100% - 24px);
+                padding: 8px;
+            }
+
+            .modal-content {
+                max-height: 90vh;
+                margin: 10px auto;
+                padding: 8px;
+                width: calc(100% - 24px);
+            }
+
+            #lista-zakupow {
+                max-height: calc(90vh - 140px);
+            }
+
+            .KSGROUP-PASEK-WYSZUKIWANIA input,
+            #nowy-produkt,
+            .KSGROUP-PASEK-LINKU-OBRAZU a,
+            .buttons-container,
+            .modal-buttons-container {
+                max-width: none;
+            }
+
+            .karty a {
+                height: 70px;
+                min-width: 100px;
+                padding: 8px;
+            }
+
+            #lista-zakupow li {
+                padding: 10px;
+                margin-bottom: 6px;
+            }
+
+            .produkt-text {
+                font-size: 14px;
+            }
+
+            .usun-z-listy {
+                padding: 6px;
+            }
+
+            #lista-zakupow li.dragging {
+                transform: scale(1.08);
+            }
+
+            /* Efekty dotykowe dla urządzeń mobilnych */
+            #lista-zakupow li:active {
+                background-color: #222;
+                transform: translateX(5px);
+            }
+
+            #lista-zakupow li:active .produkt-text {
+                color: #FF00FF;
+            }
+
+            .karty a:active {
+                background: #222222;
+                transform: translateY(-3px);
+                box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            }
+
+            .karty a:active img {
+                filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
+                transform: scale(1.1);
+            }
+
+            .karty a:active .nazwa {
+                color: #FF00FF;
+            }
+
+            .przelacz-rzadkie:active, 
+            .lista-zakupow-btn:active,
+            .powrot-do-kart:active,
+            .dodaj-produkt:active {
+                background-color: #333;
+                color: #FF00FF;
+                transform: translateY(-2px);
+            }
         }
 
         @media (max-width: 768px) and (orientation: portrait) {
@@ -591,42 +671,6 @@ filter: brightness(1) invert(1);
                 top: 30px;
                 left: 50%;
                 transform: translateX(-50%);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .header, .container {
-                width: calc(100% - 24px);
-                padding: 8px;
-            }
-            
-            .modal-content {
-                max-height: 90vh;
-                margin: 10px auto;
-                padding: 8px;
-                width: calc(100% - 24px);
-            }
-            
-            #lista-zakupow {
-                max-height: calc(90vh - 140px);
-            }
-            
-            .KSGROUP-PASEK-WYSZUKIWANIA input,
-            #nowy-produkt,
-            .KSGROUP-PASEK-LINKU-OBRAZU a,
-            .buttons-container,
-            .modal-buttons-container {
-                max-width: none;
-            }
-            
-            .karty a {
-                height: 70px;
-                min-width: 100px;
-                padding: 8px 8px;
-            }
-            
-            #lista-zakupow li.dragging {
-                transform: scale(1.08);
             }
         }
 
@@ -890,10 +934,7 @@ filter: brightness(1) invert(1);
                     `;
                     listaZakupow.appendChild(li);
                     
-                    li.addEventListener('touchstart', handleTouchStart, { passive: false });
-                    li.addEventListener('touchmove', handleTouchMove, { passive: false });
-                    li.addEventListener('touchend', handleTouchEnd, { passive: false });
-                    
+                    // Obsługa zdarzeń desktopowych
                     li.addEventListener('dragstart', handleDragStart);
                     li.addEventListener('dragover', handleDragOver);
                     li.addEventListener('dragenter', handleDragEnter);
@@ -924,6 +965,37 @@ filter: brightness(1) invert(1);
                             wyswietlListeZakupow();
                         }
                     });
+                    
+                    // Obsługa zdarzeń mobilnych
+                    li.addEventListener('touchstart', handleTouchStart, { passive: false });
+                    li.addEventListener('touchmove', handleTouchMove, { passive: false });
+                    li.addEventListener('touchend', handleTouchEnd, { passive: false });
+                    
+                    li.querySelector('.produkt-text').addEventListener('touchstart', function(e) {
+                        e.stopPropagation();
+                        const index = parseInt(this.getAttribute('data-index'));
+                        setTimeout(() => {
+                            const nowyTekst = prompt('Edytuj produkt:', zakupy[index]);
+                            if (nowyTekst !== null && nowyTekst.trim() !== '') {
+                                zakupy[index] = nowyTekst.trim();
+                                localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                                wyswietlListeZakupow();
+                            }
+                        }, 100); // Lekkie opóźnienie dla lepszej responsywności
+                    }, { passive: false });
+                    
+                    li.querySelector('.usun-z-listy').addEventListener('touchstart', function(e) {
+                        e.stopPropagation();
+                        const index = parseInt(this.getAttribute('data-index'));
+                        zakupy.splice(index, 1);
+                        localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                        
+                        li.style.transform = 'translateX(100%)';
+                        li.style.opacity = '0';
+                        setTimeout(() => {
+                            wyswietlListeZakupow();
+                        }, 300);
+                    }, { passive: false });
                 }, index * 50);
             });
         }
@@ -933,6 +1005,7 @@ filter: brightness(1) invert(1);
         let startY = 0;
         let scrollTop = 0;
         let isDragging = false;
+        let touchStartTime = 0;
 
         function handleTouchStart(e) {
             if (e.touches.length !== 1) return;
@@ -940,17 +1013,22 @@ filter: brightness(1) invert(1);
             const touch = e.touches[0];
             const li = e.currentTarget;
             
-            if (touch.target.classList.contains('usun-z-listy')) {
+            if (touch.target.classList.contains('usun-z-listy') || touch.target.classList.contains('produkt-text')) {
                 return;
             }
             
             e.preventDefault();
             
-            if (!isDragging) {
-                isDragging = true;
-                startY = touch.pageY;
-                scrollTop = listaZakupow.scrollTop;
-            }
+            draggedItem = li;
+            isDragging = true;
+            startY = touch.pageY;
+            scrollTop = listaZakupow.scrollTop;
+            touchStartTime = Date.now();
+            
+            li.classList.add('dragging');
+            li.style.transform = 'scale(1.08)';
+            li.style.boxShadow = '0 8px 16px rgba(0,0,0,0.3)';
+            li.style.transition = 'none';
         }
 
         function handleTouchMove(e) {
@@ -959,12 +1037,76 @@ filter: brightness(1) invert(1);
             
             const touch = e.touches[0];
             const y = touch.pageY;
-            const walk = (y - startY) * -1;
-            listaZakupow.scrollTop = scrollTop + walk;
+            const walk = (y - startY);
+            const offset = walk;
+            
+            draggedItem.style.transform = `translateY(${offset}px) scale(1.08)`;
+            
+            const allItems = Array.from(listaZakupow.children).filter(item => !item.classList.contains('placeholder'));
+            const draggedRect = draggedItem.getBoundingClientRect();
+            const draggedCenter = draggedRect.top + draggedRect.height / 2;
+            
+            allItems.forEach(item => {
+                if (item !== draggedItem) {
+                    const rect = item.getBoundingClientRect();
+                    const middleY = rect.top + rect.height / 2;
+                    
+                    if (draggedCenter < middleY && offset < 0) {
+                        if (!placeholder || placeholder.nextSibling !== item) {
+                            if (!placeholder) {
+                                placeholder = document.createElement('li');
+                                placeholder.className = 'placeholder';
+                            }
+                            listaZakupow.insertBefore(placeholder, item);
+                        }
+                    } else if (draggedCenter > middleY && offset > 0) {
+                        if (!placeholder || placeholder.previousSibling !== item) {
+                            if (!placeholder) {
+                                placeholder = document.createElement('li');
+                                placeholder.className = 'placeholder';
+                            }
+                            listaZakupow.insertBefore(placeholder, item.nextSibling);
+                        }
+                    }
+                }
+            });
+            
+            // Auto-scroll
+            const containerRect = listaZakupow.getBoundingClientRect();
+            const scrollSpeed = 10;
+            if (draggedRect.top < containerRect.top + 50) {
+                listaZakupow.scrollTop -= scrollSpeed;
+            } else if (draggedRect.bottom > containerRect.bottom - 50) {
+                listaZakupow.scrollTop += scrollSpeed;
+            }
         }
 
-        function handleTouchEnd() {
+        function handleTouchEnd(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            
             isDragging = false;
+            draggedItem.classList.remove('dragging');
+            draggedItem.style.transform = '';
+            draggedItem.style.boxShadow = '';
+            draggedItem.style.transition = 'all 0.3s';
+            
+            if (placeholder && placeholder.parentNode) {
+                const newIndex = Array.from(listaZakupow.children).indexOf(placeholder);
+                const oldIndex = parseInt(draggedItem.getAttribute('data-index'));
+                
+                if (newIndex !== -1 && newIndex !== oldIndex) {
+                    const [removed] = zakupy.splice(oldIndex, 1);
+                    zakupy.splice(newIndex > oldIndex ? newIndex - 1 : newIndex, 0, removed);
+                    localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                }
+                
+                placeholder.parentNode.removeChild(placeholder);
+                placeholder = null;
+                wyswietlListeZakupow();
+            }
+            
+            draggedItem = null;
         }
 
         function handleDragStart(e) {
@@ -972,12 +1114,6 @@ filter: brightness(1) invert(1);
             e.dataTransfer.effectAllowed = 'move';
             e.dataTransfer.setData('text/html', this.innerHTML);
             
-            if ('ontouchstart' in window) {
-                this.style.transform = 'scale(1.05)';
-                this.style.boxShadow = '0 5px 20px rgba(0,0,0,0.4)';
-                this.style.transition = 'none';
-            }
-
             setTimeout(() => {
                 this.classList.add('dragging');
             }, 0);
@@ -993,9 +1129,7 @@ filter: brightness(1) invert(1);
             const middleY = rect.top + rect.height / 2;
             
             if (e.clientY < middleY) {
-                if (placeholder && placeholder.nextSibling === this) {
-                    return;
-                }
+                if (placeholder && placeholder.nextSibling === this) return;
                 if (!placeholder) {
                     placeholder = document.createElement('li');
                     placeholder.className = 'placeholder';
@@ -1004,9 +1138,7 @@ filter: brightness(1) invert(1);
                     listaZakupow.insertBefore(placeholder, this);
                 }
             } else {
-                if (placeholder && placeholder.previousSibling === this) {
-                    return;
-                }
+                if (placeholder && placeholder.previousSibling === this) return;
                 if (!placeholder) {
                     placeholder = document.createElement('li');
                     placeholder.className = 'placeholder';
@@ -1028,12 +1160,6 @@ filter: brightness(1) invert(1);
 
         function handleDragEnd() {
             this.classList.remove('dragging');
-            
-            if ('ontouchstart' in window) {
-                this.style.transform = '';
-                this.style.boxShadow = '';
-                this.style.transition = 'all 0.3s';
-            }
             
             if (placeholder && placeholder.parentNode) {
                 placeholder.parentNode.removeChild(placeholder);
@@ -1092,13 +1218,12 @@ filter: brightness(1) invert(1);
         }, { passive: false });
 
         listaZakupow.addEventListener('touchend', function() {
-            isDragging = false;
+            if (!draggedItem) isDragging = false;
         }, { passive: false });
         
         function handleOrientationChange() {
             if (window.matchMedia("(max-width: 768px)").matches) {
                 if (window.orientation === 0 || window.orientation === 180) {
-                    // Portrait mode
                     fullscreenImg.style.transform = 'rotate(90deg)';
                     fullscreenImg.style.maxWidth = '100vh';
                     fullscreenImg.style.maxHeight = '100vw';
@@ -1108,7 +1233,6 @@ filter: brightness(1) invert(1);
                     fullscreenCardNumber.style.transformOrigin = 'left top';
                     fullscreenCardNumber.style.whiteSpace = 'nowrap';
                 } else {
-                    // Landscape mode
                     fullscreenImg.style.transform = 'rotate(0)';
                     fullscreenImg.style.maxWidth = '100%';
                     fullscreenImg.style.maxHeight = '100%';
@@ -1125,10 +1249,7 @@ filter: brightness(1) invert(1);
         aktualizujWidocznoscKart();
         wyswietlListeZakupow();
         
-        // Initial check
         handleOrientationChange();
-        
-        // Add event listener for orientation changes
         window.addEventListener('orientationchange', handleOrientationChange);
         
         przelaczRzadkieBtn.addEventListener('click', function() {
@@ -1216,11 +1337,9 @@ filter: brightness(1) invert(1);
                     fullscreenImg.src = imageUrl;
                     imageLink.href = imageUrl;
                     
-                    // Pobierz numer karty z klasy rodzica (elementu li)
                     const cardNumber = this.parentElement.classList[0];
                     fullscreenCardNumber.textContent = `Numer karty: ${cardNumber}`;
                     
-                    // Aktualizuj orientację po otwarciu pełnego ekranu
                     handleOrientationChange();
                     
                     fullscreenImg.onerror = () => {
@@ -1234,6 +1353,33 @@ filter: brightness(1) invert(1);
                     fullscreenCardNumber.textContent = '';
                 }
             });
+            
+            link.addEventListener('touchstart', function(e) {
+                e.preventDefault();
+                
+                pelnyEkran = !pelnyEkran;
+                if (pelnyEkran) {
+                    document.body.classList.add('fullscreen-mode');
+                    const imageUrl = this.getAttribute('data-image');
+                    fullscreenImg.src = imageUrl;
+                    imageLink.href = imageUrl;
+                    
+                    const cardNumber = this.parentElement.classList[0];
+                    fullscreenCardNumber.textContent = `Numer karty: ${cardNumber}`;
+                    
+                    handleOrientationChange();
+                    
+                    fullscreenImg.onerror = () => {
+                        fullscreenImg.src = 'https://via.placeholder.com/800x600?text=Obraz+niedostępny';
+                        imageLink.href = fullscreenImg.src;
+                        fullscreenCardNumber.textContent = 'BRAK NUMERU KARTY';
+                    };
+                } else {
+                    document.body.classList.remove('fullscreen-mode');
+                    fullscreenImg.src = '';
+                    fullscreenCardNumber.textContent = '';
+                }
+            }, { passive: false });
         });
         
         document.body.addEventListener('click', function(e) {
@@ -1244,6 +1390,15 @@ filter: brightness(1) invert(1);
                 fullscreenCardNumber.textContent = '';
             }
         });
+
+        document.body.addEventListener('touchstart', function(e) {
+            if (pelnyEkran && (e.target === document.body || e.target === fullscreenImage || e.target === fullscreenImg)) {
+                pelnyEkran = false;
+                document.body.classList.remove('fullscreen-mode');
+                fullscreenImg.src = '';
+                fullscreenCardNumber.textContent = '';
+            }
+        }, { passive: false });
 
         document.addEventListener('touchmove', function(e) {
             if (modal.style.display === 'block') {
