@@ -565,26 +565,27 @@
 
         @media (max-width: 768px) and (orientation: portrait) {
             .fullscreen-image-content {
-                transform: rotate(90deg);
                 max-width: 100vh;
                 max-height: 100vw;
+                transform: rotate(0);
             }
             
             .card-number-fullscreen {
-                top: 20px;
+                top: 30px;
                 left: 50%;
-                transform: translateY(-50%);
-                white-space: nowrap;
+                transform: translateX(-50%);
             }
         }
 
         @media (max-width: 768px) and (orientation: landscape) {
             .fullscreen-image-content {
+                max-width: 100vh;
+                max-height: 100vw;
                 transform: rotate(0);
             }
             
             .card-number-fullscreen {
-                top: 50px;
+                top: 30px;
                 left: 50%;
                 transform: translateX(-50%);
             }
