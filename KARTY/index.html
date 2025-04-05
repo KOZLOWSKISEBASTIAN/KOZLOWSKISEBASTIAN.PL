@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KARTY</title>
     <meta name="theme-color" content="#000000">
     <meta name="description" content="Aplikacja do zarządzania kartami i listą zakupów">
@@ -22,6 +22,7 @@
             margin: 0 auto;
             transition: background 0.3s;
             touch-action: pan-y;
+            -webkit-text-size-adjust: 100%;
         }
 
         .header, .modal-content {
@@ -29,7 +30,7 @@
             max-width: 520px;
             margin: 10px auto;
             background-color: #333333;
-            padding: 10px 15px;
+            padding: 10px 10px;
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             box-sizing: border-box;
@@ -43,7 +44,7 @@
         .KSGROUP-PASEK-WYSZUKIWANIA input,
         #nowy-produkt {
             width: 100%;
-            max-width: 500px;
+            max-width: 520px;
             padding: 8px;
             font-size: 16px;
             font-family: 'Montserrat', sans-serif;
@@ -101,7 +102,7 @@
             text-align: center;
             display: block;
             background-color: #222;
-            padding: 8px 15px;
+            padding: 8px 8px;
             border-radius: 5px;
             font-weight: bold;
             transition: all 0.3s;
@@ -125,11 +126,11 @@
             flex-direction: column;
             align-items: center;
             width: calc(100% - 40px);
-            max-width: 600px;
+            max-width: 520px;
             transition: opacity 0.3s;
             position: relative;
             z-index: 2;
-            margin: 10px auto;
+            margin: 10px 10px;
         }
 
         .fullscreen-mode .container {
@@ -176,7 +177,7 @@
 
         .karty a {
             text-decoration: none;
-            padding: 10px 15px;
+            padding: 10px 10px;
             color: #FF00FF;
             background: #333333;
             border-radius: 5px;
@@ -286,7 +287,7 @@
             display: flex;
             justify-content: space-between;
             width: 100%;
-            max-width: 500px;
+            max-width: 520px;
             gap: 10px;
         }
 
@@ -295,7 +296,7 @@
             background-color: #222;
             color: #FF00FF;
             border: none;
-            padding: 8px 15px;
+            padding: 8px 8px;
             border-radius: 5px;
             cursor: pointer;
             font-weight: bold;
@@ -337,6 +338,8 @@
             background-color: rgba(0, 0, 0, 0.8);
             animation: fadeIn 0.3s;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
         }
 
         @keyframes fadeIn {
@@ -345,19 +348,29 @@
         }
 
         .modal-content {
-            max-height: 80vh;
+            width: calc(100% - 40px);
+            max-width: 520px;
+            margin: 10px auto;
+            background-color: #333333;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            max-height: 100% - 20px;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         #lista-zakupow {
             list-style-type: none;
             padding: 0;
-            margin-top: 20px;
+            margin-top: 15px;
             width: 100%;
             overflow-y: auto;
             flex-grow: 1;
-            max-height: calc(80vh - 150px);
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
         }
 
         /* Stylowanie paska przewijania */
@@ -539,17 +552,20 @@
                 bottom: 100px;
             }
             
-            .header, .modal-content, .container {
-                width: calc(100% - 40px);
+            .header, .container {
+                width: calc(100% - 24px);
                 padding: 12px;
             }
             
             .modal-content {
                 max-height: 90vh;
+                margin: 10px auto;
+                padding: 12px;
+                width: calc(100% - 24px);
             }
             
             #lista-zakupow {
-                max-height: calc(90vh - 150px);
+                max-height: calc(90vh - 140px);
             }
             
             .KSGROUP-PASEK-WYSZUKIWANIA input,
@@ -568,6 +584,29 @@
             
             #lista-zakupow li.dragging {
                 transform: scale(1.08);
+            }
+        }
+
+        /* Poprawki dla iOS */
+        @supports (-webkit-touch-callout: none) {
+            .modal-content {
+                max-height: -webkit-fill-available;
+                height: -webkit-fill-available;
+                margin: 10px auto;
+            }
+            
+            #lista-zakupow {
+                max-height: calc(-webkit-fill-available - 140px);
+            }
+            
+            body {
+                height: 100%;
+                overflow: hidden;
+            }
+            
+            html {
+                height: 100%;
+                overflow: hidden;
             }
         }
     </style>
@@ -653,12 +692,24 @@
         let zakupy = JSON.parse(localStorage.getItem('listaZakupow')) || [];
         let deferredPrompt;
         
+        // Funkcja do wykrywania iOS
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        }
+        
+        // Inicjalizacja dla iOS
+        if (isIOS()) {
+            document.body.style.height = '100%';
+            document.documentElement.style.height = '100%';
+            document.body.style.overflow = 'hidden';
+        }
+        
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
             installButton.style.display = 'block';
             
-            // Animacja przycisku instalacji
             installButton.style.animation = 'pulse 2s infinite';
             setTimeout(() => {
                 installButton.style.animation = '';
@@ -742,7 +793,6 @@
                     `;
                     listaZakupow.appendChild(li);
                     
-                    // Dodajemy obsługę przeciągania
                     li.addEventListener('dragstart', handleDragStart);
                     li.addEventListener('dragover', handleDragOver);
                     li.addEventListener('dragenter', handleDragEnter);
@@ -750,14 +800,12 @@
                     li.addEventListener('dragend', handleDragEnd);
                     li.addEventListener('drop', handleDrop);
                     
-                    // Dodajemy obsługę kliknięcia usuwania
                     li.querySelector('.usun-z-listy').addEventListener('click', function(e) {
                         e.stopPropagation();
                         const index = parseInt(this.getAttribute('data-index'));
                         zakupy.splice(index, 1);
                         localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
                         
-                        // Animacja usuwania
                         li.style.transform = 'translateX(100%)';
                         li.style.opacity = '0';
                         setTimeout(() => {
@@ -768,7 +816,6 @@
             });
         }
 
-        // Funkcje do obsługi przeciągania
         let draggedItem = null;
         let placeholder = null;
 
@@ -792,15 +839,12 @@
             e.preventDefault();
             e.dataTransfer.dropEffect = 'move';
             
-            // Pomijamy jeśli to ten sam element
             if (draggedItem === this) return;
             
             const rect = this.getBoundingClientRect();
             const middleY = rect.top + rect.height / 2;
             
-            // Sprawdzamy czy przeciągamy nad górną czy dolną połową elementu
             if (e.clientY < middleY) {
-                // Wstawiamy placeholder przed obecnym elementem
                 if (placeholder && placeholder.nextSibling === this) {
                     return;
                 }
@@ -812,7 +856,6 @@
                     listaZakupow.insertBefore(placeholder, this);
                 }
             } else {
-                // Wstawiamy placeholder po obecnym elemencie
                 if (placeholder && placeholder.previousSibling === this) {
                     return;
                 }
@@ -844,13 +887,11 @@
                 this.style.transition = 'all 0.3s';
             }
             
-            // Usuwamy placeholder jeśli istnieje
             if (placeholder && placeholder.parentNode) {
                 placeholder.parentNode.removeChild(placeholder);
             }
             placeholder = null;
             
-            // Resetujemy style
             document.querySelectorAll('#lista-zakupow li').forEach(li => {
                 li.classList.remove('over');
             });
@@ -861,21 +902,17 @@
             e.preventDefault();
             
             if (draggedItem !== this) {
-                // Usuwamy placeholder
                 if (placeholder && placeholder.parentNode) {
                     placeholder.parentNode.removeChild(placeholder);
                 }
                 placeholder = null;
                 
-                // Pobieramy indeksy
                 const fromIndex = parseInt(draggedItem.getAttribute('data-index'));
                 const toIndex = parseInt(this.getAttribute('data-index'));
                 
-                // Aktualizujemy kolejność w tablicy
                 const [removed] = zakupy.splice(fromIndex, 1);
                 zakupy.splice(toIndex, 0, removed);
                 
-                // Zapisujemy i odświeżamy
                 localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
                 wyswietlListeZakupow();
             }
@@ -905,7 +942,6 @@
 
         listaZakupowBtn.addEventListener('click', function() {
             modal.style.display = 'block';
-            // Animacja przycisku
             this.style.transform = 'scale(0.95)';
             setTimeout(() => {
                 this.style.transform = '';
@@ -914,7 +950,6 @@
         
         powrotDoKartBtn.addEventListener('click', function() {
             modal.style.display = 'none';
-            // Animacja przycisku
             this.style.transform = 'scale(0.95)';
             setTimeout(() => {
                 this.style.transform = '';
@@ -934,7 +969,6 @@
                 localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
                 nowyProduktInput.value = '';
                 
-                // Animacja przycisku
                 this.style.transform = 'scale(0.95)';
                 setTimeout(() => {
                     this.style.transform = '';
@@ -942,7 +976,6 @@
                 
                 wyswietlListeZakupow();
             } else {
-                // Animacja błędu
                 nowyProduktInput.style.animation = 'shake 0.5s';
                 setTimeout(() => {
                     nowyProduktInput.style.animation = '';
@@ -1003,6 +1036,23 @@
                 cardNumberElement.textContent = '';
             }
         });
+
+        // Poprawka dla touch na iOS
+        document.addEventListener('touchmove', function(e) {
+            if (modal.style.display === 'block') {
+                const isScrollable = e.target.closest('#lista-zakupow');
+                if (!isScrollable) {
+                    e.preventDefault();
+                }
+            }
+        }, { passive: false });
+
+        // Zapobieganie podwójnemu kliknięciu (double-tap zoom) na iOS
+        document.addEventListener('dblclick', function(e) {
+            if (isIOS()) {
+                e.preventDefault();
+            }
+        }, { passive: false });
 
         // Animacja shake dla błędów
         const style = document.createElement('style');
