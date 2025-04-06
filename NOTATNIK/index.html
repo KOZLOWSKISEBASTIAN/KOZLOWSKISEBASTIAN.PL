@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LISTA</title>
+    <title>NOTATNIK</title>
     <meta name="theme-color" content="#000000">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* LISTA POCZĄTEK */
-        .KOZLOWSKISEBASTIAN_LISTY {
+        /* NOTATNIK POCZĄTEK */
+        .KOZLOWSKISEBASTIAN_NOTATNIK {
             font-family: sans-serif;
             background: #000000;
             color: #FF00FF;
@@ -19,21 +19,21 @@
             display: flex;
             justify-content: center;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-KONTENER {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-KONTENER {
             max-width: 520px;
             width: 100%;
             background: #333333;
             padding: 8px;
             border-radius: 8px;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-WIERSZ {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-WIERSZ {
             display: flex;
             gap: 10px;
             margin-top: 4px;
             margin-bottom: 4px;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-PRZYCISK,
-        .KOZLOWSKISEBASTIAN_LISTY-INPUT {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-PRZYCISK,
+        .KOZLOWSKISEBASTIAN_NOTATNIK-INPUT {
             background: #222222;
             color: #B0B0B0;
             border: none;
@@ -42,21 +42,21 @@
             font-family: 'Montserrat', sans-serif;
             transition: all 0.2s;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-PRZYCISK {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-PRZYCISK {
             flex: 1;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-INPUT {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-INPUT {
             flex: 2;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-PRZYCISK:hover {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-PRZYCISK:hover {
             color: #FF00FF;
             background: #333333;
             transform: translateY(-2px);
         }
-        .KOZLOWSKISEBASTIAN_LISTY-INPUT:focus {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-INPUT:focus {
             box-shadow: 0 0 0 2px #FFF;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-LISTA {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-LISTA {
             list-style-type: none;
             padding: 0;
             margin-top: 0px;
@@ -65,7 +65,7 @@
             overflow-y: auto;
             max-height: 60vh;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-ELEMENT {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT {
             padding: 8px;
             display: flex;
             flex-direction: column;
@@ -73,58 +73,62 @@
             border-radius: 8px;
             margin-bottom: 4px;
             transition: all 0.2s;
+            position: relative;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-ELEMENT:hover {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT:hover {
             background-color: #333;
             transform: translateY(-2px);
         }
-        .KOZLOWSKISEBASTIAN_LISTY-TEKST {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-TEKST {
             color: #B0B0B0;
             flex-grow: 1;
             word-break: break-word;
+            padding-right: 60px; /* Miejsce dla ikon */
         }
-        .KOZLOWSKISEBASTIAN_LISTY-ELEMENT:hover .KOZLOWSKISEBASTIAN_LISTY-TEKST {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT:hover .KOZLOWSKISEBASTIAN_NOTATNIK-TEKST {
             color: #FF00FF;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-AKCJE {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-AKCJE {
             display: flex;
             gap: 8px;
-            margin-top: 8px;
-            justify-content: flex-end;
+            position: absolute;
+            right: 8px;
+            top: 8px;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-USUN,
-        .KOZLOWSKISEBASTIAN_LISTY-EDYTUJ {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-USUN,
+        .KOZLOWSKISEBASTIAN_NOTATNIK-EDYTUJ {
             color: #B0B0B0;
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 14px;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-USUN:hover,
-        .KOZLOWSKISEBASTIAN_LISTY-EDYTUJ:hover {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-USUN:hover,
+        .KOZLOWSKISEBASTIAN_NOTATNIK-EDYTUJ:hover {
             color: #FF00FF;
             transform: scale(1.2);
         }
-        .KOZLOWSKISEBASTIAN_LISTY-TEKST.editing {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-TEKST.editing {
             background-color: #333;
-            padding: 8px 8px;
+            padding: 8px;
             border-radius: 4px;
             cursor: text;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-ZDJECIE-INPUT {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-ZDJECIE-INPUT {
             display: none;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-ELEMENT-IMAGE-CONTAINER {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT-IMAGE-CONTAINER {
             position: relative;
             display: inline-block;
             margin-top: 4px;
             align-self: flex-start;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-ELEMENT-IMAGE {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT-IMAGE {
             max-width: 100%;
             max-height: 150px;
             border-radius: 4px;
             object-fit: contain;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-USUN-ZDJECIE {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-USUN-ZDJECIE {
             position: absolute;
             top: -8px;
             right: -8px;
@@ -141,10 +145,13 @@
             opacity: 0;
             transition: opacity 0.2s;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-ELEMENT.editing .KOZLOWSKISEBASTIAN_LISTY-USUN-ZDJECIE {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT:hover .KOZLOWSKISEBASTIAN_NOTATNIK-USUN-ZDJECIE {
             opacity: 1;
         }
-        .KOZLOWSKISEBASTIAN_LISTY-NAZWA-PLIKU {
+        .KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT.editing .KOZLOWSKISEBASTIAN_NOTATNIK-USUN-ZDJECIE {
+            opacity: 1;
+        }
+        .KOZLOWSKISEBASTIAN_NOTATNIK-NAZWA-PLIKU {
             font-size: 12px;
             color: #B0B0B0;
             margin-top: 4px;
@@ -155,31 +162,31 @@
             border-radius: 8px;
             font-family: 'Montserrat', sans-serif;
         }
-        /* LISTA KONIEC */
+        /* NOTATNIK KONIEC */
     </style>
 </head>
-<body class="KOZLOWSKISEBASTIAN_LISTY">
-    <div class="KOZLOWSKISEBASTIAN_LISTY-KONTENER">
-        <div class="KOZLOWSKISEBASTIAN_LISTY-WIERSZ">
+<body class="KOZLOWSKISEBASTIAN_NOTATNIK">
+    <div class="KOZLOWSKISEBASTIAN_NOTATNIK-KONTENER">
+        <div class="KOZLOWSKISEBASTIAN_NOTATNIK-WIERSZ">
             <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
         </div>
-        <div class="KOZLOWSKISEBASTIAN_LISTY-WIERSZ">
-            <input type="text" class="KOZLOWSKISEBASTIAN_LISTY-INPUT" id="KOZLOWSKISEBASTIAN_LISTY-INPUT" 
-                   placeholder="DODAJ PRODUKT" inputmode="text">
+        <div class="KOZLOWSKISEBASTIAN_NOTATNIK-WIERSZ">
+            <input type="text" class="KOZLOWSKISEBASTIAN_NOTATNIK-INPUT" id="KOZLOWSKISEBASTIAN_NOTATNIK-INPUT" 
+                   placeholder="DODAJ NOTATKĘ" inputmode="text">
         </div>
-        <div class="KOZLOWSKISEBASTIAN_LISTY-WIERSZ">
-            <button class="KOZLOWSKISEBASTIAN_LISTY-PRZYCISK" id="KOZLOWSKISEBASTIAN_LISTY-DODAJ-ZDJECIE">ZAŁĄCZ GRAFIKĘ</button>
-            <input type="file" accept="image/*" class="KOZLOWSKISEBASTIAN_LISTY-ZDJECIE-INPUT" id="KOZLOWSKISEBASTIAN_LISTY-ZDJECIE-INPUT">
-            <button class="KOZLOWSKISEBASTIAN_LISTY-PRZYCISK" id="KOZLOWSKISEBASTIAN_LISTY-DODAJ">DODAJ</button>
+        <div class="KOZLOWSKISEBASTIAN_NOTATNIK-WIERSZ">
+            <button class="KOZLOWSKISEBASTIAN_NOTATNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_NOTATNIK-DODAJ-ZDJECIE">ZAŁĄCZ GRAFIKĘ</button>
+            <input type="file" accept="image/*" class="KOZLOWSKISEBASTIAN_NOTATNIK-ZDJECIE-INPUT" id="KOZLOWSKISEBASTIAN_NOTATNIK-ZDJECIE-INPUT">
+            <button class="KOZLOWSKISEBASTIAN_NOTATNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_NOTATNIK-DODAJ">DODAJ</button>
         </div>
-        <div id="KOZLOWSKISEBASTIAN_LISTY-NAZWA-PLIKU" class="KOZLOWSKISEBASTIAN_LISTY-NAZWA-PLIKU">&nbsp;</div>
-        <ul class="KOZLOWSKISEBASTIAN_LISTY-LISTA" id="KOZLOWSKISEBASTIAN_LISTY-LISTA"></ul>
+        <div id="KOZLOWSKISEBASTIAN_NOTATNIK-NAZWA-PLIKU" class="KOZLOWSKISEBASTIAN_NOTATNIK-NAZWA-PLIKU">&nbsp;</div>
+        <ul class="KOZLOWSKISEBASTIAN_NOTATNIK-LISTA" id="KOZLOWSKISEBASTIAN_NOTATNIK-LISTA"></ul>
     </div>
 
     <script>
         // Inicjalizacja IndexedDB
         let db;
-        const request = indexedDB.open('ListaZakupowDB', 1);
+        const request = indexedDB.open('NotatnikDB', 1);
 
         request.onerror = function(event) {
             console.error("Błąd przy otwieraniu bazy danych:", event.target.error);
@@ -187,68 +194,68 @@
 
         request.onsuccess = function(event) {
             db = event.target.result;
-            wyswietlListeZakupow();
+            wyswietlNotatki();
         };
 
         request.onupgradeneeded = function(event) {
             const db = event.target.result;
-            const objectStore = db.createObjectStore('zakupy', { keyPath: 'id', autoIncrement: true });
+            const objectStore = db.createObjectStore('notatki', { keyPath: 'id', autoIncrement: true });
             objectStore.createIndex('text', 'text', { unique: false });
             objectStore.createIndex('image', 'image', { unique: false });
             objectStore.createIndex('filename', 'filename', { unique: false });
         };
 
         // Elementy DOM
-        const listaZakupow = document.getElementById('KOZLOWSKISEBASTIAN_LISTY-LISTA');
-        const dodajDoListyBtn = document.getElementById('KOZLOWSKISEBASTIAN_LISTY-DODAJ');
-        const dodajZdjecielBtn = document.getElementById('KOZLOWSKISEBASTIAN_LISTY-DODAJ-ZDJECIE');
-        const inputZdjeciel = document.getElementById('KOZLOWSKISEBASTIAN_LISTY-ZDJECIE-INPUT');
-        const nowyProduktInput = document.getElementById('KOZLOWSKISEBASTIAN_LISTY-INPUT');
-        const nazwaPlikuElement = document.getElementById('KOZLOWSKISEBASTIAN_LISTY-NAZWA-PLIKU');
+        const listaNotatek = document.getElementById('KOZLOWSKISEBASTIAN_NOTATNIK-LISTA');
+        const dodajNotatkeBtn = document.getElementById('KOZLOWSKISEBASTIAN_NOTATNIK-DODAJ');
+        const dodajZdjecielBtn = document.getElementById('KOZLOWSKISEBASTIAN_NOTATNIK-DODAJ-ZDJECIE');
+        const inputZdjeciel = document.getElementById('KOZLOWSKISEBASTIAN_NOTATNIK-ZDJECIE-INPUT');
+        const nowaNotatkaInput = document.getElementById('KOZLOWSKISEBASTIAN_NOTATNIK-INPUT');
+        const nazwaPlikuElement = document.getElementById('KOZLOWSKISEBASTIAN_NOTATNIK-NAZWA-PLIKU');
 
         let aktualneZdjeciel = null;
         let aktualnaNazwaPliku = '';
 
         // Funkcja do renderowania listy
-        function wyswietlListeZakupow() {
-            const transaction = db.transaction(['zakupy'], 'readonly');
-            const objectStore = transaction.objectStore('zakupy');
+        function wyswietlNotatki() {
+            const transaction = db.transaction(['notatki'], 'readonly');
+            const objectStore = transaction.objectStore('notatki');
             const request = objectStore.getAll();
 
             request.onsuccess = function(event) {
-                const zakupy = event.target.result;
-                listaZakupow.innerHTML = '';
+                const notatki = event.target.result;
+                listaNotatek.innerHTML = '';
                 
-                zakupy.forEach((item, index) => {
+                notatki.forEach((item, index) => {
                     const li = document.createElement('li');
-                    li.className = 'KOZLOWSKISEBASTIAN_LISTY-ELEMENT';
+                    li.className = 'KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT';
                     li.setAttribute('data-id', item.id);
                     
                     let imageHtml = '';
                     if (item.image) {
                         imageHtml = `
-                            <div class="KOZLOWSKISEBASTIAN_LISTY-ELEMENT-IMAGE-CONTAINER">
-                                <img src="${item.image}" class="KOZLOWSKISEBASTIAN_LISTY-ELEMENT-IMAGE">
-                                <span class="KOZLOWSKISEBASTIAN_LISTY-USUN-ZDJECIE" title="Usuń grafikę">×</span>
+                            <div class="KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT-IMAGE-CONTAINER">
+                                <img src="${item.image}" class="KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT-IMAGE">
+                                <span class="KOZLOWSKISEBASTIAN_NOTATNIK-USUN-ZDJECIE" title="Usuń grafikę">×</span>
                             </div>
                         `;
                     }
                     
                     li.innerHTML = `
-                        <span class="KOZLOWSKISEBASTIAN_LISTY-TEKST">${item.text}</span>
+                        <span class="KOZLOWSKISEBASTIAN_NOTATNIK-TEKST">${item.text}</span>
                         ${imageHtml}
-                        <div class="KOZLOWSKISEBASTIAN_LISTY-AKCJE">
-                            <span class="KOZLOWSKISEBASTIAN_LISTY-EDYTUJ"><i class="fas fa-edit"></i></span>
-                            <span class="KOZLOWSKISEBASTIAN_LISTY-USUN"><i class="fas fa-trash-alt"></i></span>
+                        <div class="KOZLOWSKISEBASTIAN_NOTATNIK-AKCJE">
+                            <span class="KOZLOWSKISEBASTIAN_NOTATNIK-EDYTUJ"><i class="fas fa-edit"></i></span>
+                            <span class="KOZLOWSKISEBASTIAN_NOTATNIK-USUN"><i class="fas fa-trash-alt"></i></span>
                         </div>
                     `;
-                    listaZakupow.appendChild(li);
+                    listaNotatek.appendChild(li);
 
                     // Elementy w liście
-                    const tekst = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-TEKST');
-                    const edytuj = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-EDYTUJ');
-                    const usun = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-USUN');
-                    const usunZdjeciel = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-USUN-ZDJECIE');
+                    const tekst = li.querySelector('.KOZLOWSKISEBASTIAN_NOTATNIK-TEKST');
+                    const edytuj = li.querySelector('.KOZLOWSKISEBASTIAN_NOTATNIK-EDYTUJ');
+                    const usun = li.querySelector('.KOZLOWSKISEBASTIAN_NOTATNIK-USUN');
+                    const usunZdjeciel = li.querySelector('.KOZLOWSKISEBASTIAN_NOTATNIK-USUN-ZDJECIE');
                     
                     // Obsługa edycji
                     edytuj.addEventListener('click', () => {
@@ -257,14 +264,21 @@
                         li.classList.add('editing');
                         tekst.focus();
                         
+                        // Zaznacz cały tekst przy edycji
+                        const range = document.createRange();
+                        range.selectNodeContents(tekst);
+                        const selection = window.getSelection();
+                        selection.removeAllRanges();
+                        selection.addRange(range);
+                        
                         const zapiszZmiany = () => {
                             tekst.contentEditable = false;
                             tekst.classList.remove('editing');
                             li.classList.remove('editing');
                             const nowaWartosc = tekst.textContent.trim();
                             if (nowaWartosc) {
-                                const transaction = db.transaction(['zakupy'], 'readwrite');
-                                const objectStore = transaction.objectStore('zakupy');
+                                const transaction = db.transaction(['notatki'], 'readwrite');
+                                const objectStore = transaction.objectStore('notatki');
                                 const getRequest = objectStore.get(item.id);
                                 
                                 getRequest.onsuccess = function() {
@@ -284,12 +298,12 @@
                         });
                     });
                     
-                    // Obsługa usuwania zdjęcia (tylko w trybie edycji)
+                    // Obsługa usuwania zdjęcia
                     if (usunZdjeciel) {
                         usunZdjeciel.addEventListener('click', (e) => {
                             e.stopPropagation();
-                            const transaction = db.transaction(['zakupy'], 'readwrite');
-                            const objectStore = transaction.objectStore('zakupy');
+                            const transaction = db.transaction(['notatki'], 'readwrite');
+                            const objectStore = transaction.objectStore('notatki');
                             const getRequest = objectStore.get(item.id);
                             
                             getRequest.onsuccess = function() {
@@ -297,7 +311,7 @@
                                 data.image = null;
                                 data.filename = '';
                                 objectStore.put(data);
-                                wyswietlListeZakupow();
+                                wyswietlNotatki();
                             };
                         });
                     }
@@ -305,14 +319,14 @@
                     // Obsługa usuwania całego elementu
                     usun.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        const transaction = db.transaction(['zakupy'], 'readwrite');
-                        const objectStore = transaction.objectStore('zakupy');
+                        const transaction = db.transaction(['notatki'], 'readwrite');
+                        const objectStore = transaction.objectStore('notatki');
                         objectStore.delete(item.id);
                         
                         li.style.transform = 'translateX(100%)';
                         li.style.opacity = '0';
                         setTimeout(() => {
-                            wyswietlListeZakupow();
+                            wyswietlNotatki();
                         }, 300);
                     });
                 });
@@ -341,37 +355,37 @@
             }
         });
 
-        // Obsługa dodawania nowych produktów
-        function dodajProdukt() {
-            const tekst = nowyProduktInput.value.trim();
+        // Obsługa dodawania nowych notatek
+        function dodajNotatke() {
+            const tekst = nowaNotatkaInput.value.trim();
             if (tekst || aktualneZdjeciel) {
-                const transaction = db.transaction(['zakupy'], 'readwrite');
-                const objectStore = transaction.objectStore('zakupy');
+                const transaction = db.transaction(['notatki'], 'readwrite');
+                const objectStore = transaction.objectStore('notatki');
                 
-                const nowyProdukt = {
+                const nowaNotatka = {
                     text: tekst || '(brak opisu)',
                     image: aktualneZdjeciel || null,
                     filename: aktualnaNazwaPliku || ''
                 };
                 
-                const request = objectStore.add(nowyProdukt);
+                const request = objectStore.add(nowaNotatka);
                 
                 request.onsuccess = function() {
-                    nowyProduktInput.value = '';
+                    nowaNotatkaInput.value = '';
                     aktualneZdjeciel = null;
                     aktualnaNazwaPliku = '';
                     inputZdjeciel.value = '';
                     nazwaPlikuElement.textContent = '';
-                    wyswietlListeZakupow();
+                    wyswietlNotatki();
                 };
             }
         }
 
-        dodajDoListyBtn.addEventListener('click', dodajProdukt);
+        dodajNotatkeBtn.addEventListener('click', dodajNotatke);
 
-        nowyProduktInput.addEventListener('keydown', (e) => {
+        nowaNotatkaInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                dodajProdukt();
+                dodajNotatke();
             }
         });
     </script>
