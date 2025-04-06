@@ -5,39 +5,477 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>KALKULATOR</title>
     <meta name="theme-color" content="#000000">
+    <meta name="description" content="Aplikacja kalkulatora">
+    <link rel="manifest" href="/manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KALKULATOR.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            background-color: #000000;
+            color: #FF00FF;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0 auto;
+            transition: background 0.3s;
+            touch-action: pan-y;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            width: calc(100% - 40px);
+            max-width: 520px;
+            margin: 10px auto;
+            background-color: #333333;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            max-height: 100%;
+            height: calc(100% - 20px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .kalkulator-modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .powrot-do-kart, .przybornik-btn {
+            background-color: #222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s;
+            white-space: nowrap;
+            flex: 1;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .powrot-do-kart:hover, .przybornik-btn:hover {
+            background-color: #333;
+            color: #FF00FF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .powrot-do-kart:active, .przybornik-btn:active {
+            transform: scale(0.98);
+        }
+
+        .KSGROUP-KALKULATOR {
+            width: calc(100%);
+            max-width: 520px;
+            background-color: #333333;
+            padding: 0px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            margin: 10px auto;
+        }
+
+        .KSGROUP-WYSWIETLACZ {
+            background-color: #222;
+            border-radius: 5px;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        #KSGROUP-OPERACJE {
+            width: 100%;
+            font-size: 18px;
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            background-color: transparent;
+            color: #B0B0B0;
+            outline: none;
+            box-sizing: border-box;
+            text-align: right;
+            margin-bottom: 5px;
+            min-height: 24px;
+        }
+
+        .KSGROUP-ROZDZIELACZ {
+            height: 1px;
+            background-color: #444;
+            margin: 5px 0;
+        }
+
+        #KSGROUP-WYNIK {
+            width: 100%;
+            font-size: 24px;
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            background-color: transparent;
+            color: #B0B0B0;
+            outline: none;
+            box-sizing: border-box;
+            text-align: right;
+        }
+
+        .KSGROUP-PRZYCISKI {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .KSGROUP-PRZYCISK {
+            background-color: #222;
+            color: #B0B0B0;
+            border: none;
+            padding: 15px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .KSGROUP-PRZYCISK:hover {
+            color: #FF00FF;
+            background-color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .KSGROUP-PRZYCISK:active {
+            transform: scale(0.95);
+        }
+
+        .KSGROUP-OPERATOR, #KSGROUP-ROWNA-SIE, #KSGROUP-WYCZYSC, .KSGROUP-DZIESIETNY, #KSGROUP-ZNAK, #KSGROUP-COFNIJ {
+            color: #FF00FF;
+        }
+
+        .KSGROUP-OPERATOR:hover, #KSGROUP-ROWNA-SIE:hover, #KSGROUP-WYCZYSC:hover, 
+        .KSGROUP-DZIESIETNY:hover, #KSGROUP-ZNAK:hover, #KSGROUP-COFNIJ:hover {
+            color: #B0B0B0;
+        }
+
+        #KSGROUP-WYCZYSC {
+            grid-column: span 1;
+            width: 100%;
+        }
+
+        #KSGROUP-ROWNA-SIE {
+            grid-column: span 2;
+            width: 100%;
+        }
+
+        .KSGROUP-DZIESIETNY i {
+            font-size: 10px;
+            position: relative;
+            top: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                max-height: 90vh;
+                margin: 10px auto;
+                padding: 8px;
+                width: calc(100% - 24px);
+            }
+            
+            .KSGROUP-PRZYCISK {
+                padding: 12px 8px;
+                font-size: 16px;
+            }
+            
+            #KSGROUP-OPERACJE {
+                font-size: 16px;
+            }
+            
+            #KSGROUP-WYNIK {
+                font-size: 20px;
+            }
+        }
+
+        @supports (-webkit-touch-callout: none) {
+            .modal-content {
+                max-height: -webkit-fill-available;
+                height: -webkit-fill-available;
+                margin: 10px auto;
+            }
+            
+            body {
+                height: 100%;
+                overflow: hidden;
+            }
+            
+            html {
+                height: 100%;
+                overflow: hidden;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="KSGROUP-KALKULATOR">
-        <div class="KSGROUP-WYSWIETLACZ">
-            <input type="text" id="KSGROUP-OPERACJE" readonly>
-            <div class="KSGROUP-ROZDZIELACZ"></div>
-            <input type="text" id="KSGROUP-WYNIK" readonly>
-        </div>
-        <div class="KSGROUP-PRZYCISKI">
-            <button id="KSGROUP-WYCZYSC" class="KSGROUP-PRZYCISK"><i class="fas fa-trash-alt"></i></button>
-            <button id="KSGROUP-COFNIJ" class="KSGROUP-PRZYCISK"><i class="fas fa-backspace"></i></button>
-            <button id="KSGROUP-ZNAK" class="KSGROUP-PRZYCISK"><i class="fas fa-plus-minus"></i></button>
-            <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-divide"></i></button>
-            <button class="KSGROUP-PRZYCISK"><i class="fas fa-7"></i></button>
-            <button class="KSGROUP-PRZYCISK"><i class="fas fa-8"></i></button>
-            <button class="KSGROUP-PRZYCISK"><i class="fas fa-9"></i></button>
-            <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-times"></i></button>
-            <button class="KSGROUP-PRZYCISK"><i class="fas fa-4"></i></button>
-            <button class="KSGROUP-PRZYCISK"><i class="fas fa-5"></i></button>
-            <button class="KSGROUP-PRZYCISK"><i class="fas fa-6"></i></button>
-            <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-minus"></i></button>
-            <button class="KSGROUP-PRZYCISK"><i class="fas fa-1"></i></button>
-            <button class="KSGROUP-PRZYCISK"><i class="fas fa-2"></i></button>
-            <button class="KSGROUP-PRZYCISK"><i class="fas fa-3"></i></button>
-            <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-plus"></i></button>
-            <button class="KSGROUP-PRZYCISK"><i class="fas fa-0"></i></button>
-            <button class="KSGROUP-PRZYCISK KSGROUP-DZIESIETNY"><i class="fas fa-circle" style="font-size: 5px;"></i></button>
-            <button id="KSGROUP-ROWNA-SIE" class="KSGROUP-PRZYCISK"><i class="fas fa-equals"></i></button>
+    <div id="kalkulator-modal" class="modal">
+        <div class="modal-content">
+            <div class="kalkulator-modal-buttons">
+                <button class="powrot-do-kart" id="powrot-do-kart-kalkulator">KARTY</button>
+                <button class="przybornik-btn" id="przybornik-btn-kalkulator">PRZYBORNIK</button>
+            </div>
+            <div class="KSGROUP-KALKULATOR">
+                <div class="KSGROUP-WYSWIETLACZ">
+                    <input type="text" id="KSGROUP-OPERACJE" readonly>
+                    <div class="KSGROUP-ROZDZIELACZ"></div>
+                    <input type="text" id="KSGROUP-WYNIK" readonly>
+                </div>
+                <div class="KSGROUP-PRZYCISKI">
+                    <button id="KSGROUP-WYCZYSC" class="KSGROUP-PRZYCISK"><i class="fas fa-trash-alt"></i></button>
+                    <button id="KSGROUP-COFNIJ" class="KSGROUP-PRZYCISK"><i class="fas fa-backspace"></i></button>
+                    <button id="KSGROUP-ZNAK" class="KSGROUP-PRZYCISK"><i class="fas fa-plus-minus"></i></button>
+                    <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-divide"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-7"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-8"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-9"></i></button>
+                    <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-times"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-4"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-5"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-6"></i></button>
+                    <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-minus"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-1"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-2"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-3"></i></button>
+                    <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-plus"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-0"></i></button>
+                    <button class="KSGROUP-PRZYCISK KSGROUP-DZIESIETNY"><i class="fas fa-circle" style="font-size: 5px;"></i></button>
+                    <button id="KSGROUP-ROWNA-SIE" class="KSGROUP-PRZYCISK"><i class="fas fa-equals"></i></button>
+                </div>
+            </div>
         </div>
     </div>
-    <script src="https://kozlowskisebastian.pl/JS/KALKULATOR.js"></script>
+
+    <script>
+        const kalkulatorModal = document.getElementById('kalkulator-modal');
+        const powrotDoKartKalkulatorBtn = document.getElementById('powrot-do-kart-kalkulator');
+
+        kalkulatorModal.style.display = 'block'; // Domyślnie widoczne dla tej strony
+
+        powrotDoKartKalkulatorBtn.addEventListener('click', function() {
+            kalkulatorModal.style.display = 'none';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === kalkulatorModal) {
+                kalkulatorModal.style.display = 'none';
+            }
+        });
+
+        const KSGROUP_OPERACJE = document.getElementById('KSGROUP-OPERACJE');
+        const KSGROUP_WYNIK = document.getElementById('KSGROUP-WYNIK');
+        let KSGROUP_AKTUALNE_DANE = '';
+        let KSGROUP_POPRZEDNIE_DANE = '';
+        let KSGROUP_OPERACJA = null;
+        let KSGROUP_RESETUJ_EKRAN = false;
+        const KSGROUP_MAPA_KLAWISZY = {
+            '0': '0', '1': '1', '2': '2', '3': '3', '4': '4',
+            '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+            '.': '.', ',': '.', '+': '+', '-': '-', '*': '*', 
+            'x': '*', 'X': '*', '/': '/', 'Enter': '=', '=': '=', 
+            'Escape': 'C', 'Backspace': '⌫', 'Delete': 'C',
+            '_': '+/-'
+        };
+        const KSGROUP_MAPA_IKON = {
+            'fa-trash-alt': 'C',
+            'fa-backspace': '⌫',
+            'fa-plus-minus': '+/-',
+            'fa-divide': '/',
+            'fa-7': '7',
+            'fa-8': '8',
+            'fa-9': '9',
+            'fa-times': '*',
+            'fa-4': '4',
+            'fa-5': '5',
+            'fa-6': '6',
+            'fa-minus': '-',
+            'fa-1': '1',
+            'fa-2': '2',
+            'fa-3': '3',
+            'fa-plus': '+',
+            'fa-0': '0',
+            'fa-circle': '.',
+            'fa-equals': '='
+        };
+
+        document.querySelectorAll('.KSGROUP-PRZYCISK').forEach(przycisk => {
+            przycisk.addEventListener('click', function() {
+                const ikona = this.querySelector('i');
+                if (ikona) {
+                    const klasaIkony = Array.from(ikona.classList).find(klasa => klasa.startsWith('fa-'));
+                    if (klasaIkony && KSGROUP_MAPA_IKON[klasaIkony]) {
+                        KSGROUP_OBSLUZ_WEJSCIE(KSGROUP_MAPA_IKON[klasaIkony]);
+                    }
+                }
+            });
+        });
+
+        document.addEventListener('keydown', function(event) {
+            const klawisz = event.key;
+            if (KSGROUP_MAPA_KLAWISZY.hasOwnProperty(klawisz)) {
+                event.preventDefault();
+                KSGROUP_OBSLUZ_WEJSCIE(KSGROUP_MAPA_KLAWISZY[klawisz]);
+            }
+        });
+
+        function KSGROUP_OBSLUZ_WEJSCIE(wartosc) {
+            if (KSGROUP_WYNIK.value === 'Error') {
+                KSGROUP_WYCZYSC_WSZYSTKO();
+            }
+            if (wartosc === 'C') {
+                KSGROUP_WYCZYSC_WSZYSTKO();
+            } else if (wartosc === '+/-') {
+                KSGROUP_ZMIEN_ZNAK();
+            } else if (wartosc === '⌫') {
+                KSGROUP_COFNIJ();
+            } else if (wartosc === '=') {
+                KSGROUP_OBLICZ_WYNIK();
+            } else if (['+', '-', '*', '/'].includes(wartosc)) {
+                KSGROUP_USTAW_OPERACJE(wartosc);
+            } else if (wartosc.match(/[0-9.]/)) {
+                KSGROUP_DODAJ_LICZBE(wartosc);
+            }
+            KSGROUP_AKTUALIZUJ_WYSWIETLACZ();
+        }
+
+        function KSGROUP_WYCZYSC_WSZYSTKO() {
+            KSGROUP_AKTUALNE_DANE = '';
+            KSGROUP_POPRZEDNIE_DANE = '';
+            KSGROUP_OPERACJA = null;
+            KSGROUP_RESETUJ_EKRAN = false;
+            KSGROUP_WYNIK.value = '0';
+            KSGROUP_OPERACJE.value = '';
+        }
+
+        function KSGROUP_ZMIEN_ZNAK() {
+            if (KSGROUP_AKTUALNE_DANE) {
+                KSGROUP_AKTUALNE_DANE = (parseFloat(KSGROUP_AKTUALNE_DANE) * -1).toString();
+            } else if (KSGROUP_WYNIK.value !== '0') {
+                KSGROUP_AKTUALNE_DANE = (parseFloat(KSGROUP_WYNIK.value) * -1).toString();
+            }
+        }
+
+        function KSGROUP_COFNIJ() {
+            if (KSGROUP_AKTUALNE_DANE.length > 0) {
+                KSGROUP_AKTUALNE_DANE = KSGROUP_AKTUALNE_DANE.slice(0, -1);
+            } else if (KSGROUP_WYNIK.value !== '0' && !KSGROUP_OPERACJA) {
+                KSGROUP_AKTUALNE_DANE = KSGROUP_WYNIK.value.slice(0, -1);
+            }           
+            if (KSGROUP_AKTUALNE_DANE === '' || KSGROUP_AKTUALNE_DANE === '-') {
+                KSGROUP_AKTUALNE_DANE = '';
+                KSGROUP_WYNIK.value = '0';
+            }
+        }
+
+        function KSGROUP_DODAJ_LICZBE(liczba) {
+            if (KSGROUP_RESETUJ_EKRAN) {
+                KSGROUP_AKTUALNE_DANE = '';
+                KSGROUP_RESETUJ_EKRAN = false;
+            }
+            if (liczba === '.' && KSGROUP_AKTUALNE_DANE.includes('.')) return;
+            if (KSGROUP_AKTUALNE_DANE === '0' && liczba !== '.') {
+                KSGROUP_AKTUALNE_DANE = liczba;
+            } else {
+                KSGROUP_AKTUALNE_DANE += liczba;
+            }
+        }
+
+        function KSGROUP_USTAW_OPERACJE(operacja) {
+            if (KSGROUP_AKTUALNE_DANE === '' && KSGROUP_POPRZEDNIE_DANE && KSGROUP_OPERACJA) {
+                KSGROUP_OPERACJA = operacja;
+                return;
+            }
+            if (KSGROUP_OPERACJA && !KSGROUP_RESETUJ_EKRAN) {
+                KSGROUP_OBLICZ_WYNIK(false);
+            }
+            KSGROUP_POPRZEDNIE_DANE = KSGROUP_AKTUALNE_DANE || KSGROUP_WYNIK.value;
+            KSGROUP_OPERACJA = operacja;
+            KSGROUP_AKTUALNE_DANE = '';
+            KSGROUP_RESETUJ_EKRAN = true;
+        }
+
+        function KSGROUP_OBLICZ_WYNIK(czyAktualizowacWyswietlacz = true) {
+            if (!KSGROUP_OPERACJA || !KSGROUP_POPRZEDNIE_DANE) return;
+            let wynik;
+            const poprzednia = parseFloat(KSGROUP_POPRZEDNIE_DANE);
+            const aktualna = parseFloat(KSGROUP_AKTUALNE_DANE) || parseFloat(KSGROUP_WYNIK.value) || 0;
+            switch (KSGROUP_OPERACJA) {
+                case '+': wynik = poprzednia + aktualna; break;
+                case '-': wynik = poprzednia - aktualna; break;
+                case '*': wynik = poprzednia * aktualna; break;
+                case '/': wynik = aktualna === 0 ? 'Error' : poprzednia / aktualna; break;
+                default: return;
+            }
+            if (typeof wynik === 'number' && !isNaN(wynik)) {
+                wynik = Math.round(wynik * 100000) / 100000;
+            }
+            
+            if (czyAktualizowacWyswietlacz) {
+                KSGROUP_OPERACJE.value = `${KSGROUP_POPRZEDNIE_DANE} ${KSGROUP_OPERACJA} ${KSGROUP_AKTUALNE_DANE || aktualna} = ${wynik}`;
+            }
+            
+            KSGROUP_AKTUALNE_DANE = wynik.toString();
+            KSGROUP_POPRZEDNIE_DANE = '';
+            KSGROUP_OPERACJA = null;
+            KSGROUP_RESETUJ_EKRAN = true;
+        }
+
+        function KSGROUP_AKTUALIZUJ_WYSWIETLACZ() {
+            KSGROUP_WYNIK.value = KSGROUP_AKTUALNE_DANE || (KSGROUP_OPERACJA ? '0' : KSGROUP_WYNIK.value);
+            
+            if (KSGROUP_OPERACJA && KSGROUP_POPRZEDNIE_DANE && !KSGROUP_RESETUJ_EKRAN) {
+                KSGROUP_OPERACJE.value = `${KSGROUP_POPRZEDNIE_DANE} ${KSGROUP_OPERACJA}`;
+            } else if (!KSGROUP_OPERACJE.value.includes('=')) {
+                KSGROUP_OPERACJE.value = '';
+            }
+        }
+
+        KSGROUP_WYCZYSC_WSZYSTKO();
+    </script>
 </body>
 </html>
