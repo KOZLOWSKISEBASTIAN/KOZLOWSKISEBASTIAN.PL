@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MIARA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #000000;
+        }
+        .ruler-container {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            top: 0;
+            left: 0;
+        }
+        
+        /* DOLNA LINIJKA (mm) - NIEBIESKA */
+        .ruler-mm {
+            width: 100%;
+            height: 30px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            border-top: 1px solid #FF00FF;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        
+        /* GÓRNA LINIJKA (cale) - RÓŻOWA */
+        .ruler-in {
+            width: 100%;
+            height: 30px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-bottom: 1px solid #FF00FF;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        
+        .mark {
+            position: absolute;
+        }
+        
+        /* STYLE DLA MILIMETRÓW (DÓŁ) */
+        .mark-mm {
+            border-left: 1px solid #FF00FF;
+            height: 50px;
+            bottom: 0;
+        }
+        .mark-mm-5 {
+            border-left: 1px solid #FF00FF;
+            height: 500px;
+            bottom: 0;
+        }
+        .mark-mm-10 {
+            border-left: 2px solid #FF00FF;
+            height: 500px;
+            bottom: 0;
+        }
+        .mark-mm-100 {
+            border-left: 3px solid #FF00FF;
+            height: 500px;
+            bottom: 0;
+            opacity: 0.5;
+        }
+        
+        /* STYLE DLA CALI (GÓRA) */
+        .mark-in {
+            border-left: 1px solid #00FFFF;
+            height: 50px;
+            top: 0;
+        }
+        .mark-in-05 {
+            border-left: 1px solid #00FFFF;
+            height: 100px;
+            top: 0;
+        }
+        .mark-in-1 {
+            border-left: 2px solid #00FFFF;
+            height: 100px;
+            top: 0;
+        }
+        .mark-in-10 {
+            border-left: 3px solid #00FFFF;
+            height: 100px;
+            top: 0;
+            opacity: 0.5;
+        }
+        
+        .mark-label {
+            position: absolute;
+            font-size: 12px;
+            text-shadow: 0 0 3px #000;
+            font-weight: 500;
+            z-index: 20;
+            transform: translateX(-50%) rotate(-90deg);
+            white-space: nowrap;
+        }
+        
+        /* ETYKIETY MILIMETRÓW (DÓŁ) */
+        .label-mm {
+            color: #FF00FF;
+            bottom: 50px;
+            transform-origin: left top;
+        }
+        
+        /* ETYKIETY CALI (GÓRA) */
+        .label-in {
+            color: #00FFFF;
+            top: 50px;
+            transform-origin: left bottom;
+        }
+        
+        #video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            display: none;
+        }
+
+        @media only screen and (max-width: 768px) {
+            body {
+                background-color: transparent;
+            }
+            #video-background {
+                display: block;
+            }
+            .ruler-mm, .ruler-in {
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+            .mark-label {
+                font-size: 10px;
+            }
+            .label-mm {
+                bottom: 30px;
+            }
+            .label-in {
+                top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <video id="video-background" autoplay playsinline muted></video>
+    <div class="ruler-container">
+        <div class="ruler-mm" id="rulerMm"></div>
+        <div class="ruler-in" id="rulerIn"></div>
+    </div>
+
+    <script>
+        function drawRulers() {
+            const rulerMm = document.getElementById('rulerMm');
+            const rulerIn = document.getElementById('rulerIn');
+            const windowWidth = window.innerWidth;
+
+            // DOLNA LINIJKA MILIMETROWA
+            const pixelsPerMm = 3.78; // 96 DPI / 25.4 mm
+            const maxMm = Math.floor(windowWidth / pixelsPerMm);
+            
+            for (let i = 0; i <= maxMm; i++) {
+                const mark = document.createElement('div');
+                
+                if (i % 100 === 0) {
+                    mark.className = 'mark mark-mm-100';
+                } else if (i % 10 === 0) {
+                    mark.className = 'mark mark-mm-10';
+                } else if (i % 5 === 0) {
+                    mark.className = 'mark mark-mm-5';
+                } else {
+                    mark.className = 'mark mark-mm';
+                }
+                
+                mark.style.left = `${i * pixelsPerMm}px`;
+                rulerMm.appendChild(mark);
+
+                if (i % 100 === 0) {
+                    const label = document.createElement('div');
+                    label.className = 'mark-label label-mm';
+                    label.innerText = `${i/10} cm`;
+                    label.style.left = `${i * pixelsPerMm}px`;
+                    rulerMm.appendChild(label);
+                }
+                else if (i % 10 === 0) {
+                    const label = document.createElement('div');
+                    label.className = 'mark-label label-mm';
+                    label.innerText = `${i} mm`;
+                    label.style.left = `${i * pixelsPerMm}px`;
+                    rulerMm.appendChild(label);
+                }
+            }
+
+            // GÓRNA LINIJKA W CALACH
+            const pixelsPerInch = 96; // 96 DPI
+            const maxIn = Math.floor(windowWidth / pixelsPerInch);
+            
+            for (let i = 0; i <= maxIn; i++) {
+                const mark = document.createElement('div');
+                
+                if (i % 10 === 0) {
+                    mark.className = 'mark mark-in-10';
+                } else if (i % 1 === 0) {
+                    mark.className = 'mark mark-in-1';
+                } else if (i % 0.5 === 0) {
+                    mark.className = 'mark mark-in-05';
+                } else {
+                    mark.className = 'mark mark-in';
+                }
+                
+                mark.style.left = `${i * pixelsPerInch}px`;
+                rulerIn.appendChild(mark);
+
+                if (i % 1 === 0) {
+                    const label = document.createElement('div');
+                    label.className = 'mark-label label-in';
+                    label.innerText = `${i}"`;
+                    label.style.left = `${i * pixelsPerInch}px`;
+                    rulerIn.appendChild(label);
+                }
+            }
+        }
+
+        function setupCamera() {
+            const video = document.getElementById('video-background');
+            if (window.innerWidth <= 768) {
+                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+                        .then(stream => {
+                            video.srcObject = stream;
+                        })
+                        .catch(err => {
+                            console.error("Błąd dostępu do kamery: ", err);
+                        });
+                }
+            }
+        }
+
+        window.onload = function() {
+            drawRulers();
+            setupCamera();
+        };
+
+        window.onresize = function() {
+            document.getElementById('rulerMm').innerHTML = '';
+            document.getElementById('rulerIn').innerHTML = '';
+            drawRulers();
+        };
+    </script>
+</body>
+</html>
