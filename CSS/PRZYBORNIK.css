@@ -123,6 +123,11 @@
             background: #222222;
             color: #FF00FF;
         }
+        .KOZLOWSKISEBASTIAN_KALKULATOR-ROWNA-SIE:hover {
+            grid-column: span 2;
+            background: #333333;
+            color: #B0B0B0;
+        }
 /* KALKULATOR KONIEC */
 /* LICZYDŁO POCZĄTEK */
         .KOZLOWSKISEBASTIAN_LICZYDLO {
