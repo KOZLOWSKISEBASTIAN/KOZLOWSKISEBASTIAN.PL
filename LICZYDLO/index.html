@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LICZYDŁO</title>
+    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
+</head>
+<body class="KOZLOWSKISEBASTIAN_LICZYDLO">
+    <div class="KOZLOWSKISEBASTIAN_LICZYDLO-KONTENER">
+        <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
+            <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
+        </div>
+        <div class="KOZLOWSKISEBASTIAN_LICZYDLO-WIERSZ">
+            <input type="number" id="KOZLOWSKISEBASTIAN_LICZYDLO-CENA" class="KOZLOWSKISEBASTIAN_LICZYDLO-POLE" placeholder="CENA" step="0.01">
+            <input type="number" id="KOZLOWSKISEBASTIAN_LICZYDLO-ILOSC" class="KOZLOWSKISEBASTIAN_LICZYDLO-POLE" placeholder="ILOŚĆ" step="0.01">
+            <select id="KOZLOWSKISEBASTIAN_LICZYDLO-JEDNOSTKA" class="KOZLOWSKISEBASTIAN_LICZYDLO-POLE">
+                <option value="ML">MILILITR ml - l LITR</option>
+                <option value="DAG">DEKAGRAM dag - kg KILOGRAM</option>
+                <option value="PALIWO">SPALANIE PALIWA</option>
+                <option value="TRASA">PLANOWANY KOSZT TRASY</option>
+            </select>
+        </div>
+        <div class="KOZLOWSKISEBASTIAN_LICZYDLO-WIERSZ">
+            <input type="number" id="KOZLOWSKISEBASTIAN_LICZYDLO-KILOMETRY" class="KOZLOWSKISEBASTIAN_LICZYDLO-POLE" placeholder="KILOMETRY" step="0.01">
+            <button class="KOZLOWSKISEBASTIAN_LICZYDLO-PRZYCISK">PRZELICZ</button>
+        </div>
+        <div id="KOZLOWSKISEBASTIAN_LICZYDLO-WYNIK" class="KOZLOWSKISEBASTIAN_LICZYDLO-WYNIK">&nbsp;</div>
+    </div>
+	<script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
+</body>
+</html>
