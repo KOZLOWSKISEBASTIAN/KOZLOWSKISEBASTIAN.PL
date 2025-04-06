@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PODWÓJNA LINIJKA</title>
+    <title>PODWÓJNA LINIJKA - WERYFIKATOR WYMIARÓW</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -21,7 +22,7 @@
             left: 0;
         }
         
-        /* LEWA LINIJKA (mm) - NIEBIESKA */
+        /* LEWA LINIJKA (mm) - RÓŻOWA */
         .ruler-mm {
             width: 30px;
             height: 100vh;
@@ -32,7 +33,7 @@
             background-color: rgba(0, 0, 0, 0.3);
         }
         
-        /* PRAWA LINIJKA (cale) - RÓŻOWA */
+        /* PRAWA LINIJKA (cale) - CYJANOWA */
         .ruler-in {
             width: 30px;
             height: 100vh;
@@ -67,7 +68,7 @@
             border-top: 3px solid #FF00FF;
             width: 200px;
             left: 0;
-            opacity: 0.5;
+            opacity: 0.7;
         }
         
         /* STYLE DLA CALI (PRAWO) */
@@ -90,7 +91,7 @@
             border-top: 3px solid #00FFFF;
             width: 200px;
             right: 0;
-            opacity: 0.5;
+            opacity: 0.7;
         }
         
         .mark-label {
@@ -117,17 +118,29 @@
             transform-origin: right top;
         }
         
-        /* RAMKA KARTY PŁATNICZEJ */
-        .card-frame {
+        /* RAMKA DOWODU OSOBISTEGO (PIONOWA) */
+        .id-frame {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 85.6mm;
-            height: 53.98mm;
+            width: 54.0mm;  /* Szerokość dowodu */
+            height: 85.6mm; /* Wysokość dowodu */
             border: 2px dashed #FFFFFF;
             background-color: rgba(255, 255, 255, 0.1);
             box-sizing: border-box;
+        }
+        
+        /* PODPIS POD RAMKĄ */
+        .frame-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, calc(85.6mm / 2 + 20px));
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            width: 100%;
         }
         
         #video-background {
@@ -160,16 +173,27 @@
             .label-in {
                 right: 30px;
             }
+            .id-frame {
+                width: 54.0mm;
+                height: 85.6mm;
+            }
+            .frame-label {
+                transform: translate(-50%, calc(85.6mm / 2 + 15px));
+                font-size: 12px;
+            }
         }
     </style>
-    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
 </head>
 <body>
     <video id="video-background" autoplay playsinline muted></video>
+        <div class="KOZLOWSKISEBASTIAN_LISTY-WIERSZ">
+           <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
+        </div>
     <div class="ruler-container">
         <div class="ruler-mm" id="rulerMm"></div>
         <div class="ruler-in" id="rulerIn"></div>
-        <div class="card-frame"></div>
+        <div class="id-frame"></div>
+        <div class="frame-label">WZÓR DOWODU OSOBISTEGO (54.0 × 85.6 mm)</div>
     </div>
 
     <script>
@@ -270,6 +294,6 @@
             drawRulers();
         };
     </script>
-<script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
+    <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
 </body>
 </html>
