@@ -8,6 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
         /* NOTATNIK POCZĄTEK */
         .KOZLOWSKISEBASTIAN_NOTATNIK {
@@ -83,7 +84,7 @@
             color: #B0B0B0;
             flex-grow: 1;
             word-break: break-word;
-            padding-right: 60px; /* Miejsce dla ikon */
+            padding-right: 60px;
         }
         .KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT:hover .KOZLOWSKISEBASTIAN_NOTATNIK-TEKST {
             color: #FF00FF;
@@ -132,8 +133,8 @@
             position: absolute;
             top: -8px;
             right: -8px;
-            background: #FF0000;
-            color: white;
+            background: #FF00FF;
+            color: #000000;
             border-radius: 50%;
             width: 20px;
             height: 20px;
@@ -167,9 +168,6 @@
 </head>
 <body class="KOZLOWSKISEBASTIAN_NOTATNIK">
     <div class="KOZLOWSKISEBASTIAN_NOTATNIK-KONTENER">
-        <div class="KOZLOWSKISEBASTIAN_NOTATNIK-WIERSZ">
-            <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
-        </div>
         <div class="KOZLOWSKISEBASTIAN_NOTATNIK-WIERSZ">
             <input type="text" class="KOZLOWSKISEBASTIAN_NOTATNIK-INPUT" id="KOZLOWSKISEBASTIAN_NOTATNIK-INPUT" 
                    placeholder="DODAJ NOTATKĘ" inputmode="text">
@@ -236,13 +234,13 @@
                         imageHtml = `
                             <div class="KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT-IMAGE-CONTAINER">
                                 <img src="${item.image}" class="KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT-IMAGE">
-                                <span class="KOZLOWSKISEBASTIAN_NOTATNIK-USUN-ZDJECIE" title="Usuń grafikę">×</span>
+                                <span class="KOZLOWSKISEBASTIAN_NOTATNIK-USUN-ZDJECIE" title="Usuń grafikę">X</span>
                             </div>
                         `;
                     }
                     
                     li.innerHTML = `
-                        <span class="KOZLOWSKISEBASTIAN_NOTATNIK-TEKST">${item.text}</span>
+                        <span class="KOZLOWSKISEBASTIAN_NOTATNIK-TEKST">${item.text}&nbsp;</span>
                         ${imageHtml}
                         <div class="KOZLOWSKISEBASTIAN_NOTATNIK-AKCJE">
                             <span class="KOZLOWSKISEBASTIAN_NOTATNIK-EDYTUJ"><i class="fas fa-edit"></i></span>
@@ -388,7 +386,14 @@
                 dodajNotatke();
             }
         });
+
+        // Poprawka dla wprowadzania znaków specjalnych
+        nowaNotatkaInput.addEventListener('keypress', (e) => {
+            // Zezwól na wszystkie znaki
+            return true;
+        });
     </script>
+
     <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
 </body>
 </html>
