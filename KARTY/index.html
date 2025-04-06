@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KARTY</title>
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Aplikacja do zarządzania kartami">
+    <link rel="manifest" href="/manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            background-color: #000000;
+            color: #FF00FF;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0 auto;
+            transition: background 0.3s;
+            touch-action: pan-y;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .header {
+            width: calc(100% - 40px);
+            max-width: 520px;
+            margin: 10px auto;
+            background-color: #333333;
+            padding: 8px 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+
+        .fullscreen-mode .header {
+            display: none;
+        }
+
+        .KSGROUP-PASEK-WYSZUKIWANIA input {
+            width: 100%;
+            max-width: 520px;
+            padding: 8px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            border-radius: 5px;
+            background-color: #222;
+            color: #B0B0B0;
+            outline: none;
+            box-sizing: border-box;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .KSGROUP-WYSZUKIWARKA-NORMALNA {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .fullscreen-mode .KSGROUP-WYSZUKIWARKA-NORMALNA {
+            display: none;
+        }
+
+        .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: fixed;
+            top: 10px;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        .fullscreen-mode .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN {
+            display: flex;
+        }
+
+        .KSGROUP-PASEK-WYSZUKIWANIA {
+            order: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+            padding: 0;
+        }
+
+        .KSGROUP-PASEK-LINKU-OBRAZU {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 90%;
+            max-width: 520px;
+            margin: 0 0;
+        }
+
+        .KSGROUP-PASEK-LINKU-OBRAZU a {
+            text-decoration: none;
+            color: #B0B0B0;
+            text-align: center;
+            display: block;
+            background-color: #222;
+            padding: 8px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0px 0px;
+            max-width: 520px;
+        }
+
+        .card-number-fullscreen {
+            position: fixed;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #000;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            padding: 0px 0px;
+            border-radius: 5px;
+            z-index: 11;
+            max-width: 80%;
+            box-sizing: border-box;
+        }
+
+        .KSGROUP-PASEK-LINKU-OBRAZU a:hover {
+            background-color: #333;
+            color: #FF00FF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: calc(100% - 40px);
+            max-width: 520px;
+            transition: opacity 0.3s;
+            position: relative;
+            z-index: 2;
+            margin: 10px 10px;
+        }
+
+        .fullscreen-mode .container {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .row {
+            margin: 0;
+            text-align: center;
+            width: 100%;
+        }
+
+        .karty {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .karty li {
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        .karty li.ukryta {
+            display: none !important;
+        }
+
+        .karty li.rzadko-uzywana {
+            display: none;
+        }
+
+        body.pokaz-rzadkie .karty li.rzadko-uzywana {
+            display: block;
+        }
+
+        body.pokaz-rzadkie .karty li:not(.rzadko-uzywana) {
+            display: none;
+        }
+
+        .karty a {
+            text-decoration: none;
+            padding: 8px 8px;
+            color: #FF00FF;
+            background: #333333;
+            border-radius: 5px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80px;
+            min-width: 120px;
+            box-sizing: border-box;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .karty a:hover {
+            background: #222222;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .karty a:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .karty a img {
+            max-height: 30px;
+            width: auto;
+            filter: invert(1) brightness(0.69) contrast(0.95);
+            transition: all 0.3s;
+            margin-bottom: 5px;
+        }
+
+        .karty a:hover img {
+            filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
+            transform: scale(1.1);
+        }
+
+        .karty a .nazwa {
+            font-size: 12px;
+            color: #B0B0B0;
+            margin-top: 5px;
+            transition: color 0.3s;
+        }
+
+        .karty a:hover .nazwa {
+            color: #FF00FF;
+        }
+
+        .fullscreen-mode {
+            background-color: #B0B0B0;
+            padding: 0;
+            box-sizing: border-box;
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            top: 0;
+            left: 0;
+        }
+
+        .fullscreen-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #B0B0B0;
+        }
+
+        .fullscreen-mode .fullscreen-image {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .fullscreen-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.5s ease;
+        }
+
+        .fullscreen-image img:hover {
+            transform: scale(1.05);
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 520px;
+            gap: 10px;
+        }
+
+        .przelacz-rzadkie, .przybornik-btn {
+            background-color: #222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s;
+            white-space: nowrap;
+            flex: 1;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .przelacz-rzadkie:hover, 
+        .przybornik-btn:hover {
+            background-color: #333;
+            color: #FF00FF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .przelacz-rzadkie:active, 
+        .przybornik-btn:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 768px) and (orientation: portrait) {
+            .fullscreen-image-content {
+                max-width: 100vh;
+                max-height: 100vw;
+                transform: rotate(0);
+            }
+            
+            .card-number-fullscreen {
+                top: 50px;
+                left: 30%;
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 768px) and (orientation: landscape) {
+            .fullscreen-image-content {
+                max-width: 100vh;
+                max-height: 100vw;
+                transform: rotate(0);
+            }
+            
+            .card-number-fullscreen {
+                top: 50px;
+                left: 30%;
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header, .container {
+                width: calc(100% - 24px);
+                padding: 8px;
+            }
+            
+            .KSGROUP-PASEK-WYSZUKIWANIA input,
+            .buttons-container {
+                max-width: none;
+            }
+            
+            .karty a {
+                height: 70px;
+                min-width: 100px;
+                padding: 8px 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="KSGROUP-WYSZUKIWARKA-NORMALNA">
+            <div class="KSGROUP-PASEK-WYSZUKIWANIA">
+                <input type="text" id="wyszukaj-input" placeholder="WYSZUKAJ KARTĘ">
+                <div class="buttons-container">
+                    <button class="przelacz-rzadkie" id="przelacz-rzadkie" title="INNE">INNE</button>
+                    <button class="przybornik-btn" id="przybornik-btn" title="PRZYBORNIK">PRZYBORNIK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN">
+        <div class="KSGROUP-PASEK-LINKU-OBRAZU">
+            <a id="image-link" href="" target="_blank">ZAPISZ</a>
+            <div id="fullscreen-card-number" class="card-number-fullscreen"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <ul class="karty" id="lista-kart">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <!-- Pozostałe karty można dodać tutaj -->
+            </ul>
+        </div>
+    </div>
+    <div class="fullscreen-image">
+        <img id="fullscreen-img" src="" alt="PEŁNY EKRAN" class="fullscreen-image-content">
+    </div>
+
+    <script>
+        let pelnyEkran = false;
+        let pokazRzadkie = false;
+        const fullscreenImage = document.querySelector('.fullscreen-image');
+        const fullscreenImg = document.getElementById('fullscreen-img');
+        const imageLink = document.getElementById('image-link');
+        const wyszukajInput = document.getElementById('wyszukaj-input');
+        const przelaczRzadkieBtn = document.getElementById('przelacz-rzadkie');
+        const listaKart = document.getElementById('lista-kart');
+        const wszystkieKarty = Array.from(listaKart.children);
+        const fullscreenCardNumber = document.getElementById('fullscreen-card-number');
+
+        function oznaczRzadkieKarty() {
+            wszystkieKarty.forEach(karta => {
+                if (karta.getAttribute('data-usage') === "0") {
+                    karta.classList.add('rzadko-uzywana');
+                } else {
+                    karta.classList.remove('rzadko-uzywana');
+                }
+            });
+        }
+
+        function aktualizujWidocznoscKart() {
+            const fraza = wyszukajInput.value.trim().toLowerCase();
+            
+            if (fraza !== '') {
+                wszystkieKarty.forEach(karta => {
+                    const nazwa = karta.getAttribute('data-name').toLowerCase();
+                    const czyPasuje = nazwa.includes(fraza);
+                    
+                    if (czyPasuje) {
+                        karta.style.display = 'block';
+                        karta.classList.remove('ukryta');
+                    } else {
+                        karta.style.display = 'none';
+                        karta.classList.add('ukryta');
+                    }
+                });
+            } else {
+                wszystkieKarty.forEach(karta => {
+                    karta.style.display = '';
+                    if (pokazRzadkie) {
+                        karta.classList.toggle('ukryta', !karta.classList.contains('rzadko-uzywana'));
+                    } else {
+                        karta.classList.toggle('ukryta', karta.classList.contains('rzadko-uzywana'));
+                    }
+                });
+            }
+        }
+
+        function handleOrientationChange() {
+            if (window.matchMedia("(max-width: 768px)").matches) {
+                if (window.orientation === 0 || window.orientation === 180) {
+                    fullscreenImg.style.transform = 'rotate(90deg)';
+                    fullscreenImg.style.maxWidth = '100vh';
+                    fullscreenImg.style.maxHeight = '100vw';
+                    fullscreenCardNumber.style.top = '60px';
+                    fullscreenCardNumber.style.left = '50%';
+                    fullscreenCardNumber.style.transform = 'translateY(-50%)';
+                    fullscreenCardNumber.style.transformOrigin = 'left top';
+                    fullscreenCardNumber.style.whiteSpace = 'nowrap';
+                } else {
+                    fullscreenImg.style.transform = 'rotate(0)';
+                    fullscreenImg.style.maxWidth = '100%';
+                    fullscreenImg.style.maxHeight = '100%';
+                    fullscreenCardNumber.style.top = '60px';
+                    fullscreenCardNumber.style.left = '60%';
+                    fullscreenCardNumber.style.transform = 'translateX(-50%)';
+                    fullscreenCardNumber.style.transformOrigin = '';
+                    fullscreenCardNumber.style.whiteSpace = '';
+                }
+            }
+        }
+
+        oznaczRzadkieKarty();
+        aktualizujWidocznoscKart();
+
+        handleOrientationChange();
+        window.addEventListener('orientationchange', handleOrientationChange);
+
+        przelaczRzadkieBtn.addEventListener('click', function() {
+            if (wyszukajInput.value.trim() === '') {
+                pokazRzadkie = !pokazRzadkie;
+                
+                if (pokazRzadkie) {
+                    document.body.classList.add('pokaz-rzadkie');
+                    this.style.backgroundColor = '#333';
+                } else {
+                    document.body.classList.remove('pokaz-rzadkie');
+                    this.style.backgroundColor = '#222';
+                }
+                
+                aktualizujWidocznoscKart();
+            }
+        });
+
+        wyszukajInput.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                document.body.classList.remove('pokaz-rzadkie');
+                pokazRzadkie = false;
+                przelaczRzadkieBtn.style.backgroundColor = '#222';
+            }
+            aktualizujWidocznoscKart();
+        });
+
+        document.querySelectorAll('.link-btn').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                pelnyEkran = !pelnyEkran;
+                if (pelnyEkran) {
+                    document.body.classList.add('fullscreen-mode');
+                    const imageUrl = this.getAttribute('data-image');
+                    fullscreenImg.src = imageUrl;
+                    imageLink.href = imageUrl;
+                    
+                    const cardNumber = this.parentElement.classList[0];
+                    fullscreenCardNumber.textContent = `${cardNumber}`;
+                    
+                    handleOrientationChange();
+                    
+                    fullscreenImg.onerror = () => {
+                        fullscreenImg.src = 'https://via.placeholder.com/800x600?text=Obraz+niedostępny';
+                        imageLink.href = fullscreenImg.src;
+                        fullscreenCardNumber.textContent = 'BRAK NUMERU KARTY';
+                    };
+                } else {
+                    document.body.classList.remove('fullscreen-mode');
+                    fullscreenImg.src = '';
+                    fullscreenCardNumber.textContent = '';
+                }
+            });
+        });
+
+        document.body.addEventListener('click', function(e) {
+            if (pelnyEkran && (e.target === document.body || e.target === fullscreenImage || e.target === fullscreenImg)) {
+                pelnyEkran = false;
+                document.body.classList.remove('fullscreen-mode');
+                fullscreenImg.src = '';
+                fullscreenCardNumber.textContent = '';
+            }
+        });
+    </script>
+</body>
+</html>
