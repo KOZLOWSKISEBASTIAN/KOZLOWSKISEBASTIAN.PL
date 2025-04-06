@@ -2,654 +2,124 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>LISTA</title>
-    <meta name="theme-color" content="#000000">
-    <meta name="description" content="Aplikacja do zarządzania listą zakupów">
-    <link rel="manifest" href="/manifest.json">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KALKULATOR</title>
+    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 300;
-            background-color: #000000;
+        
+        /* KALKULATOR POCZĄTEK */
+        .KOZLOWSKISEBASTIAN_KALKULATOR {
+            font-family: sans-serif;
+            background: #000000;
             color: #FF00FF;
-            padding: 0;
+            margin: 0;
+            padding: 8px;
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0 auto;
-            transition: background 0.3s;
-            touch-action: pan-y;
-            -webkit-text-size-adjust: 100%;
+            justify-content: center;
         }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 10;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            animation: fadeIn 0.3s;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: contain;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-content {
-            width: calc(100% - 40px);
+        .KOZLOWSKISEBASTIAN_KALKULATOR-KONTENER {
             max-width: 520px;
-            margin: 10px auto;
-            background-color: #333333;
+            width: 100%;
+            background: #333333;
             padding: 8px;
             border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            box-sizing: border-box;
-            max-height: 100%;
-            height: calc(100% - 20px);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
         }
-
-        #nowy-produkt {
-            width: 100%;
-            max-width: 520px;
+        .KOZLOWSKISEBASTIAN_KALKULATOR-WYSWIETLACZ {
+            background: #222222;
+            border-radius: 8px;
             padding: 8px;
+            margin-bottom: 4px;
+        }
+        .KOZLOWSKISEBASTIAN_KALKULATOR-OPERACJE {
+            width: 100%;
             font-size: 16px;
-            font-family: 'Montserrat', sans-serif;
             border: none;
-            border-radius: 5px;
-            background-color: #222;
+            background: transparent;
             color: #B0B0B0;
             outline: none;
-            box-sizing: border-box;
-            margin: 0 auto;
-            display: block;
-            flex-grow: 1;
-            transition: all 0.3s;
+            text-align: right;
+            margin-bottom: 4px;
+            min-height: 20px;
         }
-
-        #nowy-produkt:focus {
-            box-shadow: 0 0 0 2px #FF00FF;
-        }
-
-        .input-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .KOZLOWSKISEBASTIAN_KALKULATOR-WYNIK {
             width: 100%;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
+            font-size: 24px;
+            border: none;
+            background: transparent;
+            color: #B0B0B0;
+            outline: none;
+            text-align: right;
         }
-
-        .modal-buttons-container {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            gap: 10px;
+        .KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISKI {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
         }
-
-        .powrot-do-kart, .przybornik-btn, .dodaj-produkt {
-            background-color: #222;
+        .KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK {
+            background: #222222;
             color: #B0B0B0;
             border: none;
-            padding: 8px 8px;
-            border-radius: 5px;
+            padding: px 8px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            transition: all 0.3s;
-            white-space: nowrap;
-            flex: 1;
-            box-sizing: border-box;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .powrot-do-kart:hover, .przybornik-btn:hover, .dodaj-produkt:hover {
-            background-color: #333;
-            color: #FF00FF;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-
-        .powrot-do-kart:active, .przybornik-btn:active, .dodaj-produkt:active {
-            transform: scale(0.98);
-        }
-
-        #lista-zakupow {
-            list-style-type: none;
-            padding: 0;
-            margin-top: 15px;
-            width: 100%;
-            overflow-y: auto;
-            flex-grow: 1;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: contain;
-            touch-action: pan-y;
-        }
-
-        #lista-zakupow::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        #lista-zakupow::-webkit-scrollbar-track {
-            background: #222;
-            border-radius: 4px;
-        }
-
-        #lista-zakupow::-webkit-scrollbar-thumb {
-            background: #B0B0B0;
-            border-radius: 4px;
-        }
-
-        #lista-zakupow::-webkit-scrollbar-thumb:hover {
-            background: #FF00FF;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        #lista-zakupow li {
-            padding: 8px 8px;
-            border-bottom: 1px solid #B0B0B0;
+            transition: all 0.2s;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            background-color: #333;
-            border-radius: 5px;
-            margin-bottom: 8px;
-            cursor: grab;
-            user-select: none;
-            touch-action: none;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            animation: slideIn 0.3s ease cáncer
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-
-        #lista-zakupow li:hover {
-            background-color: #222;
-            transform: translateX(5px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        .KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK:hover {
+            color: #FF00FF;
+            background: #333333;
+            transform: translateY(-2px);
         }
-
-        #lista-zakupow li:active {
-            cursor: grabbing;
-            background-color: #222;
-        }
-
-        #lista-zakupow li.dragging {
-            opacity: 0.9;
-            transform: scale(1.05);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
-            background-color: #222;
-            z-index: 10;
-        }
-
-        #lista-zakupow li.placeholder {
-            background: linear-gradient(90deg, transparent, rgba(255,0,255,0.2), transparent);
-            border: none;
-            height: 3px;
-            margin: 10px 0;
-            padding: 0;
-            border-radius: 3px;
-            animation: none;
-        }
-
-        #lista-zakupow li:last-child {
-            border-bottom: none;
-        }
-
-        .produkt-text {
-            color: #B0B0B0;
-            flex-grow: 1;
-            transition: color 0.2s;
-        }
-
-        #lista-zakupow li:hover .produkt-text {
+        .KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR,
+        .KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY {
             color: #FF00FF;
         }
-
-        .usun-z-listy {
-            color: #B0B0B0;
-            cursor: pointer;
-            margin-left: 10px;
-            padding: 8px;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
-
-        #lista-zakupow li:hover .usun-z-listy {
-            animation: pulse 0.5s ease-in-out;
-        }
-
-        .usun-z-listy:hover {
+        .KOZLOWSKISEBASTIAN_KALKULATOR-ROWNA-SIE {
+            grid-column: span 2;
+            background: #222222;
             color: #FF00FF;
-            transform: scale(1.2);
         }
-
-        .usun-z-listy:active {
-            transform: scale(0.9);
-        }
-
-        .edit-btn {
-            color: #B0B0B0;
-            cursor: pointer;
-            margin-left: 10px;
-            padding: 8px;
-            font-weight: bold;
-            transition: all 0.2s;
-        }
-
-        .edit-btn:hover {
-            color: #FF00FF;
-            transform: scale(1.2);
-        }
-
-        .edit-btn:active {
-            transform: scale(0.9);
-        }
-
-        .produkt-text.editing {
-            background-color: #222;
-            padding: 4px 8px;
-            border-radius: 4px;
-            cursor: text;
-        }
-
-        @media (max-width: 768px) {
-            .modal-content {
-                max-height: 90vh;
-                margin: 10px auto;
-                padding: 8px;
-                width: calc(100% - 24px);
-            }
-            
-            #lista-zakupow {
-                max-height: calc(90vh - 140px);
-            }
-            
-            #nowy-produkt,
-            .modal-buttons-container {
-                max-width: none;
-            }
-            
-            #lista-zakupow li.dragging {
-                transform: scale(1.08);
-            }
-        }
-
-        @supports (-webkit-touch-callout: none) {
-            .modal-content {
-                max-height: -webkit-fill-available;
-                height: -webkit-fill-available;
-                margin: 10px auto;
-            }
-            
-            #lista-zakupow {
-                max-height: calc(-webkit-fill-available - 140px);
-            }
-            
-            body {
-                height: 100%;
-                overflow: hidden;
-            }
-            
-            html {
-                height: 100%;
-                overflow: hidden;
-            }
-        }
+        /* KALKULATOR KONIEC */
     </style>
 </head>
-<body>
-    <div id="lista-zakupow-modal" class="modal">
-        <div class="modal-content">
-            <div class="input-container">
-                <input type="text" id="nowy-produkt" placeholder="DODAJ PRODUKT">
-                <div class="modal-buttons-container">
-                    <button class="powrot-do-kart" id="powrot-do-kart">KARTY</button>
-                    <button class="przybornik-btn" id="przybornik-btn-lista">PRZYBORNIK</button>
-                    <button class="dodaj-produkt" id="dodaj-do-listy">DODAJ</button>
-                </div>
-            </div>
-            <ul id="lista-zakupow"></ul>
+<body class="KOZLOWSKISEBASTIAN_KALKULATOR">
+    <div class="KOZLOWSKISEBASTIAN_KALKULATOR-KONTENER">
+        <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
+            <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
+        </div>
+        <div class="KOZLOWSKISEBASTIAN_KALKULATOR-WYSWIETLACZ">
+            <input type="text" class="KOZLOWSKISEBASTIAN_KALKULATOR-OPERACJE" id="KOZLOWSKISEBASTIAN_KALKULATOR-OPERACJE" readonly>
+            <input type="text" class="KOZLOWSKISEBASTIAN_KALKULATOR-WYNIK" id="KOZLOWSKISEBASTIAN_KALKULATOR-WYNIK" readonly value="0">
+        </div>
+        <div class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISKI">
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY" id="KOZLOWSKISEBASTIAN_KALKULATOR-WYCZYSC"><i class="fas fa-trash-alt"></i></button>
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY" id="KOZLOWSKISEBASTIAN_KALKULATOR-COFNIJ"><i class="fas fa-backspace"></i></button>
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY" id="KOZLOWSKISEBASTIAN_KALKULATOR-ZNAK"><i class="fas fa-plus-minus"></i></button>
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR"><i class="fas fa-divide"></i></button>
+            
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-7"></i></button>
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-8"></i></button>
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-9"></i></button>
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR"><i class="fas fa-times"></i></button>
+            
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-4"></i></button>
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-5"></i></button>
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-6"></i></button>
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR"><i class="fas fa-minus"></i></button>
+            
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-1"></i></button>
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-2"></i></button>
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-3"></i></button>
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR"><i class="fas fa-plus"></i></button>
+            
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-0"></i></button>
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-circle" style="font-size: 5px;"></i></button>
+            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-ROWNA-SIE" id="KOZLOWSKISEBASTIAN_KALKULATOR-ROWNA-SIE"><i class="fas fa-equals"></i></button>
         </div>
     </div>
-
-    <script>
-        const modal = document.getElementById('lista-zakupow-modal');
-        const listaZakupow = document.getElementById('lista-zakupow');
-        const dodajDoListyBtn = document.getElementById('dodaj-do-listy');
-        const powrotDoKartBtn = document.getElementById('powrot-do-kart');
-        const nowyProduktInput = document.getElementById('nowy-produkt');
-
-        let zakupy = JSON.parse(localStorage.getItem('listaZakupow')) || [];
-
-        modal.style.display = 'block'; // Domyślnie widoczne dla tej strony
-
-        function wyswietlListeZakupow() {
-            listaZakupow.innerHTML = '';
-            zakupy.forEach((produkt, index) => {
-                setTimeout(() => {
-                    const li = document.createElement('li');
-                    li.setAttribute('data-index', index);
-                    li.draggable = true;
-                    li.innerHTML = `
-                        <span class="produkt-text" contenteditable="false">${produkt}</span>
-                        <span class="edit-btn" data-index="${index}"><i class="fas fa-edit"></i></span>
-                        <span class="usun-z-listy" data-index="${index}"><i class="fas fa-trash-alt"></i></span>
-                    `;
-                    listaZakupow.appendChild(li);
-                    
-                    li.addEventListener('touchstart', handleTouchStart, { passive: false });
-                    li.addEventListener('touchmove', handleTouchMove, { passive: false });
-                    li.addEventListener('touchend', handleTouchEnd, { passive: false });
-                    
-                    li.addEventListener('dragstart', handleDragStart);
-                    li.addEventListener('dragover', handleDragOver);
-                    li.addEventListener('dragenter', handleDragEnter);
-                    li.addEventListener('dragleave', handleDragLeave);
-                    li.addEventListener('dragend', handleDragEnd);
-                    li.addEventListener('drop', handleDrop);
-                    
-                    const produktText = li.querySelector('.produkt-text');
-                    const editBtn = li.querySelector('.edit-btn');
-                    
-                    editBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        produktText.contentEditable = true;
-                        produktText.classList.add('editing');
-                        produktText.focus();
-                        
-                        const originalValue = produktText.textContent;
-                        
-                        produktText.addEventListener('blur', function handler() {
-                            produktText.contentEditable = false;
-                            produktText.classList.remove('editing');
-                            const newValue = produktText.textContent.trim();
-                            
-                            if (newValue && newValue !== originalValue) {
-                                zakupy[index] = newValue;
-                                localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
-                            } else if (!newValue) {
-                                produktText.textContent = originalValue;
-                            }
-                            
-                            produktText.removeEventListener('blur', handler);
-                        });
-                        
-                        produktText.addEventListener('keypress', function(e) {
-                            if (e.key === 'Enter') {
-                                e.preventDefault();
-                                produktText.blur();
-                            }
-                        });
-                    });
-                    
-                    li.querySelector('.usun-z-listy').addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const index = parseInt(this.getAttribute('data-index'));
-                        zakupy.splice(index, 1);
-                        localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
-                        
-                        li.style.transform = 'translateX(100%)';
-                        li.style.opacity = '0';
-                        setTimeout(() => {
-                            wyswietlListeZakupow();
-                        }, 300);
-                    });
-                }, index * 50);
-            });
-        }
-
-        let draggedItem = null;
-        let placeholder = null;
-        let startY = 0;
-        let scrollTop = 0;
-        let isDragging = false;
-
-        function handleTouchStart(e) {
-            if (e.touches.length !== 1) return;
-            
-            const touch = e.touches[0];
-            const li = e.currentTarget;
-            
-            if (touch.target.classList.contains('usun-z-listy') || 
-                touch.target.classList.contains('edit-btn')) {
-                return;
-            }
-            
-            e.preventDefault();
-            
-            if (!isDragging) {
-                isDragging = true;
-                startY = touch.pageY;
-                scrollTop = listaZakupow.scrollTop;
-            }
-        }
-
-        function handleTouchMove(e) {
-            if (!isDragging || e.touches.length !== 1) return;
-            e.preventDefault();
-            
-            const touch = e.touches[0];
-            const y = touch.pageY;
-            const walk = (y - startY) * -1;
-            listaZakupow.scrollTop = scrollTop + walk;
-        }
-
-        function handleTouchEnd() {
-            isDragging = false;
-        }
-
-        function handleDragStart(e) {
-            draggedItem = this;
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html', this.innerHTML);
-            
-            if ('ontouchstart' in window) {
-                this.style.transform = 'scale(1.05)';
-                this.style.boxShadow = '0 5px 20px rgba(0,0,0,0.4)';
-                this.style.transition = 'none';
-            }
-
-            setTimeout(() => {
-                this.classList.add('dragging');
-            }, 0);
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            
-            if (draggedItem === this) return;
-            
-            const rect = this.getBoundingClientRect();
-            const middleY = rect.top + rect.height / 2;
-            
-            if (e.clientY < middleY) {
-                if (placeholder && placeholder.nextSibling === this) {
-                    return;
-                }
-                if (!placeholder) {
-                    placeholder = document.createElement('li');
-                    placeholder.className = 'placeholder';
-                    listaZakupow.insertBefore(placeholder, this);
-                } else {
-                    listaZakupow.insertBefore(placeholder, this);
-                }
-            } else {
-                if (placeholder && placeholder.previousSibling === this) {
-                    return;
-                }
-                if (!placeholder) {
-                    placeholder = document.createElement('li');
-                    placeholder.className = 'placeholder';
-                    listaZakupow.insertBefore(placeholder, this.nextSibling);
-                } else {
-                    listaZakupow.insertBefore(placeholder, this.nextSibling);
-                }
-            }
-        }
-
-        function handleDragEnter(e) {
-            e.preventDefault();
-            this.classList.add('over');
-        }
-
-        function handleDragLeave() {
-            this.classList.remove('over');
-        }
-
-        function handleDragEnd() {
-            this.classList.remove('dragging');
-            
-            if ('ontouchstart' in window) {
-                this.style.transform = '';
-                this.style.boxShadow = '';
-                this.style.transition = 'all 0.3s';
-            }
-            
-            if (placeholder && placeholder.parentNode) {
-                placeholder.parentNode.removeChild(placeholder);
-            }
-            placeholder = null;
-            
-            document.querySelectorAll('#lista-zakupow li').forEach(li => {
-                li.classList.remove('over');
-            });
-        }
-
-        function handleDrop(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            
-            if (draggedItem !== this) {
-                if (placeholder && placeholder.parentNode) {
-                    placeholder.parentNode.removeChild(placeholder);
-                }
-                placeholder = null;
-                
-                const fromIndex = parseInt(draggedItem.getAttribute('data-index'));
-                const toIndex = parseInt(this.getAttribute('data-index'));
-                
-                const [removed] = zakupy.splice(fromIndex, 1);
-                zakupy.splice(toIndex, 0, removed);
-                
-                localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
-                wyswietlListeZakupow();
-            }
-            
-            return false;
-        }
-
-        listaZakupow.addEventListener('touchstart', function(e) {
-            if (e.touches.length !== 1) return;
-            
-            const touch = e.touches[0];
-            const li = touch.target.closest('li');
-            
-            if (!li) {
-                isDragging = true;
-                startY = touch.pageY;
-                scrollTop = this.scrollTop;
-            }
-        }, { passive: false });
-
-        listaZakupow.addEventListener('touchmove', function(e) {
-            if (!isDragging || e.touches.length !== 1) return;
-            e.preventDefault();
-            
-            const touch = e.touches[0];
-            const y = touch.pageY;
-            const walk = (y - startY) * -1;
-            this.scrollTop = scrollTop + walk;
-        }, { passive: false });
-
-        listaZakupow.addEventListener('touchend', function() {
-            isDragging = false;
-        }, { passive: false });
-
-        wyswietlListeZakupow();
-
-        powrotDoKartBtn.addEventListener('click', function() {
-            modal.style.display = 'none';
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                this.style.transform = '';
-            }, 200);
-        });
-
-        window.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-
-        dodajDoListyBtn.addEventListener('click', function() {
-            const produkt = nowyProduktInput.value.trim();
-            if (produkt) {
-                zakupy.push(produkt);
-                localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
-                nowyProduktInput.value = '';
-                
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                }, 200);
-                
-                wyswietlListeZakupow();
-            } else {
-                nowyProduktInput.style.animation = 'shake 0.5s';
-                setTimeout(() => {
-                    nowyProduktInput.style.animation = '';
-                }, 500);
-            }
-        });
-
-        nowyProduktInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                dodajDoListyBtn.click();
-            }
-        });
-
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                20%, 60% { transform: translateX(-5px); }
-                40%, 80% { transform: translateX(5px); }
-            }
-        `;
-        document.head.appendChild(style);
-    </script>
-</body>
+    <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
+    </body>
 </html>
