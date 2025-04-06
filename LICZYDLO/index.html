@@ -4,80 +4,87 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LICZYDŁO</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: #000000;
+        .KOZLOWSKISEBASTIAN_LICZYDLO {
+            font-family: sans-serif;
+            background: #000000;
             color: #FF00FF;
+            margin: 0;
+            padding: 8px;
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
+
         }
-        .calculator {
-            background-color: #333;
+        .KOZLOWSKISEBASTIAN_LICZYDLO-KONTENER {
+            max-width: 520px;
+            width: 100%;
+            background: #333333;
             padding: 8px;
             border-radius: 8px;
-            width: 90%;
-            max-width: 400px;
         }
-        .input-group {
+        .KOZLOWSKISEBASTIAN_LICZYDLO-WIERSZ {
             display: flex;
-            flex-wrap: wrap;
             gap: 10px;
-            margin: 5px 0;
+            margin-top: 4px;
+            margin-bottom: 4px;
         }
-        input, select {
-            flex: 1;
-            min-width: 100px;
-            padding: 8px;
-            background-color: #222;
-            border: none;
+        .KOZLOWSKISEBASTIAN_LICZYDLO-POLE {
+            background: #222222;
             color: #B0B0B0;
-            border-radius: 5px;
+            border: none;
+            padding: 8px;
+            flex: 1;
+            border-radius: 8px;
+            min-width: 100px;
             box-sizing: border-box;
         }
-        #distance {
-            display: none; /* Ukryte domyślnie */
-        }
-        button {
-            background-color: #222;
-            color: #FF00FF;
+        .KOZLOWSKISEBASTIAN_LICZYDLO-PRZYCISK {
+            background: #222222;
+            color: #B0B0B0;
             border: none;
             padding: 8px;
-            width: 100%;
-            border-radius: 5px;
+            flex: 1;
+            border-radius: 8px;
             cursor: pointer;
+            transition: all 0.2s;
         }
-        button:hover {
-            background-color: #444;
+        .KOZLOWSKISEBASTIAN_LICZYDLO-PRZYCISK:hover {
+            color: #FF00FF;
+            background: #333333;
+            transform: translateY(-2px);
         }
-        .result {
+        .KOZLOWSKISEBASTIAN_LICZYDLO-WYNIK {
             color: #B0B0B0;
             margin-top: 5px;
             word-wrap: break-word;
+            padding: 8px;
+            background: #222222;
+            border-radius: 8px;
+        }
+        #distance {
+            display: none;
         }
     </style>
 </head>
-<body>
-    <div class="calculator">
-        <div class="input-group">
-            <input type="number" id="cost" placeholder="Cena litra (np. 0.13 zł)" step="0.01">
-            <input type="number" id="amount" placeholder="Litry (np. 4.69)" step="0.01">
-            <select id="unit" onchange="toggleDistanceField()">
-                <option value="ml">ml (na litr)</option>
-                <option value="dag">dag (na kg)</option>
-                <option value="fuel">paliwo (spalanie)</option>
-                <option value="route">koszt trasy</option>
+<body class="KOZLOWSKISEBASTIAN_LICZYDLO">
+    <div class="KOZLOWSKISEBASTIAN_LICZYDLO-KONTENER">
+        <div class="KOZLOWSKISEBASTIAN_LICZYDLO-WIERSZ">
+            <input type="number" id="cost" class="KOZLOWSKISEBASTIAN_LICZYDLO-POLE" placeholder="CENA" step="0.01">
+            <input type="number" id="amount" class="KOZLOWSKISEBASTIAN_LICZYDLO-POLE" placeholder="ILOŚĆ" step="0.01">
+            <select id="unit" class="KOZLOWSKISEBASTIAN_LICZYDLO-POLE" onchange="toggleDistanceField()">
+                <option value="ml">MILILITR ml - l LITR</option>
+                <option value="dag">DEKAGRAM dag - kg KILOGRAM</option>
+                <option value="fuel">SPALANIE PALIWA</option>
+                <option value="route">PLANOWANY KOSZT TRASY</option>
             </select>
         </div>
-        <div class="input-group">
-            <input type="number" id="distance" placeholder="Km (np. 100)" step="0.01">
+         <div class="KOZLOWSKISEBASTIAN_LICZYDLO-WIERSZ">
+            <input type="number" id="distance" class="KOZLOWSKISEBASTIAN_LICZYDLO-POLE" placeholder="KILOMETRY" step="0.01">
         </div>
-        <button onclick="calculate()">Przelicz</button>
-        <div id="result" class="result"></div>
+        <div class="KOZLOWSKISEBASTIAN_LICZYDLO-WIERSZ">
+            <button class="KOZLOWSKISEBASTIAN_LICZYDLO-PRZYCISK" onclick="calculate()">PRZELICZ</button>
+        </div>
+        <div id="result" class="KOZLOWSKISEBASTIAN_LICZYDLO-WYNIK">&nbsp;</div>
     </div>
 
     <script>
@@ -89,19 +96,19 @@
             distanceField.style.display = (unit === 'fuel' || unit === 'route') ? 'block' : 'none';
             
             if (unit === 'route') {
-                amountField.placeholder = "Śr. spalanie (l/100km)";
+                amountField.placeholder = "ŚREDNIE SPALANIE";
             } else if (unit === 'fuel') {
-                amountField.placeholder = "Litry (np. 4.69)";
+                amountField.placeholder = "ILOŚĆ";
             } else {
-                amountField.placeholder = "Litry (np. 4.69)";
+                amountField.placeholder = "ILOŚĆ";
             }
         }
 
         function calculate() {
-            const costPerLiter = parseFloat(document.getElementById('cost').value); // Cena za litr
-            const amount = parseFloat(document.getElementById('amount').value); // Ilość paliwa w litrach lub średnie spalanie
+            const costPerLiter = parseFloat(document.getElementById('cost').value);
+            const amount = parseFloat(document.getElementById('amount').value);
             const unit = document.getElementById('unit').value;
-            const distance = parseFloat(document.getElementById('distance').value); // Przejechane km
+            const distance = parseFloat(document.getElementById('distance').value);
             const resultDiv = document.getElementById('result');
 
             if (!costPerLiter || !amount) {
