@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PRZYBORNIK</title>
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Aplikacja do zarządzania przybornikiem">
+    <link rel="manifest" href="/manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            background-color: #000000;
+            color: #FF00FF;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0 auto;
+            transition: background 0.3s;
+            touch-action: pan-y;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .header {
+            width: calc(100% - 40px);
+            max-width: 520px;
+            margin: 10px auto;
+            background-color: #333333;
+            padding: 8px 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+
+        .KSGROUP-PASEK-WYSZUKIWANIA input {
+            width: 100%;
+            max-width: 520px;
+            padding: 8px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            border-radius: 5px;
+            background-color: #222;
+            color: #B0B0B0;
+            outline: none;
+            box-sizing: border-box;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .KSGROUP-WYSZUKIWARKA-NORMALNA {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .KSGROUP-PASEK-WYSZUKIWANIA {
+            order: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+            padding: 0;
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 520px;
+            gap: 10px;
+        }
+
+        .przelacz-rzadkie, .przybornik-btn {
+            background-color: #222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s;
+            white-space: nowrap;
+            flex: 1;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .przelacz-rzadkie:hover, 
+        .przybornik-btn:hover {
+            background-color: #333;
+            color: #FF00FF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .przelacz-rzadkie:active, 
+        .przybornik-btn:active {
+            transform: scale(0.98);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            width: calc(100% - 40px);
+            max-width: 520px;
+            margin: 10px auto;
+            background-color: #333333;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            max-height: 100%;
+            height: calc(100% - 20px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .przybornik-buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .przybornik-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .powrot-do-kart, .kalkulator-btn, .liczydlo-btn, .lista-btn, .miara-btn {
+            background-color: #222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s;
+            white-space: nowrap;
+            flex: 1;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .powrot-do-kart:hover, .kalkulator-btn:hover, .liczydlo-btn:hover, .lista-btn:hover, .miara-btn:hover {
+            background-color: #333;
+            color: #FF00FF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .powrot-do-kart:active, .kalkulator-btn:active, .liczydlo-btn:active, .lista-btn:active, .miara-btn:active {
+            transform: scale(0.98);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                width: calc(100% - 24px);
+                padding: 8px;
+            }
+            
+            .modal-content {
+                max-height: 90vh;
+                margin: 10px auto;
+                padding: 8px;
+                width: calc(100% - 24px);
+            }
+            
+            .KSGROUP-PASEK-WYSZUKIWANIA input,
+            .buttons-container,
+            .przybornik-buttons-container {
+                max-width: none;
+            }
+        }
+
+        @supports (-webkit-touch-callout: none) {
+            .modal-content {
+                max-height: -webkit-fill-available;
+                height: -webkit-fill-available;
+                margin: 10px auto;
+            }
+            
+            body {
+                height: 100%;
+                overflow: hidden;
+            }
+            
+            html {
+                height: 100%;
+                overflow: hidden;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="KSGROUP-WYSZUKIWARKA-NORMALNA">
+            <div class="KSGROUP-PASEK-WYSZUKIWANIA">
+                <input type="text" id="wyszukaj-input" placeholder="WYSZUKAJ KARTĘ">
+                <div class="buttons-container">
+                    <button class="przelacz-rzadkie" id="przelacz-rzadkie" title="INNE">INNE</button>
+                    <button class="przybornik-btn" id="przybornik-btn" title="PRZYBORNIK">PRZYBORNIK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="przybornik-modal" class="modal">
+        <div class="modal-content">
+            <div class="przybornik-buttons-container">
+                <div class="przybornik-row">
+                    <button class="powrot-do-kart" id="powrot-do-kart-przybornik">KARTY</button>
+                    <button class="lista-btn" id="lista-btn-przybornik">LISTA</button>
+                </div>
+                <div class="przybornik-row">
+                    <button class="kalkulator-btn" id="kalkulator-btn-przybornik">KALKULATOR</button>
+                    <button class="liczydlo-btn" id="liczydlo-btn-przybornik">LICZYDŁO</button>
+                </div>
+                <div class="przybornik-row">
+                    <button class="miara-btn" id="miara-btn-przybornik">MIARA</button>
+                    <button class="miara-btn" id="miara-btn-przybornik">PUSTE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const przybornikBtn = document.getElementById('przybornik-btn');
+        const przybornikModal = document.getElementById('przybornik-modal');
+        const powrotDoKartPrzybornikBtn = document.getElementById('powrot-do-kart-przybornik');
+
+        przybornikBtn.addEventListener('click', function() {
+            przybornikModal.style.display = 'block';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+
+        powrotDoKartPrzybornikBtn.addEventListener('click', function() {
+            przybornikModal.style.display = 'none';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+
+        window.addEventListener('click', function(event) {
+            if (event.target === przybornikModal) {
+                przybornikModal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
