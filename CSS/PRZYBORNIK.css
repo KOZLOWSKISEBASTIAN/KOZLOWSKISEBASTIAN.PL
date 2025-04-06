@@ -102,7 +102,14 @@
             background: #333333;
             transform: translateY(-2px);
         }
-        .KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR,
+        .KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR {
+            color: #FF00FF;
+        }
+        .KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR:hover {
+            color: #B0B0B0;
+            background: #333333;
+            transform: translateY(-2px);
+        }
         .KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY {
             color: #FF00FF;
         }
