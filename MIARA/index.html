@@ -21,25 +21,25 @@
             left: 0;
         }
         
-        /* DOLNA LINIJKA (mm) - NIEBIESKA */
+        /* LEWA LINIJKA (mm) - NIEBIESKA */
         .ruler-mm {
-            width: 100%;
-            height: 30px;
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            border-top: 1px solid #FF00FF;
-            background-color: rgba(0, 0, 0, 0.3);
-        }
-        
-        /* GÓRNA LINIJKA (cale) - RÓŻOWA */
-        .ruler-in {
-            width: 100%;
-            height: 30px;
+            width: 30px;
+            height: 100vh;
             position: absolute;
             left: 0;
             top: 0;
-            border-bottom: 1px solid #FF00FF;
+            border-right: 1px solid #FF00FF;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        
+        /* PRAWA LINIJKA (cale) - RÓŻOWA */
+        .ruler-in {
+            width: 30px;
+            height: 100vh;
+            position: absolute;
+            right: 0;
+            top: 0;
+            border-left: 1px solid #00FFFF;
             background-color: rgba(0, 0, 0, 0.3);
         }
         
@@ -47,49 +47,49 @@
             position: absolute;
         }
         
-        /* STYLE DLA MILIMETRÓW (DÓŁ) */
+        /* STYLE DLA MILIMETRÓW (LEWO) */
         .mark-mm {
-            border-left: 1px solid #FF00FF;
-            height: 50px;
-            bottom: 0;
+            border-top: 1px solid #FF00FF;
+            width: 50px;
+            left: 0;
         }
         .mark-mm-5 {
-            border-left: 1px solid #FF00FF;
-            height: 500px;
-            bottom: 0;
+            border-top: 1px solid #FF00FF;
+            width: 100px;
+            left: 0;
         }
         .mark-mm-10 {
-            border-left: 2px solid #FF00FF;
-            height: 500px;
-            bottom: 0;
+            border-top: 2px solid #FF00FF;
+            width: 150px;
+            left: 0;
         }
         .mark-mm-100 {
-            border-left: 3px solid #FF00FF;
-            height: 500px;
-            bottom: 0;
+            border-top: 3px solid #FF00FF;
+            width: 200px;
+            left: 0;
             opacity: 0.5;
         }
         
-        /* STYLE DLA CALI (GÓRA) */
+        /* STYLE DLA CALI (PRAWO) */
         .mark-in {
-            border-left: 1px solid #00FFFF;
-            height: 50px;
-            top: 0;
+            border-top: 1px solid #00FFFF;
+            width: 50px;
+            right: 0;
         }
         .mark-in-05 {
-            border-left: 1px solid #00FFFF;
-            height: 100px;
-            top: 0;
+            border-top: 1px solid #00FFFF;
+            width: 100px;
+            right: 0;
         }
         .mark-in-1 {
-            border-left: 2px solid #00FFFF;
-            height: 100px;
-            top: 0;
+            border-top: 2px solid #00FFFF;
+            width: 150px;
+            right: 0;
         }
         .mark-in-10 {
-            border-left: 3px solid #00FFFF;
-            height: 100px;
-            top: 0;
+            border-top: 3px solid #00FFFF;
+            width: 200px;
+            right: 0;
             opacity: 0.5;
         }
         
@@ -99,22 +99,35 @@
             text-shadow: 0 0 3px #000;
             font-weight: 500;
             z-index: 20;
-            transform: translateX(-50%) rotate(-90deg);
             white-space: nowrap;
         }
         
-        /* ETYKIETY MILIMETRÓW (DÓŁ) */
+        /* ETYKIETY MILIMETRÓW (LEWO) */
         .label-mm {
             color: #FF00FF;
-            bottom: 50px;
+            left: 50px;
             transform-origin: left top;
         }
         
-        /* ETYKIETY CALI (GÓRA) */
+        /* ETYKIETY CALI (PRAWO) */
         .label-in {
             color: #00FFFF;
-            top: 50px;
-            transform-origin: left bottom;
+            right: 50px;
+            text-align: right;
+            transform-origin: right top;
+        }
+        
+        /* RAMKA KARTY PŁATNICZEJ */
+        .card-frame {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85.6mm;
+            height: 53.98mm;
+            border: 2px dashed #FFFFFF;
+            background-color: rgba(255, 255, 255, 0.1);
+            box-sizing: border-box;
         }
         
         #video-background {
@@ -142,30 +155,32 @@
                 font-size: 10px;
             }
             .label-mm {
-                bottom: 30px;
+                left: 30px;
             }
             .label-in {
-                top: 30px;
+                right: 30px;
             }
         }
     </style>
+    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
 </head>
 <body>
     <video id="video-background" autoplay playsinline muted></video>
     <div class="ruler-container">
         <div class="ruler-mm" id="rulerMm"></div>
         <div class="ruler-in" id="rulerIn"></div>
+        <div class="card-frame"></div>
     </div>
 
     <script>
         function drawRulers() {
             const rulerMm = document.getElementById('rulerMm');
             const rulerIn = document.getElementById('rulerIn');
-            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
 
-            // DOLNA LINIJKA MILIMETROWA
+            // LEWA LINIJKA MILIMETROWA
             const pixelsPerMm = 3.78; // 96 DPI / 25.4 mm
-            const maxMm = Math.floor(windowWidth / pixelsPerMm);
+            const maxMm = Math.floor(windowHeight / pixelsPerMm);
             
             for (let i = 0; i <= maxMm; i++) {
                 const mark = document.createElement('div');
@@ -180,28 +195,28 @@
                     mark.className = 'mark mark-mm';
                 }
                 
-                mark.style.left = `${i * pixelsPerMm}px`;
+                mark.style.top = `${i * pixelsPerMm}px`;
                 rulerMm.appendChild(mark);
 
                 if (i % 100 === 0) {
                     const label = document.createElement('div');
                     label.className = 'mark-label label-mm';
                     label.innerText = `${i/10} cm`;
-                    label.style.left = `${i * pixelsPerMm}px`;
+                    label.style.top = `${i * pixelsPerMm}px`;
                     rulerMm.appendChild(label);
                 }
                 else if (i % 10 === 0) {
                     const label = document.createElement('div');
                     label.className = 'mark-label label-mm';
                     label.innerText = `${i} mm`;
-                    label.style.left = `${i * pixelsPerMm}px`;
+                    label.style.top = `${i * pixelsPerMm}px`;
                     rulerMm.appendChild(label);
                 }
             }
 
-            // GÓRNA LINIJKA W CALACH
+            // PRAWA LINIJKA W CALACH
             const pixelsPerInch = 96; // 96 DPI
-            const maxIn = Math.floor(windowWidth / pixelsPerInch);
+            const maxIn = Math.floor(windowHeight / pixelsPerInch);
             
             for (let i = 0; i <= maxIn; i++) {
                 const mark = document.createElement('div');
@@ -216,14 +231,14 @@
                     mark.className = 'mark mark-in';
                 }
                 
-                mark.style.left = `${i * pixelsPerInch}px`;
+                mark.style.top = `${i * pixelsPerInch}px`;
                 rulerIn.appendChild(mark);
 
                 if (i % 1 === 0) {
                     const label = document.createElement('div');
                     label.className = 'mark-label label-in';
                     label.innerText = `${i}"`;
-                    label.style.left = `${i * pixelsPerInch}px`;
+                    label.style.top = `${i * pixelsPerInch}px`;
                     rulerIn.appendChild(label);
                 }
             }
@@ -255,5 +270,6 @@
             drawRulers();
         };
     </script>
+<script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
 </body>
 </html>
