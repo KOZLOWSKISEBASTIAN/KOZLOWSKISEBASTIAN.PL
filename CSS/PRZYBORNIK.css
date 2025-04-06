@@ -1,3 +1,4 @@
+/* PRZYBORNIK POCZĄTEK */
         .KOZLOWSKISEBASTIAN_PRZYBORNIK {
             font-family: sans-serif;
             background: #000000;
@@ -35,3 +36,64 @@
             background: #333333;
             transform: translateY(-2px);
         }
+/* PRZYBORNIK POCZĄTEK */
+/* LICZYDŁO POCZĄTEK */
+        .KOZLOWSKISEBASTIAN_LICZYDLO {
+            font-family: sans-serif;
+            background: #000000;
+            color: #FF00FF;
+            margin: 0;
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+        }
+        .KOZLOWSKISEBASTIAN_LICZYDLO-KONTENER {
+            max-width: 520px;
+            width: 100%;
+            background: #333333;
+            padding: 8px;
+            border-radius: 8px;
+        }
+        .KOZLOWSKISEBASTIAN_LICZYDLO-WIERSZ {
+            display: flex;
+            gap: 10px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+        .KOZLOWSKISEBASTIAN_LICZYDLO-POLE {
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px;
+            flex: 1;
+            border-radius: 8px;
+            min-width: 100px;
+            box-sizing: border-box;
+        }
+        .KOZLOWSKISEBASTIAN_LICZYDLO-PRZYCISK {
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px;
+            flex: 1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .KOZLOWSKISEBASTIAN_LICZYDLO-PRZYCISK:hover {
+            color: #FF00FF;
+            background: #333333;
+            transform: translateY(-2px);
+        }
+        .KOZLOWSKISEBASTIAN_LICZYDLO-WYNIK {
+            color: #B0B0B0;
+            margin-top: 5px;
+            word-wrap: break-word;
+            padding: 8px;
+            background: #222222;
+            border-radius: 8px;
+        }
+        #KOZLOWSKISEBASTIAN_LICZYDLO-KILOMETRY {
+            display: none;
+        }
+/* LICZYDŁO KONIEC */
