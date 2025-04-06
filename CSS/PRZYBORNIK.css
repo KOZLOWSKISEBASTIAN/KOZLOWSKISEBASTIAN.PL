@@ -83,7 +83,7 @@
         .KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISKI {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
+            gap: 10px;
         }
         .KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK {
             background: #222222;
