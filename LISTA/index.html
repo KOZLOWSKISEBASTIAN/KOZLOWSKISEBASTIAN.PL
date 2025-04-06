@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LISTA</title>
     <meta name="theme-color" content="#000000">
-   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -68,8 +68,7 @@
         .KOZLOWSKISEBASTIAN_LISTY-ELEMENT {
             padding: 8px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
             background-color: #222;
             border-radius: 8px;
             margin-bottom: 4px;
@@ -89,21 +88,20 @@
         }
         .KOZLOWSKISEBASTIAN_LISTY-AKCJE {
             display: flex;
-            gap: 4px;
+            gap: 8px;
+            margin-top: 8px;
+            justify-content: flex-end;
         }
         .KOZLOWSKISEBASTIAN_LISTY-USUN,
-        .KOZLOWSKISEBASTIAN_LISTY-EDYTUJ,
-        .KOZLOWSKISEBASTIAN_LISTY-ZDJECIE {
+        .KOZLOWSKISEBASTIAN_LISTY-EDYTUJ {
             color: #B0B0B0;
-            padding: 8px;
             cursor: pointer;
             transition: all 0.2s;
         }
         .KOZLOWSKISEBASTIAN_LISTY-USUN:hover,
-        .KOZLOWSKISEBASTIAN_LISTY-EDYTUJ:hover,
-        .KOZLOWSKISEBASTIAN_LISTY-ZDJECIE:hover {
+        .KOZLOWSKISEBASTIAN_LISTY-EDYTUJ:hover {
             color: #FF00FF;
-            transform: scale(1.1);
+            transform: scale(1.2);
         }
         .KOZLOWSKISEBASTIAN_LISTY-TEKST.editing {
             background-color: #333;
@@ -114,11 +112,48 @@
         .KOZLOWSKISEBASTIAN_LISTY-ZDJECIE-INPUT {
             display: none;
         }
+        .KOZLOWSKISEBASTIAN_LISTY-ELEMENT-IMAGE-CONTAINER {
+            position: relative;
+            display: inline-block;
+            margin-top: 4px;
+            align-self: flex-start;
+        }
         .KOZLOWSKISEBASTIAN_LISTY-ELEMENT-IMAGE {
             max-width: 100%;
-            max-height: 100px;
+            max-height: 150px;
             border-radius: 4px;
+            object-fit: contain;
+        }
+        .KOZLOWSKISEBASTIAN_LISTY-USUN-ZDJECIE {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #FF0000;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        .KOZLOWSKISEBASTIAN_LISTY-ELEMENT.editing .KOZLOWSKISEBASTIAN_LISTY-USUN-ZDJECIE {
+            opacity: 1;
+        }
+        .KOZLOWSKISEBASTIAN_LISTY-NAZWA-PLIKU {
+            font-size: 12px;
+            color: #B0B0B0;
             margin-top: 4px;
+            margin-bottom: 4px;
+            word-break: break-all;
+            background-color: #222222;
+            padding: 8px 8px;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
         }
         /* LISTA KONIEC */
     </style>
@@ -126,118 +161,162 @@
 <body class="KOZLOWSKISEBASTIAN_LISTY">
     <div class="KOZLOWSKISEBASTIAN_LISTY-KONTENER">
         <div class="KOZLOWSKISEBASTIAN_LISTY-WIERSZ">
-            <button class="KOZLOWSKISEBASTIAN_LISTY-PRZYCISK">PRZYBORNIK</button>
+            <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
         </div>
         <div class="KOZLOWSKISEBASTIAN_LISTY-WIERSZ">
             <input type="text" class="KOZLOWSKISEBASTIAN_LISTY-INPUT" id="KOZLOWSKISEBASTIAN_LISTY-INPUT" 
                    placeholder="DODAJ PRODUKT" inputmode="text">
-
         </div>
-		
         <div class="KOZLOWSKISEBASTIAN_LISTY-WIERSZ">
-		            <button class="KOZLOWSKISEBASTIAN_LISTY-PRZYCISK" id="KOZLOWSKISEBASTIAN_LISTY-DODAJ-ZDJECIE">GRAFIKA</button>
-            <input type="file" accept="image/*" capture="environment" class="KOZLOWSKISEBASTIAN_LISTY-ZDJECIE-INPUT" id="KOZLOWSKISEBASTIAN_LISTY-ZDJECIE-INPUT">
+            <button class="KOZLOWSKISEBASTIAN_LISTY-PRZYCISK" id="KOZLOWSKISEBASTIAN_LISTY-DODAJ-ZDJECIE">ZAŁĄCZ GRAFIKĘ</button>
+            <input type="file" accept="image/*" class="KOZLOWSKISEBASTIAN_LISTY-ZDJECIE-INPUT" id="KOZLOWSKISEBASTIAN_LISTY-ZDJECIE-INPUT">
             <button class="KOZLOWSKISEBASTIAN_LISTY-PRZYCISK" id="KOZLOWSKISEBASTIAN_LISTY-DODAJ">DODAJ</button>
         </div>
+        <div id="KOZLOWSKISEBASTIAN_LISTY-NAZWA-PLIKU" class="KOZLOWSKISEBASTIAN_LISTY-NAZWA-PLIKU">&nbsp;</div>
         <ul class="KOZLOWSKISEBASTIAN_LISTY-LISTA" id="KOZLOWSKISEBASTIAN_LISTY-LISTA"></ul>
     </div>
 
     <script>
+        // Inicjalizacja IndexedDB
+        let db;
+        const request = indexedDB.open('ListaZakupowDB', 1);
+
+        request.onerror = function(event) {
+            console.error("Błąd przy otwieraniu bazy danych:", event.target.error);
+        };
+
+        request.onsuccess = function(event) {
+            db = event.target.result;
+            wyswietlListeZakupow();
+        };
+
+        request.onupgradeneeded = function(event) {
+            const db = event.target.result;
+            const objectStore = db.createObjectStore('zakupy', { keyPath: 'id', autoIncrement: true });
+            objectStore.createIndex('text', 'text', { unique: false });
+            objectStore.createIndex('image', 'image', { unique: false });
+            objectStore.createIndex('filename', 'filename', { unique: false });
+        };
+
         // Elementy DOM
         const listaZakupow = document.getElementById('KOZLOWSKISEBASTIAN_LISTY-LISTA');
         const dodajDoListyBtn = document.getElementById('KOZLOWSKISEBASTIAN_LISTY-DODAJ');
         const dodajZdjecielBtn = document.getElementById('KOZLOWSKISEBASTIAN_LISTY-DODAJ-ZDJECIE');
         const inputZdjeciel = document.getElementById('KOZLOWSKISEBASTIAN_LISTY-ZDJECIE-INPUT');
         const nowyProduktInput = document.getElementById('KOZLOWSKISEBASTIAN_LISTY-INPUT');
+        const nazwaPlikuElement = document.getElementById('KOZLOWSKISEBASTIAN_LISTY-NAZWA-PLIKU');
 
-        let zakupy = JSON.parse(localStorage.getItem('listaZakupow')) || [];
         let aktualneZdjeciel = null;
+        let aktualnaNazwaPliku = '';
 
         // Funkcja do renderowania listy
         function wyswietlListeZakupow() {
-            listaZakupow.innerHTML = '';
-            zakupy.forEach((item, index) => {
-                const li = document.createElement('li');
-                li.className = 'KOZLOWSKISEBASTIAN_LISTY-ELEMENT';
-                li.setAttribute('data-index', index);
-                
-                let imageHtml = '';
-                if (item.image) {
-                    imageHtml = `<img src="${item.image}" class="KOZLOWSKISEBASTIAN_LISTY-ELEMENT-IMAGE">`;
-                }
-                
-                li.innerHTML = `
-                    <span class="KOZLOWSKISEBASTIAN_LISTY-TEKST">${item.text}</span>
-                    ${imageHtml}
-                    <span class="KOZLOWSKISEBASTIAN_LISTY-AKCJE">
-                        <span class="KOZLOWSKISEBASTIAN_LISTY-EDYTUJ"><i class="fas fa-edit"></i></span>
-                        <span class="KOZLOWSKISEBASTIAN_LISTY-USUN"><i class="fas fa-trash-alt"></i></span>
-                    </span>
-                    <input type="file" accept="image/*" capture="environment" 
-                           class="KOZLOWSKISEBASTIAN_LISTY-ZDJECIE-INPUT" style="display: none;">
-                `;
-                listaZakupow.appendChild(li);
+            const transaction = db.transaction(['zakupy'], 'readonly');
+            const objectStore = transaction.objectStore('zakupy');
+            const request = objectStore.getAll();
 
-                // Obsługa edycji
-                const tekst = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-TEKST');
-                const edytuj = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-EDYTUJ');
-                const zdjecieBtn = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-ZDJECIE');
-                const zdjecieInput = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-ZDJECIE-INPUT');
+            request.onsuccess = function(event) {
+                const zakupy = event.target.result;
+                listaZakupow.innerHTML = '';
                 
-                edytuj.addEventListener('click', () => {
-                    tekst.contentEditable = true;
-                    tekst.classList.add('editing');
-                    tekst.focus();
+                zakupy.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'KOZLOWSKISEBASTIAN_LISTY-ELEMENT';
+                    li.setAttribute('data-id', item.id);
                     
-                    const zapiszZmiany = () => {
-                        tekst.contentEditable = false;
-                        tekst.classList.remove('editing');
-                        const nowaWartosc = tekst.textContent.trim();
-                        if (nowaWartosc) {
-                            zakupy[index].text = nowaWartosc;
-                            localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
-                        }
-                    };
+                    let imageHtml = '';
+                    if (item.image) {
+                        imageHtml = `
+                            <div class="KOZLOWSKISEBASTIAN_LISTY-ELEMENT-IMAGE-CONTAINER">
+                                <img src="${item.image}" class="KOZLOWSKISEBASTIAN_LISTY-ELEMENT-IMAGE">
+                                <span class="KOZLOWSKISEBASTIAN_LISTY-USUN-ZDJECIE" title="Usuń grafikę">×</span>
+                            </div>
+                        `;
+                    }
                     
-                    tekst.addEventListener('blur', zapiszZmiany);
-                    tekst.addEventListener('keydown', (e) => {
-                        if (e.key === 'Enter') {
-                            e.preventDefault();
-                            zapiszZmiany();
-                        }
+                    li.innerHTML = `
+                        <span class="KOZLOWSKISEBASTIAN_LISTY-TEKST">${item.text}</span>
+                        ${imageHtml}
+                        <div class="KOZLOWSKISEBASTIAN_LISTY-AKCJE">
+                            <span class="KOZLOWSKISEBASTIAN_LISTY-EDYTUJ"><i class="fas fa-edit"></i></span>
+                            <span class="KOZLOWSKISEBASTIAN_LISTY-USUN"><i class="fas fa-trash-alt"></i></span>
+                        </div>
+                    `;
+                    listaZakupow.appendChild(li);
+
+                    // Elementy w liście
+                    const tekst = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-TEKST');
+                    const edytuj = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-EDYTUJ');
+                    const usun = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-USUN');
+                    const usunZdjeciel = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-USUN-ZDJECIE');
+                    
+                    // Obsługa edycji
+                    edytuj.addEventListener('click', () => {
+                        tekst.contentEditable = true;
+                        tekst.classList.add('editing');
+                        li.classList.add('editing');
+                        tekst.focus();
+                        
+                        const zapiszZmiany = () => {
+                            tekst.contentEditable = false;
+                            tekst.classList.remove('editing');
+                            li.classList.remove('editing');
+                            const nowaWartosc = tekst.textContent.trim();
+                            if (nowaWartosc) {
+                                const transaction = db.transaction(['zakupy'], 'readwrite');
+                                const objectStore = transaction.objectStore('zakupy');
+                                const getRequest = objectStore.get(item.id);
+                                
+                                getRequest.onsuccess = function() {
+                                    const data = getRequest.result;
+                                    data.text = nowaWartosc;
+                                    objectStore.put(data);
+                                };
+                            }
+                        };
+                        
+                        tekst.addEventListener('blur', zapiszZmiany);
+                        tekst.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                zapiszZmiany();
+                            }
+                        });
+                    });
+                    
+                    // Obsługa usuwania zdjęcia (tylko w trybie edycji)
+                    if (usunZdjeciel) {
+                        usunZdjeciel.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            const transaction = db.transaction(['zakupy'], 'readwrite');
+                            const objectStore = transaction.objectStore('zakupy');
+                            const getRequest = objectStore.get(item.id);
+                            
+                            getRequest.onsuccess = function() {
+                                const data = getRequest.result;
+                                data.image = null;
+                                data.filename = '';
+                                objectStore.put(data);
+                                wyswietlListeZakupow();
+                            };
+                        });
+                    }
+                    
+                    // Obsługa usuwania całego elementu
+                    usun.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const transaction = db.transaction(['zakupy'], 'readwrite');
+                        const objectStore = transaction.objectStore('zakupy');
+                        objectStore.delete(item.id);
+                        
+                        li.style.transform = 'translateX(100%)';
+                        li.style.opacity = '0';
+                        setTimeout(() => {
+                            wyswietlListeZakupow();
+                        }, 300);
                     });
                 });
-                
-                // Obsługa dodawania zdjęć do istniejących elementów
-                zdjecieBtn.addEventListener('click', () => {
-                    zdjecieInput.click();
-                });
-                
-                zdjecieInput.addEventListener('change', (e) => {
-                    const file = e.target.files[0];
-                    if (file) {
-                        const reader = new FileReader();
-                        reader.onload = (event) => {
-                            zakupy[index].image = event.target.result;
-                            localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
-                            wyswietlListeZakupow();
-                        };
-                        reader.readAsDataURL(file);
-                    }
-                });
-                
-                // Obsługa usuwania
-                const usun = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-USUN');
-                usun.addEventListener('click', () => {
-                    zakupy.splice(index, 1);
-                    localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
-                    li.style.transform = 'translateX(100%)';
-                    li.style.opacity = '0';
-                    setTimeout(() => {
-                        wyswietlListeZakupow();
-                    }, 300);
-                });
-            });
+            };
         }
 
         // Obsługa dodawania nowych zdjęć
@@ -248,11 +327,17 @@
         inputZdjeciel.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
+                aktualnaNazwaPliku = file.name;
+                nazwaPlikuElement.textContent = `Wybrana grafika: ${aktualnaNazwaPliku}`;
+                
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     aktualneZdjeciel = event.target.result;
                 };
                 reader.readAsDataURL(file);
+            } else {
+                aktualnaNazwaPliku = '';
+                nazwaPlikuElement.textContent = '';
             }
         });
 
@@ -260,14 +345,25 @@
         function dodajProdukt() {
             const tekst = nowyProduktInput.value.trim();
             if (tekst || aktualneZdjeciel) {
-                zakupy.push({
+                const transaction = db.transaction(['zakupy'], 'readwrite');
+                const objectStore = transaction.objectStore('zakupy');
+                
+                const nowyProdukt = {
                     text: tekst || '(brak opisu)',
-                    image: aktualneZdjeciel || null
-                });
-                localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
-                nowyProduktInput.value = '';
-                aktualneZdjeciel = null;
-                wyswietlListeZakupow();
+                    image: aktualneZdjeciel || null,
+                    filename: aktualnaNazwaPliku || ''
+                };
+                
+                const request = objectStore.add(nowyProdukt);
+                
+                request.onsuccess = function() {
+                    nowyProduktInput.value = '';
+                    aktualneZdjeciel = null;
+                    aktualnaNazwaPliku = '';
+                    inputZdjeciel.value = '';
+                    nazwaPlikuElement.textContent = '';
+                    wyswietlListeZakupow();
+                };
             }
         }
 
@@ -278,10 +374,7 @@
                 dodajProdukt();
             }
         });
-
-        // Inicjalizacja
-        wyswietlListeZakupow();
     </script>
-   <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
+    <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
 </body>
 </html>
