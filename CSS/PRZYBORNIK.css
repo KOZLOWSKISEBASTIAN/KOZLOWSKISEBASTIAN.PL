@@ -37,6 +37,81 @@
             transform: translateY(-2px);
         }
 /* PRZYBORNIK POCZĄTEK */
+/* KALKULATOR POCZĄTEK */
+        .KOZLOWSKISEBASTIAN_KALKULATOR {
+            font-family: sans-serif;
+            background: #000000;
+            color: #FF00FF;
+            margin: 0;
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+        }
+        .KOZLOWSKISEBASTIAN_KALKULATOR-KONTENER {
+            max-width: 520px;
+            width: 100%;
+            background: #333333;
+            padding: 8px;
+            border-radius: 8px;
+        }
+        .KOZLOWSKISEBASTIAN_KALKULATOR-WYSWIETLACZ {
+            background: #222222;
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 4px;
+        }
+        .KOZLOWSKISEBASTIAN_KALKULATOR-OPERACJE {
+            width: 100%;
+            font-size: 16px;
+            border: none;
+            background: transparent;
+            color: #B0B0B0;
+            outline: none;
+            text-align: right;
+            margin-bottom: 4px;
+            min-height: 20px;
+        }
+        .KOZLOWSKISEBASTIAN_KALKULATOR-WYNIK {
+            width: 100%;
+            font-size: 24px;
+            border: none;
+            background: transparent;
+            color: #B0B0B0;
+            outline: none;
+            text-align: right;
+        }
+        .KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISKI {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+        .KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK {
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK:hover {
+            color: #FF00FF;
+            background: #333333;
+            transform: translateY(-2px);
+        }
+        .KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR,
+        .KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY {
+            color: #FF00FF;
+        }
+        .KOZLOWSKISEBASTIAN_KALKULATOR-ROWNA-SIE {
+            grid-column: span 2;
+            background: #222222;
+            color: #FF00FF;
+        }
+/* KALKULATOR KONIEC */
 /* LICZYDŁO POCZĄTEK */
         .KOZLOWSKISEBASTIAN_LICZYDLO {
             font-family: sans-serif;
