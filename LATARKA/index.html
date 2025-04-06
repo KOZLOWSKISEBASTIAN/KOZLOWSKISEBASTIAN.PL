@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KSGROUP LATARKA</title>
+    <meta name="theme-color" content="#000000">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            background-color: #000000;
+            color: #FF00FF;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            transition: background 0.1s;
+            overflow: hidden;
+        }
+        .KSGROUP-LATARKA {
+            width: calc(100% - 40px);
+            max-width: 400px;
+            background-color: #333333;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            margin: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        .KSGROUP-ROZDZIELACZ {
+            height: 1px;
+            background-color: #444;
+            margin: 5px 0;
+        }
+        .KSGROUP-PRZYCISKI {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .KSGROUP-PRZYCISK {
+            background-color: #222;
+            color: #B0B0B0;
+            border: none;
+            padding: 15px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .KSGROUP-PRZYCISK:hover {
+            color: #FF00FF;
+            background-color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .KSGROUP-PRZYCISK:active {
+            transform: scale(0.95);
+        }
+        .KSGROUP-OPTIONS {
+            margin-top: 15px;
+            display: none;
+        }
+        .KSGROUP-OPTIONS.active {
+            display: block;
+        }
+        .KSGROUP-OPTION {
+            margin-bottom: 10px;
+        }
+        .KSGROUP-OPTION label {
+            display: block;
+            margin-bottom: 5px;
+            color: #B0B0B0;
+        }
+        .KSGROUP-SLIDER {
+            width: 100%;
+            -webkit-appearance: none;
+            height: 8px;
+            border-radius: 4px;
+            background: #222;
+            outline: none;
+        }
+        .KSGROUP-SLIDER::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #FF00FF;
+            cursor: pointer;
+        }
+        .KSGROUP-COLOR-OPTIONS {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .KSGROUP-COLOR-OPTION {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #333;
+        }
+        .KSGROUP-COLOR-OPTION.active {
+            border-color: #FF00FF;
+        }
+        #KSGROUP-FLASHLIGHT {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @media (max-width: 768px) {
+            .KSGROUP-LATARKA {
+                width: calc(100% - 20px);
+                padding: 8px;
+                margin: 10px;
+            }
+            .KSGROUP-PRZYCISK {
+                padding: 12px 8px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="KSGROUP-FLASHLIGHT"></div>
+    <div class="KSGROUP-LATARKA">
+        <div class="KSGROUP-PRZYCISKI">
+            <button id="KSGROUP-TOGGLE" class="KSGROUP-PRZYCISK"><i class="fas fa-power-off"></i></button>
+            <button id="KSGROUP-MODE" class="KSGROUP-PRZYCISK"><i class="fas fa-bolt"></i></button>
+            <button id="KSGROUP-SCREEN" class="KSGROUP-PRZYCISK"><i class="fas fa-desktop"></i></button>
+            <button id="KSGROUP-OPTIONS-BTN" class="KSGROUP-PRZYCISK"><i class="fas fa-cog"></i></button>
+        </div>
+        
+        <div class="KSGROUP-OPTIONS" id="KSGROUP-SCREEN-OPTIONS">
+            <div class="KSGROUP-OPTION">
+                <label for="KSGROUP-SCREEN-MODE">Tryb ekranu:</label>
+                <select id="KSGROUP-SCREEN-MODE" class="KSGROUP-PRZYCISK" style="width: 100%;">
+                    <option value="off">Wyłączony</option>
+                    <option value="sos">SOS</option>
+                    <option value="strobe">Stroboskop</option>
+                    <option value="solid">Stały</option>
+                </select>
+            </div>
+            <div class="KSGROUP-OPTION">
+                <label for="KSGROUP-SPEED">Szybkość:</label>
+                <input type="range" min="50" max="1000" value="200" class="KSGROUP-SLIDER" id="KSGROUP-SPEED">
+            </div>
+            <div class="KSGROUP-OPTION">
+                <label>Kolory:</label>
+                <div class="KSGROUP-COLOR-OPTIONS">
+                    <div class="KSGROUP-COLOR-OPTION active" style="background: linear-gradient(45deg, #000, #fff);" data-color1="#000000" data-color2="#ffffff"></div>
+                    <div class="KSGROUP-COLOR-OPTION" style="background: linear-gradient(45deg, #f00, #0f0);" data-color1="#ff0000" data-color2="#00ff00"></div>
+                    <div class="KSGROUP-COLOR-OPTION" style="background: linear-gradient(45deg, #00f, #ff0);" data-color1="#0000ff" data-color2="#ffff00"></div>
+                    <div class="KSGROUP-COLOR-OPTION" style="background: linear-gradient(45deg, #f0f, #0ff);" data-color1="#ff00ff" data-color2="#00ffff"></div>
+                    <div class="KSGROUP-COLOR-OPTION" style="background: linear-gradient(45deg, #f90, #09f);" data-color1="#ff9900" data-color2="#0099ff"></div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="KSGROUP-OPTIONS" id="KSGROUP-FLASH-OPTIONS">
+            <div class="KSGROUP-OPTION">
+                <label for="KSGROUP-FLASH-MODE">Tryb latarki:</label>
+                <select id="KSGROUP-FLASH-MODE" class="KSGROUP-PRZYCISK" style="width: 100%;">
+                    <option value="off">Wyłączony</option>
+                    <option value="sos">SOS</option>
+                    <option value="strobe">Stroboskop</option>
+                    <option value="solid">Stały</option>
+                </select>
+            </div>
+            <div class="KSGROUP-OPTION">
+                <label for="KSGROUP-FLASH-SPEED">Szybkość latarki:</label>
+                <input type="range" min="50" max="1000" value="200" class="KSGROUP-SLIDER" id="KSGROUP-FLASH-SPEED">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Elementy DOM
+        const flashlight = document.getElementById('KSGROUP-FLASHLIGHT');
+        const toggleBtn = document.getElementById('KSGROUP-TOGGLE');
+        const modeBtn = document.getElementById('KSGROUP-MODE');
+        const screenBtn = document.getElementById('KSGROUP-SCREEN');
+        const optionsBtn = document.getElementById('KSGROUP-OPTIONS-BTN');
+        const screenOptions = document.getElementById('KSGROUP-SCREEN-OPTIONS');
+        const flashOptions = document.getElementById('KSGROUP-FLASH-OPTIONS');
+        const screenModeSelect = document.getElementById('KSGROUP-SCREEN-MODE');
+        const flashModeSelect = document.getElementById('KSGROUP-FLASH-MODE');
+        const speedSlider = document.getElementById('KSGROUP-SPEED');
+        const flashSpeedSlider = document.getElementById('KSGROUP-FLASH-SPEED');
+        const colorOptions = document.querySelectorAll('.KSGROUP-COLOR-OPTION');
+        
+        // Zmienne stanu
+        let isFlashOn = false;
+        let isScreenOn = false;
+        let flashMode = 'off';
+        let screenMode = 'off';
+        let flashInterval;
+        let screenInterval;
+        let speed = 200;
+        let flashSpeed = 200;
+        let color1 = '#000000';
+        let color2 = '#ffffff';
+        let showScreenOptions = false;
+        let showFlashOptions = false;
+        
+        // Inicjalizacja
+        function init() {
+            updateButtons();
+            
+            // Event listeners
+            toggleBtn.addEventListener('click', toggleFlash);
+            modeBtn.addEventListener('click', toggleFlashMode);
+            screenBtn.addEventListener('click', toggleScreen);
+            optionsBtn.addEventListener('click', toggleOptions);
+            
+            screenModeSelect.addEventListener('change', function() {
+                screenMode = this.value;
+                if (isScreenOn) {
+                    startScreenEffect();
+                }
+            });
+            
+            flashModeSelect.addEventListener('change', function() {
+                flashMode = this.value;
+                if (isFlashOn) {
+                    startFlashEffect();
+                }
+            });
+            
+            speedSlider.addEventListener('input', function() {
+                speed = parseInt(this.value);
+                if (isScreenOn) {
+                    startScreenEffect();
+                }
+            });
+            
+            flashSpeedSlider.addEventListener('input', function() {
+                flashSpeed = parseInt(this.value);
+                if (isFlashOn) {
+                    startFlashEffect();
+                }
+            });
+            
+            colorOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    colorOptions.forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    color1 = this.dataset.color1;
+                    color2 = this.dataset.color2;
+                    if (isScreenOn) {
+                        startScreenEffect();
+                    }
+                });
+            });
+        }
+        
+        // Funkcje pomocnicze
+        function updateButtons() {
+            toggleBtn.innerHTML = `<i class="fas fa-power-off"></i> ${isFlashOn ? 'Wyłącz' : 'Włącz'}`;
+            modeBtn.innerHTML = `<i class="fas fa-bolt"></i> ${flashMode.toUpperCase()}`;
+            screenBtn.innerHTML = `<i class="fas fa-desktop"></i> ${isScreenOn ? 'Wyłącz' : 'Włącz'}`;
+            
+            if (isFlashOn) {
+                toggleBtn.style.color = '#FF00FF';
+            } else {
+                toggleBtn.style.color = '#B0B0B0';
+            }
+            
+            if (isScreenOn) {
+                screenBtn.style.color = '#FF00FF';
+            } else {
+                screenBtn.style.color = '#B0B0B0';
+            }
+        }
+        
+        function toggleFlash() {
+            isFlashOn = !isFlashOn;
+            if (isFlashOn) {
+                startFlashEffect();
+            } else {
+                stopFlashEffect();
+            }
+            updateButtons();
+        }
+        
+        function toggleFlashMode() {
+            const modes = ['off', 'sos', 'strobe', 'solid'];
+            const currentIndex = modes.indexOf(flashMode);
+            flashMode = modes[(currentIndex + 1) % modes.length];
+            flashModeSelect.value = flashMode;
+            
+            if (isFlashOn) {
+                startFlashEffect();
+            }
+            updateButtons();
+        }
+        
+        function toggleScreen() {
+            isScreenOn = !isScreenOn;
+            if (isScreenOn) {
+                startScreenEffect();
+            } else {
+                stopScreenEffect();
+            }
+            updateButtons();
+        }
+        
+        function toggleOptions() {
+            if (showScreenOptions || showFlashOptions) {
+                showScreenOptions = false;
+                showFlashOptions = false;
+                screenOptions.classList.remove('active');
+                flashOptions.classList.remove('active');
+            } else {
+                showFlashOptions = true;
+                flashOptions.classList.add('active');
+            }
+        }
+        
+        // Efekty latarki
+        function startFlashEffect() {
+            stopFlashEffect();
+            
+            if (flashMode === 'off') {
+                flashlight.style.opacity = '0';
+                return;
+            }
+            
+            if (flashMode === 'solid') {
+                flashlight.style.opacity = '1';
+                return;
+            }
+            
+            let pattern = [];
+            if (flashMode === 'sos') {
+                // SOS: ... --- ... (3 krótkie, 3 długie, 3 krótkie)
+                pattern = [100, 100, 100, 300, 300, 300, 100, 100, 100, 600];
+            } else if (flashMode === 'strobe') {
+                // Stroboskop: regularne błyski
+                pattern = [flashSpeed, flashSpeed];
+            }
+            
+            let step = 0;
+            flashlight.style.opacity = '0';
+            
+            flashInterval = setInterval(() => {
+                if (flashMode === 'strobe') {
+                    flashlight.style.opacity = flashlight.style.opacity === '0' ? '1' : '0';
+                } else {
+                    if (step >= pattern.length) step = 0;
+                    const duration = pattern[step];
+                    flashlight.style.opacity = step % 2 === 0 ? '1' : '0';
+                    setTimeout(() => {
+                        flashlight.style.opacity = step % 2 === 0 ? '0' : '1';
+                    }, duration);
+                    step++;
+                }
+            }, flashMode === 'strobe' ? flashSpeed : 100);
+        }
+        
+        function stopFlashEffect() {
+            clearInterval(flashInterval);
+            flashlight.style.opacity = '0';
+        }
+        
+        // Efekty ekranu
+        function startScreenEffect() {
+            stopScreenEffect();
+            
+            if (screenMode === 'off') {
+                document.body.style.background = '#000';
+                return;
+            }
+            
+            if (screenMode === 'solid') {
+                document.body.style.background = color1;
+                return;
+            }
+            
+            let pattern = [];
+            if (screenMode === 'sos') {
+                // SOS: ... --- ... (3 krótkie, 3 długie, 3 krótkie)
+                pattern = [100, 100, 100, 300, 300, 300, 100, 100, 100, 600];
+            } else if (screenMode === 'strobe') {
+                // Stroboskop: regularne błyski
+                pattern = [speed, speed];
+            }
+            
+            let step = 0;
+            document.body.style.background = color1;
+            
+            screenInterval = setInterval(() => {
+                if (screenMode === 'strobe') {
+                    document.body.style.background = document.body.style.background === color1 ? color2 : color1;
+                } else {
+                    if (step >= pattern.length) step = 0;
+                    const duration = pattern[step];
+                    document.body.style.background = step % 2 === 0 ? color2 : color1;
+                    setTimeout(() => {
+                        document.body.style.background = step % 2 === 0 ? color1 : color2;
+                    }, duration);
+                    step++;
+                }
+            }, screenMode === 'strobe' ? speed : 100);
+        }
+        
+        function stopScreenEffect() {
+            clearInterval(screenInterval);
+            document.body.style.background = '#000';
+        }
+        
+        // Start aplikacji
+        init();
+    </script>
+</body>
+</html>
