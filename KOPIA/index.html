@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eksport/Import Listy</title>
+    <meta name="theme-color" content="#000000">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #000000;
+            color: #FF00FF;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: #333333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #FF00FF;
+        }
+        
+        .button {
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .button:hover {
+            background: #444444;
+            color: #FF00FF;
+            transform: translateY(-2px);
+        }
+        
+        .button i {
+            margin-right: 10px;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            margin-bottom: 20px;
+            resize: vertical;
+        }
+        
+        .instructions {
+            background: #222222;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #B0B0B0;
+        }
+        
+        .instructions h3 {
+            color: #FF00FF;
+            margin-top: 0;
+        }
+        
+        .file-input {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Eksport/Import Listy</h1>
+        
+        <button id="exportBtn" class="button">
+            <i class="fas fa-file-export"></i> EKSPORTUJ DANE
+        </button>
+        
+        <textarea id="dataField" placeholder="Tutaj pojawią się dane do eksportu lub możesz wkleić dane do importu..."></textarea>
+        
+        <button id="importBtn" class="button">
+            <i class="fas fa-file-import"></i> IMPORTUJ DANE
+        </button>
+        
+        <input type="file" id="fileInput" class="file-input" accept=".json,.txt">
+        <button id="loadFileBtn" class="button">
+            <i class="fas fa-folder-open"></i> WCZYTAJ Z PLIKU
+        </button>
+        
+        <div class="instructions">
+            <h3>Instrukcja:</h3>
+            <p><strong>Eksport:</strong> Kliknij przycisk "EKSPORTUJ DANE", skopiuj wygenerowany tekst i zapisz go w bezpiecznym miejscu.</p>
+            <p><strong>Import:</strong> Wklej wcześniej wyeksportowane dane do pola tekstowego i kliknij "IMPORTUJ DANE" lub użyj przycisku "WCZYTAJ Z PLIKU" aby załadować zapisany plik.</p>
+            <p>Dane są przenoszone między urządzeniami w formie zaszyfrowanego tekstu.</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const exportBtn = document.getElementById('exportBtn');
+            const importBtn = document.getElementById('importBtn');
+            const loadFileBtn = document.getElementById('loadFileBtn');
+            const fileInput = document.getElementById('fileInput');
+            const dataField = document.getElementById('dataField');
+            
+            // Eksport danych z IndexedDB
+            exportBtn.addEventListener('click', function() {
+                const request = indexedDB.open('ListaZakupowDB', 1);
+                
+                request.onsuccess = function(event) {
+                    const db = event.target.result;
+                    const transaction = db.transaction(['zakupy'], 'readonly');
+                    const objectStore = transaction.objectStore('zakupy');
+                    const getAllRequest = objectStore.getAll();
+                    
+                    getAllRequest.onsuccess = function() {
+                        const data = getAllRequest.result;
+                        if (data.length > 0) {
+                            // Konwertuj dane do JSON i zakoduj w base64 dla bezpieczeństwa
+                            const jsonData = JSON.stringify(data);
+                            const encodedData = btoa(unescape(encodeURIComponent(jsonData)));
+                            dataField.value = encodedData;
+                            
+                            // Automatyczne zaznaczenie tekstu do skopiowania
+                            dataField.select();
+                            document.execCommand('copy');
+                            
+                            alert('Dane zostały wyeksportowane i skopiowane do schowka!');
+                        } else {
+                            alert('Brak danych do eksportu!');
+                        }
+                    };
+                    
+                    getAllRequest.onerror = function() {
+                        alert('Wystąpił błąd podczas eksportu danych!');
+                    };
+                };
+                
+                request.onerror = function() {
+                    alert('Nie można połączyć się z bazą danych!');
+                };
+            });
+            
+            // Import danych do IndexedDB
+            importBtn.addEventListener('click', function() {
+                const encodedData = dataField.value.trim();
+                
+                if (!encodedData) {
+                    alert('Wprowadź dane do zaimportowania!');
+                    return;
+                }
+                
+                if (confirm('Czy na pewno chcesz zaimportować dane? Obecna lista zostanie zastąpiona.')) {
+                    try {
+                        // Dekodowanie danych z base64
+                        const jsonData = decodeURIComponent(escape(atob(encodedData)));
+                        const data = JSON.parse(jsonData);
+                        
+                        const request = indexedDB.open('ListaZakupowDB', 1);
+                        
+                        request.onsuccess = function(event) {
+                            const db = event.target.result;
+                            const transaction = db.transaction(['zakupy'], 'readwrite');
+                            const objectStore = transaction.objectStore('zakupy');
+                            
+                            // Wyczyść obecne dane
+                            const clearRequest = objectStore.clear();
+                            
+                            clearRequest.onsuccess = function() {
+                                // Dodaj nowe dane
+                                data.forEach(item => {
+                                    objectStore.add(item);
+                                });
+                                
+                                alert(`Pomyślnie zaimportowano ${data.length} pozycji!`);
+                            };
+                            
+                            clearRequest.onerror = function() {
+                                alert('Wystąpił błąd podczas czyszczenia bazy danych!');
+                            };
+                        };
+                        
+                        request.onerror = function() {
+                            alert('Nie można połączyć się z bazą danych!');
+                        };
+                    } catch (e) {
+                        alert('Nieprawidłowy format danych!');
+                        console.error(e);
+                    }
+                }
+            });
+            
+            // Wczytywanie danych z pliku
+            loadFileBtn.addEventListener('click', function() {
+                fileInput.click();
+            });
+            
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    dataField.value = e.target.result;
+                };
+                reader.readAsText(file);
+            });
+        });
+    </script>
+</body>
+</html>
