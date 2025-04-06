@@ -1,0 +1,2281 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>KARTY</title>
+    <meta name="theme-color" content="#000000">
+    <meta name="description" content="Aplikacja do zarządzania kartami i listą zakupów">
+    <link rel="manifest" href="/manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 300;
+            background-color: #000000;
+            color: #FF00FF;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0 auto;
+            transition: background 0.3s;
+            touch-action: pan-y;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        .header, .modal-content {
+            width: calc(100% - 40px);
+            max-width: 520px;
+            margin: 10px auto;
+            background-color: #333333;
+            padding: 8px 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+
+        .fullscreen-mode .header {
+            display: none;
+        }
+
+        .KSGROUP-PASEK-WYSZUKIWANIA input,
+        #nowy-produkt {
+            width: 100%;
+            max-width: 520px;
+            padding: 8px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            border-radius: 5px;
+            background-color: #222;
+            color: #B0B0B0;
+            outline: none;
+            box-sizing: border-box;
+            margin: 0 auto;
+            display: block;
+        }
+
+        .KSGROUP-WYSZUKIWARKA-NORMALNA {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .fullscreen-mode .KSGROUP-WYSZUKIWARKA-NORMALNA {
+            display: none;
+        }
+
+        .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            position: fixed;
+            top: 10px;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        .fullscreen-mode .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN {
+            display: flex;
+        }
+
+        .KSGROUP-PASEK-WYSZUKIWANIA {
+            order: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+            padding: 0;
+        }
+
+        .KSGROUP-PASEK-LINKU-OBRAZU {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 90%;
+            max-width: 520px;
+            margin: 0 0;
+        }
+
+        .KSGROUP-PASEK-LINKU-OBRAZU a {
+            text-decoration: none;
+            color: #B0B0B0;
+            text-align: center;
+            display: block;
+            background-color: #222;
+            padding: 8px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 16px;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0px 0px;
+            max-width: 520px;
+        }
+
+        .card-number-fullscreen {
+            position: fixed;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #000;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            padding: 0px 0px;
+            border-radius: 5px;
+            z-index: 11;
+            max-width: 80%;
+            box-sizing: border-box;
+        }
+
+        .KSGROUP-PASEK-LINKU-OBRAZU a:hover {
+            background-color: #333;
+            color: #FF00FF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: calc(100% - 40px);
+            max-width: 520px;
+            transition: opacity 0.3s;
+            position: relative;
+            z-index: 2;
+            margin: 10px 10px;
+        }
+
+        .fullscreen-mode .container {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .row {
+            margin: 0;
+            text-align: center;
+            width: 100%;
+        }
+
+        .karty {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
+        .karty li {
+            margin: 5px 0;
+            transition: all 0.3s ease;
+        }
+
+        .karty li.ukryta {
+            display: none !important;
+        }
+
+        .karty li.rzadko-uzywana {
+            display: none;
+        }
+
+        body.pokaz-rzadkie .karty li.rzadko-uzywana {
+            display: block;
+        }
+
+        body.pokaz-rzadkie .karty li:not(.rzadko-uzywana) {
+            display: none;
+        }
+
+        .karty a {
+            text-decoration: none;
+            padding: 8px 8px;
+            color: #FF00FF;
+            background: #333333;
+            border-radius: 5px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 80px;
+            min-width: 120px;
+            box-sizing: border-box;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .karty a:hover {
+            background: #222222;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .karty a:active {
+            transform: scale(0.95);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .karty a img {
+            max-height: 30px;
+            width: auto;
+            filter: invert(1) brightness(0.69) contrast(0.95);
+            transition: all 0.3s;
+            margin-bottom: 5px;
+        }
+
+        .karty a:hover img {
+            filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
+            transform: scale(1.1);
+        }
+
+        .karty a .nazwa {
+            font-size: 12px;
+            color: #B0B0B0;
+            margin-top: 5px;
+            transition: color 0.3s;
+        }
+
+        .karty a:hover .nazwa {
+            color: #FF00FF;
+        }
+
+        .fullscreen-mode {
+            background-color: #B0B0B0;
+            padding: 0;
+            box-sizing: border-box;
+            position: fixed;
+            width: 100%;
+            height: 100vh;
+            top: 0;
+            left: 0;
+        }
+
+        .fullscreen-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #B0B0B0;
+        }
+
+        .fullscreen-mode .fullscreen-image {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .fullscreen-image img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.5s ease;
+        }
+
+        .fullscreen-image img:hover {
+            transform: scale(1.05);
+        }
+
+        .buttons-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 520px;
+            gap: 10px;
+        }
+
+        .przelacz-rzadkie, .przybornik-btn,
+        .powrot-do-kart, .dodaj-produkt,
+        .kalkulator-btn, .liczydlo-btn,
+        .lista-btn, .miara-btn {
+            background-color: #222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s;
+            white-space: nowrap;
+            flex: 1;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .przelacz-rzadkie:hover, 
+        .przybornik-btn:hover,
+        .powrot-do-kart:hover,
+        .dodaj-produkt:hover,
+        .kalkulator-btn:hover,
+        .liczydlo-btn:hover,
+        .lista-btn:hover,
+        .miara-btn:hover {
+            background-color: #333;
+            color: #FF00FF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .przelacz-rzadkie:active, 
+        .przybornik-btn:active,
+        .powrot-do-kart:active,
+        .dodaj-produkt:active,
+        .kalkulator-btn:active,
+        .liczydlo-btn:active,
+        .lista-btn:active,
+        .miara-btn:active {
+            transform: scale(0.98);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            width: calc(100% - 40px);
+            max-width: 520px;
+            margin: 10px auto;
+            background-color: #333333;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            max-height: 100%;
+            height: calc(100% - 20px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #lista-zakupow {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 15px;
+            width: 100%;
+            overflow-y: auto;
+            flex-grow: 1;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            touch-action: pan-y;
+        }
+
+        #lista-zakupow::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #lista-zakupow::-webkit-scrollbar-track {
+            background: #222;
+            border-radius: 4px;
+        }
+
+        #lista-zakupow::-webkit-scrollbar-thumb {
+            background: #B0B0B0;
+            border-radius: 4px;
+        }
+
+        #lista-zakupow::-webkit-scrollbar-thumb:hover {
+            background: #FF00FF;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        #lista-zakupow li {
+            padding: 8px 8px;
+            border-bottom: 1px solid #B0B0B0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            animation: slideIn 0.3s ease-out forwards;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        #lista-zakupow li:hover {
+            background-color: #222;
+            transform: translateX(5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        #lista-zakupow li:active {
+            cursor: grabbing;
+            background-color: #222;
+        }
+
+        #lista-zakupow li.dragging {
+            opacity: 0.9;
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+            background-color: #222;
+            z-index: 10;
+        }
+
+        #lista-zakupow li.placeholder {
+            background: linear-gradient(90deg, transparent, rgba(255,0,255,0.2), transparent);
+            border: none;
+            height: 3px;
+            margin: 10px 0;
+            padding: 0;
+            border-radius: 3px;
+            animation: none;
+        }
+
+        #lista-zakupow li:last-child {
+            border-bottom: none;
+        }
+
+        .produkt-text {
+            color: #B0B0B0;
+            flex-grow: 1;
+            transition: color 0.2s;
+        }
+
+        #lista-zakupow li:hover .produkt-text {
+            color: #FF00FF;
+        }
+
+        .usun-z-listy {
+            color: #B0B0B0;
+            cursor: pointer;
+            margin-left: 10px;
+            padding: 8px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        #lista-zakupow li:hover .usun-z-listy {
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        .usun-z-listy:hover {
+            color: #FF00FF;
+            transform: scale(1.2);
+        }
+
+        .usun-z-listy:active {
+            transform: scale(0.9);
+        }
+
+        .edit-btn {
+            color: #B0B0B0;
+            cursor: pointer;
+            margin-left: 10px;
+            padding: 8px;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+
+        .edit-btn:hover {
+            color: #FF00FF;
+            transform: scale(1.2);
+        }
+
+        .edit-btn:active {
+            transform: scale(0.9);
+        }
+
+        .produkt-text.editing {
+            background-color: #222;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: text;
+        }
+
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        #nowy-produkt {
+            flex-grow: 1;
+            transition: all 0.3s;
+        }
+
+        #nowy-produkt:focus {
+            box-shadow: 0 0 0 2px #FF00FF;
+        }
+
+        .modal-buttons-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .przybornik-buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .przybornik-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            width: 100%;
+        }
+
+        #installButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #FF00FF;
+            color: white;
+            border: none;
+            padding: 8px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        #installButton:hover {
+            background-color: #cc00cc;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        #installButton:active {
+            transform: scale(0.98);
+        }
+
+        .fullscreen-image-content {
+            transition: transform 0.3s ease;
+        }
+
+        /* Kalkulator styles */
+        .KSGROUP-KALKULATOR {
+            width: calc(100%);
+            max-width: 520px;
+            background-color: #333333;
+            padding: 0px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            margin: 10px auto;
+        }
+
+        .KSGROUP-WYSWIETLACZ {
+            background-color: #222;
+            border-radius: 5px;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        #KSGROUP-OPERACJE {
+            width: 100%;
+            font-size: 18px;
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            background-color: transparent;
+            color: #B0B0B0;
+            outline: none;
+            box-sizing: border-box;
+            text-align: right;
+            margin-bottom: 5px;
+            min-height: 24px;
+        }
+
+        .KSGROUP-ROZDZIELACZ {
+            height: 1px;
+            background-color: #444;
+            margin: 5px 0;
+        }
+
+        #KSGROUP-WYNIK {
+            width: 100%;
+            font-size: 24px;
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            background-color: transparent;
+            color: #B0B0B0;
+            outline: none;
+            box-sizing: border-box;
+            text-align: right;
+        }
+
+        .KSGROUP-PRZYCISKI {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .KSGROUP-PRZYCISK {
+            background-color: #222;
+            color: #B0B0B0;
+            border: none;
+            padding: 15px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 18px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .KSGROUP-PRZYCISK:hover {
+            color: #FF00FF;
+            background-color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .KSGROUP-PRZYCISK:active {
+            transform: scale(0.95);
+        }
+
+        .KSGROUP-OPERATOR, #KSGROUP-ROWNA-SIE, #KSGROUP-WYCZYSC, .KSGROUP-DZIESIETNY, #KSGROUP-ZNAK, #KSGROUP-COFNIJ {
+            color: #FF00FF;
+        }
+
+        .KSGROUP-OPERATOR:hover, #KSGROUP-ROWNA-SIE:hover, #KSGROUP-WYCZYSC:hover, 
+        .KSGROUP-DZIESIETNY:hover, #KSGROUP-ZNAK:hover, #KSGROUP-COFNIJ:hover {
+            color: #B0B0B0;
+        }
+
+        #KSGROUP-WYCZYSC {
+            grid-column: span 1;
+            width: 100%;
+        }
+
+        #KSGROUP-ROWNA-SIE {
+            grid-column: span 2;
+            width: 100%;
+        }
+
+        .KSGROUP-DZIESIETNY i {
+            font-size: 10px;
+            position: relative;
+            top: 2px;
+        }
+
+        /* Liczydło styles */
+        .KSGROUP-LICZYDLO {
+            width: calc(100%);
+            max-width: 520px;
+            background-color: #333333;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            margin: 10px auto;
+        }
+
+        .KSGROUP-LICZYDLO .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 5px 0;
+        }
+
+        .KSGROUP-LICZYDLO input, 
+        .KSGROUP-LICZYDLO select {
+            flex: 1;
+            min-width: 100px;
+            padding: 8px;
+            background-color: #222;
+            border: none;
+            color: #B0B0B0;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif;
+            outline: none;
+        }
+
+        .KSGROUP-LICZYDLO #distance {
+            display: none;
+        }
+
+        .KSGROUP-LICZYDLO button {
+            background-color: #222;
+            color: #FF00FF;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .KSGROUP-LICZYDLO button:hover {
+            background-color: #333;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .KSGROUP-LICZYDLO button:active {
+            transform: scale(0.98);
+        }
+
+        .KSGROUP-LICZYDLO .result {
+            color: #B0B0B0;
+            margin-top: 10px;
+            word-wrap: break-word;
+            padding: 8px;
+            background-color: #222;
+            border-radius: 5px;
+        }
+
+        /* Kalkulator modal buttons */
+        .kalkulator-modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* Ruler styles */
+        .ruler-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin-top: 20px;
+        }
+
+        /* DOLNA LINIJKA (mm) - NIEBIESKA */
+        .ruler-mm {
+            width: 100%;
+            height: 10px;
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            border-top: 1px solid #00FFFF;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        /* GÓRNA LINIJKA (cale) - RÓŻOWA */
+        .ruler-in {
+            width: 100%;
+            height: 10px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-bottom: 1px solid #FF00FF;
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+
+        .mark {
+            position: absolute;
+        }
+
+        /* STYLE DLA MILIMETRÓW (DÓŁ) */
+        .mark-mm {
+            border-left: 1px solid #00AAFF;
+            height: 30px;
+            bottom: 0;
+        }
+        .mark-mm-5 {
+            border-left: 1px solid #00CCFF;
+            height: 50px;
+            bottom: 0;
+        }
+        .mark-mm-10 {
+            border-left: 2px solid #00FFFF;
+            height: 100px;
+            bottom: 0;
+        }
+        .mark-mm-100 {
+            border-left: 3px solid #00FFFF;
+            height: 100%;
+            bottom: 0;
+            opacity: 0.5;
+        }
+
+        /* STYLE DLA CALI (GÓRA) */
+        .mark-in {
+            border-left: 1px solid #FF00AA;
+            height: 30px;
+            top: 0;
+        }
+        .mark-in-05 {
+            border-left: 1px solid #FF00CC;
+            height: 50px;
+            top: 0;
+        }
+        .mark-in-1 {
+            border-left: 2px solid #FF00FF;
+            height: 100px;
+            top: 0;
+        }
+        .mark-in-10 {
+            border-left: 3px solid #FF00FF;
+            height: 100%;
+            top: 0;
+            opacity: 0.5;
+        }
+
+        .mark-label {
+            position: absolute;
+            font-size: 12px;
+            text-shadow: 0 0 3px #000;
+            font-weight: 500;
+            z-index: 20;
+            transform: translateX(-50%) rotate(-90deg);
+            white-space: nowrap;
+        }
+
+        /* ETYKIETY MILIMETRÓW (DÓŁ) */
+        .label-mm {
+            color: #00FFFF;
+            bottom: 35px;
+            transform-origin: left top;
+        }
+
+        /* ETYKIETY CALI (GÓRA) */
+        .label-in {
+            color: #FF00FF;
+            top: 35px;
+            transform-origin: left bottom;
+        }
+
+        @media (max-width: 768px) and (orientation: portrait) {
+            .fullscreen-image-content {
+                max-width: 100vh;
+                max-height: 100vw;
+                transform: rotate(0);
+            }
+            
+            .card-number-fullscreen {
+                top: 50px;
+                left: 30%;
+                transform: translateX(-50%);
+            }
+            
+            .KSGROUP-PRZYCISK {
+                padding: 12px 8px;
+                font-size: 16px;
+            }
+            
+            #KSGROUP-OPERACJE {
+                font-size: 16px;
+            }
+            
+            #KSGROUP-WYNIK {
+                font-size: 20px;
+            }
+
+            .ruler-mm, .ruler-in {
+                background-color: rgba(0, 0, 0, 0.5);
+            }
+            .mark-label {
+                font-size: 10px;
+            }
+            .label-mm {
+                bottom: 30px;
+            }
+            .label-in {
+                top: 30px;
+            }
+        }
+
+        @media (max-width: 768px) and (orientation: landscape) {
+            .fullscreen-image-content {
+                max-width: 100vh;
+                max-height: 100vw;
+                transform: rotate(0);
+            }
+            
+            .card-number-fullscreen {
+                top: 50px;
+                left: 30%;
+                transform: translateX(-50%);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header, .container {
+                width: calc(100% - 24px);
+                padding: 8px;
+            }
+            
+            .modal-content {
+                max-height: 90vh;
+                margin: 10px auto;
+                padding: 8px;
+                width: calc(100% - 24px);
+            }
+            
+            #lista-zakupow {
+                max-height: calc(90vh - 140px);
+            }
+            
+            .KSGROUP-PASEK-WYSZUKIWANIA input,
+            #nowy-produkt,
+            .KSGROUP-PASEK-LINKU-OBRAZU a,
+            .buttons-container,
+            .modal-buttons-container,
+            .przybornik-buttons-container {
+                max-width: none;
+            }
+            
+            .karty a {
+                height: 70px;
+                min-width: 100px;
+                padding: 8px 8px;
+            }
+            
+            #lista-zakupow li.dragging {
+                transform: scale(1.08);
+            }
+        }
+
+        @supports (-webkit-touch-callout: none) {
+            .modal-content {
+                max-height: -webkit-fill-available;
+                height: -webkit-fill-available;
+                margin: 10px auto;
+            }
+            
+            #lista-zakupow {
+                max-height: calc(-webkit-fill-available - 140px);
+            }
+            
+            body {
+                height: 100%;
+                overflow: hidden;
+            }
+            
+            html {
+                height: 100%;
+                overflow: hidden;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="KSGROUP-WYSZUKIWARKA-NORMALNA">
+            <div class="KSGROUP-PASEK-WYSZUKIWANIA">
+                <input type="text" id="wyszukaj-input" placeholder="WYSZUKAJ KARTĘ">
+                <div class="buttons-container">
+                    <button class="przelacz-rzadkie" id="przelacz-rzadkie" title="INNE">INNE</button>
+                    <button class="przybornik-btn" id="przybornik-btn" title="PRZYBORNIK">PRZYBORNIK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN">
+        <div class="KSGROUP-PASEK-LINKU-OBRAZU">
+            <a id="image-link" href="" target="_blank">ZAPISZ</a>
+            <div id="fullscreen-card-number" class="card-number-fullscreen"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <ul class="karty" id="lista-kart">
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="5" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="5" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="5" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="5" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="5" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="fullscreen-image">
+        <img id="fullscreen-img" src="" alt="PEŁNY EKRAN" class="fullscreen-image-content">
+    </div>
+    
+    <div id="lista-zakupow-modal" class="modal">
+        <div class="modal-content">
+            <div class="input-container">
+                <input type="text" id="nowy-produkt" placeholder="DODAJ PRODUKT">
+                <div class="modal-buttons-container">
+                    <button class="powrot-do-kart" id="powrot-do-kart">KARTY</button>
+                    <button class="przybornik-btn" id="przybornik-btn-lista">PRZYBORNIK</button>
+                    <button class="dodaj-produkt" id="dodaj-do-listy">DODAJ</button>
+                </div>
+            </div>
+            <ul id="lista-zakupow"></ul>
+        </div>
+    </div>
+    
+    <div id="kalkulator-modal" class="modal">
+        <div class="modal-content">
+            <div class="kalkulator-modal-buttons">
+                <button class="powrot-do-kart" id="powrot-do-kart-kalkulator">KARTY</button>
+                <button class="przybornik-btn" id="przybornik-btn-kalkulator">PRZYBORNIK</button>
+            </div>
+            <div class="KSGROUP-KALKULATOR">
+                <div class="KSGROUP-WYSWIETLACZ">
+                    <input type="text" id="KSGROUP-OPERACJE" readonly>
+                    <div class="KSGROUP-ROZDZIELACZ"></div>
+                    <input type="text" id="KSGROUP-WYNIK" readonly>
+                </div>
+                <div class="KSGROUP-PRZYCISKI">
+                    <button id="KSGROUP-WYCZYSC" class="KSGROUP-PRZCISK"><i class="fas fa-trash-alt"></i></button>
+                    <button id="KSGROUP-COFNIJ" class="KSGROUP-PRZYCISK"><i class="fas fa-backspace"></i></button>
+                    <button id="KSGROUP-ZNAK" class="KSGROUP-PRZYCISK"><i class="fas fa-plus-minus"></i></button>
+                    <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-divide"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-7"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-8"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-9"></i></button>
+                    <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-times"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-4"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-5"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-6"></i></button>
+                    <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-minus"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-1"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-2"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-3"></i></button>
+                    <button class="KSGROUP-PRZYCISK KSGROUP-OPERATOR"><i class="fas fa-plus"></i></button>
+                    <button class="KSGROUP-PRZYCISK"><i class="fas fa-0"></i></button>
+                    <button class="KSGROUP-PRZYCISK KSGROUP-DZIESIETNY"><i class="fas fa-circle" style="font-size: 5px;"></i></button>
+                    <button id="KSGROUP-ROWNA-SIE" class="KSGROUP-PRZYCISK"><i class="fas fa-equals"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="liczydlo-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-buttons-container">
+                <button class="powrot-do-kart" id="powrot-do-kart-liczydlo">KARTY</button>
+                <button class="przybornik-btn" id="przybornik-btn-liczydlo">PRZYBORNIK</button>
+            </div>
+            <div class="KSGROUP-LICZYDLO">
+                <div class="input-group">
+                    <input type="number" id="cost" placeholder="Cena litra (np. 0.13 zł)" step="0.01">
+                    <input type="number" id="amount" placeholder="Litry (np. 4.69)" step="0.01">
+                    <select id="unit" onchange="toggleDistanceField()">
+                        <option value="ml">ml (na litr)</option>
+                        <option value="dag">dag (na kg)</option>
+                        <option value="fuel">paliwo (spalanie)</option>
+                        <option value="route">koszt trasy</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <input type="number" id="distance" placeholder="Km (np. 100)" step="0.01">
+                </div>
+                <button onclick="calculate()">Przelicz</button>
+                <div id="result" class="result"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="przybornik-modal" class="modal">
+        <div class="modal-content">
+            <div class="przybornik-buttons-container">
+                <div class="przybornik-row">
+                    <button class="powrot-do-kart" id="powrot-do-kart-przybornik">KARTY</button>
+                    <button class="lista-btn" id="lista-btn-przybornik">LISTA</button>
+                </div>
+                <div class="przybornik-row">
+                    <button class="kalkulator-btn" id="kalkulator-btn-przybornik">KALKULATOR</button>
+                    <button class="liczydlo-btn" id="liczydlo-btn-przybornik">LICZYDŁO</button>
+                </div>
+                <div class="przybornik-row">
+                    <button class="miara-btn" id="miara-btn-przybornik">MIARA</button>
+                    <button class="miara-btn" id="miara-btn-przybornik">PUSTE</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="miara-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-buttons-container">
+                <button class="powrot-do-kart" id="powrot-do-kart-miara">KARTY</button>
+                <button class="przybornik-btn" id="przybornik-btn-miara">PRZYBORNIK</button>
+            </div>
+            <div class="ruler-container">
+                <div class="ruler-mm" id="rulerMm"></div>
+                <div class="ruler-in" id="rulerIn"></div>
+            </div>
+        </div>
+    </div>
+
+    <button id="installButton">ZAINSTALUJ APLIKACJĘ</button>
+
+    <script>
+        let pelnyEkran = false;
+        let pokazRzadkie = false;
+        const fullscreenImage = document.querySelector('.fullscreen-image');
+        const fullscreenImg = document.getElementById('fullscreen-img');
+        const imageLink = document.getElementById('image-link');
+        const imageLinkBar = document.querySelector('.KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN');
+        const wyszukajInput = document.getElementById('wyszukaj-input');
+        const przelaczRzadkieBtn = document.getElementById('przelacz-rzadkie');
+        const przybornikBtn = document.getElementById('przybornik-btn');
+        const listaKart = document.getElementById('lista-kart');
+        const wszystkieKarty = Array.from(listaKart.children);
+        const modal = document.getElementById('lista-zakupow-modal');
+        const listaZakupow = document.getElementById('lista-zakupow');
+        const dodajDoListyBtn = document.getElementById('dodaj-do-listy');
+        const powrotDoKartBtn = document.getElementById('powrot-do-kart');
+        const nowyProduktInput = document.getElementById('nowy-produkt');
+        const fullscreenCardNumber = document.getElementById('fullscreen-card-number');
+        const installButton = document.getElementById('installButton');
+        const kalkulatorModal = document.getElementById('kalkulator-modal');
+        const liczydloModal = document.getElementById('liczydlo-modal');
+        const przybornikModal = document.getElementById('przybornik-modal');
+        const miaraModal = document.getElementById('miara-modal');
+        const powrotDoKartKalkulatorBtn = document.getElementById('powrot-do-kart-kalkulator');
+        const powrotDoKartLiczydloBtn = document.getElementById('powrot-do-kart-liczydlo');
+        const powrotDoKartPrzybornikBtn = document.getElementById('powrot-do-kart-przybornik');
+        const powrotDoKartMiaraBtn = document.getElementById('powrot-do-kart-miara');
+        const kalkulatorBtnPrzybornik = document.getElementById('kalkulator-btn-przybornik');
+        const liczydloBtnPrzybornik = document.getElementById('liczydlo-btn-przybornik');
+        const listaBtnPrzybornik = document.getElementById('lista-btn-przybornik');
+        const miaraBtnPrzybornik = document.getElementById('miara-btn-przybornik');
+        const przybornikBtnLista = document.getElementById('przybornik-btn-lista');
+        const przybornikBtnKalkulator = document.getElementById('przybornik-btn-kalkulator');
+        const przybornikBtnLiczydlo = document.getElementById('przybornik-btn-liczydlo');
+        const przybornikBtnMiara = document.getElementById('przybornik-btn-miara');
+        
+        let zakupy = JSON.parse(localStorage.getItem('listaZakupow')) || [];
+        let deferredPrompt;
+        
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        }
+        
+        if (isIOS()) {
+            document.body.style.height = '100%';
+            document.documentElement.style.height = '100%';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installButton.style.display = 'block';
+            
+            installButton.style.animation = 'pulse 2s infinite';
+            setTimeout(() => {
+                installButton.style.animation = '';
+            }, 2000);
+        });
+
+        installButton.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    installButton.style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installButton.style.display = 'none';
+            deferredPrompt = null;
+        });
+        
+        function oznaczRzadkieKarty() {
+            wszystkieKarty.forEach(karta => {
+                if (karta.getAttribute('data-usage') === "0") {
+                    karta.classList.add('rzadko-uzywana');
+                } else {
+                    karta.classList.remove('rzadko-uzywana');
+                }
+            });
+        }
+        
+        function aktualizujWidocznoscKart() {
+            const fraza = wyszukajInput.value.trim().toLowerCase();
+            
+            if (fraza !== '') {
+                wszystkieKarty.forEach(karta => {
+                    const nazwa = karta.getAttribute('data-name').toLowerCase();
+                    const czyPasuje = nazwa.includes(fraza);
+                    
+                    if (czyPasuje) {
+                        karta.style.display = 'block';
+                        karta.classList.remove('ukryta');
+                    } else {
+                        karta.style.display = 'none';
+                        karta.classList.add('ukryta');
+                    }
+                });
+            } else {
+                wszystkieKarty.forEach(karta => {
+                    karta.style.display = '';
+                    if (pokazRzadkie) {
+                        karta.classList.toggle('ukryta', !karta.classList.contains('rzadko-uzywana'));
+                    } else {
+                        karta.classList.toggle('ukryta', karta.classList.contains('rzadko-uzywana'));
+                    }
+                });
+            }
+        }
+        
+        function wyswietlListeZakupow() {
+            listaZakupow.innerHTML = '';
+            zakupy.forEach((produkt, index) => {
+                setTimeout(() => {
+                    const li = document.createElement('li');
+                    li.setAttribute('data-index', index);
+                    li.draggable = true;
+                    li.innerHTML = `
+                        <span class="produkt-text" contenteditable="false">${produkt}</span>
+                        <span class="edit-btn" data-index="${index}"><i class="fas fa-edit"></i></span>
+                        <span class="usun-z-listy" data-index="${index}"><i class="fas fa-trash-alt"></i></span>
+                    `;
+                    listaZakupow.appendChild(li);
+                    
+                    li.addEventListener('touchstart', handleTouchStart, { passive: false });
+                    li.addEventListener('touchmove', handleTouchMove, { passive: false });
+                    li.addEventListener('touchend', handleTouchEnd, { passive: false });
+                    
+                    li.addEventListener('dragstart', handleDragStart);
+                    li.addEventListener('dragover', handleDragOver);
+                    li.addEventListener('dragenter', handleDragEnter);
+                    li.addEventListener('dragleave', handleDragLeave);
+                    li.addEventListener('dragend', handleDragEnd);
+                    li.addEventListener('drop', handleDrop);
+                    
+                    const produktText = li.querySelector('.produkt-text');
+                    const editBtn = li.querySelector('.edit-btn');
+                    
+                    editBtn.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        produktText.contentEditable = true;
+                        produktText.classList.add('editing');
+                        produktText.focus();
+                        
+                        const originalValue = produktText.textContent;
+                        
+                        produktText.addEventListener('blur', function handler() {
+                            produktText.contentEditable = false;
+                            produktText.classList.remove('editing');
+                            const newValue = produktText.textContent.trim();
+                            
+                            if (newValue && newValue !== originalValue) {
+                                zakupy[index] = newValue;
+                                localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                            } else if (!newValue) {
+                                produktText.textContent = originalValue;
+                            }
+                            
+                            produktText.removeEventListener('blur', handler);
+                        });
+                        
+                        produktText.addEventListener('keypress', function(e) {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                produktText.blur();
+                            }
+                        });
+                    });
+                    
+                    li.querySelector('.usun-z-listy').addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const index = parseInt(this.getAttribute('data-index'));
+                        zakupy.splice(index, 1);
+                        localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                        
+                        li.style.transform = 'translateX(100%)';
+                        li.style.opacity = '0';
+                        setTimeout(() => {
+                            wyswietlListeZakupow();
+                        }, 300);
+                    });
+                }, index * 50);
+            });
+        }
+
+        let draggedItem = null;
+        let placeholder = null;
+        let startY = 0;
+        let scrollTop = 0;
+        let isDragging = false;
+
+        function handleTouchStart(e) {
+            if (e.touches.length !== 1) return;
+            
+            const touch = e.touches[0];
+            const li = e.currentTarget;
+            
+            if (touch.target.classList.contains('usun-z-listy') || 
+                touch.target.classList.contains('edit-btn')) {
+                return;
+            }
+            
+            e.preventDefault();
+            
+            if (!isDragging) {
+                isDragging = true;
+                startY = touch.pageY;
+                scrollTop = listaZakupow.scrollTop;
+            }
+        }
+
+        function handleTouchMove(e) {
+            if (!isDragging || e.touches.length !== 1) return;
+            e.preventDefault();
+            
+            const touch = e.touches[0];
+            const y = touch.pageY;
+            const walk = (y - startY) * -1;
+            listaZakupow.scrollTop = scrollTop + walk;
+        }
+
+        function handleTouchEnd() {
+            isDragging = false;
+        }
+
+        function handleDragStart(e) {
+            draggedItem = this;
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.innerHTML);
+            
+            if ('ontouchstart' in window) {
+                this.style.transform = 'scale(1.05)';
+                this.style.boxShadow = '0 5px 20px rgba(0,0,0,0.4)';
+                this.style.transition = 'none';
+            }
+
+            setTimeout(() => {
+                this.classList.add('dragging');
+            }, 0);
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            
+            if (draggedItem === this) return;
+            
+            const rect = this.getBoundingClientRect();
+            const middleY = rect.top + rect.height / 2;
+            
+            if (e.clientY < middleY) {
+                if (placeholder && placeholder.nextSibling === this) {
+                    return;
+                }
+                if (!placeholder) {
+                    placeholder = document.createElement('li');
+                    placeholder.className = 'placeholder';
+                    listaZakupow.insertBefore(placeholder, this);
+                } else {
+                    listaZakupow.insertBefore(placeholder, this);
+                }
+            } else {
+                if (placeholder && placeholder.previousSibling === this) {
+                    return;
+                }
+                if (!placeholder) {
+                    placeholder = document.createElement('li');
+                    placeholder.className = 'placeholder';
+                    listaZakupow.insertBefore(placeholder, this.nextSibling);
+                } else {
+                    listaZakupow.insertBefore(placeholder, this.nextSibling);
+                }
+            }
+        }
+
+        function handleDragEnter(e) {
+            e.preventDefault();
+            this.classList.add('over');
+        }
+
+        function handleDragLeave() {
+            this.classList.remove('over');
+        }
+
+        function handleDragEnd() {
+            this.classList.remove('dragging');
+            
+            if ('ontouchstart' in window) {
+                this.style.transform = '';
+                this.style.boxShadow = '';
+                this.style.transition = 'all 0.3s';
+            }
+            
+            if (placeholder && placeholder.parentNode) {
+                placeholder.parentNode.removeChild(placeholder);
+            }
+            placeholder = null;
+            
+            document.querySelectorAll('#lista-zakupow li').forEach(li => {
+                li.classList.remove('over');
+            });
+        }
+
+        function handleDrop(e) {
+            e.stopPropagation();
+            e.preventDefault();
+            
+            if (draggedItem !== this) {
+                if (placeholder && placeholder.parentNode) {
+                    placeholder.parentNode.removeChild(placeholder);
+                }
+                placeholder = null;
+                
+                const fromIndex = parseInt(draggedItem.getAttribute('data-index'));
+                const toIndex = parseInt(this.getAttribute('data-index'));
+                
+                const [removed] = zakupy.splice(fromIndex, 1);
+                zakupy.splice(toIndex, 0, removed);
+                
+                localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                wyswietlListeZakupow();
+            }
+            
+            return false;
+        }
+        
+        listaZakupow.addEventListener('touchstart', function(e) {
+            if (e.touches.length !== 1) return;
+            
+            const touch = e.touches[0];
+            const li = touch.target.closest('li');
+            
+            if (!li) {
+                isDragging = true;
+                startY = touch.pageY;
+                scrollTop = this.scrollTop;
+            }
+        }, { passive: false });
+
+        listaZakupow.addEventListener('touchmove', function(e) {
+            if (!isDragging || e.touches.length !== 1) return;
+            e.preventDefault();
+            
+            const touch = e.touches[0];
+            const y = touch.pageY;
+            const walk = (y - startY) * -1;
+            this.scrollTop = scrollTop + walk;
+        }, { passive: false });
+
+        listaZakupow.addEventListener('touchend', function() {
+            isDragging = false;
+        }, { passive: false });
+        
+        function handleOrientationChange() {
+            if (window.matchMedia("(max-width: 768px)").matches) {
+                if (window.orientation === 0 || window.orientation === 180) {
+                    fullscreenImg.style.transform = 'rotate(90deg)';
+                    fullscreenImg.style.maxWidth = '100vh';
+                    fullscreenImg.style.maxHeight = '100vw';
+                    fullscreenCardNumber.style.top = '60px';
+                    fullscreenCardNumber.style.left = '50%';
+                    fullscreenCardNumber.style.transform = 'translateY(-50%)';
+                    fullscreenCardNumber.style.transformOrigin = 'left top';
+                    fullscreenCardNumber.style.whiteSpace = 'nowrap';
+                } else {
+                    fullscreenImg.style.transform = 'rotate(0)';
+                    fullscreenImg.style.maxWidth = '100%';
+                    fullscreenImg.style.maxHeight = '100%';
+                    fullscreenCardNumber.style.top = '60px';
+                    fullscreenCardNumber.style.left = '60%';
+                    fullscreenCardNumber.style.transform = 'translateX(-50%)';
+                    fullscreenCardNumber.style.transformOrigin = '';
+                    fullscreenCardNumber.style.whiteSpace = '';
+                }
+            }
+        }
+        
+        function drawRulers() {
+            const rulerMm = document.getElementById('rulerMm');
+            const rulerIn = document.getElementById('rulerIn');
+            const modalContent = document.querySelector('#miara-modal .modal-content');
+            const windowWidth = modalContent.clientWidth;
+
+            // Clear existing rulers
+            rulerMm.innerHTML = '';
+            rulerIn.innerHTML = '';
+
+            // DOLNA LINIJKA MILIMETROWA
+            const pixelsPerMm = 3.78; // 96 DPI / 25.4 mm
+            const maxMm = Math.floor(windowWidth / pixelsPerMm);
+            
+            for (let i = 0; i <= maxMm; i++) {
+                const mark = document.createElement('div');
+                
+                if (i % 100 === 0) {
+                    mark.className = 'mark mark-mm-100';
+                } else if (i % 10 === 0) {
+                    mark.className = 'mark mark-mm-10';
+                } else if (i % 5 === 0) {
+                    mark.className = 'mark mark-mm-5';
+                } else {
+                    mark.className = 'mark mark-mm';
+                }
+                
+                mark.style.left = `${i * pixelsPerMm}px`;
+                rulerMm.appendChild(mark);
+
+                if (i % 100 === 0) {
+                    const label = document.createElement('div');
+                    label.className = 'mark-label label-mm';
+                    label.innerText = `${i/10} cm`;
+                    label.style.left = `${i * pixelsPerMm}px`;
+                    rulerMm.appendChild(label);
+                }
+                else if (i % 10 === 0) {
+                    const label = document.createElement('div');
+                    label.className = 'mark-label label-mm';
+                    label.innerText = `${i} mm`;
+                    label.style.left = `${i * pixelsPerMm}px`;
+                    rulerMm.appendChild(label);
+                }
+            }
+
+            // GÓRNA LINIJKA W CALACH
+            const pixelsPerInch = 96; // 96 DPI
+            const maxIn = Math.floor(windowWidth / pixelsPerInch);
+            
+            for (let i = 0; i <= maxIn; i++) {
+                const mark = document.createElement('div');
+                
+                if (i % 10 === 0) {
+                    mark.className = 'mark mark-in-10';
+                } else if (i % 1 === 0) {
+                    mark.className = 'mark mark-in-1';
+                } else if (i % 0.5 === 0) {
+                    mark.className = 'mark mark-in-05';
+                } else {
+                    mark.className = 'mark mark-in';
+                }
+                
+                mark.style.left = `${i * pixelsPerInch}px`;
+                rulerIn.appendChild(mark);
+
+                if (i % 1 === 0) {
+                    const label = document.createElement('div');
+                    label.className = 'mark-label label-in';
+                    label.innerText = `${i}"`;
+                    label.style.left = `${i * pixelsPerInch}px`;
+                    rulerIn.appendChild(label);
+                }
+            }
+        }
+        
+        oznaczRzadkieKarty();
+        aktualizujWidocznoscKart();
+        wyswietlListeZakupow();
+        
+        handleOrientationChange();
+        window.addEventListener('orientationchange', handleOrientationChange);
+        
+        przelaczRzadkieBtn.addEventListener('click', function() {
+            if (wyszukajInput.value.trim() === '') {
+                pokazRzadkie = !pokazRzadkie;
+                
+                if (pokazRzadkie) {
+                    document.body.classList.add('pokaz-rzadkie');
+                    this.style.backgroundColor = '#333';
+                } else {
+                    document.body.classList.remove('pokaz-rzadkie');
+                    this.style.backgroundColor = '#222';
+                }
+                
+                aktualizujWidocznoscKart();
+            }
+        });
+
+        przybornikBtn.addEventListener('click', function() {
+            przybornikModal.style.display = 'block';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+        
+        przybornikBtnLista.addEventListener('click', function() {
+            modal.style.display = 'none';
+            przybornikModal.style.display = 'block';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+        
+        przybornikBtnKalkulator.addEventListener('click', function() {
+            kalkulatorModal.style.display = 'none';
+            przybornikModal.style.display = 'block';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+        
+        przybornikBtnLiczydlo.addEventListener('click', function() {
+            liczydloModal.style.display = 'none';
+            przybornikModal.style.display = 'block';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+        
+        przybornikBtnMiara.addEventListener('click', function() {
+            miaraModal.style.display = 'none';
+            przybornikModal.style.display = 'block';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+        
+        kalkulatorBtnPrzybornik.addEventListener('click', function() {
+            przybornikModal.style.display = 'none';
+            kalkulatorModal.style.display = 'block';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+        
+        liczydloBtnPrzybornik.addEventListener('click', function() {
+            przybornikModal.style.display = 'none';
+            liczydloModal.style.display = 'block';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+        
+        listaBtnPrzybornik.addEventListener('click', function() {
+            przybornikModal.style.display = 'none';
+            modal.style.display = 'block';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+        
+        miaraBtnPrzybornik.addEventListener('click', function() {
+            przybornikModal.style.display = 'none';
+            miaraModal.style.display = 'block';
+            drawRulers();
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+        
+        powrotDoKartBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+        
+        powrotDoKartKalkulatorBtn.addEventListener('click', function() {
+            kalkulatorModal.style.display = 'none';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+        
+        powrotDoKartLiczydloBtn.addEventListener('click', function() {
+            liczydloModal.style.display = 'none';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+        
+        powrotDoKartPrzybornikBtn.addEventListener('click', function() {
+            przybornikModal.style.display = 'none';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+        
+        powrotDoKartMiaraBtn.addEventListener('click', function() {
+            miaraModal.style.display = 'none';
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 200);
+        });
+        
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+            if (event.target === kalkulatorModal) {
+                kalkulatorModal.style.display = 'none';
+            }
+            if (event.target === liczydloModal) {
+                liczydloModal.style.display = 'none';
+            }
+            if (event.target === przybornikModal) {
+                przybornikModal.style.display = 'none';
+            }
+            if (event.target === miaraModal) {
+                miaraModal.style.display = 'none';
+            }
+        });
+        
+        dodajDoListyBtn.addEventListener('click', function() {
+            const produkt = nowyProduktInput.value.trim();
+            if (produkt) {
+                zakupy.push(produkt);
+                localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                nowyProduktInput.value = '';
+                
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 200);
+                
+                wyswietlListeZakupow();
+            } else {
+                nowyProduktInput.style.animation = 'shake 0.5s';
+                setTimeout(() => {
+                    nowyProduktInput.style.animation = '';
+                }, 500);
+            }
+        });
+        
+        nowyProduktInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                dodajDoListyBtn.click();
+            }
+        });
+
+        wyszukajInput.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                document.body.classList.remove('pokaz-rzadkie');
+                pokazRzadkie = false;
+                przelaczRzadkieBtn.style.backgroundColor = '#222';
+            }
+            aktualizujWidocznoscKart();
+        });
+        
+        wyszukajInput.addEventListener('keydown', function(e) {
+            e.stopPropagation();
+        });
+        
+        nowyProduktInput.addEventListener('keydown', function(e) {
+            e.stopPropagation();
+        });
+        
+        document.querySelectorAll('.link-btn').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                pelnyEkran = !pelnyEkran;
+                if (pelnyEkran) {
+                    document.body.classList.add('fullscreen-mode');
+                    const imageUrl = this.getAttribute('data-image');
+                    fullscreenImg.src = imageUrl;
+                    imageLink.href = imageUrl;
+                    
+                    const cardNumber = this.parentElement.classList[0];
+                    fullscreenCardNumber.textContent = `${cardNumber}`;
+                    
+                    handleOrientationChange();
+                    
+                    fullscreenImg.onerror = () => {
+                        fullscreenImg.src = 'https://via.placeholder.com/800x600?text=Obraz+niedostępny';
+                        imageLink.href = fullscreenImg.src;
+                        fullscreenCardNumber.textContent = 'BRAK NUMERU KARTY';
+                    };
+                } else {
+                    document.body.classList.remove('fullscreen-mode');
+                    fullscreenImg.src = '';
+                    fullscreenCardNumber.textContent = '';
+                }
+            });
+        });
+        
+        document.body.addEventListener('click', function(e) {
+            if (pelnyEkran && (e.target === document.body || e.target === fullscreenImage || e.target === fullscreenImg)) {
+                pelnyEkran = false;
+                document.body.classList.remove('fullscreen-mode');
+                fullscreenImg.src = '';
+                fullscreenCardNumber.textContent = '';
+            }
+        });
+
+        document.addEventListener('touchmove', function(e) {
+            if (modal.style.display === 'block' || kalkulatorModal.style.display === 'block' || liczydloModal.style.display === 'block' || przybornikModal.style.display === 'block' || miaraModal.style.display === 'block') {
+                const isScrollable = e.target.closest('#lista-zakupow');
+                if (!isScrollable) {
+                    e.preventDefault();
+                }
+            }
+        }, { passive: false });
+
+        document.addEventListener('dblclick', function(e) {
+            if (isIOS()) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                20%, 60% { transform: translateX(-5px); }
+                40%, 80% { transform: translateX(5px); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful');
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
+        
+        // Kalkulator logic
+        const KSGROUP_OPERACJE = document.getElementById('KSGROUP-OPERACJE');
+        const KSGROUP_WYNIK = document.getElementById('KSGROUP-WYNIK');
+        let KSGROUP_AKTUALNE_DANE = '';
+        let KSGROUP_POPRZEDNIE_DANE = '';
+        let KSGROUP_OPERACJA = null;
+        let KSGROUP_RESETUJ_EKRAN = false;
+        const KSGROUP_MAPA_KLAWISZY = {
+            '0': '0', '1': '1', '2': '2', '3': '3', '4': '4',
+            '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+            '.': '.', ',': '.', '+': '+', '-': '-', '*': '*', 
+            'x': '*', 'X': '*', '/': '/', 'Enter': '=', '=': '=', 
+            'Escape': 'C', 'Backspace': '⌫', 'Delete': 'C',
+            '_': '+/-'
+        };
+        const KSGROUP_MAPA_IKON = {
+            'fa-trash-alt': 'C',
+            'fa-backspace': '⌫',
+            'fa-plus-minus': '+/-',
+            'fa-divide': '/',
+            'fa-7': '7',
+            'fa-8': '8',
+            'fa-9': '9',
+            'fa-times': '*',
+            'fa-4': '4',
+            'fa-5': '5',
+            'fa-6': '6',
+            'fa-minus': '-',
+            'fa-1': '1',
+            'fa-2': '2',
+            'fa-3': '3',
+            'fa-plus': '+',
+            'fa-0': '0',
+            'fa-circle': '.',
+            'fa-equals': '='
+        };
+        document.querySelectorAll('.KSGROUP-PRZYCISK').forEach(przycisk => {
+            przycisk.addEventListener('click', function() {
+                const ikona = this.querySelector('i');
+                if (ikona) {
+                    const klasaIkony = Array.from(ikona.classList).find(klasa => klasa.startsWith('fa-'));
+                    if (klasaIkony && KSGROUP_MAPA_IKON[klasaIkony]) {
+                        KSGROUP_OBSLUZ_WEJSCIE(KSGROUP_MAPA_IKON[klasaIkony]);
+                    }
+                }
+            });
+        });
+        document.addEventListener('keydown', function(event) {
+            const klawisz = event.key;
+            if (KSGROUP_MAPA_KLAWISZY.hasOwnProperty(klawisz)) {
+                event.preventDefault();
+                KSGROUP_OBSLUZ_WEJSCIE(KSGROUP_MAPA_KLAWISZY[klawisz]);
+            }
+        });
+        function KSGROUP_OBSLUZ_WEJSCIE(wartosc) {
+            if (KSGROUP_WYNIK.value === 'Error') {
+                KSGROUP_WYCZYSC_WSZYSTKO();
+            }
+            if (wartosc === 'C') {
+                KSGROUP_WYCZYSC_WSZYSTKO();
+            } else if (wartosc === '+/-') {
+                KSGROUP_ZMIEN_ZNAK();
+            } else if (wartosc === '⌫') {
+                KSGROUP_COFNIJ();
+            } else if (wartosc === '=') {
+                KSGROUP_OBLICZ_WYNIK();
+            } else if (['+', '-', '*', '/'].includes(wartosc)) {
+                KSGROUP_USTAW_OPERACJE(wartosc);
+            } else if (wartosc.match(/[0-9.]/)) {
+                KSGROUP_DODAJ_LICZBE(wartosc);
+            }
+            KSGROUP_AKTUALIZUJ_WYSWIETLACZ();
+        }
+        function KSGROUP_WYCZYSC_WSZYSTKO() {
+            KSGROUP_AKTUALNE_DANE = '';
+            KSGROUP_POPRZEDNIE_DANE = '';
+            KSGROUP_OPERACJA = null;
+            KSGROUP_RESETUJ_EKRAN = false;
+            KSGROUP_WYNIK.value = '0';
+            KSGROUP_OPERACJE.value = '';
+        }
+        function KSGROUP_ZMIEN_ZNAK() {
+            if (KSGROUP_AKTUALNE_DANE) {
+                KSGROUP_AKTUALNE_DANE = (parseFloat(KSGROUP_AKTUALNE_DANE) * -1).toString();
+            } else if (KSGROUP_WYNIK.value !== '0') {
+                KSGROUP_AKTUALNE_DANE = (parseFloat(KSGROUP_WYNIK.value) * -1).toString();
+            }
+        }
+        function KSGROUP_COFNIJ() {
+            if (KSGROUP_AKTUALNE_DANE.length > 0) {
+                KSGROUP_AKTUALNE_DANE = KSGROUP_AKTUALNE_DANE.slice(0, -1);
+            } else if (KSGROUP_WYNIK.value !== '0' && !KSGROUP_OPERACJA) {
+                KSGROUP_AKTUALNE_DANE = KSGROUP_WYNIK.value.slice(0, -1);
+            }           
+            if (KSGROUP_AKTUALNE_DANE === '' || KSGROUP_AKTUALNE_DANE === '-') {
+                KSGROUP_AKTUALNE_DANE = '';
+                KSGROUP_WYNIK.value = '0';
+            }
+        }
+        function KSGROUP_DODAJ_LICZBE(liczba) {
+            if (KSGROUP_RESETUJ_EKRAN) {
+                KSGROUP_AKTUALNE_DANE = '';
+                KSGROUP_RESETUJ_EKRAN = false;
+            }
+            if (liczba === '.' && KSGROUP_AKTUALNE_DANE.includes('.')) return;
+            if (KSGROUP_AKTUALNE_DANE === '0' && liczba !== '.') {
+                KSGROUP_AKTUALNE_DANE = liczba;
+            } else {
+                KSGROUP_AKTUALNE_DANE += liczba;
+            }
+        }
+        function KSGROUP_USTAW_OPERACJE(operacja) {
+            if (KSGROUP_AKTUALNE_DANE === '' && KSGROUP_POPRZEDNIE_DANE && KSGROUP_OPERACJA) {
+                KSGROUP_OPERACJA = operacja;
+                return;
+            }
+            if (KSGROUP_OPERACJA && !KSGROUP_RESETUJ_EKRAN) {
+                KSGROUP_OBLICZ_WYNIK(false);
+            }
+            KSGROUP_POPRZEDNIE_DANE = KSGROUP_AKTUALNE_DANE || KSGROUP_WYNIK.value;
+            KSGROUP_OPERACJA = operacja;
+            KSGROUP_AKTUALNE_DANE = '';
+            KSGROUP_RESETUJ_EKRAN = true;
+        }
+        function KSGROUP_OBLICZ_WYNIK(czyAktualizowacWyswietlacz = true) {
+            if (!KSGROUP_OPERACJA || !KSGROUP_POPRZEDNIE_DANE) return;
+            let wynik;
+            const poprzednia = parseFloat(KSGROUP_POPRZEDNIE_DANE);
+            const aktualna = parseFloat(KSGROUP_AKTUALNE_DANE) || parseFloat(KSGROUP_WYNIK.value) || 0;
+            switch (KSGROUP_OPERACJA) {
+                case '+': wynik = poprzednia + aktualna; break;
+                case '-': wynik = poprzednia - aktualna; break;
+                case '*': wynik = poprzednia * aktualna; break;
+                case '/': wynik = aktualna === 0 ? 'Error' : poprzednia / aktualna; break;
+                default: return;
+            }
+            if (typeof wynik === 'number' && !isNaN(wynik)) {
+                wynik = Math.round(wynik * 100000) / 100000;
+            }
+            
+            if (czyAktualizowacWyswietlacz) {
+                KSGROUP_OPERACJE.value = `${KSGROUP_POPRZEDNIE_DANE} ${KSGROUP_OPERACJA} ${KSGROUP_AKTUALNE_DANE || aktualna} = ${wynik}`;
+            }
+            
+            KSGROUP_AKTUALNE_DANE = wynik.toString();
+            KSGROUP_POPRZEDNIE_DANE = '';
+            KSGROUP_OPERACJA = null;
+            KSGROUP_RESETUJ_EKRAN = true;
+        }
+
+        function KSGROUP_AKTUALIZUJ_WYSWIETLACZ() {
+            KSGROUP_WYNIK.value = KSGROUP_AKTUALNE_DANE || (KSGROUP_OPERACJA ? '0' : KSGROUP_WYNIK.value);
+            
+            if (KSGROUP_OPERACJA && KSGROUP_POPRZEDNIE_DANE && !KSGROUP_RESETUJ_EKRAN) {
+                KSGROUP_OPERACJE.value = `${KSGROUP_POPRZEDNIE_DANE} ${KSGROUP_OPERACJA}`;
+            } else if (!KSGROUP_OPERACJE.value.includes('=')) {
+                KSGROUP_OPERACJE.value = '';
+            }
+        }
+
+        // Liczydło logic
+        function toggleDistanceField() {
+            const unit = document.getElementById('unit').value;
+            const distanceField = document.getElementById('distance');
+            const amountField = document.getElementById('amount');
+            
+            distanceField.style.display = (unit === 'fuel' || unit === 'route') ? 'block' : 'none';
+            
+            if (unit === 'route') {
+                amountField.placeholder = "Śr. spalanie (l/100km)";
+            } else if (unit === 'fuel') {
+                amountField.placeholder = "Litry (np. 4.69)";
+            } else {
+                amountField.placeholder = "Litry (np. 4.69)";
+            }
+        }
+
+        function calculate() {
+            const costPerLiter = parseFloat(document.getElementById('cost').value); // Cena za litr
+            const amount = parseFloat(document.getElementById('amount').value); // Ilość paliwa w litrach lub średnie spalanie
+            const unit = document.getElementById('unit').value;
+            const distance = parseFloat(document.getElementById('distance').value); // Przejechane km
+            const resultDiv = document.getElementById('result');
+
+            if (!costPerLiter || !amount) {
+                resultDiv.innerHTML = "Wprowadź wymagane wartości!";
+                return;
+            }
+
+            if (unit === 'ml') {
+                const pricePerLiter = (costPerLiter / amount) * 1000;
+                resultDiv.innerHTML = `Cena za litr: ${pricePerLiter.toFixed(2)} zł`;
+            } else if (unit === 'dag') {
+                const pricePerKg = (costPerLiter / amount) * 100;
+                resultDiv.innerHTML = `Cena za kg: ${pricePerKg.toFixed(2)} zł`;
+            } else if (unit === 'fuel') {
+                if (!distance) {
+                    resultDiv.innerHTML = "Wprowadź przejechane kilometry!";
+                    return;
+                }
+                const consumption = (amount / distance) * 100; // Spalanie w l/100km
+                const totalCost = costPerLiter * amount; // Całkowity koszt
+                const costPerKm = totalCost / distance; // Koszt za 1 km
+                const costPer100km = costPerKm * 100; // Koszt na 100 km
+
+                resultDiv.innerHTML = 
+                    `Spalanie: ${consumption.toFixed(2)} l/100km<br>` +
+                    `Koszt na 100km: ${costPer100km.toFixed(2)} zł<br>` +
+                    `Koszt za 1km: ${costPerKm.toFixed(4)} zł<br>` +
+                    `Całkowity koszt: ${totalCost.toFixed(2)} zł (dla ${distance} km)`;
+            } else if (unit === 'route') {
+                if (!distance) {
+                    resultDiv.innerHTML = "Wprowadź dystans!";
+                    return;
+                }
+                const totalFuel = (distance * amount) / 100; // Całkowite zużycie paliwa
+                const totalCost = totalFuel * costPerLiter; // Całkowity koszt trasy
+                const costPerKm = totalCost / distance; // Koszt za 1 km
+                const costPer100km = costPerKm * 100; // Koszt na 100 km
+
+                resultDiv.innerHTML = 
+                    `Koszt trasy (${distance} km): ${totalCost.toFixed(2)} zł<br>` +
+                    `Zużycie paliwa: ${totalFuel.toFixed(2)} l<br>` +
+                    `Koszt na 100km: ${costPer100km.toFixed(2)} zł<br>` +
+                    `Koszt za 1km: ${costPerKm.toFixed(4)} zł`;
+            }
+        }
+
+        // Obsługa klawiatury w Liczydle
+        document.addEventListener('keydown', function(event) {
+            // Sprawdź, czy liczydło jest otwarte
+            if (liczydloModal.style.display !== 'block') return;
+            
+            const activeElement = document.activeElement;
+            const isInputFocused = activeElement.tagName === 'INPUT' || activeElement.tagName === 'SELECT';
+            
+            // Jeśli focus jest na inputach, pozwól na normalne wpisywanie
+            if (isInputFocused) return;
+            
+            const key = event.key;
+            
+            // Obsługa klawiszy numerycznych i specjalnych
+            if (key >= '0' && key <= '9') {
+                event.preventDefault();
+                const activeInput = document.querySelector('#liczydlo-modal input:focus');
+                if (activeInput) {
+                    activeInput.value += key;
+                }
+            } else if (key === '.' || key === ',') {
+                event.preventDefault();
+                const activeInput = document.querySelector('#liczydlo-modal input:focus');
+                if (activeInput && !activeInput.value.includes('.')) {
+                    activeInput.value += '.';
+                }
+            } else if (key === 'Backspace') {
+                event.preventDefault();
+                const activeInput = document.querySelector('#liczydlo-modal input:focus');
+                if (activeInput) {
+                    activeInput.value = activeInput.value.slice(0, -1);
+                }
+            } else if (key === 'Enter') {
+                event.preventDefault();
+                calculate();
+            }
+        });
+
+        // Obsługa zmiany rozmiaru okna dla linijki
+        window.addEventListener('resize', function() {
+            if (miaraModal.style.display === 'block') {
+                drawRulers();
+            }
+        });
+    </script>
+</body>
+</html>
