@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LICZYDŁO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #000000;
+            color: #FF00FF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .calculator {
+            background-color: #333;
+            padding: 8px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+        }
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 5px 0;
+        }
+        input, select {
+            flex: 1;
+            min-width: 100px;
+            padding: 8px;
+            background-color: #222;
+            border: none;
+            color: #B0B0B0;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        #distance {
+            display: none; /* Ukryte domyślnie */
+        }
+        button {
+            background-color: #222;
+            color: #FF00FF;
+            border: none;
+            padding: 8px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #444;
+        }
+        .result {
+            color: #B0B0B0;
+            margin-top: 5px;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="input-group">
+            <input type="number" id="cost" placeholder="Cena litra (np. 0.13 zł)" step="0.01">
+            <input type="number" id="amount" placeholder="Litry (np. 4.69)" step="0.01">
+            <select id="unit" onchange="toggleDistanceField()">
+                <option value="ml">ml (na litr)</option>
+                <option value="dag">dag (na kg)</option>
+                <option value="fuel">paliwo (spalanie)</option>
+                <option value="route">koszt trasy</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <input type="number" id="distance" placeholder="Km (np. 100)" step="0.01">
+        </div>
+        <button onclick="calculate()">Przelicz</button>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        function toggleDistanceField() {
+            const unit = document.getElementById('unit').value;
+            const distanceField = document.getElementById('distance');
+            const amountField = document.getElementById('amount');
+            
+            distanceField.style.display = (unit === 'fuel' || unit === 'route') ? 'block' : 'none';
+            
+            if (unit === 'route') {
+                amountField.placeholder = "Śr. spalanie (l/100km)";
+            } else if (unit === 'fuel') {
+                amountField.placeholder = "Litry (np. 4.69)";
+            } else {
+                amountField.placeholder = "Litry (np. 4.69)";
+            }
+        }
+
+        function calculate() {
+            const costPerLiter = parseFloat(document.getElementById('cost').value); // Cena za litr
+            const amount = parseFloat(document.getElementById('amount').value); // Ilość paliwa w litrach lub średnie spalanie
+            const unit = document.getElementById('unit').value;
+            const distance = parseFloat(document.getElementById('distance').value); // Przejechane km
+            const resultDiv = document.getElementById('result');
+
+            if (!costPerLiter || !amount) {
+                resultDiv.innerHTML = "Wprowadź wymagane wartości!";
+                return;
+            }
+
+            if (unit === 'ml') {
+                const pricePerLiter = (costPerLiter / amount) * 1000;
+                resultDiv.innerHTML = `Cena za litr: ${pricePerLiter.toFixed(2)} zł`;
+            } else if (unit === 'dag') {
+                const pricePerKg = (costPerLiter / amount) * 100;
+                resultDiv.innerHTML = `Cena za kg: ${pricePerKg.toFixed(2)} zł`;
+            } else if (unit === 'fuel') {
+                if (!distance) {
+                    resultDiv.innerHTML = "Wprowadź przejechane kilometry!";
+                    return;
+                }
+                const consumption = (amount / distance) * 100; // Spalanie w l/100km
+                const totalCost = costPerLiter * amount; // Całkowity koszt
+                const costPerKm = totalCost / distance; // Koszt za 1 km
+                const costPer100km = costPerKm * 100; // Koszt na 100 km
+
+                resultDiv.innerHTML = 
+                    `Spalanie: ${consumption.toFixed(2)} l/100km<br>` +
+                    `Koszt na 100km: ${costPer100km.toFixed(2)} zł<br>` +
+                    `Koszt za 1km: ${costPerKm.toFixed(4)} zł<br>` +
+                    `Całkowity koszt: ${totalCost.toFixed(2)} zł (dla ${distance} km)`;
+            } else if (unit === 'route') {
+                if (!distance) {
+                    resultDiv.innerHTML = "Wprowadź dystans!";
+                    return;
+                }
+                const totalFuel = (distance * amount) / 100; // Całkowite zużycie paliwa
+                const totalCost = totalFuel * costPerLiter; // Całkowity koszt trasy
+                const costPerKm = totalCost / distance; // Koszt za 1 km
+                const costPer100km = costPerKm * 100; // Koszt na 100 km
+
+                resultDiv.innerHTML = 
+                    `Koszt trasy (${distance} km): ${totalCost.toFixed(2)} zł<br>` +
+                    `Zużycie paliwa: ${totalFuel.toFixed(2)} l<br>` +
+                    `Koszt na 100km: ${costPer100km.toFixed(2)} zł<br>` +
+                    `Koszt za 1km: ${costPerKm.toFixed(4)} zł`;
+            }
+        }
+    </script>
+</body>
+</html>
