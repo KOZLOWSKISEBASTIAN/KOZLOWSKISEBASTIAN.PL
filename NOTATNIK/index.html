@@ -6,12 +6,11 @@
     <title>NOTATNIK</title>
     <meta name="theme-color" content="#000000">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
     <style>
         /* NOTATNIK POCZĄTEK */
-        .KOZLOWSKISEBASTIAN_NOTATNIK {
+        body {
             font-family: sans-serif;
             background: #000000;
             color: #FF00FF;
@@ -20,21 +19,23 @@
             display: flex;
             justify-content: center;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-KONTENER {
+        .notatnik-kontener {
             max-width: 520px;
+            max-height: 100%;
             width: 100%;
+            height: 100%;
             background: #333333;
             padding: 8px;
             border-radius: 8px;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-WIERSZ {
+        .notatnik-wiersz {
             display: flex;
             gap: 10px;
             margin-top: 4px;
             margin-bottom: 4px;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-PRZYCISK,
-        .KOZLOWSKISEBASTIAN_NOTATNIK-INPUT {
+        .notatnik-przycisk,
+        .notatnik-input {
             background: #222222;
             color: #B0B0B0;
             border: none;
@@ -43,21 +44,22 @@
             font-family: 'Montserrat', sans-serif;
             transition: all 0.2s;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-PRZYCISK {
+        .notatnik-przycisk {
             flex: 1;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-INPUT {
+        .notatnik-input {
             flex: 2;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-PRZYCISK:hover {
+        .notatnik-przycisk:hover {
             color: #FF00FF;
             background: #333333;
             transform: translateY(-2px);
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-INPUT:focus {
+        .notatnik-input:focus {
             box-shadow: 0 0 0 2px #FFF;
+            outline: none;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-LISTA {
+        .notatnik-lista {
             list-style-type: none;
             padding: 0;
             margin-top: 0px;
@@ -66,7 +68,7 @@
             overflow-y: auto;
             max-height: 60vh;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT {
+        .notatnik-element {
             padding: 8px;
             display: flex;
             flex-direction: column;
@@ -76,65 +78,86 @@
             transition: all 0.2s;
             position: relative;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT:hover {
+        .notatnik-element:hover {
             background-color: #333;
             transform: translateY(-2px);
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-TEKST {
+        .notatnik-tekst {
             color: #B0B0B0;
             flex-grow: 1;
             word-break: break-word;
             padding-right: 60px;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT:hover .KOZLOWSKISEBASTIAN_NOTATNIK-TEKST {
+        .notatnik-element:hover .notatnik-tekst {
             color: #FF00FF;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-AKCJE {
+        .notatnik-akcje {
             display: flex;
             gap: 8px;
             position: absolute;
             right: 8px;
             top: 8px;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-USUN,
-        .KOZLOWSKISEBASTIAN_NOTATNIK-EDYTUJ {
+        .notatnik-usun,
+        .notatnik-edytuj {
             color: #B0B0B0;
             cursor: pointer;
             transition: all 0.2s;
             font-size: 14px;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-USUN:hover,
-        .KOZLOWSKISEBASTIAN_NOTATNIK-EDYTUJ:hover {
+        .notatnik-usun:hover,
+        .notatnik-edytuj:hover {
             color: #FF00FF;
             transform: scale(1.2);
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-TEKST.editing {
+        .notatnik-tekst.editing {
             background-color: #333;
             padding: 8px;
             border-radius: 4px;
             cursor: text;
+            outline: none;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-ZDJECIE-INPUT {
+        .notatnik-plik-input,
+        .notatnik-import-input {
             display: none;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT-IMAGE-CONTAINER {
+        .notatnik-element-image-container {
             position: relative;
             display: inline-block;
             margin-top: 4px;
             align-self: flex-start;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT-IMAGE {
+        .notatnik-element-image {
             max-width: 100%;
             max-height: 150px;
             border-radius: 4px;
             object-fit: contain;
+            cursor: pointer;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-USUN-ZDJECIE {
+        .notatnik-element-plik {
+            color: #B0B0B0;
+            text-decoration: underline;
+            cursor: pointer;
+            margin-top: 4px;
+            word-break: break-all;
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+        .notatnik-element-plik i {
+            color: #B0B0B0;
+            margin-right: 8px;
+            transition: color 0.2s;
+        }
+        .notatnik-element-plik:hover i {
+            color: #FF00FF;
+        }
+        .notatnik-usun-plik {
             position: absolute;
             top: -8px;
-            right: -8px;
+            left: -8px;
             background: #FF00FF;
-            color: #000000;
+            color: #B0B0B0;
             border-radius: 50%;
             width: 20px;
             height: 20px;
@@ -146,13 +169,13 @@
             opacity: 0;
             transition: opacity 0.2s;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT:hover .KOZLOWSKISEBASTIAN_NOTATNIK-USUN-ZDJECIE {
+        .notatnik-element:hover .notatnik-usun-plik {
             opacity: 1;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT.editing .KOZLOWSKISEBASTIAN_NOTATNIK-USUN-ZDJECIE {
+        .notatnik-element.editing .notatnik-usun-plik {
             opacity: 1;
         }
-        .KOZLOWSKISEBASTIAN_NOTATNIK-NAZWA-PLIKU {
+        .notatnik-nazwa-pliku {
             font-size: 12px;
             color: #B0B0B0;
             margin-top: 4px;
@@ -163,28 +186,76 @@
             border-radius: 8px;
             font-family: 'Montserrat', sans-serif;
         }
+        .notatnik-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #333;
+            padding: 20px;
+            border-radius: 8px;
+            z-index: 1000;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            color: #B0B0B0;
+            max-width: 90%;
+        }
+        .notatnik-dialog-przycisk {
+            background: #FF00FF;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .notatnik-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+        }
         /* NOTATNIK KONIEC */
     </style>
 </head>
-<body class="KOZLOWSKISEBASTIAN_NOTATNIK">
-    <div class="KOZLOWSKISEBASTIAN_NOTATNIK-KONTENER">
-        <div class="KOZLOWSKISEBASTIAN_NOTATNIK-WIERSZ">
-            <input type="text" class="KOZLOWSKISEBASTIAN_NOTATNIK-INPUT" id="KOZLOWSKISEBASTIAN_NOTATNIK-INPUT" 
-                   placeholder="DODAJ NOTATKĘ" inputmode="text">
+<body>
+    <div class="notatnik-kontener">
+        
+        <div class="notatnik-wiersz">
+            <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
         </div>
-        <div class="KOZLOWSKISEBASTIAN_NOTATNIK-WIERSZ">
-            <button class="KOZLOWSKISEBASTIAN_NOTATNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_NOTATNIK-DODAJ-ZDJECIE">ZAŁĄCZ GRAFIKĘ</button>
-            <input type="file" accept="image/*" class="KOZLOWSKISEBASTIAN_NOTATNIK-ZDJECIE-INPUT" id="KOZLOWSKISEBASTIAN_NOTATNIK-ZDJECIE-INPUT">
-            <button class="KOZLOWSKISEBASTIAN_NOTATNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_NOTATNIK-DODAJ">DODAJ</button>
+        <div class="notatnik-wiersz">
+            <input type="text" class="notatnik-input" id="notatnik-input" placeholder="DODAJ NOTATKĘ">
         </div>
-        <div id="KOZLOWSKISEBASTIAN_NOTATNIK-NAZWA-PLIKU" class="KOZLOWSKISEBASTIAN_NOTATNIK-NAZWA-PLIKU">&nbsp;</div>
-        <ul class="KOZLOWSKISEBASTIAN_NOTATNIK-LISTA" id="KOZLOWSKISEBASTIAN_NOTATNIK-LISTA"></ul>
+        <div class="notatnik-wiersz">
+            <button class="notatnik-przycisk" id="notatnik-dodaj-plik">ZAŁĄCZ PLIK</button>
+            <input type="file" class="notatnik-plik-input" id="notatnik-plik-input">
+            <button class="notatnik-przycisk" id="notatnik-dodaj">DODAJ</button>
+        </div>
+        <div class="notatnik-wiersz">
+            <button class="notatnik-przycisk" id="notatnik-eksportuj">EKSPORTUJ ZIP</button>
+            <button class="notatnik-przycisk" id="notatnik-importuj">IMPORTUJ ZIP</button>
+            <input type="file" accept=".zip" class="notatnik-import-input" id="notatnik-import-input">
+        </div>
+        <div id="notatnik-nazwa-pliku" class="notatnik-nazwa-pliku">&nbsp;</div>
+        <ul class="notatnik-lista" id="notatnik-lista"></ul>
     </div>
 
+    <div class="notatnik-overlay" id="notatnik-overlay"></div>
+    <div class="notatnik-dialog" id="notatnik-dialog">
+        <p id="notatnik-dialog-tekst"></p>
+        <button class="notatnik-dialog-przycisk" id="notatnik-dialog-przycisk">OK</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
         // Inicjalizacja IndexedDB
         let db;
-        const request = indexedDB.open('NotatnikDB', 1);
+        const request = indexedDB.open('NotatnikDB', 7);
 
         request.onerror = function(event) {
             console.error("Błąd przy otwieraniu bazy danych:", event.target.error);
@@ -197,22 +268,74 @@
 
         request.onupgradeneeded = function(event) {
             const db = event.target.result;
-            const objectStore = db.createObjectStore('notatki', { keyPath: 'id', autoIncrement: true });
-            objectStore.createIndex('text', 'text', { unique: false });
-            objectStore.createIndex('image', 'image', { unique: false });
-            objectStore.createIndex('filename', 'filename', { unique: false });
+            if (!db.objectStoreNames.contains('notatki')) {
+                const objectStore = db.createObjectStore('notatki', { keyPath: 'id', autoIncrement: true });
+                objectStore.createIndex('text', 'text', { unique: false });
+                objectStore.createIndex('file', 'file', { unique: false });
+                objectStore.createIndex('filename', 'filename', { unique: false });
+                objectStore.createIndex('filetype', 'filetype', { unique: false });
+                objectStore.createIndex('createdAt', 'createdAt', { unique: false });
+            }
         };
 
         // Elementy DOM
-        const listaNotatek = document.getElementById('KOZLOWSKISEBASTIAN_NOTATNIK-LISTA');
-        const dodajNotatkeBtn = document.getElementById('KOZLOWSKISEBASTIAN_NOTATNIK-DODAJ');
-        const dodajZdjecielBtn = document.getElementById('KOZLOWSKISEBASTIAN_NOTATNIK-DODAJ-ZDJECIE');
-        const inputZdjeciel = document.getElementById('KOZLOWSKISEBASTIAN_NOTATNIK-ZDJECIE-INPUT');
-        const nowaNotatkaInput = document.getElementById('KOZLOWSKISEBASTIAN_NOTATNIK-INPUT');
-        const nazwaPlikuElement = document.getElementById('KOZLOWSKISEBASTIAN_NOTATNIK-NAZWA-PLIKU');
+        const listaNotatek = document.getElementById('notatnik-lista');
+        const dodajNotatkeBtn = document.getElementById('notatnik-dodaj');
+        const dodajPlikBtn = document.getElementById('notatnik-dodaj-plik');
+        const eksportujBtn = document.getElementById('notatnik-eksportuj');
+        const importujBtn = document.getElementById('notatnik-importuj');
+        const inputPlik = document.getElementById('notatnik-plik-input');
+        const inputImport = document.getElementById('notatnik-import-input');
+        const nowaNotatkaInput = document.getElementById('notatnik-input');
+        const nazwaPlikuElement = document.getElementById('notatnik-nazwa-pliku');
+        const overlay = document.getElementById('notatnik-overlay');
+        const dialog = document.getElementById('notatnik-dialog');
+        const dialogTekst = document.getElementById('notatnik-dialog-tekst');
+        const dialogPrzycisk = document.getElementById('notatnik-dialog-przycisk');
 
-        let aktualneZdjeciel = null;
+        let aktualnyPlik = null;
         let aktualnaNazwaPliku = '';
+        let aktualnyTypPliku = '';
+        let plikDoPobrania = null;
+
+        // Funkcje pomocnicze
+        function pokazDialog(tekst) {
+            dialogTekst.textContent = tekst;
+            dialog.style.display = 'block';
+            overlay.style.display = 'block';
+        }
+
+        function zamknijDialog() {
+            dialog.style.display = 'none';
+            overlay.style.display = 'none';
+        }
+
+        function dataURLtoBlob(dataURL) {
+            const arr = dataURL.split(',');
+            const mime = arr[0].match(/:(.*?);/)[1];
+            const bstr = atob(arr[1]);
+            let n = bstr.length;
+            const u8arr = new Uint8Array(n);
+            while (n--) {
+                u8arr[n] = bstr.charCodeAt(n);
+            }
+            return new Blob([u8arr], {type: mime});
+        }
+
+        function formatujDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleString('pl-PL', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Obsługa dialogu
+        dialogPrzycisk.addEventListener('click', zamknijDialog);
+        overlay.addEventListener('click', zamknijDialog);
 
         // Funkcja do renderowania listy
         function wyswietlNotatki() {
@@ -224,36 +347,56 @@
                 const notatki = event.target.result;
                 listaNotatek.innerHTML = '';
                 
-                notatki.forEach((item, index) => {
+                notatki.forEach((item) => {
                     const li = document.createElement('li');
-                    li.className = 'KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT';
+                    li.className = 'notatnik-element';
                     li.setAttribute('data-id', item.id);
                     
-                    let imageHtml = '';
-                    if (item.image) {
-                        imageHtml = `
-                            <div class="KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT-IMAGE-CONTAINER">
-                                <img src="${item.image}" class="KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT-IMAGE">
-                                <span class="KOZLOWSKISEBASTIAN_NOTATNIK-USUN-ZDJECIE" title="Usuń grafikę">X</span>
-                            </div>
-                        `;
+                    let fileHtml = '';
+                    if (item.file) {
+                        if (item.filetype && item.filetype.startsWith('image/')) {
+                            fileHtml = `
+                                <div class="notatnik-element-image-container">
+                                    <span class="notatnik-usun-plik" title="Usuń plik">X</span>
+                                    <img src="${item.file}" class="notatnik-element-image" data-file="${item.filename}">
+                                </div>
+                            `;
+                        } else {
+                            let iconClass = 'fa-file';
+                            if (/pdf/.test(item.filetype)) iconClass = 'fa-file-pdf';
+                            else if (/word|document/.test(item.filetype)) iconClass = 'fa-file-word';
+                            else if (/text|plain/.test(item.filetype)) iconClass = 'fa-file-alt';
+                            else if (/html/.test(item.filetype)) iconClass = 'fa-file-code';
+                            else if (/zip|rar|7z/.test(item.filetype)) iconClass = 'fa-file-archive';
+                            else if (/excel|spreadsheet/.test(item.filetype)) iconClass = 'fa-file-excel';
+                            else if (/powerpoint|presentation/.test(item.filetype)) iconClass = 'fa-file-powerpoint';
+
+                            fileHtml = `
+                                <div class="notatnik-element-plik" data-file="${item.filename}">
+                                    <span class="notatnik-usun-plik" title="Usuń plik">X</span>
+                                    <i class="fas ${iconClass}"></i>
+                                    ${item.filename}
+                                </div>
+                            `;
+                        }
                     }
                     
                     li.innerHTML = `
-                        <span class="KOZLOWSKISEBASTIAN_NOTATNIK-TEKST">${item.text}&nbsp;</span>
-                        ${imageHtml}
-                        <div class="KOZLOWSKISEBASTIAN_NOTATNIK-AKCJE">
-                            <span class="KOZLOWSKISEBASTIAN_NOTATNIK-EDYTUJ"><i class="fas fa-edit"></i></span>
-                            <span class="KOZLOWSKISEBASTIAN_NOTATNIK-USUN"><i class="fas fa-trash-alt"></i></span>
+                        <span class="notatnik-tekst">${item.text || '&nbsp;'}</span>
+                        ${fileHtml}
+                        <div class="notatnik-akcje">
+                            <span class="notatnik-edytuj"><i class="fas fa-edit"></i></span>
+                            <span class="notatnik-usun"><i class="fas fa-trash-alt"></i></span>
                         </div>
                     `;
                     listaNotatek.appendChild(li);
 
                     // Elementy w liście
-                    const tekst = li.querySelector('.KOZLOWSKISEBASTIAN_NOTATNIK-TEKST');
-                    const edytuj = li.querySelector('.KOZLOWSKISEBASTIAN_NOTATNIK-EDYTUJ');
-                    const usun = li.querySelector('.KOZLOWSKISEBASTIAN_NOTATNIK-USUN');
-                    const usunZdjeciel = li.querySelector('.KOZLOWSKISEBASTIAN_NOTATNIK-USUN-ZDJECIE');
+                    const tekst = li.querySelector('.notatnik-tekst');
+                    const edytuj = li.querySelector('.notatnik-edytuj');
+                    const usun = li.querySelector('.notatnik-usun');
+                    const usunPlik = li.querySelector('.notatnik-usun-plik');
+                    const plikElement = li.querySelector('.notatnik-element-image, .notatnik-element-plik');
                     
                     // Obsługa edycji
                     edytuj.addEventListener('click', () => {
@@ -262,7 +405,6 @@
                         li.classList.add('editing');
                         tekst.focus();
                         
-                        // Zaznacz cały tekst przy edycji
                         const range = document.createRange();
                         range.selectNodeContents(tekst);
                         const selection = window.getSelection();
@@ -274,17 +416,16 @@
                             tekst.classList.remove('editing');
                             li.classList.remove('editing');
                             const nowaWartosc = tekst.textContent.trim();
-                            if (nowaWartosc) {
-                                const transaction = db.transaction(['notatki'], 'readwrite');
-                                const objectStore = transaction.objectStore('notatki');
-                                const getRequest = objectStore.get(item.id);
-                                
-                                getRequest.onsuccess = function() {
-                                    const data = getRequest.result;
-                                    data.text = nowaWartosc;
-                                    objectStore.put(data);
-                                };
-                            }
+                            
+                            const transaction = db.transaction(['notatki'], 'readwrite');
+                            const objectStore = transaction.objectStore('notatki');
+                            const getRequest = objectStore.get(item.id);
+                            
+                            getRequest.onsuccess = function() {
+                                const data = getRequest.result;
+                                data.text = nowaWartosc || '';
+                                objectStore.put(data);
+                            };
                         };
                         
                         tekst.addEventListener('blur', zapiszZmiany);
@@ -296,9 +437,33 @@
                         });
                     });
                     
-                    // Obsługa usuwania zdjęcia
-                    if (usunZdjeciel) {
-                        usunZdjeciel.addEventListener('click', (e) => {
+                    // Obsługa kliknięcia w plik (pobieranie od razu)
+                    if (plikElement) {
+                        plikElement.addEventListener('click', (e) => {
+                            if (e.target.classList.contains('notatnik-usun-plik') || 
+                                e.target.classList.contains('fa')) return;
+                            
+                            const transaction = db.transaction(['notatki'], 'readonly');
+                            const objectStore = transaction.objectStore('notatki');
+                            const getRequest = objectStore.get(item.id);
+                            
+                            getRequest.onsuccess = function() {
+                                const data = getRequest.result;
+                                if (data.file) {
+                                    const link = document.createElement('a');
+                                    link.href = data.file;
+                                    link.download = data.filename;
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                }
+                            };
+                        });
+                    }
+                    
+                    // Obsługa usuwania pliku
+                    if (usunPlik) {
+                        usunPlik.addEventListener('click', (e) => {
                             e.stopPropagation();
                             const transaction = db.transaction(['notatki'], 'readwrite');
                             const objectStore = transaction.objectStore('notatki');
@@ -306,8 +471,9 @@
                             
                             getRequest.onsuccess = function() {
                                 const data = getRequest.result;
-                                data.image = null;
+                                data.file = null;
                                 data.filename = '';
+                                data.filetype = '';
                                 objectStore.put(data);
                                 wyswietlNotatki();
                             };
@@ -331,49 +497,54 @@
             };
         }
 
-        // Obsługa dodawania nowych zdjęć
-        dodajZdjecielBtn.addEventListener('click', () => {
-            inputZdjeciel.click();
+        // Obsługa dodawania nowych plików
+        dodajPlikBtn.addEventListener('click', () => {
+            inputPlik.click();
         });
         
-        inputZdjeciel.addEventListener('change', (e) => {
+        inputPlik.addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
                 aktualnaNazwaPliku = file.name;
-                nazwaPlikuElement.textContent = `Wybrana grafika: ${aktualnaNazwaPliku}`;
+                aktualnyTypPliku = file.type;
+                nazwaPlikuElement.textContent = `Wybrany plik: ${aktualnaNazwaPliku}`;
                 
                 const reader = new FileReader();
                 reader.onload = (event) => {
-                    aktualneZdjeciel = event.target.result;
+                    aktualnyPlik = event.target.result;
                 };
                 reader.readAsDataURL(file);
             } else {
                 aktualnaNazwaPliku = '';
-                nazwaPlikuElement.textContent = '';
+                aktualnyTypPliku = '';
+                nazwaPlikuElement.innerHTML = '&nbsp;';
             }
         });
 
         // Obsługa dodawania nowych notatek
         function dodajNotatke() {
             const tekst = nowaNotatkaInput.value.trim();
-            if (tekst || aktualneZdjeciel) {
+            if (tekst || aktualnyPlik) {
                 const transaction = db.transaction(['notatki'], 'readwrite');
                 const objectStore = transaction.objectStore('notatki');
                 
                 const nowaNotatka = {
-                    text: tekst || '(brak opisu)',
-                    image: aktualneZdjeciel || null,
-                    filename: aktualnaNazwaPliku || ''
+                    text: tekst || '',
+                    file: aktualnyPlik || null,
+                    filename: aktualnaNazwaPliku || '',
+                    filetype: aktualnyTypPliku || '',
+                    createdAt: new Date().getTime()
                 };
                 
                 const request = objectStore.add(nowaNotatka);
                 
                 request.onsuccess = function() {
                     nowaNotatkaInput.value = '';
-                    aktualneZdjeciel = null;
+                    aktualnyPlik = null;
                     aktualnaNazwaPliku = '';
-                    inputZdjeciel.value = '';
-                    nazwaPlikuElement.textContent = '';
+                    aktualnyTypPliku = '';
+                    inputPlik.value = '';
+                    nazwaPlikuElement.innerHTML = '&nbsp;';
                     wyswietlNotatki();
                 };
             }
@@ -387,13 +558,157 @@
             }
         });
 
-        // Poprawka dla wprowadzania znaków specjalnych
-        nowaNotatkaInput.addEventListener('keypress', (e) => {
-            // Zezwól na wszystkie znaki
-            return true;
+        // Eksport notatek do ZIP z czytelnym TXT
+        eksportujBtn.addEventListener('click', async () => {
+            try {
+                const notatki = await new Promise((resolve) => {
+                    const trans = db.transaction(['notatki'], 'readonly');
+                    trans.objectStore('notatki').getAll().onsuccess = (e) => resolve(e.target.result);
+                });
+
+                const zip = new JSZip();
+                const notesFolder = zip.folder("notatki");
+                const filesFolder = zip.folder("pliki");
+                
+                // Tworzenie czytelnego pliku TXT
+                let txtContent = "PRZYBORNIK NOTATNIK - EKSPORT\n";
+                txtContent += `Data eksportu: ${formatujDate(new Date().getTime())}\n\n`;
+                txtContent += "================================\n\n";
+                
+                notatki.forEach((note, index) => {
+                    txtContent += `NOTATKA ${index + 1}\n`;
+                    txtContent += `Data utworzenia: ${formatujDate(note.createdAt || new Date().getTime())}\n`;
+                    txtContent += `Treść: ${note.text || '(brak tekstu)'}\n`;
+                    
+                    if (note.filename) {
+                        txtContent += `Załącznik: ${note.filename}\n`;
+                        txtContent += `Typ pliku: ${note.filetype || 'nieznany'}\n`;
+                    }
+                    
+                    txtContent += "\n================================\n\n";
+                });
+                
+                // Dodaj plik TXT
+                notesFolder.file("PRZYBORNIK_NOTATNIK.txt", txtContent);
+                
+                // Dodaj załączone pliki
+                let fileCount = 0;
+                for (const note of notatki) {
+                    if (note.file) {
+                        const blob = dataURLtoBlob(note.file);
+                        filesFolder.file(note.filename, blob);
+                        fileCount++;
+                    }
+                }
+                
+                // Generuj ZIP z aktualną datą w nazwie
+                const currentDate = new Date();
+                const formattedDate = [
+                    currentDate.getFullYear(),
+                    (currentDate.getMonth() + 1).toString().padStart(2, '0'),
+                    currentDate.getDate().toString().padStart(2, '0')
+                ].join('-');
+                
+                const content = await zip.generateAsync({type: "blob"});
+                const url = URL.createObjectURL(content);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `PRZYBORNIK_NOTATNIK_${formattedDate}.zip`;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                pokazDialog(`Wyeksportowano ${notatki.length} notatek i ${fileCount} plików do ZIP!`);
+            } catch (error) {
+                pokazDialog("Błąd podczas eksportu: " + error.message);
+            }
+        });
+
+        // Import notatek z ZIP
+        importujBtn.addEventListener('click', () => {
+            inputImport.click();
+        });
+
+        inputImport.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            try {
+                const zip = new JSZip();
+                const content = await zip.loadAsync(file);
+                
+                // Sprawdź czy istnieje plik TXT
+                if (!content.files["notatki/PRZYBORNIK_NOTATNIK.txt"]) {
+                    throw new Error("Nieprawidłowy format pliku ZIP - brak pliku PRZYBORNIK_NOTATNIK.txt");
+                }
+                
+                // Odczytaj pliki
+                const pliki = {};
+                for (const [path, file] of Object.entries(content.files)) {
+                    if (path.startsWith("pliki/") && !file.dir) {
+                        const filename = path.replace("pliki/", "");
+                        const fileData = await file.async("base64");
+                        pliki[filename] = `data:application/octet-stream;base64,${fileData}`;
+                    }
+                }
+                
+                // Usuń stare notatki
+                const clearTransaction = db.transaction(['notatki'], 'readwrite');
+                const clearRequest = clearTransaction.objectStore('notatki').clear();
+                
+                clearRequest.onsuccess = () => {
+                    // Dodaj nowe notatki
+                    const addTransaction = db.transaction(['notatki'], 'readwrite');
+                    const objectStore = addTransaction.objectStore('notatki');
+                    
+                    let addedCount = 0;
+                    
+                    // Dodaj notatki z plikami
+                    for (const [filename, fileData] of Object.entries(pliki)) {
+                        const nowaNotatka = {
+                            text: `Załączony plik: ${filename}`,
+                            file: fileData,
+                            filename: filename,
+                            filetype: filename.split('.').pop(),
+                            createdAt: new Date().getTime()
+                        };
+                        objectStore.add(nowaNotatka);
+                        addedCount++;
+                    }
+                    
+                    addTransaction.oncomplete = () => {
+                        wyswietlNotatki();
+                        pokazDialog(`Zaimportowano ${addedCount} plików z archiwum ZIP!`);
+                        inputImport.value = '';
+                    };
+                };
+            } catch (error) {
+                pokazDialog("Błąd importu: " + error.message);
+                inputImport.value = '';
+            }
+        });
+
+        // Pełna swoboda wprowadzania tekstu - usunięcie wszystkich ograniczeń
+        nowaNotatkaInput.addEventListener('keydown', function(e) {
+            // Obsługa tylko Entera do dodawania notatki
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                dodajNotatke();
+            }
+            // Wszystkie inne klawisze działają normalnie
+        });
+
+        // Podczas edycji notatki - pełna swoboda edycji
+        document.addEventListener('keydown', function(e) {
+            const editingElement = document.querySelector('.notatnik-tekst.editing');
+            if (editingElement) {
+                // Pozwól na wszystkie klawisze podczas edycji
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    editingElement.blur();
+                }
+            }
         });
     </script>
-
     <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
 </body>
 </html>
