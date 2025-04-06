@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KALKULATOR</title>
+    <title>LISTA</title>
+    <meta name="theme-color" content="#000000">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        
-        /* KALKULATOR POCZĄTEK */
-        .KOZLOWSKISEBASTIAN_KALKULATOR {
+        /* LISTA POCZĄTEK */
+        .KOZLOWSKISEBASTIAN_LISTY {
             font-family: sans-serif;
             background: #000000;
             color: #FF00FF;
@@ -17,109 +18,177 @@
             padding: 8px;
             display: flex;
             justify-content: center;
+
         }
-        .KOZLOWSKISEBASTIAN_KALKULATOR-KONTENER {
+        .KOZLOWSKISEBASTIAN_LISTY-KONTENER {
             max-width: 520px;
             width: 100%;
             background: #333333;
             padding: 8px;
             border-radius: 8px;
         }
-        .KOZLOWSKISEBASTIAN_KALKULATOR-WYSWIETLACZ {
-            background: #222222;
-            border-radius: 8px;
-            padding: 8px;
-            margin-bottom: 4px;
-        }
-        .KOZLOWSKISEBASTIAN_KALKULATOR-OPERACJE {
-            width: 100%;
-            font-size: 16px;
-            border: none;
-            background: transparent;
-            color: #B0B0B0;
-            outline: none;
-            text-align: right;
-            margin-bottom: 4px;
-            min-height: 20px;
-        }
-        .KOZLOWSKISEBASTIAN_KALKULATOR-WYNIK {
-            width: 100%;
-            font-size: 24px;
-            border: none;
-            background: transparent;
-            color: #B0B0B0;
-            outline: none;
-            text-align: right;
-        }
-        .KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISKI {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-        }
-        .KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK {
-            background: #222222;
-            color: #B0B0B0;
-            border: none;
-            padding: px 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
+        .KOZLOWSKISEBASTIAN_LISTY-WIERSZ {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            gap: 10px;
+            margin-top: 4px;
+            margin-bottom: 4px;
         }
-        .KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK:hover {
+        .KOZLOWSKISEBASTIAN_LISTY-PRZYCISK,
+        .KOZLOWSKISEBASTIAN_LISTY-INPUT {
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px;
+            flex: 1;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.2s;
+        }
+        .KOZLOWSKISEBASTIAN_LISTY-PRZYCISK:hover {
             color: #FF00FF;
             background: #333333;
             transform: translateY(-2px);
         }
-        .KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR,
-        .KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY {
+        .KOZLOWSKISEBASTIAN_LISTY-INPUT:focus {
+            box-shadow: 0 0 0 2px #FFF;
+        }
+        .KOZLOWSKISEBASTIAN_LISTY-LISTA {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            width: 100%;
+            overflow-y: auto;
+            
+        }
+        .KOZLOWSKISEBASTIAN_LISTY-ELEMENT {
+            padding: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #222;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            transition: all 0.2s;
+        }
+        .KOZLOWSKISEBASTIAN_LISTY-ELEMENT:hover {
+            background-color: #333;
+            transform: translateY(-2px);
+        }
+        .KOZLOWSKISEBASTIAN_LISTY-TEKST {
+            color: #B0B0B0;
+            flex-grow: 1;
+        }
+        .KOZLOWSKISEBASTIAN_LISTY-ELEMENT:hover .KOZLOWSKISEBASTIAN_LISTY-TEKST {
             color: #FF00FF;
         }
-        .KOZLOWSKISEBASTIAN_KALKULATOR-ROWNA-SIE {
-            grid-column: span 2;
-            background: #222222;
-            color: #FF00FF;
+        .KOZLOWSKISEBASTIAN_LISTY-AKCJE {
+            display: flex;
+            gap: 4px;
         }
-        /* KALKULATOR KONIEC */
+        .KOZLOWSKISEBASTIAN_LISTY-USUN,
+        .KOZLOWSKISEBASTIAN_LISTY-EDYTUJ {
+            color: #B0B0B0;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .KOZLOWSKISEBASTIAN_LISTY-USUN:hover,
+        .KOZLOWSKISEBASTIAN_LISTY-EDYTUJ:hover {
+            color: #FF00FF;
+            transform: scale(1.1);
+        }
+        .KOZLOWSKISEBASTIAN_LISTY-TEKST.editing {
+            background-color: #333;
+            padding: 8px 8px;
+            border-radius: 4px;
+            cursor: text;
+        }
+        /* LISTA KONIEC */
     </style>
 </head>
-<body class="KOZLOWSKISEBASTIAN_KALKULATOR">
-    <div class="KOZLOWSKISEBASTIAN_KALKULATOR-KONTENER">
-        <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
-            <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
+<body class="KOZLOWSKISEBASTIAN_LISTY">
+    <div class="KOZLOWSKISEBASTIAN_LISTY-KONTENER">
+        <div class="KOZLOWSKISEBASTIAN_LISTY-WIERSZ">
+            <button class="KOZLOWSKISEBASTIAN_LISTY-PRZYCISK">PRZYBORNIK</button>
         </div>
-        <div class="KOZLOWSKISEBASTIAN_KALKULATOR-WYSWIETLACZ">
-            <input type="text" class="KOZLOWSKISEBASTIAN_KALKULATOR-OPERACJE" id="KOZLOWSKISEBASTIAN_KALKULATOR-OPERACJE" readonly>
-            <input type="text" class="KOZLOWSKISEBASTIAN_KALKULATOR-WYNIK" id="KOZLOWSKISEBASTIAN_KALKULATOR-WYNIK" readonly value="0">
+        <div class="KOZLOWSKISEBASTIAN_LISTY-WIERSZ">
+            <input type="text" class="KOZLOWSKISEBASTIAN_LISTY-INPUT" placeholder="DODAJ PRODUKT">
+            <button class="KOZLOWSKISEBASTIAN_LISTY-PRZYCISK">DODAJ</button>
         </div>
-        <div class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISKI">
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY" id="KOZLOWSKISEBASTIAN_KALKULATOR-WYCZYSC"><i class="fas fa-trash-alt"></i></button>
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY" id="KOZLOWSKISEBASTIAN_KALKULATOR-COFNIJ"><i class="fas fa-backspace"></i></button>
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY" id="KOZLOWSKISEBASTIAN_KALKULATOR-ZNAK"><i class="fas fa-plus-minus"></i></button>
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR"><i class="fas fa-divide"></i></button>
-            
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-7"></i></button>
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-8"></i></button>
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-9"></i></button>
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR"><i class="fas fa-times"></i></button>
-            
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-4"></i></button>
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-5"></i></button>
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-6"></i></button>
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR"><i class="fas fa-minus"></i></button>
-            
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-1"></i></button>
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-2"></i></button>
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-3"></i></button>
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR"><i class="fas fa-plus"></i></button>
-            
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-0"></i></button>
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK"><i class="fas fa-circle" style="font-size: 5px;"></i></button>
-            <button class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-ROWNA-SIE" id="KOZLOWSKISEBASTIAN_KALKULATOR-ROWNA-SIE"><i class="fas fa-equals"></i></button>
-        </div>
+        <ul class="KOZLOWSKISEBASTIAN_LISTY-LISTA"></ul>
     </div>
+
+    <script>
+        // Elementy
+        const lista = document.querySelector('.KOZLOWSKISEBASTIAN_LISTY-LISTA');
+        const input = document.querySelector('.KOZLOWSKISEBASTIAN_LISTY-INPUT');
+        const przyciskDodaj = document.querySelectorAll('.KOZLOWSKISEBASTIAN_LISTY-PRZYCISK')[1];
+        
+        // Dane
+        let zakupy = JSON.parse(localStorage.getItem('listaZakupow')) || [];
+        
+        // Renderuj listę
+        function renderList() {
+            lista.innerHTML = '';
+            zakupy.forEach((item, index) => {
+                const li = document.createElement('li');
+                li.className = 'KOZLOWSKISEBASTIAN_LISTY-ELEMENT';
+                li.innerHTML = `
+                    <span class="KOZLOWSKISEBASTIAN_LISTY-TEKST">${item}</span>
+                    <span class="KOZLOWSKISEBASTIAN_LISTY-AKCJE">
+                        <span class="KOZLOWSKISEBASTIAN_LISTY-EDYTUJ"><i class="fas fa-edit"></i></span>
+                        <span class="KOZLOWSKISEBASTIAN_LISTY-USUN"><i class="fas fa-trash-alt"></i></span>
+                    </span>
+                `;
+                
+                // Edycja
+                li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-EDYTUJ').addEventListener('click', () => {
+                    const text = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-TEKST');
+                    text.contentEditable = true;
+                    text.classList.add('editing');
+                    text.focus();
+                    
+                    const save = () => {
+                        text.contentEditable = false;
+                        text.classList.remove('editing');
+                        zakupy[index] = text.textContent.trim();
+                        localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                    };
+                    
+                    text.addEventListener('blur', save);
+                    text.addEventListener('keypress', (e) => e.key === 'Enter' && save());
+                });
+                
+                // Usuwanie
+                li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-USUN').addEventListener('click', () => {
+                    zakupy.splice(index, 1);
+                    localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                    renderList();
+                });
+                
+                lista.appendChild(li);
+            });
+        }
+        
+        // Dodawanie
+        przyciskDodaj.addEventListener('click', () => {
+            const produkt = input.value.trim();
+            if (produkt) {
+                zakupy.push(produkt);
+                localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                input.value = '';
+                renderList();
+            }
+        });
+        
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') przyciskDodaj.click();
+        });
+        
+        // Start
+        renderList();
+    </script>
+</body>
     <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
-    </body>
 </html>
