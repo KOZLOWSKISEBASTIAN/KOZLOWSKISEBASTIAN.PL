@@ -1,0 +1,37 @@
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK {
+            font-family: sans-serif;
+            background: #000000;
+            color: #FF00FF;
+            margin: 0;
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+        }
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
+            max-width: 520px;
+            width: 100%;
+            background: #333333;
+            padding: 8px;
+            border-radius: 8px;
+        }
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ {
+            display: flex;
+            gap: 10px;
+            margin-top: 4px;
+            margin-bottom: 4px;
+        }
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px;
+            flex: 1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
+            color: #FF00FF;
+            background: #333333;
+            transform: translateY(-2px);
+        }
