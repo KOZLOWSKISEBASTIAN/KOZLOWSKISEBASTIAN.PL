@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PODWÓJNA LINIJKA - WERYFIKATOR WYMIARÓW</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
+    <title>WERYFIKATOR WYMIARÓW DOWODU OSOBISTEGO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
+    
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -121,11 +122,11 @@
         /* RAMKA DOWODU OSOBISTEGO (PIONOWA) */
         .id-frame {
             position: absolute;
-            top: 50%;
+            top: 0; /* Zaczyna się w punkcie zero linijki */
             left: 50%;
-            transform: translate(-50%, -50%);
-            width: 54.0mm;  /* Szerokość dowodu */
-            height: 85.6mm; /* Wysokość dowodu */
+            transform: translateX(-50%);
+            width: 54.0mm;  /* Standardowa szerokość dowodu */
+            height: 85.6mm; /* Standardowa wysokość dowodu */
             border: 2px dashed #FFFFFF;
             background-color: rgba(255, 255, 255, 0.1);
             box-sizing: border-box;
@@ -134,13 +135,14 @@
         /* PODPIS POD RAMKĄ */
         .frame-label {
             position: absolute;
-            top: 50%;
+            top: 85.6mm; /* Na wysokości końca ramki */
             left: 50%;
-            transform: translate(-50%, calc(85.6mm / 2 + 20px));
+            transform: translateX(-50%);
             color: white;
             font-size: 14px;
             text-align: center;
             width: 100%;
+            margin-top: 10px;
         }
         
         #video-background {
@@ -173,12 +175,7 @@
             .label-in {
                 right: 30px;
             }
-            .id-frame {
-                width: 54.0mm;
-                height: 85.6mm;
-            }
             .frame-label {
-                transform: translate(-50%, calc(85.6mm / 2 + 15px));
                 font-size: 12px;
             }
         }
@@ -186,25 +183,27 @@
 </head>
 <body>
     <video id="video-background" autoplay playsinline muted></video>
-        <div class="KOZLOWSKISEBASTIAN_LISTY-WIERSZ">
-           <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
-        </div>
     <div class="ruler-container">
         <div class="ruler-mm" id="rulerMm"></div>
         <div class="ruler-in" id="rulerIn"></div>
-        <div class="id-frame"></div>
-        <div class="frame-label">WZÓR DOWODU OSOBISTEGO (54.0 × 85.6 mm)</div>
+        <div class="id-frame" id="idFrame"></div>
+        <div class="frame-label">STANDARDOWY DOWÓD OSOBISTY (54.0 × 85.6 mm)</div>
     </div>
 
     <script>
+        // Stałe wymiary
+        const MM_TO_PX = 3.78; // 96 DPI / 25.4 mm
+        const ID_WIDTH_MM = 54.0;
+        const ID_HEIGHT_MM = 85.6;
+        
         function drawRulers() {
             const rulerMm = document.getElementById('rulerMm');
             const rulerIn = document.getElementById('rulerIn');
+            const idFrame = document.getElementById('idFrame');
             const windowHeight = window.innerHeight;
 
             // LEWA LINIJKA MILIMETROWA
-            const pixelsPerMm = 3.78; // 96 DPI / 25.4 mm
-            const maxMm = Math.floor(windowHeight / pixelsPerMm);
+            const maxMm = Math.floor(windowHeight / MM_TO_PX);
             
             for (let i = 0; i <= maxMm; i++) {
                 const mark = document.createElement('div');
@@ -219,21 +218,21 @@
                     mark.className = 'mark mark-mm';
                 }
                 
-                mark.style.top = `${i * pixelsPerMm}px`;
+                mark.style.top = `${i * MM_TO_PX}px`;
                 rulerMm.appendChild(mark);
 
                 if (i % 100 === 0) {
                     const label = document.createElement('div');
                     label.className = 'mark-label label-mm';
                     label.innerText = `${i/10} cm`;
-                    label.style.top = `${i * pixelsPerMm}px`;
+                    label.style.top = `${i * MM_TO_PX}px`;
                     rulerMm.appendChild(label);
                 }
                 else if (i % 10 === 0) {
                     const label = document.createElement('div');
                     label.className = 'mark-label label-mm';
                     label.innerText = `${i} mm`;
-                    label.style.top = `${i * pixelsPerMm}px`;
+                    label.style.top = `${i * MM_TO_PX}px`;
                     rulerMm.appendChild(label);
                 }
             }
@@ -266,6 +265,14 @@
                     rulerIn.appendChild(label);
                 }
             }
+
+            // Ustawienie ramki dowodu
+            idFrame.style.width = `${ID_WIDTH_MM * MM_TO_PX}px`;
+            idFrame.style.height = `${ID_HEIGHT_MM * MM_TO_PX}px`;
+            
+            // Ustawienie etykiety
+            const frameLabel = document.querySelector('.frame-label');
+            frameLabel.style.top = `${ID_HEIGHT_MM * MM_TO_PX}px`;
         }
 
         function setupCamera() {
