@@ -18,7 +18,6 @@
             padding: 8px;
             display: flex;
             justify-content: center;
-
         }
         .KOZLOWSKISEBASTIAN_LISTY-KONTENER {
             max-width: 520px;
@@ -59,7 +58,6 @@
             margin-bottom: 0px;
             width: 100%;
             overflow-y: auto;
-            
         }
         .KOZLOWSKISEBASTIAN_LISTY-ELEMENT {
             padding: 8px;
@@ -113,319 +111,92 @@
            <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
         </div>
         <div class="KOZLOWSKISEBASTIAN_LISTY-WIERSZ">
-            <input type="text" class="KOZLOWSKISEBASTIAN_LISTY-INPUT" placeholder="DODAJ PRODUKT">
-            <button class="KOZLOWSKISEBASTIAN_LISTY-PRZYCISK">DODAJ</button>
+            <input type="text" class="KOZLOWSKISEBASTIAN_LISTY-INPUT" id="KOZLOWSKISEBASTIAN_LISTY-INPUT" placeholder="DODAJ PRODUKT">
+            <button class="KOZLOWSKISEBASTIAN_LISTY-PRZYCISK" id="KOZLOWSKISEBASTIAN_LISTY-DODAJ">DODAJ</button>
         </div>
-        <ul class="KOZLOWSKISEBASTIAN_LISTY-LISTA"></ul>
+        <ul class="KOZLOWSKISEBASTIAN_LISTY-LISTA" id="KOZLOWSKISEBASTIAN_LISTY-LISTA"></ul>
     </div>
+
     <script>
-        const modal = document.getElementById('lista-zakupow-modal');
-        const listaZakupow = document.getElementById('lista-zakupow');
-        const dodajDoListyBtn = document.getElementById('dodaj-do-listy');
-        const powrotDoKartBtn = document.getElementById('powrot-do-kart');
-        const nowyProduktInput = document.getElementById('nowy-produkt');
+        // Elementy DOM
+        const listaZakupow = document.getElementById('KOZLOWSKISEBASTIAN_LISTY-LISTA');
+        const dodajDoListyBtn = document.getElementById('KOZLOWSKISEBASTIAN_LISTY-DODAJ');
+        const nowyProduktInput = document.getElementById('KOZLOWSKISEBASTIAN_LISTY-INPUT');
 
         let zakupy = JSON.parse(localStorage.getItem('listaZakupow')) || [];
-
-        modal.style.display = 'block'; // Domyślnie widoczne dla tej strony
 
         function wyswietlListeZakupow() {
             listaZakupow.innerHTML = '';
             zakupy.forEach((produkt, index) => {
-                setTimeout(() => {
-                    const li = document.createElement('li');
-                    li.setAttribute('data-index', index);
-                    li.draggable = true;
-                    li.innerHTML = `
-                        <span class="produkt-text" contenteditable="false">${produkt}</span>
-                        <span class="edit-btn" data-index="${index}"><i class="fas fa-edit"></i></span>
-                        <span class="usun-z-listy" data-index="${index}"><i class="fas fa-trash-alt"></i></span>
-                    `;
-                    listaZakupow.appendChild(li);
+                const li = document.createElement('li');
+                li.className = 'KOZLOWSKISEBASTIAN_LISTY-ELEMENT';
+                li.setAttribute('data-index', index);
+                li.innerHTML = `
+                    <span class="KOZLOWSKISEBASTIAN_LISTY-TEKST">${produkt}</span>
+                    <span class="KOZLOWSKISEBASTIAN_LISTY-AKCJE">
+                        <span class="KOZLOWSKISEBASTIAN_LISTY-EDYTUJ"><i class="fas fa-edit"></i></span>
+                        <span class="KOZLOWSKISEBASTIAN_LISTY-USUN"><i class="fas fa-trash-alt"></i></span>
+                    </span>
+                `;
+                listaZakupow.appendChild(li);
+
+                // Obsługa edycji
+                const tekst = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-TEKST');
+                const edytuj = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-EDYTUJ');
+                
+                edytuj.addEventListener('click', () => {
+                    tekst.contentEditable = true;
+                    tekst.classList.add('editing');
+                    tekst.focus();
                     
-                    li.addEventListener('touchstart', handleTouchStart, { passive: false });
-                    li.addEventListener('touchmove', handleTouchMove, { passive: false });
-                    li.addEventListener('touchend', handleTouchEnd, { passive: false });
+                    const zapiszZmiany = () => {
+                        tekst.contentEditable = false;
+                        tekst.classList.remove('editing');
+                        const nowaWartosc = tekst.textContent.trim();
+                        if (nowaWartosc) {
+                            zakupy[index] = nowaWartosc;
+                            localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                        }
+                    };
                     
-                    li.addEventListener('dragstart', handleDragStart);
-                    li.addEventListener('dragover', handleDragOver);
-                    li.addEventListener('dragenter', handleDragEnter);
-                    li.addEventListener('dragleave', handleDragLeave);
-                    li.addEventListener('dragend', handleDragEnd);
-                    li.addEventListener('drop', handleDrop);
-                    
-                    const produktText = li.querySelector('.produkt-text');
-                    const editBtn = li.querySelector('.edit-btn');
-                    
-                    editBtn.addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        produktText.contentEditable = true;
-                        produktText.classList.add('editing');
-                        produktText.focus();
-                        
-                        const originalValue = produktText.textContent;
-                        
-                        produktText.addEventListener('blur', function handler() {
-                            produktText.contentEditable = false;
-                            produktText.classList.remove('editing');
-                            const newValue = produktText.textContent.trim();
-                            
-                            if (newValue && newValue !== originalValue) {
-                                zakupy[index] = newValue;
-                                localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
-                            } else if (!newValue) {
-                                produktText.textContent = originalValue;
-                            }
-                            
-                            produktText.removeEventListener('blur', handler);
-                        });
-                        
-                        produktText.addEventListener('keypress', function(e) {
-                            if (e.key === 'Enter') {
-                                e.preventDefault();
-                                produktText.blur();
-                            }
-                        });
-                    });
-                    
-                    li.querySelector('.usun-z-listy').addEventListener('click', function(e) {
-                        e.stopPropagation();
-                        const index = parseInt(this.getAttribute('data-index'));
-                        zakupy.splice(index, 1);
-                        localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
-                        
-                        li.style.transform = 'translateX(100%)';
-                        li.style.opacity = '0';
-                        setTimeout(() => {
-                            wyswietlListeZakupow();
-                        }, 300);
-                    });
-                }, index * 50);
+                    tekst.addEventListener('blur', zapiszZmiany, { once: true });
+                    tekst.addEventListener('keypress', (e) => e.key === 'Enter' && zapiszZmiany());
+                });
+                
+                // Obsługa usuwania
+                const usun = li.querySelector('.KOZLOWSKISEBASTIAN_LISTY-USUN');
+                usun.addEventListener('click', () => {
+                    zakupy.splice(index, 1);
+                    localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
+                    li.style.transform = 'translateX(100%)';
+                    li.style.opacity = '0';
+                    setTimeout(() => {
+                        wyswietlListeZakupow();
+                    }, 300);
+                });
             });
         }
 
-        let draggedItem = null;
-        let placeholder = null;
-        let startY = 0;
-        let scrollTop = 0;
-        let isDragging = false;
-
-        function handleTouchStart(e) {
-            if (e.touches.length !== 1) return;
-            
-            const touch = e.touches[0];
-            const li = e.currentTarget;
-            
-            if (touch.target.classList.contains('usun-z-listy') || 
-                touch.target.classList.contains('edit-btn')) {
-                return;
-            }
-            
-            e.preventDefault();
-            
-            if (!isDragging) {
-                isDragging = true;
-                startY = touch.pageY;
-                scrollTop = listaZakupow.scrollTop;
-            }
-        }
-
-        function handleTouchMove(e) {
-            if (!isDragging || e.touches.length !== 1) return;
-            e.preventDefault();
-            
-            const touch = e.touches[0];
-            const y = touch.pageY;
-            const walk = (y - startY) * -1;
-            listaZakupow.scrollTop = scrollTop + walk;
-        }
-
-        function handleTouchEnd() {
-            isDragging = false;
-        }
-
-        function handleDragStart(e) {
-            draggedItem = this;
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html', this.innerHTML);
-            
-            if ('ontouchstart' in window) {
-                this.style.transform = 'scale(1.05)';
-                this.style.boxShadow = '0 5px 20px rgba(0,0,0,0.4)';
-                this.style.transition = 'none';
-            }
-
-            setTimeout(() => {
-                this.classList.add('dragging');
-            }, 0);
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            
-            if (draggedItem === this) return;
-            
-            const rect = this.getBoundingClientRect();
-            const middleY = rect.top + rect.height / 2;
-            
-            if (e.clientY < middleY) {
-                if (placeholder && placeholder.nextSibling === this) {
-                    return;
-                }
-                if (!placeholder) {
-                    placeholder = document.createElement('li');
-                    placeholder.className = 'placeholder';
-                    listaZakupow.insertBefore(placeholder, this);
-                } else {
-                    listaZakupow.insertBefore(placeholder, this);
-                }
-            } else {
-                if (placeholder && placeholder.previousSibling === this) {
-                    return;
-                }
-                if (!placeholder) {
-                    placeholder = document.createElement('li');
-                    placeholder.className = 'placeholder';
-                    listaZakupow.insertBefore(placeholder, this.nextSibling);
-                } else {
-                    listaZakupow.insertBefore(placeholder, this.nextSibling);
-                }
-            }
-        }
-
-        function handleDragEnter(e) {
-            e.preventDefault();
-            this.classList.add('over');
-        }
-
-        function handleDragLeave() {
-            this.classList.remove('over');
-        }
-
-        function handleDragEnd() {
-            this.classList.remove('dragging');
-            
-            if ('ontouchstart' in window) {
-                this.style.transform = '';
-                this.style.boxShadow = '';
-                this.style.transition = 'all 0.3s';
-            }
-            
-            if (placeholder && placeholder.parentNode) {
-                placeholder.parentNode.removeChild(placeholder);
-            }
-            placeholder = null;
-            
-            document.querySelectorAll('#lista-zakupow li').forEach(li => {
-                li.classList.remove('over');
-            });
-        }
-
-        function handleDrop(e) {
-            e.stopPropagation();
-            e.preventDefault();
-            
-            if (draggedItem !== this) {
-                if (placeholder && placeholder.parentNode) {
-                    placeholder.parentNode.removeChild(placeholder);
-                }
-                placeholder = null;
-                
-                const fromIndex = parseInt(draggedItem.getAttribute('data-index'));
-                const toIndex = parseInt(this.getAttribute('data-index'));
-                
-                const [removed] = zakupy.splice(fromIndex, 1);
-                zakupy.splice(toIndex, 0, removed);
-                
-                localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
-                wyswietlListeZakupow();
-            }
-            
-            return false;
-        }
-
-        listaZakupow.addEventListener('touchstart', function(e) {
-            if (e.touches.length !== 1) return;
-            
-            const touch = e.touches[0];
-            const li = touch.target.closest('li');
-            
-            if (!li) {
-                isDragging = true;
-                startY = touch.pageY;
-                scrollTop = this.scrollTop;
-            }
-        }, { passive: false });
-
-        listaZakupow.addEventListener('touchmove', function(e) {
-            if (!isDragging || e.touches.length !== 1) return;
-            e.preventDefault();
-            
-            const touch = e.touches[0];
-            const y = touch.pageY;
-            const walk = (y - startY) * -1;
-            this.scrollTop = scrollTop + walk;
-        }, { passive: false });
-
-        listaZakupow.addEventListener('touchend', function() {
-            isDragging = false;
-        }, { passive: false });
-
-        wyswietlListeZakupow();
-
-        powrotDoKartBtn.addEventListener('click', function() {
-            modal.style.display = 'none';
-            this.style.transform = 'scale(0.95)';
-            setTimeout(() => {
-                this.style.transform = '';
-            }, 200);
-        });
-
-        window.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
-
-        dodajDoListyBtn.addEventListener('click', function() {
+        // Obsługa dodawania nowych produktów
+        dodajDoListyBtn.addEventListener('click', () => {
             const produkt = nowyProduktInput.value.trim();
             if (produkt) {
                 zakupy.push(produkt);
                 localStorage.setItem('listaZakupow', JSON.stringify(zakupy));
                 nowyProduktInput.value = '';
-                
-                this.style.transform = 'scale(0.95)';
-                setTimeout(() => {
-                    this.style.transform = '';
-                }, 200);
-                
                 wyswietlListeZakupow();
-            } else {
-                nowyProduktInput.style.animation = 'shake 0.5s';
-                setTimeout(() => {
-                    nowyProduktInput.style.animation = '';
-                }, 500);
             }
         });
 
-        nowyProduktInput.addEventListener('keypress', function(e) {
+        nowyProduktInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 dodajDoListyBtn.click();
             }
         });
 
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes shake {
-                0%, 100% { transform: translateX(0); }
-                20%, 60% { transform: translateX(-5px); }
-                40%, 80% { transform: translateX(5px); }
-            }
-        `;
-        document.head.appendChild(style);
+        // Inicjalizacja
+        wyswietlListeZakupow();
     </script>
     <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
 </body>
-
 </html>
