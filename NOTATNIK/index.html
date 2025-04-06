@@ -7,7 +7,7 @@
     <meta name="theme-color" content="#000000">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
+	    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
     <style>
         /* NOTATNIK POCZĄTEK */
         body {
@@ -219,15 +219,10 @@
             background: rgba(0,0,0,0.7);
             z-index: 999;
         }
-        /* NOTATNIK KONIEC */
     </style>
 </head>
 <body>
     <div class="notatnik-kontener">
-        
-        <div class="notatnik-wiersz">
-            <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
-        </div>
         <div class="notatnik-wiersz">
             <input type="text" class="notatnik-input" id="notatnik-input" placeholder="DODAJ NOTATKĘ">
         </div>
@@ -255,7 +250,7 @@
     <script>
         // Inicjalizacja IndexedDB
         let db;
-        const request = indexedDB.open('NotatnikDB', 7);
+        const request = indexedDB.open('NotatnikDB', 8);
 
         request.onerror = function(event) {
             console.error("Błąd przy otwieraniu bazy danych:", event.target.error);
@@ -296,7 +291,6 @@
         let aktualnyPlik = null;
         let aktualnaNazwaPliku = '';
         let aktualnyTypPliku = '';
-        let plikDoPobrania = null;
 
         // Funkcje pomocnicze
         function pokazDialog(tekst) {
@@ -558,7 +552,7 @@
             }
         });
 
-        // Eksport notatek do ZIP z czytelnym TXT
+        // Eksport notatek do ZIP
         eksportujBtn.addEventListener('click', async () => {
             try {
                 const notatki = await new Promise((resolve) => {
@@ -570,7 +564,6 @@
                 const notesFolder = zip.folder("notatki");
                 const filesFolder = zip.folder("pliki");
                 
-                // Tworzenie czytelnego pliku TXT
                 let txtContent = "PRZYBORNIK NOTATNIK - EKSPORT\n";
                 txtContent += `Data eksportu: ${formatujDate(new Date().getTime())}\n\n`;
                 txtContent += "================================\n\n";
@@ -588,10 +581,8 @@
                     txtContent += "\n================================\n\n";
                 });
                 
-                // Dodaj plik TXT
                 notesFolder.file("PRZYBORNIK_NOTATNIK.txt", txtContent);
                 
-                // Dodaj załączone pliki
                 let fileCount = 0;
                 for (const note of notatki) {
                     if (note.file) {
@@ -601,7 +592,6 @@
                     }
                 }
                 
-                // Generuj ZIP z aktualną datą w nazwie
                 const currentDate = new Date();
                 const formattedDate = [
                     currentDate.getFullYear(),
@@ -636,12 +626,10 @@
                 const zip = new JSZip();
                 const content = await zip.loadAsync(file);
                 
-                // Sprawdź czy istnieje plik TXT
                 if (!content.files["notatki/PRZYBORNIK_NOTATNIK.txt"]) {
                     throw new Error("Nieprawidłowy format pliku ZIP - brak pliku PRZYBORNIK_NOTATNIK.txt");
                 }
                 
-                // Odczytaj pliki
                 const pliki = {};
                 for (const [path, file] of Object.entries(content.files)) {
                     if (path.startsWith("pliki/") && !file.dir) {
@@ -651,18 +639,15 @@
                     }
                 }
                 
-                // Usuń stare notatki
                 const clearTransaction = db.transaction(['notatki'], 'readwrite');
                 const clearRequest = clearTransaction.objectStore('notatki').clear();
                 
                 clearRequest.onsuccess = () => {
-                    // Dodaj nowe notatki
                     const addTransaction = db.transaction(['notatki'], 'readwrite');
                     const objectStore = addTransaction.objectStore('notatki');
                     
                     let addedCount = 0;
                     
-                    // Dodaj notatki z plikami
                     for (const [filename, fileData] of Object.entries(pliki)) {
                         const nowaNotatka = {
                             text: `Załączony plik: ${filename}`,
@@ -687,28 +672,10 @@
             }
         });
 
-        // Pełna swoboda wprowadzania tekstu - usunięcie wszystkich ograniczeń
-        nowaNotatkaInput.addEventListener('keydown', function(e) {
-            // Obsługa tylko Entera do dodawania notatki
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                dodajNotatke();
-            }
-            // Wszystkie inne klawisze działają normalnie
-        });
-
-        // Podczas edycji notatki - pełna swoboda edycji
-        document.addEventListener('keydown', function(e) {
-            const editingElement = document.querySelector('.notatnik-tekst.editing');
-            if (editingElement) {
-                // Pozwól na wszystkie klawisze podczas edycji
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    editingElement.blur();
-                }
-            }
-        });
+        // Inicjalizacja - wyświetl notatki po załadowaniu strony
+        window.addEventListener('load', wyswietlNotatki);
     </script>
-    <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
+	    <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
+
 </body>
 </html>
