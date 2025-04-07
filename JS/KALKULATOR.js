@@ -1,178 +1,161 @@
-const KSGROUP_OPERACJE = document.getElementById('KSGROUP-OPERACJE');
-const KSGROUP_WYNIK = document.getElementById('KSGROUP-WYNIK');
-let KSGROUP_AKTUALNE_DANE = '';
-let KSGROUP_POPRZEDNIE_DANE = '';
-let KSGROUP_OPERACJA = null;
-let KSGROUP_RESETUJ_EKRAN = false;
-
-const KSGROUP_MAPA_KLAWISZY = {
-    '0': '0', '1': '1', '2': '2', '3': '3', '4': '4',
-    '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
-    '.': '.', ',': '.', '+': '+', '-': '-', '*': '*', 
-    'x': '*', 'X': '*', '/': '/', 'Enter': '=', '=': '=', 
-    'Escape': 'C', 'Backspace': '⌫', 'Delete': 'C',
-    '_': '+/-'
+        const KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJE = document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-OPERACJE');
+        const KOZLOWSKISEBASTIAN_KALKULATOR_WYNIK = document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-WYNIK');
+                let KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE = '';
+                let KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE_DANE = '';
+                let KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA = null;
+                let KOZLOWSKISEBASTIAN_KALKULATOR_RESETUJ_EKRAN = false;
+        const KOZLOWSKISEBASTIAN_KALKULATOR_MAPA = {
+                KLAWISZE: {
+                '0': '0', '1': '1', '2': '2', '3': '3', '4': '4',
+                '5': '5', '6': '6', '7': '7', '8': '8', '9': '9',
+                '.': '.', ',': '.', '+': '+', '-': '-', '*': '*', 
+                'x': '*', 'X': '*', '/': '/', 'Enter': '=', '=': '=', 
+                'Escape': 'C', 'Backspace': '⌫', 'Delete': 'C',
+                '_': '+/-'
+        },
+                IKONY: {
+                'fa-trash-alt': 'C',
+                'fa-backspace': '⌫',
+                'fa-plus-minus': '+/-',
+                'fa-divide': '/',
+                'fa-7': '7',
+                'fa-8': '8',
+                'fa-9': '9',
+                'fa-times': '*',
+                'fa-4': '4',
+                'fa-5': '5',
+                'fa-6': '6',
+                'fa-minus': '-',
+                'fa-1': '1',
+                'fa-2': '2',
+                'fa-3': '3',
+                'fa-plus': '+',
+                'fa-0': '0',
+                'fa-circle': '.',
+                'fa-equals': '='
+        }
 };
-
-const KSGROUP_MAPA_IKON = {
-    'fa-trash-alt': 'C',
-    'fa-backspace': '⌫',
-    'fa-plus-minus': '+/-',
-    'fa-divide': '/',
-    'fa-7': '7',
-    'fa-8': '8',
-    'fa-9': '9',
-    'fa-times': '*',
-    'fa-4': '4',
-    'fa-5': '5',
-    'fa-6': '6',
-    'fa-minus': '-',
-    'fa-1': '1',
-    'fa-2': '2',
-    'fa-3': '3',
-    'fa-plus': '+',
-    'fa-0': '0',
-    'fa-circle': '.',
-    'fa-equals': '='
-};
-
-document.querySelectorAll('.KSGROUP-PRZYCISK').forEach(przycisk => {
-    przycisk.addEventListener('click', function() {
-        const ikona = this.querySelector('i');
+        document.querySelectorAll('.KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISK').forEach(przycisk => {
+        przycisk.addEventListener('click', () => {
+            const ikona = przycisk.querySelector('i');
         if (ikona) {
             const klasaIkony = Array.from(ikona.classList).find(klasa => klasa.startsWith('fa-'));
-            if (klasaIkony && KSGROUP_MAPA_IKON[klasaIkony]) {
-                KSGROUP_OBSLUZ_WEJSCIE(KSGROUP_MAPA_IKON[klasaIkony]);
+        if (klasaIkony && KOZLOWSKISEBASTIAN_KALKULATOR_MAPA.IKONY[klasaIkony]) {
+                KOZLOWSKISEBASTIAN_KALKULATOR_OBSLUZ_WEJSCIE(KOZLOWSKISEBASTIAN_KALKULATOR_MAPA.IKONY[klasaIkony]);
             }
         }
     });
 });
-
-document.addEventListener('keydown', function(event) {
-    const klawisz = event.key;
-    if (KSGROUP_MAPA_KLAWISZY.hasOwnProperty(klawisz)) {
+        document.addEventListener('keydown', event => {
+            const klawisz = event.key;
+        if (KOZLOWSKISEBASTIAN_KALKULATOR_MAPA.KLAWISZE[klawisz]) {
         event.preventDefault();
-        KSGROUP_OBSLUZ_WEJSCIE(KSGROUP_MAPA_KLAWISZY[klawisz]);
+        KOZLOWSKISEBASTIAN_KALKULATOR_OBSLUZ_WEJSCIE(KOZLOWSKISEBASTIAN_KALKULATOR_MAPA.KLAWISZE[klawisz]);
     }
 });
-
-function KSGROUP_OBSLUZ_WEJSCIE(wartosc) {
-    if (KSGROUP_WYNIK.value === 'Error') {
-        KSGROUP_WYCZYSC_WSZYSTKO();
-    }
-    
-    if (wartosc === 'C') {
-        KSGROUP_WYCZYSC_WSZYSTKO();
-    } else if (wartosc === '+/-') {
-        KSGROUP_ZMIEN_ZNAK();
-    } else if (wartosc === '⌫') {
-        KSGROUP_COFNIJ();
-    } else if (wartosc === '=') {
-        KSGROUP_OBLICZ_WYNIK();
-    } else if (['+', '-', '*', '/'].includes(wartosc)) {
-        KSGROUP_USTAW_OPERACJE(wartosc);
-    } else if (wartosc.match(/[0-9.]/)) {
-        KSGROUP_DODAJ_LICZBE(wartosc);
-    }
-    KSGROUP_AKTUALIZUJ_WYSWIETLACZ();
-}
-
-function KSGROUP_WYCZYSC_WSZYSTKO() {
-    KSGROUP_AKTUALNE_DANE = '';
-    KSGROUP_POPRZEDNIE_DANE = '';
-    KSGROUP_OPERACJA = null;
-    KSGROUP_RESETUJ_EKRAN = false;
-    KSGROUP_WYNIK.value = '0';
-    KSGROUP_OPERACJE.value = '';
-}
-
-function KSGROUP_ZMIEN_ZNAK() {
-    if (KSGROUP_AKTUALNE_DANE) {
-        KSGROUP_AKTUALNE_DANE = (parseFloat(KSGROUP_AKTUALNE_DANE) * -1).toString();
-    } else if (KSGROUP_WYNIK.value !== '0') {
-        KSGROUP_AKTUALNE_DANE = (parseFloat(KSGROUP_WYNIK.value) * -1).toString();
-    }
-}
-
-function KSGROUP_COFNIJ() {
-    if (KSGROUP_AKTUALNE_DANE.length > 0) {
-        KSGROUP_AKTUALNE_DANE = KSGROUP_AKTUALNE_DANE.slice(0, -1);
-    } else if (KSGROUP_WYNIK.value !== '0' && !KSGROUP_OPERACJA) {
-        KSGROUP_AKTUALNE_DANE = KSGROUP_WYNIK.value.slice(0, -1);
-    }           
-    
-    if (KSGROUP_AKTUALNE_DANE === '' || KSGROUP_AKTUALNE_DANE === '-') {
-        KSGROUP_AKTUALNE_DANE = '';
-        KSGROUP_WYNIK.value = '0';
-    }
-}
-
-function KSGROUP_DODAJ_LICZBE(liczba) {
-    if (KSGROUP_RESETUJ_EKRAN) {
-        KSGROUP_AKTUALNE_DANE = '';
-        KSGROUP_RESETUJ_EKRAN = false;
-    }
-    
-    if (liczba === '.' && KSGROUP_AKTUALNE_DANE.includes('.')) return;
-    
-    if (KSGROUP_AKTUALNE_DANE === '0' && liczba !== '.') {
-        KSGROUP_AKTUALNE_DANE = liczba;
-    } else {
-        KSGROUP_AKTUALNE_DANE += liczba;
-    }
-}
-
-function KSGROUP_USTAW_OPERACJE(operacja) {
-    if (KSGROUP_AKTUALNE_DANE === '' && KSGROUP_POPRZEDNIE_DANE && KSGROUP_OPERACJA) {
-        KSGROUP_OPERACJA = operacja;
+        function KOZLOWSKISEBASTIAN_KALKULATOR_OBSLUZ_WEJSCIE(wartosc) {
+        if (KOZLOWSKISEBASTIAN_KALKULATOR_WYNIK.value === 'Error') {
+                KOZLOWSKISEBASTIAN_KALKULATOR_WYCZYSC_WSZYSTKO();
         return;
     }
-    
-    if (KSGROUP_OPERACJA && !KSGROUP_RESETUJ_EKRAN) {
-        KSGROUP_OBLICZ_WYNIK(false);
+    const operatory = ['+', '-', '*', '/'];
+    const akcje = {
+        'C': KOZLOWSKISEBASTIAN_KALKULATOR_WYCZYSC_WSZYSTKO,
+        '+/-': KOZLOWSKISEBASTIAN_KALKULATOR_ZMIEN_ZNAK,
+        '⌫': KOZLOWSKISEBASTIAN_KALKULATOR_COFNIJ,
+        '=': KOZLOWSKISEBASTIAN_KALKULATOR_OBLICZ_WYNIK
+    };
+    if (akcje[wartosc]) {
+        akcje[wartosc]();
+    } else if (operatory.includes(wartosc)) {
+        KOZLOWSKISEBASTIAN_KALKULATOR_USTAW_OPERACJE(wartosc);
+    } else if (wartosc.match(/[0-9.]/)) {
+        KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_LICZBE(wartosc);
     }
-    
-    KSGROUP_POPRZEDNIE_DANE = KSGROUP_AKTUALNE_DANE || KSGROUP_WYNIK.value;
-    KSGROUP_OPERACJA = operacja;
-    KSGROUP_AKTUALNE_DANE = '';
-    KSGROUP_RESETUJ_EKRAN = true;
+    KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALIZUJ_WYSWIETLACZ();
 }
-
-function KSGROUP_OBLICZ_WYNIK(czyAktualizowacWyswietlacz = true) {
-    if (!KSGROUP_OPERACJA || !KSGROUP_POPRZEDNIE_DANE) return;
-    
-    let wynik;
-    const poprzednia = parseFloat(KSGROUP_POPRZEDNIE_DANE);
-    const aktualna = parseFloat(KSGROUP_AKTUALNE_DANE) || parseFloat(KSGROUP_WYNIK.value) || 0;
-    
-    switch (KSGROUP_OPERACJA) {
-        case '+': wynik = poprzednia + aktualna; break;
-        case '-': wynik = poprzednia - aktualna; break;
-        case '*': wynik = poprzednia * aktualna; break;
-        case '/': wynik = aktualna === 0 ? 'Error' : poprzednia / aktualna; break;
-        default: return;
+function KOZLOWSKISEBASTIAN_KALKULATOR_WYCZYSC_WSZYSTKO() {
+    KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE = '';
+    KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE_DANE = '';
+    KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA = null;
+    KOZLOWSKISEBASTIAN_KALKULATOR_RESETUJ_EKRAN = false;
+    KOZLOWSKISEBASTIAN_KALKULATOR_WYNIK.value = '0';
+    KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJE.value = '';
+}
+function KOZLOWSKISEBASTIAN_KALKULATOR_ZMIEN_ZNAK() {
+    const wartosc = KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE || KOZLOWSKISEBASTIAN_KALKULATOR_WYNIK.value;
+    if (wartosc && wartosc !== '0') {
+        KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE = (parseFloat(wartosc) * -1).toString();
     }
-    
+}
+function KOZLOWSKISEBASTIAN_KALKULATOR_COFNIJ() {
+    if (KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE.length > 0) {
+        KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE = KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE.slice(0, -1);
+    } else if (KOZLOWSKISEBASTIAN_KALKULATOR_WYNIK.value !== '0' && !KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA) {
+        KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE = KOZLOWSKISEBASTIAN_KALKULATOR_WYNIK.value.slice(0, -1);
+    }
+    if (!KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE || KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE === '-') {
+        KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE = '';
+        KOZLOWSKISEBASTIAN_KALKULATOR_WYNIK.value = '0';
+    }
+}
+function KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_LICZBE(liczba) {
+    if (KOZLOWSKISEBASTIAN_KALKULATOR_RESETUJ_EKRAN) {
+        KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE = '';
+        KOZLOWSKISEBASTIAN_KALKULATOR_RESETUJ_EKRAN = false;
+    }
+    if (liczba === '.' && KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE.includes('.')) return;
+    KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE = 
+        (KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE === '0' && liczba !== '.') 
+            ? liczba 
+            : KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE + liczba;
+}
+function KOZLOWSKISEBASTIAN_KALKULATOR_USTAW_OPERACJE(operacja) {
+    if (KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE === '' && KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE_DANE && KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA) {
+        KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA = operacja;
+        return;
+    }
+    if (KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA && !KOZLOWSKISEBASTIAN_KALKULATOR_RESETUJ_EKRAN) {
+        KOZLOWSKISEBASTIAN_KALKULATOR_OBLICZ_WYNIK(false);
+    }
+    KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE_DANE = KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE || KOZLOWSKISEBASTIAN_KALKULATOR_WYNIK.value;
+    KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA = operacja;
+    KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE = '';
+    KOZLOWSKISEBASTIAN_KALKULATOR_RESETUJ_EKRAN = true;
+}
+function KOZLOWSKISEBASTIAN_KALKULATOR_OBLICZ_WYNIK(czyAktualizowacWyswietlacz = true) {
+    if (!KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA || !KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE_DANE) return;
+    const poprzednia = parseFloat(KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE_DANE);
+    const aktualna = parseFloat(KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE) || 
+                     parseFloat(KOZLOWSKISEBASTIAN_KALKULATOR_WYNIK.value) || 0;
+    const operacje = {
+        '+': poprzednia + aktualna,
+        '-': poprzednia - aktualna,
+        '*': poprzednia * aktualna,
+        '/': aktualna === 0 ? 'Error' : poprzednia / aktualna
+    };
+    let wynik = operacje[KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA];
     if (typeof wynik === 'number' && !isNaN(wynik)) {
         wynik = Math.round(wynik * 100000) / 100000;
     }
-    
     if (czyAktualizowacWyswietlacz) {
-        KSGROUP_OPERACJE.value = `${KSGROUP_POPRZEDNIE_DANE} ${KSGROUP_OPERACJA} ${KSGROUP_AKTUALNE_DANE || aktualna} = ${wynik}`;
+        KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJE.value = 
+            `${KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE_DANE} ${KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA} ` +
+            `${KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE || aktualna} = ${wynik}`;
     }
-    
-    KSGROUP_AKTUALNE_DANE = wynik.toString();
-    KSGROUP_POPRZEDNIE_DANE = '';
-    KSGROUP_OPERACJA = null;
-    KSGROUP_RESETUJ_EKRAN = true;
+    KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE = wynik.toString();
+    KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE_DANE = '';
+    KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA = null;
+    KOZLOWSKISEBASTIAN_KALKULATOR_RESETUJ_EKRAN = true;
 }
-
-function KSGROUP_AKTUALIZUJ_WYSWIETLACZ() {
-    KSGROUP_WYNIK.value = KSGROUP_AKTUALNE_DANE || (KSGROUP_OPERACJA ? '0' : KSGROUP_WYNIK.value);
-    
-    if (KSGROUP_OPERACJA && KSGROUP_POPRZEDNIE_DANE && !KSGROUP_RESETUJ_EKRAN) {
-        KSGROUP_OPERACJE.value = `${KSGROUP_POPRZEDNIE_DANE} ${KSGROUP_OPERACJA}`;
-    } else if (!KSGROUP_OPERACJE.value.includes('=')) {
-        KSGROUP_OPERACJE.value = '';
+function KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALIZUJ_WYSWIETLACZ() {
+    KOZLOWSKISEBASTIAN_KALKULATOR_WYNIK.value = 
+        KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE_DANE || 
+        (KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA ? '0' : KOZLOWSKISEBASTIAN_KALKULATOR_WYNIK.value);
+    if (KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA && KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE_DANE && !KOZLOWSKISEBASTIAN_KALKULATOR_RESETUJ_EKRAN) {
+        KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJE.value = 
+            `${KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE_DANE} ${KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA}`;
+    } else if (!KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJE.value.includes('=')) {
+        KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJE.value = '';
     }
 }
