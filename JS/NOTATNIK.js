@@ -1,7 +1,7 @@
         let db;
         const request = indexedDB.open('NotatnikDB', 8);
         request.onerror = function(event) {
-            console.error("Błąd przy otwieraniu bazy danych:", event.target.error);
+            console.error("BŁĄD:", event.target.error);
         };
         request.onsuccess = function(event) {
             db = event.target.result;
@@ -82,7 +82,7 @@
                         if (item.filetype && item.filetype.startsWith('image/')) {
                             fileHtml = `
                                 <div class="KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT-IMAGE-CONTAINER">
-                                    <span class="KOZLOWSKISEBASTIAN_NOTATNIK-USUN-PLIK" title="Usuń plik">X</span>
+                                    <span class="KOZLOWSKISEBASTIAN_NOTATNIK-USUN-PLIK" title="USUŃ">X</span>
                                     <img src="${item.file}" class="KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT-IMAGE" data-file="${item.filename}">
                                 </div>
                             `;
@@ -97,7 +97,7 @@
                             else if (/powerpoint|presentation/.test(item.filetype)) iconClass = 'fa-file-powerpoint';
                             fileHtml = `
                                 <div class="KOZLOWSKISEBASTIAN_NOTATNIK-ELEMENT-PLIK" data-file="${item.filename}">
-                                    <span class="KOZLOWSKISEBASTIAN_NOTATNIK-USUN-PLIK" title="Usuń plik">X</span>
+                                    <span class="KOZLOWSKISEBASTIAN_NOTATNIK-USUN-PLIK" title="USUŃ">X</span>
                                     <i class="fas ${iconClass}"></i>
                                     ${item.filename}
                                 </div>
@@ -294,9 +294,9 @@
                 a.download = `PRZYBORNIK_NOTATNIK_${formattedDate}.zip`;
                 a.click();
                 URL.revokeObjectURL(url);
-                KOZLOWSKISEBASTIAN_NOTATNIK_POKAZ_DIALOG(`Wyeksportowano ${notatki.length} notatek i ${fileCount} plików do ZIP!`);
+                KOZLOWSKISEBASTIAN_NOTATNIK_POKAZ_DIALOG(`WYEKSPORTOWANO ${notatki.length} NOTATEK I ${fileCount} PLIKÓW DO ARCHIWUM ZIP!`);
             } catch (error) {
-                KOZLOWSKISEBASTIAN_NOTATNIK_POKAZ_DIALOG("Błąd podczas eksportu: " + error.message);
+                KOZLOWSKISEBASTIAN_NOTATNIK_POKAZ_DIALOG("BŁĄD: " + error.message);
             }
         });
         KOZLOWSKISEBASTIAN_NOTATNIK_IMPORTUJ_BTN.addEventListener('click', () => {
@@ -309,7 +309,7 @@
                 const zip = new JSZip();
                 const content = await zip.loadAsync(file);
                 if (!content.files["notatki/PRZYBORNIK_NOTATNIK.txt"]) {
-                    throw new Error("Nieprawidłowy format pliku ZIP - brak pliku PRZYBORNIK_NOTATNIK.txt");
+                    throw new Error("BŁĄD: NIEPRAWIDŁOWY FORMAT ZIP - BRAK PLIKU PRZYBORNIK_NOTATNIK.txt");
                 }
                 const pliki = {};
                 for (const [path, file] of Object.entries(content.files)) {
@@ -338,12 +338,12 @@
                     }
                     addTransaction.oncomplete = () => {
                         KOZLOWSKISEBASTIAN_NOTATNIK_WYSWIETL_NOTATKI();
-                        KOZLOWSKISEBASTIAN_NOTATNIK_POKAZ_DIALOG(`Zaimportowano ${addedCount} plików z archiwum ZIP!`);
+                        KOZLOWSKISEBASTIAN_NOTATNIK_POKAZ_DIALOG(`ZAIMPORTOWANO ${addedCount} PLIKÓW Z ARCHIWUM ZIP!`);
                         KOZLOWSKISEBASTIAN_NOTATNIK_IMPORT_INPUT.value = '';
                     };
                 };
             } catch (error) {
-                KOZLOWSKISEBASTIAN_NOTATNIK_POKAZ_DIALOG("Błąd importu: " + error.message);
+                KOZLOWSKISEBASTIAN_NOTATNIK_POKAZ_DIALOG("BŁĄD: " + error.message);
                 KOZLOWSKISEBASTIAN_NOTATNIK_IMPORT_INPUT.value = '';
             }
         });
