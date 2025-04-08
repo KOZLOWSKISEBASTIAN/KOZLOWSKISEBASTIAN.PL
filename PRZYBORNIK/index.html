@@ -12,6 +12,7 @@
             min-height: 100vh;
             background: #000000;
             transition: background-color 0.3s;
+            touch-action: none; /* Zapobiega domyślnemu zachowaniu dotykowemu */
         }
 
         .KOZLOWSKISEBASTIAN_CIEMNY {
@@ -27,22 +28,24 @@
             position: fixed;
             bottom: 20px;
             left: 20px;
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             cursor: default;
             z-index: 1000;
-            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
             position: absolute;
-            width: 40px;
-            height: 40px;
+            width: 100%;
+            height: 100%;
             background-color: #F5F5F5;
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
             transition: all 0.5s ease;
             transform-origin: center;
             cursor: pointer;
+            touch-action: none;
         }
 
         .KOZLOWSKISEBASTIAN_CIEMNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
@@ -73,6 +76,7 @@
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.3s;
+            touch-action: none;
         }
 
         .ROZSZERZONY + .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
@@ -83,19 +87,17 @@
         .KOZLOWSKISEBASTIAN_TROJKAT {
             position: absolute;
             width: 100%;
+            height: 100%;
             cursor: pointer;
+            touch-action: none;
         }
 
         .KOZLOWSKISEBASTIAN_TROJKAT_JEDEN {
-            top: 0;
-            height: 100vh;
             clip-path: polygon(100% 0, 100% 100%, 0 100%);
             background-color: #333333;
         }
 
         .KOZLOWSKISEBASTIAN_TROJKAT_DWA {
-            top: 0;
-            height: 100vh;
             clip-path: polygon(0 0, 100% 0, 0 100%);
             background-color: #f5f5f5;
         }
@@ -138,6 +140,7 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s;
+            touch-action: manipulation;
         }
 
         .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
@@ -209,92 +212,92 @@
         let isDragging = false;
         let startX, startY, initialLeft, initialTop;
         let clickStartTime = 0;
-        const CLICK_MAX_DURATION = 200; // czas w ms, aby uznać za kliknięcie
+        const CLICK_MAX_DURATION = 200;
+        const CLICK_MAX_DISTANCE = 10;
 
-        // Rozpoczęcie przeciągania
-        kontener.addEventListener('mousedown', startDrag);
-        kontener.addEventListener('touchstart', startDrag, { passive: false });
+        // Rozpoczęcie interakcji
+        ksztalt.addEventListener('mousedown', startInteraction);
+        ksztalt.addEventListener('touchstart', startInteraction, { passive: false });
 
-        function startDrag(e) {
-            // Zapisz czas rozpoczęcia
+        function startInteraction(e) {
+            // Zapisz czas i pozycję początkową
             clickStartTime = Date.now();
+            isDragging = false;
             
-            // Zapisz początkową pozycję kursora i kontenera
+            const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
+            
+            startX = clientX;
+            startY = clientY;
+            
             const rect = kontener.getBoundingClientRect();
-            if (e.type === 'mousedown') {
-                startX = e.clientX;
-                startY = e.clientY;
-            } else {
-                startX = e.touches[0].clientX;
-                startY = e.touches[0].clientY;
-                e.preventDefault();
-            }
-            
             initialLeft = rect.left;
             initialTop = rect.top;
             
-            // Rozpocznij śledzenie ruchu
-            document.addEventListener('mousemove', drag);
-            document.addEventListener('touchmove', drag, { passive: false });
-            document.addEventListener('mouseup', stopDrag);
-            document.addEventListener('touchend', stopDrag);
+            // Dodaj nasłuchiwacze
+            document.addEventListener('mousemove', handleMove);
+            document.addEventListener('touchmove', handleMove, { passive: false });
+            document.addEventListener('mouseup', endInteraction);
+            document.addEventListener('touchend', endInteraction);
             
+            e.preventDefault();
             e.stopPropagation();
         }
 
-        // Przeciąganie
-        function drag(e) {
-            let clientX, clientY;
+        // Obsługa ruchu
+        function handleMove(e) {
+            const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
             
-            if (e.type === 'mousemove') {
-                clientX = e.clientX;
-                clientY = e.clientY;
-            } else {
-                clientX = e.touches[0].clientX;
-                clientY = e.touches[0].clientY;
-                e.preventDefault();
-            }
-            
-            // Oblicz przesunięcie
+            // Sprawdź czy to przeciąganie
             const dx = clientX - startX;
             const dy = clientY - startY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
             
-            // Jeśli przesunięcie znaczące, uznaj to za przeciąganie
-            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+            if (!isDragging && distance > CLICK_MAX_DISTANCE) {
                 isDragging = true;
             }
             
-            // Oblicz nową pozycję
-            const newX = initialLeft + dx;
-            const newY = initialTop + dy;
-            
-            // Ogranicz do granic okna
-            const maxX = window.innerWidth - kontener.offsetWidth;
-            const maxY = window.innerHeight - kontener.offsetHeight;
-            
-            kontener.style.left = `${Math.min(Math.max(0, newX), maxX)}px`;
-            kontener.style.top = `${Math.min(Math.max(0, newY), maxY)}px`;
+            if (isDragging) {
+                // Przesuń hexagon
+                const newX = initialLeft + dx;
+                const newY = initialTop + dy;
+                
+                // Ogranicz do granic ekranu
+                const maxX = window.innerWidth - kontener.offsetWidth;
+                const maxY = window.innerHeight - kontener.offsetHeight;
+                
+                kontener.style.left = `${Math.min(Math.max(0, newX), maxX)}px`;
+                kontener.style.top = `${Math.min(Math.max(0, newY), maxY)}px`;
+                
+                e.preventDefault();
+                e.stopPropagation();
+            }
         }
 
-        // Zakończenie przeciągania
-        function stopDrag(e) {
-            // Sprawdź czy to było kliknięcie (krótkie i bez znaczącego przesunięcia)
+        // Zakończenie interakcji
+        function endInteraction(e) {
+            // Sprawdź czy to kliknięcie
             const clickDuration = Date.now() - clickStartTime;
-            if (!isDragging && clickDuration < CLICK_MAX_DURATION) {
+            const isClick = !isDragging && clickDuration < CLICK_MAX_DURATION;
+            
+            // Usuń nasłuchiwacze
+            document.removeEventListener('mousemove', handleMove);
+            document.removeEventListener('touchmove', handleMove);
+            document.removeEventListener('mouseup', endInteraction);
+            document.removeEventListener('touchend', endInteraction);
+            
+            if (isClick) {
                 handleClick();
             }
             
-            // Zresetuj stan
             isDragging = false;
             
-            // Usuń nasłuchiwacze
-            document.removeEventListener('mousemove', drag);
-            document.removeEventListener('touchmove', drag);
-            document.removeEventListener('mouseup', stopDrag);
-            document.removeEventListener('touchend', stopDrag);
+            e.preventDefault();
+            e.stopPropagation();
         }
 
-        // Obsługa kliknięcia (animacja i rozszerzenie)
+        // Obsługa kliknięcia
         function handleClick() {
             if (!ksztalt.classList.contains('ROZSZERZONY')) {
                 ksztalt.classList.add('OBRACAJ');
@@ -332,14 +335,34 @@
 
         // Obsługa przycisków przybornika
         document.querySelectorAll('.KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK').forEach(btn => {
-            btn.onclick = () => {
+            btn.addEventListener('click', function(e) {
                 const polish = {'Ą':'A','Ć':'C','Ę':'E','Ł':'L','Ń':'N','Ó':'O','Ś':'S','Ź':'Z','Ż':'Z','ą':'a','ć':'c','ę':'e','ł':'l','ń':'n','ó':'o','ś':'s','ź':'z','ż':'z'};
                 const path = btn.innerText.toUpperCase().replace(/[ĄĆĘŁŃÓŚŹŻąćęłńóśźż]/g, m => polish[m]).replace(/ /g, '-');
                 if (btn.innerText.trim() !== '') {
                     location.href = `https://kozlowskisebastian.pl/${path}/`;
                 }
-            };
+            });
         });
+
+        // Zapobieganie domyślnemu zachowaniu dotykowemu
+        document.addEventListener('touchstart', function(e) {
+            if (e.target === ksztalt || e.target === kontener) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Inicjalizacja pozycji hexagonu na mobilnych
+        function initHexagonPosition() {
+            if (window.innerWidth <= 768) {
+                kontener.style.left = '20px';
+                kontener.style.top = 'auto';
+                kontener.style.bottom = '20px';
+                kontener.style.right = 'auto';
+            }
+        }
+
+        window.addEventListener('load', initHexagonPosition);
+        window.addEventListener('resize', initHexagonPosition);
     </script>
 </body>
 </html>
