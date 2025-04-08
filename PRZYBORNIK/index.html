@@ -29,8 +29,9 @@
             left: 20px;
             width: 40px;
             height: 40px;
-            cursor: pointer;
+            cursor: move;
             z-index: 1000;
+            touch-action: none; /* Zapobiega domyślnemu zachowaniu dotykowemu */
         }
 
         .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
@@ -40,6 +41,7 @@
             background-color: #F5F5F5;
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
             transition: all 0.5s ease;
+            transform-origin: center;
         }
 
         .KOZLOWSKISEBASTIAN_CIEMNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
@@ -48,6 +50,16 @@
 
         .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
             background-color: #333333;
+        }
+
+        /* Animacja obrotu */
+        .OBRACAJ {
+            animation: obrot 0.5s ease-out;
+        }
+
+        @keyframes obrot {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* STYLE PRZEŁĄCZNIKA */
@@ -193,10 +205,89 @@
         const trojkaty = document.querySelectorAll('.KOZLOWSKISEBASTIAN_TROJKAT');
         const body = document.body;
 
-        kontener.addEventListener('click', function(e) {
-            if (!ksztalt.classList.contains('ROZSZERZONY')) {
-                ksztalt.classList.add('ROZSZERZONY');
+        // Funkcja do przeciągania hexagonu
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        kontener.addEventListener('mousedown', startDrag);
+        kontener.addEventListener('touchstart', startDrag, { passive: false });
+
+        function startDrag(e) {
+            if (e.target === ksztalt || e.target === kontener) {
+                isDragging = true;
+                
+                // Oblicz przesunięcie kursora względem kontenera
+                const rect = kontener.getBoundingClientRect();
+                if (e.type === 'mousedown') {
+                    offsetX = e.clientX - rect.left;
+                    offsetY = e.clientY - rect.top;
+                } else {
+                    offsetX = e.touches[0].clientX - rect.left;
+                    offsetY = e.touches[0].clientY - rect.top;
+                    e.preventDefault(); // Zapobiega domyślnemu zachowaniu dotykowemu
+                }
+                
+                // Zmień kursor podczas przeciągania
+                document.body.style.cursor = 'grabbing';
+                kontener.style.cursor = 'grabbing';
+                
                 e.stopPropagation();
+            }
+        }
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('touchmove', drag, { passive: false });
+
+        function drag(e) {
+            if (!isDragging) return;
+            
+            let clientX, clientY;
+            
+            if (e.type === 'mousemove') {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            } else {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+                e.preventDefault(); // Zapobiega domyślnemu zachowaniu dotykowemu
+            }
+            
+            // Oblicz nową pozycję kontenera
+            const newX = clientX - offsetX;
+            const newY = clientY - offsetY;
+            
+            // Ogranicz pozycję do granic okna
+            const maxX = window.innerWidth - kontener.offsetWidth;
+            const maxY = window.innerHeight - kontener.offsetHeight;
+            
+            kontener.style.left = `${Math.min(Math.max(0, newX), maxX)}px`;
+            kontener.style.top = `${Math.min(Math.max(0, newY), maxY)}px`;
+        }
+
+        document.addEventListener('mouseup', stopDrag);
+        document.addEventListener('touchend', stopDrag);
+
+        function stopDrag() {
+            isDragging = false;
+            document.body.style.cursor = '';
+            kontener.style.cursor = 'move';
+        }
+
+        // Funkcja do animacji obrotu i rozszerzania
+        kontener.addEventListener('click', function(e) {
+            if (!isDragging) { // Tylko jeśli nie przeciągaliśmy
+                if (!ksztalt.classList.contains('ROZSZERZONY')) {
+                    // Dodaj animację obrotu
+                    ksztalt.classList.add('OBRACAJ');
+                    
+                    // Po zakończeniu animacji obrotu, rozszerz
+                    setTimeout(() => {
+                        ksztalt.classList.remove('OBRACAJ');
+                        ksztalt.classList.add('ROZSZERZONY');
+                    }, 500);
+                    
+                    e.stopPropagation();
+                }
             }
         });
 
