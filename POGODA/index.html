@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pogoda Live</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
+    <style>
+        /* Styl bazujący na notatniku */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #000000;
+            color: #B0B0B0;
+            margin: 0;
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+        
+        .pogoda-kontener {
+            max-width: 800px;
+            width: 100%;
+            background: #333333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+        }
+        
+        h1 {
+            color: #FF00FF;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .pogoda-wiersz {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .pogoda-input, .pogoda-przycisk {
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s;
+        }
+        
+        .pogoda-input {
+            flex: 2;
+        }
+        
+        .pogoda-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #FF00FF;
+        }
+        
+        .pogoda-przycisk {
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .pogoda-przycisk:hover {
+            background: #3a3a3a;
+            color: #FF00FF;
+            transform: translateY(-2px);
+        }
+        
+        .pogoda-karta {
+            background: #222222;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            position: relative;
+            overflow: hidden;
+            border-left: 4px solid #FF00FF;
+        }
+        
+        .pogoda-karta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,0,255,0.1) 0%, rgba(0,0,0,0) 100%);
+            pointer-events: none;
+        }
+        
+        .pogoda-lokalizacja {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #FF00FF;
+        }
+        
+        .pogoda-miasto {
+            font-size: 24px;
+            font-weight: 400;
+        }
+        
+        .pogoda-data {
+            font-size: 14px;
+            color: #B0B0B0;
+        }
+        
+        .pogoda-glowne {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .pogoda-temperatura {
+            font-size: 48px;
+            font-weight: 300;
+            color: #FF00FF;
+            position: relative;
+        }
+        
+        .pogoda-temperatura::after {
+            content: '°C';
+            position: absolute;
+            font-size: 24px;
+            top: 5px;
+        }
+        
+        .pogoda-ikona {
+            font-size: 60px;
+            color: #FF00FF;
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        
+        .pogoda-opis {
+            text-transform: capitalize;
+            font-size: 18px;
+            color: #B0B0B0;
+            margin-bottom: 20px;
+        }
+        
+        .pogoda-szczegoly {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .pogoda-szczegol {
+            background: #333333;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .pogoda-szczegol:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.1);
+        }
+        
+        .pogoda-szczegol-ikona {
+            font-size: 20px;
+            color: #FF00FF;
+            margin-bottom: 5px;
+        }
+        
+        .pogoda-szczegol-wartosc {
+            font-size: 18px;
+            font-weight: 400;
+            margin-bottom: 5px;
+            color: #FF00FF;
+        }
+        
+        .pogoda-szczegol-etykieta {
+            font-size: 12px;
+            color: #B0B0B0;
+            text-transform: uppercase;
+        }
+        
+        .pogoda-prognoza {
+            margin-top: 20px;
+        }
+        
+        .pogoda-prognoza-tytul {
+            color: #FF00FF;
+            font-size: 16px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .pogoda-prognoza-dni {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+        }
+        
+        .pogoda-prognoza-dzien {
+            background: #333333;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .pogoda-prognoza-dzien:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.1);
+        }
+        
+        .pogoda-prognoza-dzien-nazwa {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: #FF00FF;
+        }
+        
+        .pogoda-prognoza-dzien-ikona {
+            font-size: 24px;
+            color: #FF00FF;
+            margin-bottom: 10px;
+        }
+        
+        .pogoda-prognoza-dzien-temp {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .pogoda-prognoza-dzien-max {
+            font-weight: 400;
+            color: #FF00FF;
+        }
+        
+        .pogoda-prognoza-dzien-min {
+            color: #B0B0B0;
+        }
+        
+        .pogoda-ladowanie {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .pogoda-spinner {
+            border: 3px solid rgba(255, 0, 255, 0.2);
+            border-radius: 50%;
+            border-top: 3px solid #FF00FF;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .pogoda-blad {
+            color: #ff4b4b;
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 75, 75, 0.1);
+            border-radius: 8px;
+            border-left: 4px solid #ff4b4b;
+        }
+        
+        @media (max-width: 600px) {
+            .pogoda-wiersz {
+                flex-direction: column;
+            }
+            
+            .pogoda-glowne {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .pogoda-temperatura {
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="pogoda-kontener">
+     <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
+            <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
+        </div>
+       
+        <div class="pogoda-wiersz">
+            <input type="text" class="pogoda-input" id="pogoda-miasto" placeholder="Wpisz nazwę miasta..." value="Warszawa">
+            <button class="pogoda-przycisk" id="pogoda-szukaj"><i class="fas fa-search"></i> Szukaj</button>
+            <button class="pogoda-przycisk" id="pogoda-lokalizacja"><i class="fas fa-location-arrow"></i> Lokalizacja</button>
+        </div>
+        
+        <div id="pogoda-tresc">
+            <div class="pogoda-ladowanie">
+                <div class="pogoda-spinner"></div>
+                <p>Ładowanie danych pogodowych...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dane miast na sztywno
+        const miasta = {
+            "Warszawa": { lat: 52.2297, lon: 21.0122 },
+            "Kraków": { lat: 50.0647, lon: 19.9450 },
+            "Wrocław": { lat: 51.1079, lon: 17.0385 },
+            "Poznań": { lat: 52.4064, lon: 16.9252 },
+            "Gdańsk": { lat: 54.3520, lon: 18.6466 },
+            "Łódź": { lat: 51.7592, lon: 19.4560 },
+            "Katowice": { lat: 50.2649, lon: 19.0238 },
+            "Gdynia": { lat: 54.5189, lon: 18.5305 },
+            "Szczecin": { lat: 53.4285, lon: 14.5528 },
+            "Bydgoszcz": { lat: 53.1235, lon: 18.0084 }
+        };
+        
+        // Elementy DOM
+        const miastoInput = document.getElementById('pogoda-miasto');
+        const szukajBtn = document.getElementById('pogoda-szukaj');
+        const lokalizacjaBtn = document.getElementById('pogoda-lokalizacja');
+        const pogodaTresc = document.getElementById('pogoda-tresc');
+        
+        // Nasłuchiwanie zdarzeń
+        szukajBtn.addEventListener('click', () => {
+            const nazwaMiasta = miastoInput.value.trim();
+            if (nazwaMiasta && miasta[nazwaMiasta]) {
+                pobierzPogodeDlaMiasta(nazwaMiasta);
+            } else {
+                pokazBlad("Nie znaleziono miasta. Spróbuj: Warszawa, Kraków, Wrocław, Poznań, Gdańsk, Łódź, Katowice, Gdynia, Szczecin, Bydgoszcz");
+            }
+        });
+        
+        lokalizacjaBtn.addEventListener('click', () => {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    pozycja => {
+                        pobierzPogodePoLokalizacji(pozycja.coords.latitude, pozycja.coords.longitude);
+                    },
+                    blad => {
+                        pokazBlad("Nie udało się uzyskać lokalizacji. Spróbuj wpisać miasto ręcznie.");
+                    }
+                );
+            } else {
+                pokazBlad("Twoja przeglądarka nie obsługuje geolokalizacji. Spróbuj wpisać miasto ręcznie.");
+            }
+        });
+        
+        // Funkcje pogodowe
+        async function pobierzPogodeDlaMiasta(nazwaMiasta) {
+            pokazLadowanie();
+            try {
+                const { lat, lon } = miasta[nazwaMiasta];
+                await pobierzDanePogodowe(lat, lon, nazwaMiasta);
+            } catch (error) {
+                pokazBlad("Nie udało się pobrać danych pogodowych. Spróbuj ponownie.");
+            }
+        }
+        
+        async function pobierzPogodePoLokalizacji(lat, lon) {
+            pokazLadowanie();
+            try {
+                // Używamy OpenStreetMap Nominatim do pobrania nazwy miasta
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}`);
+                const data = await response.json();
+                const nazwaMiasta = data.address.city || data.address.town || data.address.village || "Twoja lokalizacja";
+                await pobierzDanePogodowe(lat, lon, nazwaMiasta);
+            } catch (error) {
+                pokazBlad("Nie udało się pobrać danych pogodowych. Spróbuj ponownie.");
+            }
+        }
+        
+        async function pobierzDanePogodowe(lat, lon, nazwaMiasta) {
+            try {
+                // Symulacja danych pogodowych (w rzeczywistości użyj API np. OpenWeatherMap)
+                const danePogodowe = generujPrzykladoweDane(nazwaMiasta);
+                wyswietlPogode(danePogodowe);
+            } catch (error) {
+                pokazBlad("Nie udało się pobrać danych pogodowych. Spróbuj ponownie.");
+            }
+        }
+        
+        // Wyświetlanie pogody
+        function wyswietlPogode(dane) {
+            const dzien = new Date();
+            const dniTygodnia = ['Niedziela', 'Poniedziałek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota'];
+            const miesiace = ['stycznia', 'lutego', 'marca', 'kwietnia', 'maja', 'czerwca', 'lipca', 'sierpnia', 'września', 'października', 'listopada', 'grudnia'];
+            
+            const html = `
+                <div class="pogoda-karta">
+                    <div class="pogoda-lokalizacja">
+                        <div class="pogoda-miasto">${dane.miasto}</div>
+                        <div class="pogoda-data">${dniTygodnia[dzien.getDay()]}, ${dzien.getDate()} ${miesiace[dzien.getMonth()]} ${dzien.getFullYear()}</div>
+                    </div>
+                    
+                    <div class="pogoda-glowne">
+                        <div>
+                            <div class="pogoda-temperatura">${dane.aktualna.temperatura}</div>
+                            <div class="pogoda-opis">${dane.aktualna.opis}</div>
+                        </div>
+                        <div>
+                            <i class="fas ${pobierzIkonePogody(dane.aktualna.stan)} pogoda-ikona"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="pogoda-szczegoly">
+                        <div class="pogoda-szczegol">
+                            <div class="pogoda-szczegol-ikona"><i class="fas fa-temperature-low"></i></div>
+                            <div class="pogoda-szczegol-wartosc">${dane.aktualna.odczuwalna}°C</div>
+                            <div class="pogoda-szczegol-etykieta">Odczuwalna</div>
+                        </div>
+                        <div class="pogoda-szczegol">
+                            <div class="pogoda-szczegol-ikona"><i class="fas fa-tint"></i></div>
+                            <div class="pogoda-szczegol-wartosc">${dane.aktualna.wilgotnosc}%</div>
+                            <div class="pogoda-szczegol-etykieta">Wilgotność</div>
+                        </div>
+                        <div class="pogoda-szczegol">
+                            <div class="pogoda-szczegol-ikona"><i class="fas fa-wind"></i></div>
+                            <div class="pogoda-szczegol-wartosc">${dane.aktualna.wiatr} km/h</div>
+                            <div class="pogoda-szczegol-etykieta">Wiatr</div>
+                        </div>
+                        <div class="pogoda-szczegol">
+                            <div class="pogoda-szczegol-ikona"><i class="fas fa-cloud-rain"></i></div>
+                            <div class="pogoda-szczegol-wartosc">${dane.aktualna.opady} mm</div>
+                            <div class="pogoda-szczegol-etykieta">Opady</div>
+                        </div>
+                    </div>
+                    
+                    <div class="pogoda-prognoza">
+                        <div class="pogoda-prognoza-tytul">Prognoza na 5 dni</div>
+                        <div class="pogoda-prognoza-dni">
+                            ${dane.prognoza.map(dzien => `
+                                <div class="pogoda-prognoza-dzien">
+                                    <div class="pogoda-prognoza-dzien-nazwa">${dzien.dzien}</div>
+                                    <div class="pogoda-prognoza-dzien-ikona">
+                                        <i class="fas ${pobierzIkonePogody(dzien.stan)}"></i>
+                                    </div>
+                                    <div class="pogoda-prognoza-dzien-temp">
+                                        <span class="pogoda-prognoza-dzien-max">${dzien.max}°</span>
+                                        <span class="pogoda-prognoza-dzien-min">${dzien.min}°</span>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            pogodaTresc.innerHTML = html;
+        }
+        
+        // Funkcje pomocnicze
+        function pokazLadowanie() {
+            pogodaTresc.innerHTML = `
+                <div class="pogoda-ladowanie">
+                    <div class="pogoda-spinner"></div>
+                    <p>Ładowanie danych pogodowych...</p>
+                </div>
+            `;
+        }
+        
+        function pokazBlad(wiadomosc) {
+            pogodaTresc.innerHTML = `
+                <div class="pogoda-blad">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>${wiadomosc}</p>
+                </div>
+            `;
+        }
+        
+        function pobierzIkonePogody(stan) {
+            const ikony = {
+                'clear': 'fa-sun',
+                'clouds': 'fa-cloud',
+                'rain': 'fa-cloud-rain',
+                'thunderstorm': 'fa-bolt',
+                'snow': 'fa-snowflake',
+                'mist': 'fa-smog'
+            };
+            return ikony[stan] || 'fa-cloud-sun';
+        }
+        
+        // Generowanie przykładowych danych pogodowych
+        function generujPrzykladoweDane(nazwaMiasta) {
+            const stany = ['clear', 'clouds', 'rain', 'thunderstorm', 'snow', 'mist'];
+            const opisy = {
+                'clear': 'Słonecznie',
+                'clouds': 'Pochmurno',
+                'rain': 'Deszcz',
+                'thunderstorm': 'Burza',
+                'snow': 'Śnieg',
+                'mist': 'Mgła'
+            };
+            
+            const aktualnyStan = stany[Math.floor(Math.random() * stany.length)];
+            
+            // Prognoza na 5 dni
+            const prognoza = [];
+            const dni = ['Pon', 'Wt', 'Śr', 'Czw', 'Pt', 'Sob', 'Niedz'];
+            const dzisiaj = new Date();
+            
+            for (let i = 1; i <= 5; i++) {
+                const nastepnyDzien = new Date(dzisiaj);
+                nastepnyDzien.setDate(dzisiaj.getDate() + i);
+                const stanDnia = stany[Math.floor(Math.random() * stany.length)];
+                
+                prognoza.push({
+                    dzien: dni[nastepnyDzien.getDay()],
+                    stan: stanDnia,
+                    max: Math.floor(Math.random() * 15) + 10,
+                    min: Math.floor(Math.random() * 10) + 5
+                });
+            }
+            
+            return {
+                miasto: nazwaMiasta,
+                aktualna: {
+                    temperatura: Math.floor(Math.random() * 15) + 10,
+                    odczuwalna: Math.floor(Math.random() * 15) + 8,
+                    wilgotnosc: Math.floor(Math.random() * 50) + 30,
+                    wiatr: Math.floor(Math.random() * 30) + 5,
+                    opady: (Math.random() * 10).toFixed(1),
+                    stan: aktualnyStan,
+                    opis: opisy[aktualnyStan]
+                },
+                prognoza: prognoza
+            };
+        }
+        
+        // Załaduj domyślnie pogodę dla Warszawy
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                pobierzPogodeDlaMiasta('Warszawa');
+            }, 1500);
+        });
+    </script>
+    <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
+</body>
+</html>
