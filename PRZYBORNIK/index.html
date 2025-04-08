@@ -29,9 +29,9 @@
             left: 20px;
             width: 40px;
             height: 40px;
-            cursor: move;
+            cursor: default;
             z-index: 1000;
-            touch-action: none; /* Zapobiega domyślnemu zachowaniu dotykowemu */
+            touch-action: none;
         }
 
         .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
@@ -42,6 +42,7 @@
             clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
             transition: all 0.5s ease;
             transform-origin: center;
+            cursor: pointer;
         }
 
         .KOZLOWSKISEBASTIAN_CIEMNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
@@ -99,7 +100,7 @@
             background-color: #f5f5f5;
         }
 
-        /* STYLE PRZYBORNIKA - ZMIENIONE */
+        /* STYLE PRZYBORNIKA */
         .KOZLOWSKISEBASTIAN_PRZYBORNIK {
             font-family: sans-serif;
             background: inherit;
@@ -108,7 +109,6 @@
             padding: 8px;
             display: flex;
             justify-content: center;
-            /* USUNIĘTO min-height: 100vh */
             box-sizing: border-box;
         }
 
@@ -119,7 +119,7 @@
             padding: 8px;
             border-radius: 8px;
             margin: 0 auto;
-            box-shadow: 0 0 15px rgba(0,0,0,0.5); /* Dodane dla lepszej widoczności */
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
         }
 
         .KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ {
@@ -205,42 +205,45 @@
         const trojkaty = document.querySelectorAll('.KOZLOWSKISEBASTIAN_TROJKAT');
         const body = document.body;
 
-        // Funkcja do przeciągania hexagonu
+        // Zmienne do przeciągania
         let isDragging = false;
-        let offsetX, offsetY;
+        let startX, startY, initialLeft, initialTop;
+        let clickStartTime = 0;
+        const CLICK_MAX_DURATION = 200; // czas w ms, aby uznać za kliknięcie
 
+        // Rozpoczęcie przeciągania
         kontener.addEventListener('mousedown', startDrag);
         kontener.addEventListener('touchstart', startDrag, { passive: false });
 
         function startDrag(e) {
-            if (e.target === ksztalt || e.target === kontener) {
-                isDragging = true;
-                
-                // Oblicz przesunięcie kursora względem kontenera
-                const rect = kontener.getBoundingClientRect();
-                if (e.type === 'mousedown') {
-                    offsetX = e.clientX - rect.left;
-                    offsetY = e.clientY - rect.top;
-                } else {
-                    offsetX = e.touches[0].clientX - rect.left;
-                    offsetY = e.touches[0].clientY - rect.top;
-                    e.preventDefault(); // Zapobiega domyślnemu zachowaniu dotykowemu
-                }
-                
-                // Zmień kursor podczas przeciągania
-                document.body.style.cursor = 'grabbing';
-                kontener.style.cursor = 'grabbing';
-                
-                e.stopPropagation();
+            // Zapisz czas rozpoczęcia
+            clickStartTime = Date.now();
+            
+            // Zapisz początkową pozycję kursora i kontenera
+            const rect = kontener.getBoundingClientRect();
+            if (e.type === 'mousedown') {
+                startX = e.clientX;
+                startY = e.clientY;
+            } else {
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                e.preventDefault();
             }
+            
+            initialLeft = rect.left;
+            initialTop = rect.top;
+            
+            // Rozpocznij śledzenie ruchu
+            document.addEventListener('mousemove', drag);
+            document.addEventListener('touchmove', drag, { passive: false });
+            document.addEventListener('mouseup', stopDrag);
+            document.addEventListener('touchend', stopDrag);
+            
+            e.stopPropagation();
         }
 
-        document.addEventListener('mousemove', drag);
-        document.addEventListener('touchmove', drag, { passive: false });
-
+        // Przeciąganie
         function drag(e) {
-            if (!isDragging) return;
-            
             let clientX, clientY;
             
             if (e.type === 'mousemove') {
@@ -249,14 +252,23 @@
             } else {
                 clientX = e.touches[0].clientX;
                 clientY = e.touches[0].clientY;
-                e.preventDefault(); // Zapobiega domyślnemu zachowaniu dotykowemu
+                e.preventDefault();
             }
             
-            // Oblicz nową pozycję kontenera
-            const newX = clientX - offsetX;
-            const newY = clientY - offsetY;
+            // Oblicz przesunięcie
+            const dx = clientX - startX;
+            const dy = clientY - startY;
             
-            // Ogranicz pozycję do granic okna
+            // Jeśli przesunięcie znaczące, uznaj to za przeciąganie
+            if (Math.abs(dx) > 5 || Math.abs(dy) > 5) {
+                isDragging = true;
+            }
+            
+            // Oblicz nową pozycję
+            const newX = initialLeft + dx;
+            const newY = initialTop + dy;
+            
+            // Ogranicz do granic okna
             const maxX = window.innerWidth - kontener.offsetWidth;
             const maxY = window.innerHeight - kontener.offsetHeight;
             
@@ -264,33 +276,37 @@
             kontener.style.top = `${Math.min(Math.max(0, newY), maxY)}px`;
         }
 
-        document.addEventListener('mouseup', stopDrag);
-        document.addEventListener('touchend', stopDrag);
-
-        function stopDrag() {
+        // Zakończenie przeciągania
+        function stopDrag(e) {
+            // Sprawdź czy to było kliknięcie (krótkie i bez znaczącego przesunięcia)
+            const clickDuration = Date.now() - clickStartTime;
+            if (!isDragging && clickDuration < CLICK_MAX_DURATION) {
+                handleClick();
+            }
+            
+            // Zresetuj stan
             isDragging = false;
-            document.body.style.cursor = '';
-            kontener.style.cursor = 'move';
+            
+            // Usuń nasłuchiwacze
+            document.removeEventListener('mousemove', drag);
+            document.removeEventListener('touchmove', drag);
+            document.removeEventListener('mouseup', stopDrag);
+            document.removeEventListener('touchend', stopDrag);
         }
 
-        // Funkcja do animacji obrotu i rozszerzania
-        kontener.addEventListener('click', function(e) {
-            if (!isDragging) { // Tylko jeśli nie przeciągaliśmy
-                if (!ksztalt.classList.contains('ROZSZERZONY')) {
-                    // Dodaj animację obrotu
-                    ksztalt.classList.add('OBRACAJ');
-                    
-                    // Po zakończeniu animacji obrotu, rozszerz
-                    setTimeout(() => {
-                        ksztalt.classList.remove('OBRACAJ');
-                        ksztalt.classList.add('ROZSZERZONY');
-                    }, 500);
-                    
-                    e.stopPropagation();
-                }
+        // Obsługa kliknięcia (animacja i rozszerzenie)
+        function handleClick() {
+            if (!ksztalt.classList.contains('ROZSZERZONY')) {
+                ksztalt.classList.add('OBRACAJ');
+                
+                setTimeout(() => {
+                    ksztalt.classList.remove('OBRACAJ');
+                    ksztalt.classList.add('ROZSZERZONY');
+                }, 500);
             }
-        });
+        }
 
+        // Obsługa wyboru motywu
         trojkaty.forEach(trojkat => {
             trojkat.addEventListener('click', function(e) {
                 ksztalt.classList.remove('ROZSZERZONY');
@@ -307,12 +323,14 @@
             });
         });
 
+        // Zamknięcie menu po kliknięciu gdzie indziej
         document.addEventListener('click', function(e) {
             if (ksztalt.classList.contains('ROZSZERZONY') && !kontener.contains(e.target)) {
                 ksztalt.classList.remove('ROZSZERZONY');
             }
         });
 
+        // Obsługa przycisków przybornika
         document.querySelectorAll('.KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK').forEach(btn => {
             btn.onclick = () => {
                 const polish = {'Ą':'A','Ć':'C','Ę':'E','Ł':'L','Ń':'N','Ó':'O','Ś':'S','Ź':'Z','Ż':'Z','ą':'a','ć':'c','ę':'e','ł':'l','ń':'n','ó':'o','ś':'s','ź':'z','ż':'z'};
