@@ -5,12 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PRZYBORNIK</title>
     <style>
+        /* GŁÓWNE STYLE */
         .KOZLOWSKISEBASTIAN {
             margin: 0;
             padding: 0;
-            transition: background-color 0.3s;
             min-height: 100vh;
             background: #000000;
+            transition: background-color 0.3s;
         }
 
         .KOZLOWSKISEBASTIAN_CIEMNY {
@@ -21,6 +22,7 @@
             background: #FFFFFF;
         }
 
+        /* STYLE HEXAGONU */
         .KOZLOWSKISEBASTIAN_HEXAGON_KONTENER {
             position: fixed;
             bottom: 20px;
@@ -48,6 +50,7 @@
             background-color: #333333;
         }
 
+        /* STYLE PRZEŁĄCZNIKA */
         .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
             position: fixed;
             top: 0;
@@ -84,6 +87,7 @@
             background-color: #f5f5f5;
         }
 
+        /* STYLE PRZYBORNIKA - ZMIENIONE */
         .KOZLOWSKISEBASTIAN_PRZYBORNIK {
             font-family: sans-serif;
             background: inherit;
@@ -92,7 +96,7 @@
             padding: 8px;
             display: flex;
             justify-content: center;
-            min-height: 100vh;
+            /* USUNIĘTO min-height: 100vh */
             box-sizing: border-box;
         }
 
@@ -103,6 +107,7 @@
             padding: 8px;
             border-radius: 8px;
             margin: 0 auto;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5); /* Dodane dla lepszej widoczności */
         }
 
         .KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ {
@@ -129,12 +134,13 @@
             transform: translateY(-2px);
         }
 
+        /* STYLE JASNEGO MOTYWU */
         .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK {
             color: #333333;
         }
 
         .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
-            background: #F5F5F5;
+            background: #F5F5F5 !important;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
