@@ -304,20 +304,27 @@
             padding: 2px 5px;
             border-radius: 3px;
         }
+        .notatnik-tabela-kontener {
+            position: relative;
+            margin: 5px 0;
+        }
+        .notatnik-tabela-opisy-kolumn {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 5px;
+            padding-left: 20px; /* Offset for row labels */
+        }
+        .notatnik-tabela-opis-kolumny {
+            color: #FF00FF;
+            font-weight: bold;
+            font-size: 12px;
+            width: 20px;
+            text-align: center;
+            text-transform: uppercase;
+        }
         .notatnik-ramka-tabela {
             border-collapse: collapse;
-            margin: 5px 0;
-            position: relative;
-        }
-        .notatnik-ramka-tabela th {
-            border: 1px solid #B0B0B0;
-            padding: 5px;
-            min-width: 20px;
-            height: 20px;
-            font-weight: normal;
-            font-size: 12px;
-            color: #FF00FF;
-            text-align: center;
+            width: 100%;
         }
         .notatnik-ramka-tabela td {
             border: 1px solid #B0B0B0;
@@ -326,20 +333,19 @@
             height: 20px;
             position: relative;
         }
-        .notatnik-ramka-tabela td::before {
-            content: attr(data-row);
+        .notatnik-tabela-opis-wiersza {
             position: absolute;
             left: -20px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 10px;
             color: #FF00FF;
+            font-weight: bold;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
     <div class="notatnik-kontener">
-	
         <div class="notatnik-wiersz">
             <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
         </div>
@@ -348,16 +354,19 @@
         <div class="notatnik-grupa-edycji" id="notatnik-grupa-nowa">
             <div class="notatnik-formatowanie" id="notatnik-formatowanie-nowa" style="display: none;">
                 <button class="notatnik-formatowanie-przycisk" data-cmd="bold" title="POGRUBIENIE"><i class="fas fa-bold"></i></button>
+                <button class="notatnik-formatowanie-przycisk" data-cmd="italic" title="KURSYWA"><i class="fas fa-italic"></i></button>
                 <button class="notatnik-formatowanie-przycisk" data-cmd="underline" title="PODKREŚLENIE"><i class="fas fa-underline"></i></button>
                 <button class="notatnik-formatowanie-przycisk" data-cmd="insertUnorderedList" title="LISTA WYPUNKTOWANA"><i class="fas fa-list-ul"></i></button>
                 <button class="notatnik-formatowanie-przycisk" data-cmd="insertOrderedList" title="LISTA NUMEROWANA"><i class="fas fa-list-ol"></i></button>
                 <button class="notatnik-formatowanie-przycisk" data-cmd="formatBlock" data-value="div" title="RAMKA"><i class="fas fa-square"></i></button>
                 <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#FFFFFF" title="BIAŁY"><span style="color:#FFFFFF">A</span></button>
-                <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#000000" title="CZARNY"><span style="color:#000000">A</span></button>
                 <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#ff4b4b" title="CZERWONY"><span style="color:#ff4b4b">A</span></button>
-                <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#00a038" title="ZIELONY"><span style="color:#00a038">A</span></button>
                 <input type="color" class="notatnik-kolor-input" id="notatnik-kolor-input-nowa" value="#FF00FF">
-                <button class="notatnik-formatowanie-przycisk-waskie" id="notatnik-kolor-zastosuj-nowa" title="ZASTOSUJ WŁASNY KOLOR">✓</button>
+                <button class="notatnik-formatowanie-przycisk-waskie" id="notatnik-kolor-zastosuj-nowa" title="ZASTOSUJ KOLOR TEKSTU">✓</button>
+                <button class="notatnik-formatowanie-przycisk" data-cmd="backColor" data-value="#FFFFFF" title="TŁO BIAŁE"><i class="fas fa-fill-drip" style="color:#FFFFFF"></i></button>
+                <button class="notatnik-formatowanie-przycisk" data-cmd="backColor" data-value="#ff4b4b" title="TŁO CZERWONE"><i class="fas fa-fill-drip" style="color:#ff4b4b"></i></button>
+                <input type="color" class="notatnik-kolor-input" id="notatnik-tlo-input-nowa" value="#222222">
+                <button class="notatnik-formatowanie-przycisk-waskie" id="notatnik-tlo-zastosuj-nowa" title="ZASTOSUJ KOLOR TŁA">✓</button>
                 <button class="notatnik-zapisz" id="notatnik-zapisz-nowa" title="ZAPISZ NOTATKĘ"><i class="fas fa-check"></i></button>
             </div>
             <div class="notatnik-wiersz">
@@ -377,7 +386,7 @@
             <input type="file" accept=".zip" class="notatnik-import-input" id="notatnik-import-input">
         </div>
         
-        <div id="notatnik-nazwa-pliku" class="notatnik-nazwa-pliku">&nbsp;</div>
+        <div id="notatnik-nazwa-pliku" class="notatnik-nazwa-pliku"> </div>
         
         <ul class="notatnik-lista" id="notatnik-lista"></ul>
     </div>
@@ -407,7 +416,7 @@
     <script>
         // INICJALIZACJA INDEXEDDB
         let db;
-        const request = indexedDB.open('NotatnikDB', 12);
+        const request = indexedDB.open('NotatnikDB', 13);
 
         request.onerror = function(event) {
             console.error("BŁĄD PRZY OTWIERANIU BAZY DANYCH:", event.target.error);
@@ -427,6 +436,7 @@
                 objectStore.createIndex('filename', 'filename', { unique: false });
                 objectStore.createIndex('filetype', 'filetype', { unique: false });
                 objectStore.createIndex('createdAt', 'createdAt', { unique: false });
+                objectStore.createIndex('background', 'background', { unique: false });
             }
         };
 
@@ -447,6 +457,8 @@
         const formatowaniePanelNowa = document.getElementById('notatnik-formatowanie-nowa');
         const kolorInputNowa = document.getElementById('notatnik-kolor-input-nowa');
         const kolorZastosujBtnNowa = document.getElementById('notatnik-kolor-zastosuj-nowa');
+        const tloInputNowa = document.getElementById('notatnik-tlo-input-nowa');
+        const tloZastosujBtnNowa = document.getElementById('notatnik-tlo-zastosuj-nowa');
         const zapiszBtnNowa = document.getElementById('notatnik-zapisz-nowa');
         const dialogTabela = document.getElementById('notatnik-dialog-tabela');
         const tabelaWierszeInput = document.getElementById('notatnik-tabela-wiersze');
@@ -532,15 +544,14 @@
             getRequest.onsuccess = function() {
                 const data = getRequest.result;
                 data.text = element.innerHTML || '';
+                data.background = li.style.backgroundColor || '#222';
                 objectStore.put(data);
                 
-                // Ukryj panel formatowania
                 if (aktualnyPanelFormatowania) {
                     aktualnyPanelFormatowania.remove();
                     aktualnyPanelFormatowania = null;
                 }
                 
-                // Zakończ edycję
                 element.contentEditable = false;
                 element.classList.remove('editing');
                 li.classList.remove('editing');
@@ -551,24 +562,23 @@
         }
 
         function utworzTabele(wiersze, kolumny) {
-            let html = '<table class="notatnik-ramka-tabela" border="1"><tr><th></th>';
-            
-            // Nagłówki kolumn (A, B, C...)
+            let html = '<div class="notatnik-tabela-kontener">';
+            html += '<div class="notatnik-tabela-opisy-kolumn">';
             for (let j = 0; j < kolumny; j++) {
-                const colLetter = String.fromCharCode(65 + j); // A, B, C, ...
-                html += `<th>${colLetter}</th>`;
+                const colLetter = String.fromCharCode(65 + j);
+                html += `<span class="notatnik-tabela-opis-kolumny">${colLetter}</span>`;
             }
-            html += '</tr>';
+            html += '</div>';
             
-            // Wiersze z numeracją
+            html += '<table class="notatnik-ramka-tabela">';
             for (let i = 0; i < wiersze; i++) {
-                html += `<tr><td style="color:#FF00FF; text-align:center; font-size:12px;">${i+1}</td>`;
+                html += `<tr><td style="position:relative;"><span class="notatnik-tabela-opis-wiersza">${i+1}</span></td>`;
                 for (let j = 0; j < kolumny; j++) {
-                    html += '<td>&nbsp;</td>';
+                    html += '<td> </td>';
                 }
                 html += '</tr>';
             }
-            html += '</table>';
+            html += '</table></div>';
             
             if (aktualnieEdytoanyElement) {
                 const range = window.getSelection().getRangeAt(0);
@@ -623,6 +633,13 @@
             return false;
         });
 
+        tloZastosujBtnNowa.addEventListener('click', (e) => {
+            e.preventDefault();
+            wykonajPolecenieFormatowania('backColor', tloInputNowa.value);
+            edytorNotatki.focus();
+            return false;
+        });
+
         // OBSŁUGA ZAPISU NOWEJ NOTATKI
         zapiszBtnNowa.addEventListener('click', (e) => {
             e.preventDefault();
@@ -636,7 +653,6 @@
         });
 
         edytorNotatki.addEventListener('blur', function() {
-            // Opóźnione ukrycie, aby można było kliknąć przyciski formatowania
             setTimeout(() => {
                 if (!formatowaniePanelNowa.contains(document.activeElement)) {
                     formatowaniePanelNowa.style.display = 'none';
@@ -658,6 +674,7 @@
                     const li = document.createElement('li');
                     li.className = 'notatnik-element';
                     li.setAttribute('data-id', item.id);
+                    if (item.background) li.style.backgroundColor = item.background;
                     
                     let fileHtml = '';
                     if (item.file) {
@@ -689,7 +706,7 @@
                     }
                     
                     li.innerHTML = `
-                        <span class="notatnik-tekst">${item.text || '&nbsp;'}</span>
+                        <span class="notatnik-tekst">${item.text || ' '}</span>
                         ${fileHtml}
                         <div class="notatnik-akcje">
                             <span class="notatnik-edytuj"><i class="fas fa-edit"></i></span>
@@ -707,28 +724,34 @@
                     
                     // OBSŁUGA EDYCJI
                     edytuj.addEventListener('click', () => {
+                        if (tekst.contentEditable === 'true') {
+                            zapiszNotatke(tekst);
+                            edytuj.innerHTML = '<i class="fas fa-edit"></i>';
+                            return;
+                        }
+                        
                         if (aktualnyPanelFormatowania) {
                             aktualnyPanelFormatowania.remove();
                         }
                         
-                        // Utwórz dynamiczny panel formatowania dla tej notatki
                         const formatowaniePanel = document.createElement('div');
                         formatowaniePanel.className = 'notatnik-formatowanie';
                         formatowaniePanel.innerHTML = `
                             <button class="notatnik-formatowanie-przycisk" data-cmd="bold" title="POGRUBIENIE"><i class="fas fa-bold"></i></button>
+                            <button class="notatnik-formatowanie-przycisk" data-cmd="italic" title="KURSYWA"><i class="fas fa-italic"></i></button>
                             <button class="notatnik-formatowanie-przycisk" data-cmd="underline" title="PODKREŚLENIE"><i class="fas fa-underline"></i></button>
                             <button class="notatnik-formatowanie-przycisk" data-cmd="insertUnorderedList" title="LISTA WYPUNKTOWANA"><i class="fas fa-list-ul"></i></button>
                             <button class="notatnik-formatowanie-przycisk" data-cmd="insertOrderedList" title="LISTA NUMEROWANA"><i class="fas fa-list-ol"></i></button>
                             <button class="notatnik-formatowanie-przycisk" data-cmd="formatBlock" data-value="div" title="RAMKA"><i class="fas fa-square"></i></button>
                             <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#FFFFFF" title="BIAŁY"><span style="color:#FFFFFF">A</span></button>
-                            <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#000000" title="CZARNY"><span style="color:#000000">A</span></button>
                             <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#ff4b4b" title="CZERWONY"><span style="color:#ff4b4b">A</span></button>
-                            <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#00a038" title="ZIELONY"><span style="color:#00a038">A</span></button>
                             <input type="color" class="notatnik-kolor-input" value="#FF00FF">
+                            <button class="notatnik-formatowanie-przycisk" data-cmd="backColor" data-value="#FFFFFF" title="TŁO BIAŁE"><i class="fas fa-fill-drip" style="color:#FFFFFF"></i></button>
+                            <button class="notatnik-formatowanie-przycisk" data-cmd="backColor" data-value="#ff4b4b" title="TŁO CZERWONE"><i class="fas fa-fill-drip" style="color:#ff4b4b"></i></button>
+                            <input type="color" class="notatnik-kolor-input" value="${item.background || '#222222'}">
                             <button class="notatnik-zapisz" title="ZAPISZ ZMIANY"><i class="fas fa-check"></i></button>
                         `;
                         
-                        // Wstaw panel formatowania przed edytowanym elementem
                         li.parentNode.insertBefore(formatowaniePanel, li);
                         aktualnyPanelFormatowania = formatowaniePanel;
                         
@@ -737,7 +760,6 @@
                         li.classList.add('editing');
                         aktualnieEdytoanyElement = tekst;
                         
-                        // Zamień ikonę edycji na ptaszka
                         edytuj.innerHTML = '<i class="fas fa-check"></i>';
                         
                         tekst.focus();
@@ -748,7 +770,6 @@
                         selection.removeAllRanges();
                         selection.addRange(range);
                         
-                        // Obsługa przycisków formatowania
                         formatowaniePanel.querySelectorAll('.notatnik-formatowanie-przycisk').forEach(btn => {
                             btn.addEventListener('click', (e) => {
                                 e.preventDefault();
@@ -766,8 +787,7 @@
                             });
                         });
                         
-                        // Obsługa własnego koloru
-                        const kolorInput = formatowaniePanel.querySelector('.notatnik-kolor-input');
+                        const kolorInput = formatowaniePanel.querySelectorAll('.notatnik-kolor-input')[0];
                         kolorInput.addEventListener('change', (e) => {
                             e.preventDefault();
                             wykonajPolecenieFormatowania('foreColor', kolorInput.value);
@@ -775,17 +795,23 @@
                             return false;
                         });
                         
-                        // Obsługa przycisku ZAPISZ
+                        const tloInput = formatowaniePanel.querySelectorAll('.notatnik-kolor-input')[1];
+                        tloInput.addEventListener('change', (e) => {
+                            e.preventDefault();
+                            wykonajPolecenieFormatowania('backColor', tloInput.value);
+                            li.style.backgroundColor = tloInput.value;
+                            tekst.focus();
+                            return false;
+                        });
+                        
                         const zapiszBtn = formatowaniePanel.querySelector('.notatnik-zapisz');
                         zapiszBtn.addEventListener('click', (e) => {
                             e.preventDefault();
                             zapiszNotatke(tekst);
-                            // Przywróć ikonę edycji
                             edytuj.innerHTML = '<i class="fas fa-edit"></i>';
                             return false;
                         });
                         
-                        // Obsługa klawisza Enter - nowa linia zamiast zapisywania
                         tekst.addEventListener('keydown', (e) => {
                             if (e.key === 'Enter' && !e.shiftKey) {
                                 e.preventDefault();
@@ -794,7 +820,6 @@
                         });
                     });
                     
-                    // OBSŁUGA KLIKNIĘCIA W PLIK (POBIERANIE OD RAZU)
                     if (plikElement) {
                         plikElement.addEventListener('click', (e) => {
                             if (e.target.classList.contains('notatnik-usun-plik') || 
@@ -818,7 +843,6 @@
                         });
                     }
                     
-                    // OBSŁUGA USUWANIA PLIKU
                     if (usunPlik) {
                         usunPlik.addEventListener('click', (e) => {
                             e.stopPropagation();
@@ -837,7 +861,6 @@
                         });
                     }
                     
-                    // OBSŁUGA USUWANIA CAŁEGO ELEMENTU
                     usun.addEventListener('click', (e) => {
                         e.stopPropagation();
                         const transaction = db.transaction(['notatki'], 'readwrite');
@@ -874,7 +897,7 @@
             } else {
                 aktualnaNazwaPliku = '';
                 aktualnyTypPliku = '';
-                nazwaPlikuElement.innerHTML = '&nbsp;';
+                nazwaPlikuElement.innerHTML = ' ';
             }
         });
 
@@ -890,18 +913,20 @@
                     file: aktualnyPlik || null,
                     filename: aktualnaNazwaPliku || '',
                     filetype: aktualnyTypPliku || '',
-                    createdAt: new Date().getTime()
+                    createdAt: new Date().getTime(),
+                    background: edytorNotatki.style.backgroundColor || '#222'
                 };
                 
                 const request = objectStore.add(nowaNotatka);
                 
                 request.onsuccess = function() {
                     edytorNotatki.innerHTML = '';
+                    edytorNotatki.style.backgroundColor = '#222';
                     aktualnyPlik = null;
                     aktualnaNazwaPliku = '';
                     aktualnyTypPliku = '';
                     inputPlik.value = '';
-                    nazwaPlikuElement.innerHTML = '&nbsp;';
+                    nazwaPlikuElement.innerHTML = ' ';
                     wyswietlNotatki();
                 };
             }
@@ -941,12 +966,11 @@
                     txtContent += `NOTATKA ${index + 1}\n`;
                     txtContent += `DATA UTWORZENIA: ${formatujDate(note.createdAt || new Date().getTime())}\n`;
                     txtContent += `TREŚĆ: ${note.text || '(BRAK TEKSTU)'}\n`;
-                    
+                    if (note.background) txtContent += `KOLOR TŁA: ${note.background}\n`;
                     if (note.filename) {
                         txtContent += `ZAŁĄCZNIK: ${note.filename}\n`;
                         txtContent += `TYP PLIKU: ${note.filetype || 'NIEZNANY'}\n`;
                     }
-                    
                     txtContent += "\n================================\n\n";
                 });
                 
@@ -995,13 +1019,11 @@
                 const zip = new JSZip();
                 const content = await zip.loadAsync(file);
                 
-                // SPRAWDŹ CZY TO NASZ FORMAT PLIKU
                 const notesFile = content.files["notatki/PRZYBORNIK_NOTATNIK.txt"];
                 if (!notesFile) {
                     throw new Error("NIEPRAWIDŁOWY FORMAT PLIKU ZIP - BRAK PLIKU PRZYBORNIK_NOTATNIK.TXT");
                 }
                 
-                // WCZYTAJ PLIKI
                 const pliki = {};
                 for (const [path, file] of Object.entries(content.files)) {
                     if (path.startsWith("pliki/") && !file.dir) {
@@ -1011,7 +1033,6 @@
                     }
                 }
                 
-                // WCZYTAJ NOTATKI Z PLIKU TEKSTOWEGO
                 const notesText = await notesFile.async("text");
                 const noteLines = notesText.split('\n');
                 const notesData = [];
@@ -1024,10 +1045,11 @@
                             currentNote = {};
                         }
                     } else if (line.startsWith('DATA UTWORZENIA: ')) {
-                        const dateStr = line.replace('DATA UTWORZENIA: ', '');
-                        // TUTAJ MOŻNA DODAĆ PARSOWANIE DATY JEŚLI POTRZEBNE
+                        // Date parsing if needed
                     } else if (line.startsWith('TREŚĆ: ')) {
                         currentNote.text = line.replace('TREŚĆ: ', '');
+                    } else if (line.startsWith('KOLOR TŁA: ')) {
+                        currentNote.background = line.replace('KOLOR TŁA: ', '');
                     } else if (line.startsWith('ZAŁĄCZNIK: ')) {
                         const filename = line.replace('ZAŁĄCZNIK: ', '');
                         if (pliki[filename]) {
@@ -1043,7 +1065,6 @@
                     notesData.push(currentNote);
                 }
                 
-                // ZAPISZ DO BAZY DANYCH
                 const clearTransaction = db.transaction(['notatki'], 'readwrite');
                 const clearRequest = clearTransaction.objectStore('notatki').clear();
                 
@@ -1060,6 +1081,7 @@
                             file: note.file || null,
                             filename: note.filename || '',
                             filetype: note.filetype || '',
+                            background: note.background || '#222',
                             createdAt: new Date().getTime()
                         };
                         
@@ -1080,10 +1102,9 @@
             }
         });
 
-        // INICJALIZACJA - WYŚWIETL NOTATKI PO ZAŁADOWANIU STRONY
+        // INICJALIZACJA
         window.addEventListener('load', wyswietlNotatki);
     </script>
 <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
-
 </body>
 </html>
