@@ -9,343 +9,604 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
     <style>
-        /* NOTATNIK POCZĄTEK */
-        body {
-            font-family: sans-serif;
-            background: #000000;
-            color: #FF00FF;
-            margin: 0;
-            padding: 8px;
-            display: flex;
-            justify-content: center;
-        }
-        .notatnik-kontener {
-            max-width: 520px;
-            max-height: 100%;
-            width: 100%;
-            height: 100%;
-            background: #333333;
-            padding: 8px;
-            border-radius: 8px;
-        }
-        .notatnik-wiersz {
-            display: flex;
-            gap: 10px;
-            margin-top: 4px;
-            margin-bottom: 4px;
-        }
-        .notatnik-przycisk,
-        .notatnik-input {
-            background: #222222;
-            color: #B0B0B0;
-            border: none;
-            padding: 8px;
-            border-radius: 8px;
-            font-family: 'Montserrat', sans-serif;
-            transition: all 0.2s;
-        }
-        .notatnik-przycisk {
-            flex: 1;
-        }
-        .notatnik-input {
-            flex: 2;
-        }
-        .notatnik-przycisk:hover {
-            color: #FF00FF;
-            background: #333333;
-            transform: translateY(-2px);
-        }
-        .notatnik-input:focus {
-            box-shadow: 0 0 0 2px #FFF;
-            outline: none;
-        }
-        .notatnik-lista {
-            list-style-type: none;
-            padding: 0;
-            margin-top: 0px;
-            margin-bottom: 0px;
-            width: 100%;
-            overflow-y: auto;
-        }
-        .notatnik-element {
-            padding: 8px;
-            display: flex;
-            flex-direction: column;
-            background-color: #222;
-            border-radius: 8px;
-            margin-bottom: 4px;
-            transition: all 0.2s;
-            position: relative;
-        }
-        .notatnik-element:hover {
-            background-color: #333;
-            transform: translateY(-2px);
-        }
-        .notatnik-tekst {
-            color: #B0B0B0;
-            flex-grow: 1;
-            word-break: break-word;
-            padding-right: 60px;
-        }
-        .notatnik-element:hover .notatnik-tekst {
-            color: #FF00FF;
-        }
-        .notatnik-akcje {
-            display: flex;
-            gap: 8px;
-            position: absolute;
-            right: 8px;
-            top: 8px;
-        }
-        .notatnik-usun,
-        .notatnik-edytuj {
-            color: #B0B0B0;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 14px;
-        }
-        .notatnik-usun:hover,
-        .notatnik-edytuj:hover {
-            color: #FF00FF;
-            transform: scale(1.2);
-        }
-        .notatnik-tekst.editing {
-            background-color: #333;
-            padding: 8px;
-            border-radius: 4px;
-            cursor: text;
-            outline: none;
-            min-height: 20px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        .notatnik-plik-input,
-        .notatnik-import-input {
-            display: none;
-        }
-        .notatnik-element-image-container {
-            position: relative;
-            display: inline-block;
-            margin-top: 4px;
-            align-self: flex-start;
-        }
-        .notatnik-element-image {
-            max-width: 100%;
-            max-height: 150px;
-            border-radius: 4px;
-            object-fit: contain;
-            cursor: pointer;
-        }
-        .notatnik-element-plik {
-            color: #B0B0B0;
-            text-decoration: underline;
-            cursor: pointer;
-            margin-top: 4px;
-            word-break: break-all;
-            display: flex;
-            align-items: center;
-            position: relative;
-        }
-        .notatnik-element-plik i {
-            color: #B0B0B0;
-            margin-right: 8px;
-            transition: color 0.2s;
-        }
-        .notatnik-element-plik:hover i {
-            color: #FF00FF;
-        }
-        .notatnik-usun-plik {
-            position: absolute;
-            top: -8px;
-            left: -8px;
-            background: #FF00FF;
-            color: #B0B0B0;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.2s;
-        }
-        .notatnik-element:hover .notatnik-usun-plik {
-            opacity: 1;
-        }
-        .notatnik-element.editing .notatnik-usun-plik {
-            opacity: 1;
-        }
-        .notatnik-nazwa-pliku {
-            font-size: 12px;
-            color: #B0B0B0;
-            margin-top: 4px;
-            margin-bottom: 4px;
-            word-break: break-all;
-            background-color: #222222;
-            padding: 8px 8px;
-            border-radius: 8px;
-            font-family: 'Montserrat', sans-serif;
-        }
-        .notatnik-dialog {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: #333;
-            padding: 20px;
-            border-radius: 8px;
-            z-index: 1000;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            color: #B0B0B0;
-            max-width: 90%;
-        }
-        .notatnik-dialog-przycisk {
-            background: #222222;
-            color: #B0B0B0;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: all 0.2s;
-        }
-        .notatnik-dialog-przycisk:hover {
-            color: #FF00FF;
-            background: #333333;
-        }
-        .notatnik-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            z-index: 999;
-        }
-        .notatnik-formatowanie {
-            display: flex;
-            gap: 5px;
-            margin-bottom: 5px;
-            flex-wrap: wrap;
-            background: #444;
-            padding: 8px;
-            border-radius: 8px;
-        }
-        .notatnik-formatowanie-przycisk {
-            background: #555;
-            color: #FFF;
-            border: none;
-            padding: 5px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .notatnik-formatowanie-przycisk-waskie {
-            background: #555;
-            color: #FFF;
-            border: none;
-            padding: 5px 5px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            min-width: 24px;
-        }
-        .notatnik-formatowanie-przycisk:hover {
-            background: #FF00FF;
-        }
-        .notatnik-kolor-input {
-            width: 30px;
-            padding: 2px;
-            background: #555;
-            color: #FFF;
-            border: none;
-            border-radius: 4px;
-        }
-        .notatnik-kolor-przycisk {
-            background: #555;
-            color: #FFF;
-            border: none;
-            padding: 5px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .notatnik-etykieta {
-            color: #FF00FF;
-            font-size: 12px;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            font-weight: bold;
-        }
-        .notatnik-grupa-edycji {
-            margin-bottom: 10px;
-        }
-        .notatnik-zapisz {
-            background: #222222;
-            color: #B0B0B0;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 12px;
-            margin-left: auto;
-            transition: all 0.2s;
-        }
-        .notatnik-zapisz:hover {
-            color: #FF00FF;
-            background: #333333;
-        }
-        .notatnik-ramka {
-            border: 1px solid #B0B0B0;
-            padding: 2px 5px;
-            border-radius: 3px;
-        }
-        .notatnik-tabela-kontener {
-            position: relative;
-            margin: 5px 0;
-        }
-        .notatnik-tabela-opisy-kolumn {
-            display: flex;
-            justify-content: space-around;
-            margin-bottom: 5px;
-            padding-left: 20px; /* Offset for row labels */
-        }
-        .notatnik-tabela-opis-kolumny {
-            color: #FF00FF;
-            font-weight: bold;
-            font-size: 12px;
-            width: 20px;
-            text-align: center;
-            text-transform: uppercase;
-        }
-        .notatnik-ramka-tabela {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        .notatnik-ramka-tabela td {
-            border: 1px solid #B0B0B0;
-            padding: 5px;
-            min-width: 20px;
-            height: 20px;
-            position: relative;
-        }
-        .notatnik-tabela-opis-wiersza {
-            position: absolute;
-            left: -20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #FF00FF;
-            font-weight: bold;
-            font-size: 12px;
-        }
+/* NOTATNIK POCZĄTEK */
+.KOZLOWSKISEBASTIAN .notatnik-kontener {
+    max-width: 520px;
+    width: 100%;
+    background: #333333;
+    padding: 8px;
+    border-radius: 8px;
+    margin: 0 auto;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-kontener {
+    background: #F5F5F5 !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-wiersz {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-przycisk,
+.KOZLOWSKISEBASTIAN .notatnik-input {
+    background: #222222;
+    color: #B0B0B0;
+    border: none;
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.15s;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-przycisk,
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-input {
+    background: #EEEEEE;
+    color: #555555;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-przycisk {
+    flex: 1;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-input {
+    flex: 2;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-przycisk:hover {
+    color: #FF00FF;
+    background: #333333;
+    transform: translateY(-2px);
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-przycisk:hover {
+    color: #333333;
+    background: #E0E0E0;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-input:focus {
+    box-shadow: 0 0 0 2px #FFF;
+    outline: none;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-input:focus {
+    box-shadow: 0 0 0 2px #333;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-lista {
+    list-style-type: none;
+    padding: 0;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-element {
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    background-color: #222;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    transition: all 0.15s;
+    position: relative;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-element {
+    background-color: #EEEEEE;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-element:hover {
+    background-color: #333;
+    transform: translateY(-2px);
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-element:hover {
+    background-color: #E0E0E0;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-tekst {
+    color: #B0B0B0;
+    flex-grow: 1;
+    word-break: break-word;
+    padding-right: 60px;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-tekst {
+    color: #555555;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-element:hover .notatnik-tekst {
+    color: #FF00FF;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-element:hover .notatnik-tekst {
+    color: #333333;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-akcje {
+    display: flex;
+    gap: 8px;
+    position: absolute;
+    right: 8px;
+    top: 8px;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-usun,
+.KOZLOWSKISEBASTIAN .notatnik-edytuj,
+.KOZLOWSKISEBASTIAN .notatnik-zapisz,
+.KOZLOWSKISEBASTIAN .notatnik-anuluj,
+.KOZLOWSKISEBASTIAN .notatnik-tlumacz {
+    color: #B0B0B0;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-size: 14px;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-usun,
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-edytuj,
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-zapisz,
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-anuluj,
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-tlumacz {
+    color: #555555;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-usun:hover,
+.KOZLOWSKISEBASTIAN .notatnik-edytuj:hover,
+.KOZLOWSKISEBASTIAN .notatnik-zapisz:hover,
+.KOZLOWSKISEBASTIAN .notatnik-anuluj:hover,
+.KOZLOWSKISEBASTIAN .notatnik-tlumacz:hover {
+    color: #FF00FF;
+    transform: scale(1.2);
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-usun:hover,
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-edytuj:hover,
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-zapisz:hover,
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-anuluj:hover,
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-tlumacz:hover {
+    color: #333333;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-tekst.editing {
+    background-color: #333;
+    padding: 8px;
+    border-radius: 4px;
+    cursor: text;
+    outline: none;
+    min-height: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-tekst.editing {
+    background-color: #E0E0E0;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-plik-input,
+.KOZLOWSKISEBASTIAN .notatnik-import-input {
+    display: none;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-element-image-container {
+    position: relative;
+    display: inline-block;
+    margin-top: 4px;
+    align-self: flex-start;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-element-image {
+    max-width: 100%;
+    max-height: 150px;
+    border-radius: 4px;
+    object-fit: contain;
+    cursor: pointer;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-element-plik {
+    color: #B0B0B0;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 4px;
+    word-break: break-all;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-element-plik {
+    color: #555555;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-element-plik i {
+    color: #B0B0B0;
+    margin-right: 8px;
+    transition: color 0.15s;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-element-plik i {
+    color: #555555;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-element-plik:hover i {
+    color: #FF00FF;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-element-plik:hover i {
+    color: #333333;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-usun-plik {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    background: #FF00FF;
+    color: #B0B0B0;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-usun-plik {
+    background: #333333;
+    color: #EEEEEE;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-element:hover .notatnik-usun-plik {
+    opacity: 1;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-element.editing .notatnik-usun-plik {
+    opacity: 1;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-nazwa-pliku {
+    font-size: 12px;
+    color: #B0B0B0;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    word-break: break-all;
+    background-color: #222222;
+    padding: 8px 8px;
+    border-radius: 8px;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-nazwa-pliku {
+    color: #555555;
+    background-color: #EEEEEE;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-dialog {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #333;
+    padding: 20px;
+    border-radius: 8px;
+    z-index: 1000;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    color: #B0B0B0;
+    max-width: 90%;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-dialog {
+    background: #F5F5F5;
+    color: #555555;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-dialog-przycisk {
+    background: #222222;
+    color: #B0B0B0;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.15s;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-dialog-przycisk {
+    background: #EEEEEE;
+    color: #555555;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-dialog-przycisk:hover {
+    color: #FF00FF;
+    background: #333333;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-dialog-przycisk:hover {
+    color: #333333;
+    background: #E0E0E0;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 999;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-formatowanie {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 5px;
+    flex-wrap: wrap;
+    background: #444;
+    padding: 8px;
+    border-radius: 8px;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-formatowanie {
+    background: #DDDDDD;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-formatowanie-przycisk {
+    background: #555;
+    color: #FFF;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.15s;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-formatowanie-przycisk {
+    background: #CCCCCC;
+    color: #333333;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-formatowanie-przycisk-waskie {
+    background: #555;
+    color: #FFF;
+    border: none;
+    padding: 5px 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    min-width: 24px;
+    transition: all 0.15s;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-formatowanie-przycisk-waskie {
+    background: #CCCCCC;
+    color: #333333;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-formatowanie-przycisk:hover {
+    background: #FF00FF;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-formatowanie-przycisk:hover {
+    background: #333333;
+    color: #FFFFFF;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-kolor-input {
+    width: 30px;
+    padding: 2px;
+    background: #555;
+    color: #FFF;
+    border: none;
+    border-radius: 4px;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-kolor-input {
+    background: #CCCCCC;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-kolor-przycisk {
+    background: #555;
+    color: #FFF;
+    border: none;
+    padding: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-kolor-przycisk {
+    background: #CCCCCC;
+    color: #333333;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-etykieta {
+    color: #FF00FF;
+    font-size: 12px;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-etykieta {
+    color: #333333;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-grupa-edycji {
+    margin-bottom: 10px;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-zapisz {
+    background: #222222;
+    color: #B0B0B0;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 12px;
+    margin-left: auto;
+    transition: all 0.15s;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-zapisz {
+    background: #EEEEEE;
+    color: #555555;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-zapisz:hover {
+    color: #FF00FF;
+    background: #333333;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-zapisz:hover {
+    color: #333333;
+    background: #E0E0E0;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-ramka {
+    border: 1px solid #B0B0B0;
+    padding: 2px 5px;
+    border-radius: 3px;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-ramka {
+    border: 1px solid #555555;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-ramka-tabela {
+    border-collapse: collapse;
+    margin: 5px 0;
+    position: relative;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-ramka-tabela th {
+    border: 1px solid #B0B0B0;
+    padding: 5px;
+    min-width: 20px;
+    height: 20px;
+    font-weight: normal;
+    font-size: 12px;
+    color: #FF00FF;
+    text-align: center;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-ramka-tabela th {
+    color: #333333;
+    border: 1px solid #555555;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-ramka-tabela td {
+    border: 1px solid #B0B0B0;
+    padding: 5px;
+    min-width: 20px;
+    height: 20px;
+    position: relative;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-ramka-tabela td {
+    border: 1px solid #555555;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-ramka-tabela td::before {
+    content: attr(data-row);
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 10px;
+    color: #FF00FF;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-ramka-tabela td::before {
+    color: #333333;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-ramka-tabela-col-header {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px;
+    color: #FF00FF;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-ramka-tabela-col-header {
+    color: #333333;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-link-dialog {
+    display: none;
+    position: absolute;
+    background: #333;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1001;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-link-dialog {
+    background: #F5F5F5;
+    box-shadow: 0 0 5px rgba(0,0,0,0.2);
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-link-input {
+    background: #222;
+    color: #B0B0B0;
+    border: 1px solid #555;
+    padding: 5px;
+    border-radius: 3px;
+    margin-bottom: 5px;
+    width: 200px;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-link-input {
+    background: #EEEEEE;
+    color: #555555;
+    border: 1px solid #CCCCCC;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-strike {
+    text-decoration: line-through;
+}
+
+.KOZLOWSKISEBASTIAN .notatnik-tlumaczenie {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+    padding: 5px;
+    background: #222;
+    border-radius: 5px;
+    border-left: 3px solid #FF00FF;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .notatnik-tlumaczenie {
+    color: #777777;
+    background: #EEEEEE;
+    border-left: 3px solid #333333;
+}
+/* NOTATNIK KONIEC */
     </style>
 </head>
-<body>
+</head>
+<body class="KOZLOWSKISEBASTIAN">
+    <div class="KOZLOWSKISEBASTIAN_HEXAGON_KONTENER">
+        <div class="KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT"></div>
+        <div class="KOZLOWSKISEBASTIAN_TROJKAT_KONTENER">
+            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_JEDEN"></div>
+            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_DWA"></div>
+        </div>
+    </div>
     <div class="notatnik-kontener">
+	
         <div class="notatnik-wiersz">
             <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
         </div>
@@ -356,17 +617,22 @@
                 <button class="notatnik-formatowanie-przycisk" data-cmd="bold" title="POGRUBIENIE"><i class="fas fa-bold"></i></button>
                 <button class="notatnik-formatowanie-przycisk" data-cmd="italic" title="KURSYWA"><i class="fas fa-italic"></i></button>
                 <button class="notatnik-formatowanie-przycisk" data-cmd="underline" title="PODKREŚLENIE"><i class="fas fa-underline"></i></button>
+                <button class="notatnik-formatowanie-przycisk" data-cmd="strikeThrough" title="PRZEKREŚLENIE"><i class="fas fa-strikethrough"></i></button>
                 <button class="notatnik-formatowanie-przycisk" data-cmd="insertUnorderedList" title="LISTA WYPUNKTOWANA"><i class="fas fa-list-ul"></i></button>
                 <button class="notatnik-formatowanie-przycisk" data-cmd="insertOrderedList" title="LISTA NUMEROWANA"><i class="fas fa-list-ol"></i></button>
-                <button class="notatnik-formatowanie-przycisk" data-cmd="formatBlock" data-value="div" title="RAMKA"><i class="fas fa-square"></i></button>
-                <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#FFFFFF" title="BIAŁY"><span style="color:#FFFFFF">A</span></button>
-                <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#ff4b4b" title="CZERWONY"><span style="color:#ff4b4b">A</span></button>
+                <button class="notatnik-formatowanie-przycisk" id="notatnik-wstaw-link" title="LINK"><i class="fas fa-link"></i></button>
+                <button class="notatnik-formatowanie-przycisk" data-cmd="formatBlock" data-value="div" title="TABELA"><i class="fas fa-table"></i></button>
+                <button class="notatnik-formatowanie-przycisk" data-cmd="hiliteColor" data-value="#333333" title="CIEMNE TŁO"><span style="background:#333333; padding:0 5px;">A</span></button>
+                <button class="notatnik-formatowanie-przycisk" data-cmd="hiliteColor" data-value="#FF00FF" title="RÓŻOWE TŁO"><span style="background:#FF00FF; padding:0 5px;">A</span></button>
+                <button class="notatnik-formatowanie-przycisk" data-cmd="hiliteColor" data-value="#ff4b4b" title="CZERWONE TŁO"><span style="background:#ff4b4b; padding:0 5px;">A</span></button>
+                <button class="notatnik-formatowanie-przycisk" data-cmd="hiliteColor" data-value="#FFFFFF" title="BIAŁE TŁO"><span style="background:#FFFFFF; padding:0 5px; color:#000">A</span></button>
                 <input type="color" class="notatnik-kolor-input" id="notatnik-kolor-input-nowa" value="#FF00FF">
-                <button class="notatnik-formatowanie-przycisk-waskie" id="notatnik-kolor-zastosuj-nowa" title="ZASTOSUJ KOLOR TEKSTU">✓</button>
-                <button class="notatnik-formatowanie-przycisk" data-cmd="backColor" data-value="#FFFFFF" title="TŁO BIAŁE"><i class="fas fa-fill-drip" style="color:#FFFFFF"></i></button>
-                <button class="notatnik-formatowanie-przycisk" data-cmd="backColor" data-value="#ff4b4b" title="TŁO CZERWONE"><i class="fas fa-fill-drip" style="color:#ff4b4b"></i></button>
-                <input type="color" class="notatnik-kolor-input" id="notatnik-tlo-input-nowa" value="#222222">
-                <button class="notatnik-formatowanie-przycisk-waskie" id="notatnik-tlo-zastosuj-nowa" title="ZASTOSUJ KOLOR TŁA">✓</button>
+                <button class="notatnik-formatowanie-przycisk-waskie" id="notatnik-kolor-zastosuj-nowa" title="ZASTOSUJ WŁASNE TŁO">✓</button>
+                <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#FFFFFF" title="BIAŁY TEKST"><span style="color:#FFFFFF">A</span></button>
+                <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#FF00FF" title="RÓŻOWY TEKST"><span style="color:#FF00FF">A</span></button>
+                <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#ff4b4b" title="CZERWONY TEKST"><span style="color:#ff4b4b">A</span></button>
+                <input type="color" class="notatnik-kolor-input" id="notatnik-kolor-tekst-input-nowa" value="#FF00FF">
+                <button class="notatnik-formatowanie-przycisk-waskie" id="notatnik-kolor-tekst-zastosuj-nowa" title="ZASTOSUJ WŁASNY KOLOR TEKSTU">✓</button>
                 <button class="notatnik-zapisz" id="notatnik-zapisz-nowa" title="ZAPISZ NOTATKĘ"><i class="fas fa-check"></i></button>
             </div>
             <div class="notatnik-wiersz">
@@ -386,7 +652,7 @@
             <input type="file" accept=".zip" class="notatnik-import-input" id="notatnik-import-input">
         </div>
         
-        <div id="notatnik-nazwa-pliku" class="notatnik-nazwa-pliku"> </div>
+        <div id="notatnik-nazwa-pliku" class="notatnik-nazwa-pliku">&nbsp;</div>
         
         <ul class="notatnik-lista" id="notatnik-lista"></ul>
     </div>
@@ -412,11 +678,18 @@
         <button class="notatnik-dialog-przycisk" id="notatnik-dialog-tabela-anuluj">ANULUJ</button>
     </div>
 
+    <!-- Dialog do wstawiania linków -->
+    <div class="notatnik-link-dialog" id="notatnik-link-dialog">
+        <input type="text" id="notatnik-link-url" class="notatnik-link-input" placeholder="Wpisz URL">
+        <button class="notatnik-dialog-przycisk" id="notatnik-link-zatwierdz">OK</button>
+        <button class="notatnik-dialog-przycisk" id="notatnik-link-anuluj">ANULUJ</button>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
         // INICJALIZACJA INDEXEDDB
         let db;
-        const request = indexedDB.open('NotatnikDB', 13);
+        const request = indexedDB.open('NotatnikDB', 15);
 
         request.onerror = function(event) {
             console.error("BŁĄD PRZY OTWIERANIU BAZY DANYCH:", event.target.error);
@@ -436,7 +709,6 @@
                 objectStore.createIndex('filename', 'filename', { unique: false });
                 objectStore.createIndex('filetype', 'filetype', { unique: false });
                 objectStore.createIndex('createdAt', 'createdAt', { unique: false });
-                objectStore.createIndex('background', 'background', { unique: false });
             }
         };
 
@@ -457,20 +729,27 @@
         const formatowaniePanelNowa = document.getElementById('notatnik-formatowanie-nowa');
         const kolorInputNowa = document.getElementById('notatnik-kolor-input-nowa');
         const kolorZastosujBtnNowa = document.getElementById('notatnik-kolor-zastosuj-nowa');
-        const tloInputNowa = document.getElementById('notatnik-tlo-input-nowa');
-        const tloZastosujBtnNowa = document.getElementById('notatnik-tlo-zastosuj-nowa');
+        const kolorTekstInputNowa = document.getElementById('notatnik-kolor-tekst-input-nowa');
+        const kolorTekstZastosujBtnNowa = document.getElementById('notatnik-kolor-tekst-zastosuj-nowa');
         const zapiszBtnNowa = document.getElementById('notatnik-zapisz-nowa');
         const dialogTabela = document.getElementById('notatnik-dialog-tabela');
         const tabelaWierszeInput = document.getElementById('notatnik-tabela-wiersze');
         const tabelaKolumnyInput = document.getElementById('notatnik-tabela-kolumny');
         const tabelaOkBtn = document.getElementById('notatnik-dialog-tabela-ok');
         const tabelaAnulujBtn = document.getElementById('notatnik-dialog-tabela-anuluj');
+        const linkDialog = document.getElementById('notatnik-link-dialog');
+        const linkUrlInput = document.getElementById('notatnik-link-url');
+        const linkZatwierdzBtn = document.getElementById('notatnik-link-zatwierdz');
+        const linkAnulujBtn = document.getElementById('notatnik-link-anuluj');
+        const wstawLinkBtn = document.getElementById('notatnik-wstaw-link');
 
         let aktualnyPlik = null;
         let aktualnaNazwaPliku = '';
         let aktualnyTypPliku = '';
         let aktualnieEdytoanyElement = null;
         let aktualnyPanelFormatowania = null;
+        let oryginalnaTrescNotatki = '';
+        let wybranyTekstDoLinku = '';
 
         // FUNKCJE POMOCNICZE
         function pokazDialog(tekst) {
@@ -494,6 +773,44 @@
             overlay.style.display = 'none';
         }
 
+        function pokazLinkDialog() {
+            const selection = window.getSelection();
+            wybranyTekstDoLinku = selection.toString();
+            
+            if (aktualnieEdytoanyElement) {
+                const rect = aktualnieEdytoanyElement.getBoundingClientRect();
+                linkDialog.style.top = `${rect.bottom + window.scrollY}px`;
+                linkDialog.style.left = `${rect.left + window.scrollX}px`;
+            } else {
+                const rect = edytorNotatki.getBoundingClientRect();
+                linkDialog.style.top = `${rect.bottom + window.scrollY}px`;
+                linkDialog.style.left = `${rect.left + window.scrollX}px`;
+            }
+            
+            linkDialog.style.display = 'block';
+            linkUrlInput.focus();
+        }
+
+        function zamknijLinkDialog() {
+            linkDialog.style.display = 'none';
+            linkUrlInput.value = '';
+        }
+
+        function wstawLink(url) {
+            if (!url) return;
+            
+            // Jeśli nie ma wybranego tekstu, użyj URL jako tekstu linku
+            const tekstLinku = wybranyTekstDoLinku || url;
+            
+            if (aktualnieEdytoanyElement) {
+                document.execCommand('insertHTML', false, `<a href="${url}" target="_blank">${tekstLinku}</a>`);
+                aktualnieEdytoanyElement.focus();
+            } else {
+                document.execCommand('insertHTML', false, `<a href="${url}" target="_blank">${tekstLinku}</a>`);
+                edytorNotatki.focus();
+            }
+        }
+
         function dataURLtoBlob(dataURL) {
             const arr = dataURL.split(',');
             const mime = arr[0].match(/:(.*?);/)[1];
@@ -515,6 +832,22 @@
                 hour: '2-digit',
                 minute: '2-digit'
             });
+        }
+
+        async function tlumaczTekst(tekst, jezykDocelowy = 'en') {
+            try {
+                const response = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(tekst)}&langpair=pl|${jezykDocelowy}`);
+                const data = await response.json();
+                
+                if (data.responseData && data.responseData.translatedText) {
+                    return data.responseData.translatedText;
+                } else {
+                    throw new Error("Nie udało się przetłumaczyć tekstu");
+                }
+            } catch (error) {
+                console.error("Błąd tłumaczenia:", error);
+                return "Błąd tłumaczenia: " + error.message;
+            }
         }
 
         function wykonajPolecenieFormatowania(cmd, value = null) {
@@ -544,41 +877,92 @@
             getRequest.onsuccess = function() {
                 const data = getRequest.result;
                 data.text = element.innerHTML || '';
-                data.background = li.style.backgroundColor || '#222';
                 objectStore.put(data);
                 
+                // Ukryj panel formatowania
                 if (aktualnyPanelFormatowania) {
                     aktualnyPanelFormatowania.remove();
                     aktualnyPanelFormatowania = null;
                 }
                 
+                // Zakończ edycję
                 element.contentEditable = false;
                 element.classList.remove('editing');
                 li.classList.remove('editing');
                 aktualnieEdytoanyElement = null;
                 
+                // Przywróć przyciski
+                const edytuj = li.querySelector('.notatnik-edytuj');
+                const usun = li.querySelector('.notatnik-usun');
+                const zapisz = li.querySelector('.notatnik-zapisz');
+                const anuluj = li.querySelector('.notatnik-anuluj');
+                const tlumacz = li.querySelector('.notatnik-tlumacz');
+                
+                if (edytuj) edytuj.style.display = 'inline-block';
+                if (usun) usun.style.display = 'inline-block';
+                if (zapisz) zapisz.style.display = 'none';
+                if (anuluj) anuluj.style.display = 'none';
+                if (tlumacz) tlumacz.style.display = 'inline-block';
+                
                 wyswietlNotatki();
             };
         }
 
-        function utworzTabele(wiersze, kolumny) {
-            let html = '<div class="notatnik-tabela-kontener">';
-            html += '<div class="notatnik-tabela-opisy-kolumn">';
-            for (let j = 0; j < kolumny; j++) {
-                const colLetter = String.fromCharCode(65 + j);
-                html += `<span class="notatnik-tabela-opis-kolumny">${colLetter}</span>`;
-            }
-            html += '</div>';
+        function anulujEdycje(element) {
+            if (!element) return;
             
-            html += '<table class="notatnik-ramka-tabela">';
+            const li = element.closest('.notatnik-element');
+            
+            // Przywróć oryginalną treść
+            element.innerHTML = oryginalnaTrescNotatki;
+            
+            // Ukryj panel formatowania
+            if (aktualnyPanelFormatowania) {
+                aktualnyPanelFormatowania.remove();
+                aktualnyPanelFormatowania = null;
+            }
+            
+            // Zakończ edycję
+            element.contentEditable = false;
+            element.classList.remove('editing');
+            li.classList.remove('editing');
+            aktualnieEdytoanyElement = null;
+            
+            // Przywróć przyciski
+            const edytuj = li.querySelector('.notatnik-edytuj');
+            const usun = li.querySelector('.notatnik-usun');
+            const zapisz = li.querySelector('.notatnik-zapisz');
+            const anuluj = li.querySelector('.notatnik-anuluj');
+            const tlumacz = li.querySelector('.notatnik-tlumacz');
+            
+            if (edytuj) edytuj.style.display = 'inline-block';
+            if (usun) usun.style.display = 'inline-block';
+            if (zapisz) zapisz.style.display = 'none';
+            if (anuluj) anuluj.style.display = 'none';
+            if (tlumacz) tlumacz.style.display = 'inline-block';
+            
+            wyswietlNotatki();
+        }
+
+        function utworzTabele(wiersze, kolumny) {
+            let html = '<table class="notatnik-ramka-tabela" border="1"><thead><tr><th></th>';
+            
+            // Nagłówki kolumn (A, B, C...)
+            for (let j = 0; j < kolumny; j++) {
+                const colLetter = String.fromCharCode(65 + j); // A, B, C, ...
+                html += `<th>${colLetter}</th>`;
+            }
+            html += '</tr></thead><tbody>';
+            
+            // Wiersze z numeracją
             for (let i = 0; i < wiersze; i++) {
-                html += `<tr><td style="position:relative;"><span class="notatnik-tabela-opis-wiersza">${i+1}</span></td>`;
+                html += `<tr><td style="color:#FF00FF; text-align:center; font-size:12px;">${i+1}</td>`;
                 for (let j = 0; j < kolumny; j++) {
-                    html += '<td> </td>';
+                    html += '<td>&nbsp;</td>';
                 }
                 html += '</tr>';
             }
-            html += '</table></div>';
+            html += '</tbody></table>';
             
             if (aktualnieEdytoanyElement) {
                 const range = window.getSelection().getRangeAt(0);
@@ -608,6 +992,17 @@
 
         tabelaAnulujBtn.addEventListener('click', zamknijDialogTabela);
 
+        // OBSŁUGA DIALOGU LINKÓW
+        wstawLinkBtn.addEventListener('click', pokazLinkDialog);
+        linkZatwierdzBtn.addEventListener('click', () => {
+            const url = linkUrlInput.value.trim();
+            if (url) {
+                wstawLink(url);
+            }
+            zamknijLinkDialog();
+        });
+        linkAnulujBtn.addEventListener('click', zamknijLinkDialog);
+
         // OBSŁUGA FORMATOWANIA TEKSTU (NOWA NOTATKA)
         document.querySelectorAll('#notatnik-formatowanie-nowa .notatnik-formatowanie-przycisk').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -628,14 +1023,14 @@
 
         kolorZastosujBtnNowa.addEventListener('click', (e) => {
             e.preventDefault();
-            wykonajPolecenieFormatowania('foreColor', kolorInputNowa.value);
+            wykonajPolecenieFormatowania('hiliteColor', kolorInputNowa.value);
             edytorNotatki.focus();
             return false;
         });
 
-        tloZastosujBtnNowa.addEventListener('click', (e) => {
+        kolorTekstZastosujBtnNowa.addEventListener('click', (e) => {
             e.preventDefault();
-            wykonajPolecenieFormatowania('backColor', tloInputNowa.value);
+            wykonajPolecenieFormatowania('foreColor', kolorTekstInputNowa.value);
             edytorNotatki.focus();
             return false;
         });
@@ -653,6 +1048,7 @@
         });
 
         edytorNotatki.addEventListener('blur', function() {
+            // Opóźnione ukrycie, aby można było kliknąć przyciski formatowania
             setTimeout(() => {
                 if (!formatowaniePanelNowa.contains(document.activeElement)) {
                     formatowaniePanelNowa.style.display = 'none';
@@ -674,7 +1070,6 @@
                     const li = document.createElement('li');
                     li.className = 'notatnik-element';
                     li.setAttribute('data-id', item.id);
-                    if (item.background) li.style.backgroundColor = item.background;
                     
                     let fileHtml = '';
                     if (item.file) {
@@ -706,10 +1101,13 @@
                     }
                     
                     li.innerHTML = `
-                        <span class="notatnik-tekst">${item.text || ' '}</span>
+                        <span class="notatnik-tekst">${item.text || '&nbsp;'}</span>
                         ${fileHtml}
                         <div class="notatnik-akcje">
                             <span class="notatnik-edytuj"><i class="fas fa-edit"></i></span>
+                            <span class="notatnik-zapisz" style="display:none;"><i class="fas fa-check"></i></span>
+                            <span class="notatnik-anuluj" style="display:none;"><i class="fas fa-times"></i></span>
+                            <span class="notatnik-tlumacz"><i class="fas fa-language"></i></span>
                             <span class="notatnik-usun"><i class="fas fa-trash-alt"></i></span>
                         </div>
                     `;
@@ -718,49 +1116,62 @@
                     // ELEMENTY W LIŚCIE
                     const tekst = li.querySelector('.notatnik-tekst');
                     const edytuj = li.querySelector('.notatnik-edytuj');
+                    const zapisz = li.querySelector('.notatnik-zapisz');
+                    const anuluj = li.querySelector('.notatnik-anuluj');
+                    const tlumacz = li.querySelector('.notatnik-tlumacz');
                     const usun = li.querySelector('.notatnik-usun');
                     const usunPlik = li.querySelector('.notatnik-usun-plik');
                     const plikElement = li.querySelector('.notatnik-element-image, .notatnik-element-plik');
                     
                     // OBSŁUGA EDYCJI
                     edytuj.addEventListener('click', () => {
-                        if (tekst.contentEditable === 'true') {
-                            zapiszNotatke(tekst);
-                            edytuj.innerHTML = '<i class="fas fa-edit"></i>';
-                            return;
-                        }
-                        
                         if (aktualnyPanelFormatowania) {
                             aktualnyPanelFormatowania.remove();
                         }
                         
+                        // Utwórz dynamiczny panel formatowania dla tej notatki
                         const formatowaniePanel = document.createElement('div');
                         formatowaniePanel.className = 'notatnik-formatowanie';
                         formatowaniePanel.innerHTML = `
                             <button class="notatnik-formatowanie-przycisk" data-cmd="bold" title="POGRUBIENIE"><i class="fas fa-bold"></i></button>
                             <button class="notatnik-formatowanie-przycisk" data-cmd="italic" title="KURSYWA"><i class="fas fa-italic"></i></button>
                             <button class="notatnik-formatowanie-przycisk" data-cmd="underline" title="PODKREŚLENIE"><i class="fas fa-underline"></i></button>
+                            <button class="notatnik-formatowanie-przycisk" data-cmd="strikeThrough" title="PRZEKREŚLENIE"><i class="fas fa-strikethrough"></i></button>
                             <button class="notatnik-formatowanie-przycisk" data-cmd="insertUnorderedList" title="LISTA WYPUNKTOWANA"><i class="fas fa-list-ul"></i></button>
                             <button class="notatnik-formatowanie-przycisk" data-cmd="insertOrderedList" title="LISTA NUMEROWANA"><i class="fas fa-list-ol"></i></button>
-                            <button class="notatnik-formatowanie-przycisk" data-cmd="formatBlock" data-value="div" title="RAMKA"><i class="fas fa-square"></i></button>
-                            <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#FFFFFF" title="BIAŁY"><span style="color:#FFFFFF">A</span></button>
-                            <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#ff4b4b" title="CZERWONY"><span style="color:#ff4b4b">A</span></button>
+                            <button class="notatnik-formatowanie-przycisk" id="notatnik-wstaw-link-edytor" title="LINK"><i class="fas fa-link"></i></button>
+                            <button class="notatnik-formatowanie-przycisk" data-cmd="formatBlock" data-value="div" title="TABELA"><i class="fas fa-table"></i></button>
+                            <button class="notatnik-formatowanie-przycisk" data-cmd="hiliteColor" data-value="#333333" title="CIEMNE TŁO"><span style="background:#333333; padding:0 5px;">A</span></button>
+                            <button class="notatnik-formatowanie-przycisk" data-cmd="hiliteColor" data-value="#FF00FF" title="RÓŻOWE TŁO"><span style="background:#FF00FF; padding:0 5px;">A</span></button>
+                            <button class="notatnik-formatowanie-przycisk" data-cmd="hiliteColor" data-value="#ff4b4b" title="CZERWONE TŁO"><span style="background:#ff4b4b; padding:0 5px;">A</span></button>
+                            <button class="notatnik-formatowanie-przycisk" data-cmd="hiliteColor" data-value="#FFFFFF" title="BIAŁE TŁO"><span style="background:#FFFFFF; padding:0 5px; color:#000">A</span></button>
                             <input type="color" class="notatnik-kolor-input" value="#FF00FF">
-                            <button class="notatnik-formatowanie-przycisk" data-cmd="backColor" data-value="#FFFFFF" title="TŁO BIAŁE"><i class="fas fa-fill-drip" style="color:#FFFFFF"></i></button>
-                            <button class="notatnik-formatowanie-przycisk" data-cmd="backColor" data-value="#ff4b4b" title="TŁO CZERWONE"><i class="fas fa-fill-drip" style="color:#ff4b4b"></i></button>
-                            <input type="color" class="notatnik-kolor-input" value="${item.background || '#222222'}">
-                            <button class="notatnik-zapisz" title="ZAPISZ ZMIANY"><i class="fas fa-check"></i></button>
+                            <button class="notatnik-formatowanie-przycisk-waskie" title="ZASTOSUJ WŁASNE TŁO">✓</button>
+                            <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#FFFFFF" title="BIAŁY TEKST"><span style="color:#FFFFFF">A</span></button>
+                            <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#FF00FF" title="RÓŻOWY TEKST"><span style="color:#FF00FF">A</span></button>
+                            <button class="notatnik-formatowanie-przycisk" data-cmd="foreColor" data-value="#ff4b4b" title="CZERWONY TEKST"><span style="color:#ff4b4b">A</span></button>
+                            <input type="color" class="notatnik-kolor-input" value="#FF00FF">
+                            <button class="notatnik-formatowanie-przycisk-waskie" title="ZASTOSUJ WŁASNY KOLOR TEKSTU">✓</button>
                         `;
                         
+                        // Wstaw panel formatowania przed edytowanym elementem
                         li.parentNode.insertBefore(formatowaniePanel, li);
                         aktualnyPanelFormatowania = formatowaniePanel;
+                        
+                        // Zapisz oryginalną treść notatki
+                        oryginalnaTrescNotatki = tekst.innerHTML;
                         
                         tekst.contentEditable = true;
                         tekst.classList.add('editing');
                         li.classList.add('editing');
                         aktualnieEdytoanyElement = tekst;
                         
-                        edytuj.innerHTML = '<i class="fas fa-check"></i>';
+                        // Pokaż przyciski zapisz/anuluj, ukryj edytuj/usun/tlumacz
+                        edytuj.style.display = 'none';
+                        usun.style.display = 'none';
+                        tlumacz.style.display = 'none';
+                        zapisz.style.display = 'inline-block';
+                        anuluj.style.display = 'inline-block';
                         
                         tekst.focus();
                         
@@ -770,6 +1181,7 @@
                         selection.removeAllRanges();
                         selection.addRange(range);
                         
+                        // Obsługa przycisków formatowania
                         formatowaniePanel.querySelectorAll('.notatnik-formatowanie-przycisk').forEach(btn => {
                             btn.addEventListener('click', (e) => {
                                 e.preventDefault();
@@ -787,39 +1199,74 @@
                             });
                         });
                         
+                        // Obsługa przycisku wstawiania linku w edytorze
+                        const wstawLinkBtnEdytor = formatowaniePanel.querySelector('#notatnik-wstaw-link-edytor');
+                        wstawLinkBtnEdytor.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            pokazLinkDialog();
+                            return false;
+                        });
+                        
+                        // Obsługa własnego koloru tła
                         const kolorInput = formatowaniePanel.querySelectorAll('.notatnik-kolor-input')[0];
-                        kolorInput.addEventListener('change', (e) => {
+                        const kolorZastosujBtn = formatowaniePanel.querySelectorAll('.notatnik-formatowanie-przycisk-waskie')[0];
+                        
+                        kolorZastosujBtn.addEventListener('click', (e) => {
                             e.preventDefault();
-                            wykonajPolecenieFormatowania('foreColor', kolorInput.value);
+                            wykonajPolecenieFormatowania('hiliteColor', kolorInput.value);
                             tekst.focus();
                             return false;
                         });
                         
-                        const tloInput = formatowaniePanel.querySelectorAll('.notatnik-kolor-input')[1];
-                        tloInput.addEventListener('change', (e) => {
+                        // Obsługa własnego koloru tekstu
+                        const kolorTekstInput = formatowaniePanel.querySelectorAll('.notatnik-kolor-input')[1];
+                        const kolorTekstZastosujBtn = formatowaniePanel.querySelectorAll('.notatnik-formatowanie-przycisk-waskie')[1];
+                        
+                        kolorTekstZastosujBtn.addEventListener('click', (e) => {
                             e.preventDefault();
-                            wykonajPolecenieFormatowania('backColor', tloInput.value);
-                            li.style.backgroundColor = tloInput.value;
+                            wykonajPolecenieFormatowania('foreColor', kolorTekstInput.value);
                             tekst.focus();
                             return false;
-                        });
-                        
-                        const zapiszBtn = formatowaniePanel.querySelector('.notatnik-zapisz');
-                        zapiszBtn.addEventListener('click', (e) => {
-                            e.preventDefault();
-                            zapiszNotatke(tekst);
-                            edytuj.innerHTML = '<i class="fas fa-edit"></i>';
-                            return false;
-                        });
-                        
-                        tekst.addEventListener('keydown', (e) => {
-                            if (e.key === 'Enter' && !e.shiftKey) {
-                                e.preventDefault();
-                                document.execCommand('insertLineBreak');
-                            }
                         });
                     });
                     
+                    // OBSŁUGA ZAPISU ZMIAN
+                    zapisz.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        zapiszNotatke(tekst);
+                    });
+                    
+                    // OBSŁUGA ANULOWANIA EDYCJI
+                    anuluj.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        anulujEdycje(tekst);
+                    });
+                    
+                    // OBSŁUGA TŁUMACZENIA
+                    tlumacz.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+                        
+                        const tekstDoTlumaczenia = tekst.textContent.trim();
+                        if (!tekstDoTlumaczenia) return;
+                        
+                        const tlumaczenieElement = li.querySelector('.notatnik-tlumaczenie');
+                        if (tlumaczenieElement) {
+                            tlumaczenieElement.remove();
+                            return;
+                        }
+                        
+                        try {
+                            const przetlumaczonyTekst = await tlumaczTekst(tekstDoTlumaczenia);
+                            const tlumaczenieDiv = document.createElement('div');
+                            tlumaczenieDiv.className = 'notatnik-tlumaczenie';
+                            tlumaczenieDiv.textContent = przetlumaczonyTekst;
+                            li.appendChild(tlumaczenieDiv);
+                        } catch (error) {
+                            console.error("Błąd tłumaczenia:", error);
+                        }
+                    });
+                    
+                    // OBSŁUGA KLIKNIĘCIA W PLIK (POBIERANIE OD RAZU)
                     if (plikElement) {
                         plikElement.addEventListener('click', (e) => {
                             if (e.target.classList.contains('notatnik-usun-plik') || 
@@ -843,6 +1290,7 @@
                         });
                     }
                     
+                    // OBSŁUGA USUWANIA PLIKU
                     if (usunPlik) {
                         usunPlik.addEventListener('click', (e) => {
                             e.stopPropagation();
@@ -861,6 +1309,7 @@
                         });
                     }
                     
+                    // OBSŁUGA USUWANIA CAŁEGO ELEMENTU
                     usun.addEventListener('click', (e) => {
                         e.stopPropagation();
                         const transaction = db.transaction(['notatki'], 'readwrite');
@@ -897,7 +1346,7 @@
             } else {
                 aktualnaNazwaPliku = '';
                 aktualnyTypPliku = '';
-                nazwaPlikuElement.innerHTML = ' ';
+                nazwaPlikuElement.innerHTML = '&nbsp;';
             }
         });
 
@@ -913,20 +1362,18 @@
                     file: aktualnyPlik || null,
                     filename: aktualnaNazwaPliku || '',
                     filetype: aktualnyTypPliku || '',
-                    createdAt: new Date().getTime(),
-                    background: edytorNotatki.style.backgroundColor || '#222'
+                    createdAt: new Date().getTime()
                 };
                 
                 const request = objectStore.add(nowaNotatka);
                 
                 request.onsuccess = function() {
                     edytorNotatki.innerHTML = '';
-                    edytorNotatki.style.backgroundColor = '#222';
                     aktualnyPlik = null;
                     aktualnaNazwaPliku = '';
                     aktualnyTypPliku = '';
                     inputPlik.value = '';
-                    nazwaPlikuElement.innerHTML = ' ';
+                    nazwaPlikuElement.innerHTML = '&nbsp;';
                     wyswietlNotatki();
                 };
             }
@@ -966,11 +1413,12 @@
                     txtContent += `NOTATKA ${index + 1}\n`;
                     txtContent += `DATA UTWORZENIA: ${formatujDate(note.createdAt || new Date().getTime())}\n`;
                     txtContent += `TREŚĆ: ${note.text || '(BRAK TEKSTU)'}\n`;
-                    if (note.background) txtContent += `KOLOR TŁA: ${note.background}\n`;
+                    
                     if (note.filename) {
                         txtContent += `ZAŁĄCZNIK: ${note.filename}\n`;
                         txtContent += `TYP PLIKU: ${note.filetype || 'NIEZNANY'}\n`;
                     }
+                    
                     txtContent += "\n================================\n\n";
                 });
                 
@@ -1019,11 +1467,13 @@
                 const zip = new JSZip();
                 const content = await zip.loadAsync(file);
                 
+                // SPRAWDŹ CZY TO NASZ FORMAT PLIKU
                 const notesFile = content.files["notatki/PRZYBORNIK_NOTATNIK.txt"];
                 if (!notesFile) {
                     throw new Error("NIEPRAWIDŁOWY FORMAT PLIKU ZIP - BRAK PLIKU PRZYBORNIK_NOTATNIK.TXT");
                 }
                 
+                // WCZYTAJ PLIKI
                 const pliki = {};
                 for (const [path, file] of Object.entries(content.files)) {
                     if (path.startsWith("pliki/") && !file.dir) {
@@ -1033,6 +1483,7 @@
                     }
                 }
                 
+                // WCZYTAJ NOTATKI Z PLIKU TEKSTOWEGO
                 const notesText = await notesFile.async("text");
                 const noteLines = notesText.split('\n');
                 const notesData = [];
@@ -1045,11 +1496,10 @@
                             currentNote = {};
                         }
                     } else if (line.startsWith('DATA UTWORZENIA: ')) {
-                        // Date parsing if needed
+                        const dateStr = line.replace('DATA UTWORZENIA: ', '');
+                        // TUTAJ MOŻNA DODAĆ PARSOWANIE DATY JEŚLI POTRZEBNE
                     } else if (line.startsWith('TREŚĆ: ')) {
                         currentNote.text = line.replace('TREŚĆ: ', '');
-                    } else if (line.startsWith('KOLOR TŁA: ')) {
-                        currentNote.background = line.replace('KOLOR TŁA: ', '');
                     } else if (line.startsWith('ZAŁĄCZNIK: ')) {
                         const filename = line.replace('ZAŁĄCZNIK: ', '');
                         if (pliki[filename]) {
@@ -1065,6 +1515,7 @@
                     notesData.push(currentNote);
                 }
                 
+                // ZAPISZ DO BAZY DANYCH
                 const clearTransaction = db.transaction(['notatki'], 'readwrite');
                 const clearRequest = clearTransaction.objectStore('notatki').clear();
                 
@@ -1081,7 +1532,6 @@
                             file: note.file || null,
                             filename: note.filename || '',
                             filetype: note.filetype || '',
-                            background: note.background || '#222',
                             createdAt: new Date().getTime()
                         };
                         
@@ -1102,9 +1552,9 @@
             }
         });
 
-        // INICJALIZACJA
+        // INICJALIZACJA - WYŚWIETL NOTATKI PO ZAŁADOWANIU STRONY
         window.addEventListener('load', wyswietlNotatki);
     </script>
-<script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
+	<script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
 </body>
 </html>
