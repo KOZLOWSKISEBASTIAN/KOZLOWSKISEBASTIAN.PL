@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>PRZYBORNIK</title>
     <style>
         /* GŁÓWNE STYLE */
@@ -12,7 +12,7 @@
             min-height: 100vh;
             background: #000000;
             transition: background-color 0.3s;
-            touch-action: none;
+            touch-action: manipulation;
         }
 
         .KOZLOWSKISEBASTIAN_CIEMNY {
@@ -34,6 +34,7 @@
             z-index: 1000;
             user-select: none;
             -webkit-user-select: none;
+            touch-action: none;
         }
 
         .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
@@ -56,7 +57,7 @@
             background-color: #333333;
         }
 
-        /* SZYBSZA ANIMACJA OBROTU (0.3s zamiast 0.5s) */
+        /* SZYBSZA ANIMACJA OBROTU */
         .OBRACAJ {
             animation: obrot 0.2s ease-out;
         }
@@ -112,6 +113,7 @@
             display: flex;
             justify-content: center;
             box-sizing: border-box;
+            touch-action: pan-y;
         }
 
         .KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
@@ -141,6 +143,7 @@
             cursor: pointer;
             transition: all 0.15s;
             touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
@@ -212,8 +215,8 @@
         let isDragging = false;
         let startX, startY, initialLeft, initialTop;
         let clickStartTime = 0;
-        const CLICK_MAX_DURATION = 150; // krótszy czas dla szybszej reakcji
-        const CLICK_MAX_DISTANCE = 8;   // mniejszy dystans
+        const CLICK_MAX_DURATION = 150;
+        const CLICK_MAX_DISTANCE = 8;
 
         // Rozpoczęcie interakcji
         ksztalt.addEventListener('mousedown', startInteraction);
@@ -290,7 +293,7 @@
             e.stopPropagation();
         }
 
-        // Obsługa kliknięcia z szybszą animacją
+        // Obsługa kliknięcia
         function handleClick() {
             if (!ksztalt.classList.contains('ROZSZERZONY')) {
                 ksztalt.classList.add('OBRACAJ');
@@ -298,7 +301,7 @@
                 setTimeout(() => {
                     ksztalt.classList.remove('OBRACAJ');
                     ksztalt.classList.add('ROZSZERZONY');
-                }, 300); // Krótszy timeout odpowiadający animacji
+                }, 300);
             }
         }
 
@@ -347,6 +350,27 @@
             }
         }
 
+        // Blokada zoomu na mobile
+        function preventZoom(e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }
+
+        // Blokada odświeżania przez przeciąganie w dół
+        let startYForRefresh = 0;
+        window.addEventListener('touchstart', function(e) {
+            startYForRefresh = e.touches[0].clientY;
+        }, { passive: true });
+
+        window.addEventListener('touchmove', function(e) {
+            const y = e.touches[0].clientY;
+            if (startYForRefresh === 0 && y > 50) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        document.addEventListener('touchmove', preventZoom, { passive: false });
         window.addEventListener('load', initHexagonPosition);
         window.addEventListener('resize', initHexagonPosition);
     </script>
