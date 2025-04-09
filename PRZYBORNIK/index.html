@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PRZYBORNIK</title>
     <style>
         /* GŁÓWNE STYLE */
@@ -12,7 +12,6 @@
             min-height: 100vh;
             background: #000000;
             transition: background-color 0.3s;
-            touch-action: manipulation;
         }
 
         .KOZLOWSKISEBASTIAN_CIEMNY {
@@ -34,7 +33,6 @@
             z-index: 1000;
             user-select: none;
             -webkit-user-select: none;
-            touch-action: none;
         }
 
         .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
@@ -46,7 +44,6 @@
             transition: all 0.3s ease;
             transform-origin: center;
             cursor: pointer;
-            touch-action: none;
         }
 
         .KOZLOWSKISEBASTIAN_CIEMNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
@@ -57,7 +54,7 @@
             background-color: #333333;
         }
 
-        /* SZYBSZA ANIMACJA OBROTU */
+        /* ANIMACJA OBROTU */
         .OBRACAJ {
             animation: obrot 0.2s ease-out;
         }
@@ -77,7 +74,6 @@
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.2s;
-            touch-action: none;
         }
 
         .ROZSZERZONY + .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
@@ -90,7 +86,6 @@
             width: 100%;
             height: 100%;
             cursor: pointer;
-            touch-action: none;
         }
 
         .KOZLOWSKISEBASTIAN_TROJKAT_JEDEN {
@@ -113,7 +108,6 @@
             display: flex;
             justify-content: center;
             box-sizing: border-box;
-            touch-action: pan-y;
         }
 
         .KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
@@ -142,7 +136,6 @@
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.15s;
-            touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -220,7 +213,7 @@
 
         // Rozpoczęcie interakcji
         ksztalt.addEventListener('mousedown', startInteraction);
-        ksztalt.addEventListener('touchstart', startInteraction, { passive: false });
+        ksztalt.addEventListener('touchstart', startInteraction);
 
         function startInteraction(e) {
             clickStartTime = Date.now();
@@ -237,12 +230,9 @@
             initialTop = rect.top;
             
             document.addEventListener('mousemove', handleMove);
-            document.addEventListener('touchmove', handleMove, { passive: false });
+            document.addEventListener('touchmove', handleMove);
             document.addEventListener('mouseup', endInteraction);
             document.addEventListener('touchend', endInteraction);
-            
-            e.preventDefault();
-            e.stopPropagation();
         }
 
         // Obsługa ruchu
@@ -267,9 +257,6 @@
                 
                 kontener.style.left = `${Math.min(Math.max(0, newX), maxX)}px`;
                 kontener.style.top = `${Math.min(Math.max(0, newY), maxY)}px`;
-                
-                e.preventDefault();
-                e.stopPropagation();
             }
         }
 
@@ -288,9 +275,6 @@
             }
             
             isDragging = false;
-            
-            e.preventDefault();
-            e.stopPropagation();
         }
 
         // Obsługa kliknięcia
@@ -350,27 +334,6 @@
             }
         }
 
-        // Blokada zoomu na mobile
-        function preventZoom(e) {
-            if (e.touches.length > 1) {
-                e.preventDefault();
-            }
-        }
-
-        // Blokada odświeżania przez przeciąganie w dół
-        let startYForRefresh = 0;
-        window.addEventListener('touchstart', function(e) {
-            startYForRefresh = e.touches[0].clientY;
-        }, { passive: true });
-
-        window.addEventListener('touchmove', function(e) {
-            const y = e.touches[0].clientY;
-            if (startYForRefresh === 0 && y > 50) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-
-        document.addEventListener('touchmove', preventZoom, { passive: false });
         window.addEventListener('load', initHexagonPosition);
         window.addEventListener('resize', initHexagonPosition);
     </script>
