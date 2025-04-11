@@ -170,7 +170,7 @@
             box-sizing: border-box;
         }
         
-        .KOZLOWSKISEBASTIAN .latarka-profil:hover {
+        .KOZLOWSKISEBASTIAN W.latarka-profil:hover {
             color: #FF00FF;
             background: #333333;
         }
@@ -532,12 +532,10 @@
                     });
                     state.videoTrack = stream.getVideoTracks()[0];
                     await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
-                    elements.latarkaElement.style.opacity = '1';
                     elements.hexagonKsztalt.style.backgroundColor = '#333333';
                 } catch (error) {
                     console.error('Błąd włączenia latarki:', error);
                     state.latarkaWlaczona = false;
-                    elements.latarkaElement.style.opacity = '0';
                     elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
                     aktualizujPrzyciski();
                     alert('Nie można włączyć latarki. Sprawdź uprawnienia kamery lub dostępność latarki.');
@@ -555,7 +553,6 @@
                     }
                     state.videoTrack = null;
                 }
-                elements.latarkaElement.style.opacity = '0';
                 elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
             }
             
