@@ -332,10 +332,9 @@
                     <div class="latarka-opcja">
                         <label for="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-TRYB">Tryb ekranu:</label>
                         <select id="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-TRYB" class="latarka-przycisk" style="width: 100%; padding: 6px; font-size: 14px; box-sizing: border-box;">
-                            <option value="off">Wyłączony</option>
+                            <option value="solid">Stały</option>
                             <option value="sos">SOS</option>
                             <option value="strobe">Stroboskop</option>
-                            <option value="solid">Stały</option>
                             <option value="fire">Straż Pożarna</option>
                             <option value="ambulance">Pogotowie</option>
                             <option value="police">Policja</option>
@@ -401,7 +400,7 @@
                 latarkaWlaczona: false,
                 latarkaSos: false,
                 ekranWlaczony: false,
-                trybEkranu: 'off',
+                trybEkranu: 'solid', // Domyślnie tryb stały
                 szybkoscEkranu: 200,
                 koloryEkranu: ['#FFFFFF'],
                 aktualnyKolorIndex: 0,
@@ -628,12 +627,6 @@
                 state.trybEkranu = elements.ekranTrybSelect.value;
                 state.szybkoscEkranu = parseInt(elements.ekranSzybkoscSlider.value);
                 
-                if (state.trybEkranu === 'off') {
-                    document.body.style.backgroundColor = '#000000';
-                    elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                    return;
-                }
-                
                 if (state.trybEkranu === 'solid') {
                     document.body.style.backgroundColor = state.koloryEkranu[0];
                     elements.hexagonKsztalt.style.backgroundColor = invertColor(state.koloryEkranu[0]);
@@ -669,7 +662,7 @@
                         document.body.style.backgroundColor = state.koloryEkranu[state.aktualnyKolorIndex];
                         elements.hexagonKsztalt.style.backgroundColor = invertColor(state.koloryEkranu[state.aktualnyKolorIndex]);
                     } else {
-                        if (step >= sosPattern.length) step = 0;
+                        if (step >= pattern.length) step = 0;
                         const duration = pattern[step];
                         if (step % 2 === 0) {
                             document.body.style.backgroundColor = state.koloryEkranu[0];
