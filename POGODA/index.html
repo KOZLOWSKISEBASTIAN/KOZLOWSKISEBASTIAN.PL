@@ -3,22 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NOTATNIK</title>
-    <meta name="theme-color" content="#000000">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="ht
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POGODA</title>
     <meta name="theme-color" content="#000000">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
     <style>
-
         body {
             font-family: 'Montserrat', sans-serif;
             background: #111;
@@ -246,6 +236,14 @@
             text-decoration: none;
         }
         
+        .pogoda-mapa-link {
+            display: block;
+            margin-top: 10px;
+            color: #FF00FF;
+            text-align: center;
+            font-size: 14px;
+        }
+        
         @media (max-width: 400px) {
             .pogoda-kontener {
                 width: 95%;
@@ -374,6 +372,9 @@
                 const dataAktualizacji = new Date(dane.data_pomiaru + 'T' + dane.godzina_pomiaru + ':00');
                 ostatniaAktualizacja.textContent = dataAktualizacji.toLocaleString('pl-PL');
                 
+                // Generuj link do mapy IMGW z koordynatami miasta
+                const mapaLink = `https://meteo.imgw.pl/dyn/index.html#loc=${stacja.wsp.lat},${stacja.wsp.lon},10`;
+                
                 const html = `
                     <div class="pogoda-karta">
                         <div class="pogoda-lokalizacja">
@@ -413,6 +414,10 @@
                                 <div class="pogoda-szczegol-etykieta">Opady</div>
                             </div>
                         </div>
+                        
+                        <a href="${mapaLink}" target="_blank" class="pogoda-mapa-link">
+                            <i class="fas fa-map-marked-alt"></i> Pokaż na mapie IMGW
+                        </a>
                     </div>
                 `;
                 
@@ -492,6 +497,6 @@
             wyswietlPogode(wyborMiasta.value);
         });
     </script>
-	<script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
+    <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
 </body>
 </html>
