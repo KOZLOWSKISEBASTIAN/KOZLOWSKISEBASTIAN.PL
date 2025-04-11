@@ -363,7 +363,6 @@
                             <button class="latarka-kolor-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-HEX-ZASTOSUJ">OK</button>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -393,11 +392,7 @@
                 ekranSzybkoscSlider: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-SZYBKOSC'),
                 koloryLista: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-KOLORY-LISTA'),
                 hexInput: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX'),
-                hexZastosujBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX-ZASTOSUJ'),
-                profilStraz: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-PROFIL-STRAZ'),
-                profilPogotowie: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-PROFIL-POGOTOWIE'),
-                profilPolicja: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-PROFIL-POLICJA'),
-                profilSpecjalny: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-PROFIL-SPECJALNY')
+                hexZastosujBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX-ZASTOSUJ')
             };
             
             // Stan aplikacji
@@ -411,7 +406,8 @@
                 koloryEkranu: ['#FFFFFF'],
                 aktualnyKolorIndex: 0,
                 intervalLatarki: null,
-                intervalEkranu: null
+                intervalEkranu: null,
+                videoTrack: null
             };
             
             // Profile kolorów
@@ -449,15 +445,16 @@
                 elements.koloryLista.addEventListener('click', handleColorSelection);
                 elements.hexZastosujBtn.addEventListener('click', applyCustomColor);
                 
-                // Profile
-                elements.profilStraz && elements.profilStraz.addEventListener('click', () => applyProfile('fire'));
-                elements.profilPogotowie && elements.profilPogotowie.addEventListener('click', () => applyProfile('ambulance'));
-                elements.profilPolicja && elements.profilPolicja.addEventListener('click', () => applyProfile('police'));
-                elements.profilSpecjalny && elements.profilSpecjalny.addEventListener('click', () => applyProfile('special'));
-                
                 // Zmiana trybu ekranu
                 elements.ekranTrybSelect.addEventListener('change', handleEkranTrybChange);
                 elements.ekranSzybkoscSlider.addEventListener('input', handleEkranSzybkoscChange);
+
+                // Czyszczenie po zamknięciu strony
+                window.addEventListener('unload', () => {
+                    if (state.videoTrack) {
+                        state.videoTrack.stop();
+                    }
+                });
             }
             
             // Ukryj elementy na starcie
@@ -502,13 +499,13 @@
             }
             
             // Włącz/wyłącz latarkę
-            function toggleLatarke() {
+            async function toggleLatarke() {
                 state.latarkaWlaczona = !state.latarkaWlaczona;
                 
                 if (state.latarkaWlaczona) {
-                    startLatarka();
+                    await startLatarka();
                 } else {
-                    stopLatarka();
+                    await stopLatarka();
                 }
                 
                 aktualizujPrzyciski();
@@ -546,7 +543,7 @@
             }
             
             // Start latarki
-            function startLatarka() {
+            async function startLatarka() {
                 stopLatarka();
                 
                 if (state.trybLatarki === 'off') {
@@ -555,59 +552,95 @@
                     return;
                 }
                 
-                if (state.trybLatarki === 'solid') {
-                    elements.latarkaElement.style.opacity = '1';
-                    elements.hexagonKsztalt.style.backgroundColor = '#333333';
-                    return;
-                }
-                
-                let pattern = [];
-                if (state.trybLatarki === 'sos') {
-                    pattern = [100, 100, 100, 300, 300, 300, 100, 100, 100, 600];
-                } else if (state.trybLatarki === 'strobe') {
-                    pattern = [200, 200];
-                }
-                
-                let step = 0;
-                elements.latarkaElement.style.opacity = '0';
-                elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                
-                state.intervalLatarki = setInterval(() => {
-                    if (state.trybLatarki === 'strobe') {
-                        if (elements.latarkaElement.style.opacity === '0') {
-                            elements.latarkaElement.style.opacity = '1';
-                            elements.hexagonKsztalt.style.backgroundColor = '#333333';
-                        } else {
-                            elements.latarkaElement.style.opacity = '0';
-                            elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                        }
-                    } else {
-                        if (step >= pattern.length) step = 0;
-                        const duration = pattern[step];
-                        if (step % 2 === 0) {
-                            elements.latarkaElement.style.opacity = '1';
-                            elements.hexagonKsztalt.style.backgroundColor = '#333333';
-                        } else {
-                            elements.latarkaElement.style.opacity = '0';
-                            elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                        }
-                        setTimeout(() => {
-                            if (step % 2 === 0) {
-                                elements.latarkaElement.style.opacity = '0';
-                                elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                            } else {
-                                elements.latarkaElement.style.opacity = '1';
-                                elements.hexagonKsztalt.style.backgroundColor = '#333333';
-                            }
-                        }, duration);
-                        step++;
+                try {
+                    if (state.trybLatarki === 'solid') {
+                        const stream = await navigator.mediaDevices.getUserMedia({
+                            video: { facingMode: 'environment', torch: true }
+                        });
+                        state.videoTrack = stream.getVideoTracks()[0];
+                        await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
+                        elements.latarkaElement.style.opacity = '1';
+                        elements.hexagonKsztalt.style.backgroundColor = '#333333';
+                        return;
                     }
-                }, state.trybLatarki === 'strobe' ? 200 : 100);
+                    
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: 'environment', torch: true }
+                    });
+                    state.videoTrack = stream.getVideoTracks()[0];
+                    
+                    let pattern = [];
+                    if (state.trybLatarki === 'sos') {
+                        pattern = [100, 100, 100, 300, 300, 300, 100, 100, 100, 600];
+                    } else if (state.trybLatarki === 'strobe') {
+                        pattern = [200, 200];
+                    }
+                    
+                    let step = 0;
+                    elements.latarkaElement.style.opacity = '0';
+                    elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
+                    
+                    state.intervalLatarki = setInterval(async () => {
+                        try {
+                            if (state.trybLatarki === 'strobe') {
+                                if (elements.latarkaElement.style.opacity === '0') {
+                                    await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
+                                    elements.latarkaElement.style.opacity = '1';
+                                    elements.hexagonKsztalt.style.backgroundColor = '#333333';
+                                } else {
+                                    await state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
+                                    elements.latarkaElement.style.opacity = '0';
+                                    elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
+                                }
+                            } else {
+                                if (step >= pattern.length) step = 0;
+                                const duration = pattern[step];
+                                if (step % 2 === 0) {
+                                    await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
+                                    elements.latarkaElement.style.opacity = '1';
+                                    elements.hexagonKsztalt.style.backgroundColor = '#333333';
+                                } else {
+                                    await state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
+                                    elements.latarkaElement.style.opacity = '0';
+                                    elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
+                                }
+                                setTimeout(async () => {
+                                    if (step % 2 === 0) {
+                                        await state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
+                                        elements.latarkaElement.style.opacity = '0';
+                                        elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
+                                    } else {
+                                        await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
+                                        elements.latarkaElement.style.opacity = '1';
+                                        elements.hexagonKsztalt.style.backgroundColor = '#333333';
+                                    }
+                                }, duration);
+                                step++;
+                            }
+                        } catch (error) {
+                            console.error('Błąd sterowania latarką:', error);
+                        }
+                    }, state.trybLatarki === 'strobe' ? 200 : 100);
+                } catch (error) {
+                    console.error('Błąd włączenia latarki:', error);
+                    state.latarkaWlaczona = false;
+                    aktualizujPrzyciski();
+                    alert('Nie można włączyć latarki. Sprawdź uprawnienia kamery.');
+                }
             }
             
             // Stop latarki
-            function stopLatarka() {
+            async function stopLatarka() {
                 clearInterval(state.intervalLatarki);
+                if (state.videoTrack) {
+                    try {
+                        await state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
+                        state.videoTrack.stop();
+                    } catch (error) {
+                        console.error('Błąd wyłączania latarki:', error);
+                    }
+                    state.videoTrack = null;
+                }
                 elements.latarkaElement.style.opacity = '0';
                 elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
             }
@@ -745,12 +778,6 @@
                 }
             }
             
-            // Zastosuj profil
-            function applyProfile(profil) {
-                elements.ekranTrybSelect.value = profil;
-                if (state.ekranWlaczony) startEkran();
-            }
-            
             // Obsługa zmiany trybu ekranu
             function handleEkranTrybChange() {
                 if (state.ekranWlaczony) {
@@ -771,47 +798,6 @@
                 init: init
             };
         })();
-		        const button = document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-WLACZ');
-        let isTorchOn = false;
-        let videoTrack = null;
-
-        async function toggleTorch() {
-            try {
-                if (!isTorchOn) {
-                    // Włączanie latarki
-                    const stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: 'environment', torch: true }
-                    });
-                    videoTrack = stream.getVideoTracks()[0];
-                    await videoTrack.applyConstraints({ advanced: [{ torch: true }] });
-                    button.textContent = 'Wyłącz latarkę';
-                    statusText.textContent = 'Latarka włączona';
-                    isTorchOn = true;
-                } else {
-                    // Wyłączanie latarki
-                    if (videoTrack) {
-                        videoTrack.applyConstraints({ advanced: [{ torch: false }] });
-                        videoTrack.stop();
-                        videoTrack = null;
-                    }
-                    button.textContent = 'Włącz latarkę';
-                    statusText.textContent = 'Latarka wyłączona';
-                    isTorchOn = false;
-                }
-            } catch (error) {
-                console.error('Błąd:', error);
-                statusText.textContent = 'Błąd: Nie można sterować latarką';
-            }
-        }
-
-        button.addEventListener('click', toggleTorch);
-
-        // Czyszczenie po zamknięciu strony
-        window.addEventListener('unload', () => {
-            if (videoTrack) {
-                videoTrack.stop();
-            }
-        });
 
         // Inicjalizacja latarki po załadowaniu DOM
         document.addEventListener('DOMContentLoaded', Latarka.init);
