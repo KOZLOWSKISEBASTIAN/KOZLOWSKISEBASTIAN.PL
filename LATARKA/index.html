@@ -68,6 +68,16 @@
             display: block;
         }
         
+        .KOZLOWSKISEBASTIAN .latarka-opcje-latarka {
+            margin-top: 8px;
+            display: none;
+            width: 100%;
+        }
+        
+        .KOZLOWSKISEBASTIAN .latarka-opcje-latarka.aktywne {
+            display: block;
+        }
+        
         .KOZLOWSKISEBASTIAN .latarka-opcja {
             margin-bottom: 8px;
             width: 100%;
@@ -211,6 +221,10 @@
             color: #555555;
         }
         
+        .KOZLOWSKISEBASTIAN_JASNY .latarka-opcje-latarka label {
+            color: #555555;
+        }
+        
         .KOZLOWSKISEBASTIAN_JASNY .latarka-slider {
             background: #EEEEEE;
         }
@@ -252,6 +266,12 @@
         .KOZLOWSKISEBASTIAN_JASNY .latarka-profil:hover {
             color: #333333;
             background: #E0E0E0;
+        }
+        
+        .KOZLOWSKISEBASTIAN_JASNY .latarka-opcje-latarka select {
+            background: #EEEEEE;
+            color: #555555;
+            border: 1px solid #E0E0E0;
         }
         
         /* STYLE PRZYCISKU LATARKA DLA JASNEGO MOTYWU */
@@ -324,10 +344,26 @@
                         <button class="latarka-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-WLACZ">WŁĄCZ LATARKĘ</button>
                         <button class="latarka-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-EKRAN">WŁĄCZ EKRAN</button>
                     </div>
-                    <button class="latarka-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-OPCJE-BTN">OPCJE</button>
+                    <div class="latarka-grupa-przyciskow">
+                        <button class="latarka-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-OPCJE-LATARKA-BTN">OPCJE LATARKI</button>
+                        <button class="latarka-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-OPCJE-EKRAN-BTN">OPCJE EKRANU</button>
+                    </div>
                     <button class="latarka-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-TRYB" style="display:none;">TRYB: WYŁ.</button>
                 </div>
                 
+                <!-- Kontener opcji latarki -->
+                <div class="latarka-opcje-latarka" id="KOZLOWSKISEBASTIAN_LATARKA-OPCJE-LATARKA">
+                    <div class="latarka-opcja">
+                        <label for="KOZLOWSKISEBASTIAN_LATARKA-TRYB-LATARKA">Tryb latarki:</label>
+                        <select id="KOZLOWSKISEBASTIAN_LATARKA-TRYB-LATARKA" class="latarka-przycisk" style="width: 100%; padding: 6px; font-size: 14px; box-sizing: border-box;">
+                            <option value="solid">Stały</option>
+                            <option value="sos">SOS</option>
+                            <option value="strobe">Stroboskop</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Kontener opcji ekranu -->
                 <div class="latarka-opcje" id="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-OPCJE">
                     <div class="latarka-opcja">
                         <label for="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-TRYB">Tryb ekranu:</label>
@@ -385,22 +421,25 @@
                 wlaczBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-WLACZ'),
                 trybBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-TRYB'),
                 ekranBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN'),
-                opcjeBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-OPCJE-BTN'),
-                ekranOpcje: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-OPCJE'),
+                opcjeLatarkaBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-OPCJE-LATARKA-BTN'),
+                opcjeEkranBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-OPCJE-EKRAN-BTN'),
+                opcjeLatarka: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-OPCJE-LATARKA'),
+                opcjeEkran: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-OPCJE'),
+                latarkaTrybSelect: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-TRYB-LATARKA'),
                 ekranTrybSelect: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-TRYB'),
                 ekranSzybkoscSlider: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-SZYBKOSC'),
                 koloryLista: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-KOLORY-LISTA'),
                 hexInput: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX'),
                 hexZastosujBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX-ZASTOSUJ')
             };
-            
+
             // Stan aplikacji
             let state = {
                 menuWidoczne: false,
                 latarkaWlaczona: false,
-                latarkaSos: false,
+                latarkaTryb: 'solid', // Domyślnie stały
                 ekranWlaczony: false,
-                trybEkranu: 'solid', // Domyślnie tryb stały
+                trybEkranu: 'solid', // Domyślnie stały
                 szybkoscEkranu: 200,
                 koloryEkranu: ['#FFFFFF'],
                 aktualnyKolorIndex: 0,
@@ -408,7 +447,7 @@
                 intervalLatarki: null,
                 videoTrack: null
             };
-            
+
             // Profile kolorów
             const profile = {
                 straz: ['#FF0000', '#FFFFFF'],
@@ -416,45 +455,51 @@
                 policja: ['#0000FF', '#FF0000'],
                 specjalny: ['#FFFF00', '#FFA500']
             };
-            
+
+            // Wzorzec SOS
+            const sosPattern = [
+                200, 200, // Krótki (S)
+                200, 200, // Krótki
+                200, 200, // Krótki
+                600, 200, // Długi (O)
+                600, 200, // Długi
+                600, 200, // Długi
+                200, 200, // Krótki (S)
+                200, 200, // Krótki
+                200, 1000 // Krótki, przerwa
+            ];
+
             // Inicjalizacja
             function init() {
                 setupEventListeners();
                 ukryjElementyNaStarcie();
                 dodajPierwszyAktywnyKolor();
             }
-            
+
             // Ustawienie nasłuchiwaczy zdarzeń
             function setupEventListeners() {
-                // Przycisk Przybornik
                 elements.przybornikPrzycisk.addEventListener('click', () => {
                     window.location.href = 'https://kozlowskisebastian.pl/PRZYBORNIK';
                 });
-                
-                // Przycisk Latarka - pokaż/ukryj menu
+
                 elements.latarkaPrzycisk.addEventListener('click', toggleMenu);
-                
-                // Przyciski funkcjonalności latarki
                 elements.wlaczBtn.addEventListener('click', toggleLatarke);
                 elements.ekranBtn.addEventListener('click', toggleEkran);
-                elements.opcjeBtn.addEventListener('click', toggleOpcje);
-                
-                // Wybór kolorów
-                elements.koloryLista.addEventListener('click', handleColorSelection);
-                elements.hexZastosujBtn.addEventListener('click', applyCustomColor);
-                
-                // Zmiana trybu ekranu
+                elements.opcjeLatarkaBtn.addEventListener('click', toggleOpcjeLatarka);
+                elements.opcjeEkranBtn.addEventListener('click', toggleOpcjeEkran);
+                elements.latarkaTrybSelect.addEventListener('change', handleLatarkaTrybChange);
                 elements.ekranTrybSelect.addEventListener('change', handleEkranTrybChange);
                 elements.ekranSzybkoscSlider.addEventListener('input', handleEkranSzybkoscChange);
+                elements.koloryLista.addEventListener('click', handleColorSelection);
+                elements.hexZastosujBtn.addEventListener('click', applyCustomColor);
 
-                // Czyszczenie po zamknięciu strony
                 window.addEventListener('unload', () => {
                     if (state.videoTrack) {
                         state.videoTrack.stop();
                     }
                 });
             }
-            
+
             // Ukryj elementy na starcie
             function ukryjElementyNaStarcie() {
                 elements.hexagonKontener.style.display = 'none';
@@ -462,16 +507,16 @@
                 elements.przybornikPrzycisk.style.display = 'none';
                 elements.trybBtn.style.display = 'none';
             }
-            
+
             // Dodaj pierwszy aktywny kolor
             function dodajPierwszyAktywnyKolor() {
                 document.querySelector('.latarka-kolor').classList.add('aktywny');
             }
-            
+
             // Pokaz/ukryj menu
             function toggleMenu() {
                 state.menuWidoczne = !state.menuWidoczne;
-                
+
                 if (state.menuWidoczne) {
                     elements.przybornikPrzycisk.style.display = 'block';
                     elements.latarkaKontener.style.display = 'block';
@@ -484,71 +529,57 @@
                     elements.latarkaPrzycisk.style.marginTop = '0';
                 }
             }
-            
+
             // Aktualizuj przyciski
             function aktualizujPrzyciski() {
-                if (!state.latarkaWlaczona) {
-                    elements.wlaczBtn.textContent = 'WŁĄCZ LATARKĘ';
-                    elements.wlaczBtn.classList.remove('aktywny');
-                } else if (state.latarkaWlaczona && !state.latarkaSos) {
-                    elements.wlaczBtn.textContent = 'WŁĄCZ SOS';
-                    elements.wlaczBtn.classList.add('aktywny');
-                } else if (state.latarkaSos) {
-                    elements.wlaczBtn.textContent = 'WYŁĄCZ LATARKĘ';
-                    elements.wlaczBtn.classList.add('aktywny');
-                }
-                
+                elements.wlaczBtn.textContent = state.latarkaWlaczona ? 'WYŁĄCZ LATARKĘ' : 'WŁĄCZ LATARKĘ';
+                elements.wlaczBtn.classList.toggle('aktywny', state.latarkaWlaczona);
                 elements.ekranBtn.textContent = state.ekranWlaczony ? 'WYŁĄCZ EKRAN' : 'WŁĄCZ EKRAN';
                 elements.ekranBtn.classList.toggle('aktywny', state.ekranWlaczony);
             }
-            
+
             // Włącz/wyłącz latarkę
             async function toggleLatarke() {
-                if (!state.latarkaWlaczona) {
-                    // Włącz latarkę
-                    state.latarkaWlaczona = true;
+                state.latarkaWlaczona = !state.latarkaWlaczona;
+
+                if (state.latarkaWlaczona) {
                     await startLatarka();
-                } else if (state.latarkaWlaczona && !state.latarkaSos) {
-                    // Włącz SOS
-                    state.latarkaSos = true;
-                    await startSosLatarka();
-                } else if (state.latarkaSos) {
-                    // Wyłącz latarkę
-                    state.latarkaWlaczona = false;
-                    state.latarkaSos = false;
+                } else {
                     await stopLatarka();
                 }
-                
+
                 aktualizujPrzyciski();
             }
-            
-            // Włącz/wyłącz ekran
-            function toggleEkran() {
-                state.ekranWlaczony = !state.ekranWlaczony;
-                
-                if (state.ekranWlaczony) {
-                    startEkran();
-                } else {
-                    stopEkran();
-                }
-                
-                aktualizujPrzyciski();
+
+            // Pokaz/ukryj opcje latarki
+            function toggleOpcjeLatarka() {
+                elements.opcjeLatarka.classList.toggle('aktywne');
             }
-            
-            // Pokaz/ukryj opcje
-            function toggleOpcje() {
-                elements.ekranOpcje.classList.toggle('aktywne');
+
+            // Pokaz/ukryj opcje ekranu
+            function toggleOpcjeEkran() {
+                elements.opcjeEkran.classList.toggle('aktywne');
             }
-            
-            // Start latarki (stałe światło)
+
+            // Start latarki
             async function startLatarka() {
+                await stopLatarka(); // Zatrzymaj poprzedni stan
+                state.latarkaTryb = elements.latarkaTrybSelect.value;
+
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({
                         video: { facingMode: 'environment', torch: true }
                     });
                     state.videoTrack = stream.getVideoTracks()[0];
-                    await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
                     elements.hexagonKsztalt.style.backgroundColor = '#333333';
+
+                    if (state.latarkaTryb === 'solid') {
+                        await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
+                    } else if (state.latarkaTryb === 'sos') {
+                        runSosLatarka();
+                    } else if (state.latarkaTryb === 'strobe') {
+                        runStrobeLatarka();
+                    }
                 } catch (error) {
                     console.error('Błąd włączenia latarki:', error);
                     state.latarkaWlaczona = false;
@@ -557,54 +588,57 @@
                     alert('Nie można włączyć latarki. Sprawdź uprawnienia kamery lub dostępność latarki.');
                 }
             }
-            
-            // Start latarki w trybie SOS
-            async function startSosLatarka() {
-                stopLatarka(); // Zatrzymaj poprzedni stan latarki
-                
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: 'environment', torch: true }
-                    });
-                    state.videoTrack = stream.getVideoTracks()[0];
-                    
-                    const sosPattern = [200, 200, 200, 200, 200, 600, 600, 600, 200, 200, 200, 1000]; // S-O-S
-                    let step = 0;
-                    
-                    elements.hexagonKsztalt.style.backgroundColor = '#333333';
-                    
-                    state.intervalLatarki = setInterval(async () => {
-                        try {
-                            if (step >= sosPattern.length) step = 0;
-                            const duration = sosPattern[step];
-                            
-                            if (step % 2 === 0) {
-                                await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
-                            } else {
-                                await state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
-                            }
-                            
-                            step++;
-                        } catch (error) {
-                            console.error('Błąd w trybie SOS:', error);
-                            clearInterval(state.intervalLatarki);
-                            state.latarkaWlaczona = false;
-                            state.latarkaSos = false;
-                            elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                            aktualizujPrzyciski();
-                            alert('Błąd w trybie SOS. Latarka została wyłączona.');
+
+            // Funkcja SOS dla latarki
+            function runSosLatarka() {
+                let step = 0;
+
+                function nextStep() {
+                    if (!state.latarkaWlaczona) return;
+                    if (step >= sosPattern.length) step = 0;
+                    const duration = sosPattern[step];
+
+                    try {
+                        if (step % 2 === 0) {
+                            state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
+                        } else {
+                            state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
                         }
-                    }, 200); // Szybkość przełączania dostosowana do wzoru SOS
-                } catch (error) {
-                    console.error('Błąd włączenia latarki w trybie SOS:', error);
-                    state.latarkaWlaczona = false;
-                    state.latarkaSos = false;
-                    elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                    aktualizujPrzyciski();
-                    alert('Nie można włączyć latarki. Sprawdź uprawnienia kamery lub dostępność latarki.');
+
+                        step++;
+                        setTimeout(nextStep, duration);
+                    } catch (error) {
+                        console.error('Błąd w trybie SOS:', error);
+                        clearInterval(state.intervalLatarki);
+                        state.latarkaWlaczona = false;
+                        elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
+                        aktualizujPrzyciski();
+                        alert('Błąd w trybie SOS. Latarka została wyłączona.');
+                    }
                 }
+
+                nextStep();
             }
-            
+
+            // Funkcja stroboskopu dla latarki
+            function runStrobeLatarka() {
+                let isOn = false;
+
+                state.intervalLatarki = setInterval(async () => {
+                    try {
+                        isOn = !isOn;
+                        await state.videoTrack.applyConstraints({ advanced: [{ torch: isOn }] });
+                    } catch (error) {
+                        console.error('Błąd w trybie stroboskopu:', error);
+                        clearInterval(state.intervalLatarki);
+                        state.latarkaWlaczona = false;
+                        elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
+                        aktualizujPrzyciski();
+                        alert('Błąd w trybie stroboskopu. Latarka została wyłączona.');
+                    }
+                }, 200); // Szybkość stroboskopu
+            }
+
             // Stop latarki
             async function stopLatarka() {
                 clearInterval(state.intervalLatarki);
@@ -619,23 +653,22 @@
                 }
                 elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
             }
-            
+
             // Start ekranu
             function startEkran() {
                 stopEkran();
-                
                 state.trybEkranu = elements.ekranTrybSelect.value;
                 state.szybkoscEkranu = parseInt(elements.ekranSzybkoscSlider.value);
-                
+
                 if (state.trybEkranu === 'solid') {
                     document.body.style.backgroundColor = state.koloryEkranu[0];
                     elements.hexagonKsztalt.style.backgroundColor = invertColor(state.koloryEkranu[0]);
                     return;
                 }
-                
+
                 let pattern = [];
                 if (state.trybEkranu === 'sos') {
-                    pattern = [100, 100, 100, 300, 300, 300, 100, 100, 100, 600];
+                    pattern = sosPattern;
                 } else if (state.trybEkranu === 'strobe') {
                     pattern = [state.szybkoscEkranu, state.szybkoscEkranu];
                 } else if (state.trybEkranu === 'fire') {
@@ -651,19 +684,19 @@
                     state.koloryEkranu = profile.specjalny;
                     pattern = [200, 200];
                 }
-                
+
                 let step = 0;
-                document.body.style.backgroundColor = '#000000';
-                elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                
-                state.intervalEkranu = setInterval(() => {
+
+                function nextStep() {
+                    if (!state.ekranWlaczony) return;
+                    if (step >= pattern.length) step = 0;
+                    const duration = pattern[step];
+
                     if (['strobe', 'fire', 'ambulance', 'police', 'special'].includes(state.trybEkranu)) {
                         state.aktualnyKolorIndex = (state.aktualnyKolorIndex + 1) % state.koloryEkranu.length;
                         document.body.style.backgroundColor = state.koloryEkranu[state.aktualnyKolorIndex];
                         elements.hexagonKsztalt.style.backgroundColor = invertColor(state.koloryEkranu[state.aktualnyKolorIndex]);
-                    } else {
-                        if (step >= pattern.length) step = 0;
-                        const duration = pattern[step];
+                    } else if (state.trybEkranu === 'sos') {
                         if (step % 2 === 0) {
                             document.body.style.backgroundColor = state.koloryEkranu[0];
                             elements.hexagonKsztalt.style.backgroundColor = invertColor(state.koloryEkranu[0]);
@@ -671,27 +704,22 @@
                             document.body.style.backgroundColor = '#000000';
                             elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
                         }
-                        setTimeout(() => {
-                            if (step % 2 === 0) {
-                                document.body.style.backgroundColor = '#000000';
-                                elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                            } else {
-                                document.body.style.backgroundColor = state.koloryEkranu[0];
-                                elements.hexagonKsztalt.style.backgroundColor = invertColor(state.koloryEkranu[0]);
-                            }
-                        }, duration);
-                        step++;
                     }
-                }, ['strobe', 'fire', 'ambulance', 'police', 'special'].includes(state.trybEkranu) ? state.szybkoscEkranu : 100);
+
+                    step++;
+                    setTimeout(nextStep, duration);
+                }
+
+                nextStep();
             }
-            
+
             // Stop ekranu
             function stopEkran() {
                 clearInterval(state.intervalEkranu);
                 document.body.style.backgroundColor = '#000000';
                 elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
             }
-            
+
             // Odwróć kolor HEX
             function invertColor(hex) {
                 if (hex.indexOf('#') === 0) {
@@ -708,37 +736,37 @@
                 const b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16).padStart(2, '0');
                 return `#${r}${g}${b}`;
             }
-            
+
             // Sprawdź poprawność koloru HEX
             function isValidHexColor(hex) {
                 return /^#([0-9A-F]{3}){1,2}$/i.test(hex);
             }
-            
+
             // Obsługa wyboru koloru
             function handleColorSelection(e) {
                 if (e.target.classList.contains('latarka-kolor')) {
                     const kolor = e.target;
                     const wybranyKolor = kolor.dataset.kolor;
-                    
+
                     document.querySelectorAll('.latarka-kolor').forEach(el => el.classList.remove('aktywny'));
-                    
+
                     kolor.classList.add('aktywny');
                     state.koloryEkranu = [wybranyKolor];
-                    
+
                     if (state.ekranWlaczony) {
                         startEkran();
                     }
                 }
             }
-            
+
             // Zastosuj własny kolor HEX
             function applyCustomColor() {
                 const hexValue = elements.hexInput.value.trim();
                 if (isValidHexColor(hexValue)) {
                     document.querySelectorAll('.latarka-kolor').forEach(k => k.classList.remove('aktywny'));
-                    
+
                     state.koloryEkranu = [hexValue];
-                    
+
                     if (state.ekranWlaczony) {
                         startEkran();
                     }
@@ -746,14 +774,21 @@
                     alert('Wprowadź poprawny kod koloru HEX (np. #FFFFFF)');
                 }
             }
-            
+
+            // Obsługa zmiany trybu latarki
+            function handleLatarkaTrybChange() {
+                if (state.latarkaWlaczona) {
+                    startLatarka();
+                }
+            }
+
             // Obsługa zmiany trybu ekranu
             function handleEkranTrybChange() {
                 if (state.ekranWlaczony) {
                     startEkran();
                 }
             }
-            
+
             // Obsługa zmiany szybkości ekranu
             function handleEkranSzybkoscChange() {
                 state.szybkoscEkranu = parseInt(elements.ekranSzybkoscSlider.value);
@@ -761,7 +796,7 @@
                     startEkran();
                 }
             }
-            
+
             // Publiczne metody
             return {
                 init: init
