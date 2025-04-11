@@ -297,6 +297,18 @@
             z-index: -1;
             transition: opacity 0.3s, background-color 0.3s;
         }
+        
+        /* STYLE EKRANU LATARKI */
+        .KOZLOWSKISEBASTIAN .latarka-ekran {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            display: none;
+        }
     </style>
 </head>
 <body class="KOZLOWSKISEBASTIAN">
@@ -363,7 +375,6 @@
                             <button class="latarka-kolor-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-HEX-ZASTOSUJ">OK</button>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -371,6 +382,9 @@
 
     <!-- Element latarki - pełnoekranowy overlay -->
     <div id="KOZLOWSKISEBASTIAN_LATARKA-ELEMENT" class="latarka-element"></div>
+    
+    <!-- Nowy element dla pełnoekranowego ekranu latarki -->
+    <div id="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-ELEMENT" class="latarka-ekran"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
     <script>
@@ -384,6 +398,7 @@
                 hexagonKontener: document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KONTENER'),
                 hexagonKsztalt: document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT'),
                 latarkaElement: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-ELEMENT'),
+                ekranElement: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-ELEMENT'),
                 wlaczBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-WLACZ'),
                 trybBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-TRYB'),
                 ekranBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN'),
@@ -393,11 +408,7 @@
                 ekranSzybkoscSlider: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-SZYBKOSC'),
                 koloryLista: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-KOLORY-LISTA'),
                 hexInput: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX'),
-                hexZastosujBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX-ZASTOSUJ'),
-                profilStraz: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-PROFIL-STRAZ'),
-                profilPogotowie: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-PROFIL-POGOTOWIE'),
-                profilPolicja: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-PROFIL-POLICJA'),
-                profilSpecjalny: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-PROFIL-SPECJALNY')
+                hexZastosujBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX-ZASTOSUJ')
             };
             
             // Stan aplikacji
@@ -449,12 +460,6 @@
                 elements.koloryLista.addEventListener('click', handleColorSelection);
                 elements.hexZastosujBtn.addEventListener('click', applyCustomColor);
                 
-                // Profile
-                elements.profilStraz.addEventListener('click', () => applyProfile('fire'));
-                elements.profilPogotowie.addEventListener('click', () => applyProfile('ambulance'));
-                elements.profilPolicja.addEventListener('click', () => applyProfile('police'));
-                elements.profilSpecjalny.addEventListener('click', () => applyProfile('special'));
-                
                 // Zmiana trybu ekranu
                 elements.ekranTrybSelect.addEventListener('change', handleEkranTrybChange);
                 elements.ekranSzybkoscSlider.addEventListener('input', handleEkranSzybkoscChange);
@@ -465,6 +470,7 @@
                 elements.hexagonKontener.style.display = 'none';
                 elements.latarkaKontener.style.display = 'none';
                 elements.przybornikPrzycisk.style.display = 'none';
+                elements.ekranElement.style.display = 'none';
             }
             
             // Dodaj pierwszy aktywny kolor
@@ -607,7 +613,10 @@
             
             // Stop latarki
             function stopLatarka() {
-                clearInterval(state.intervalLatarki);
+                if (state.intervalLatarki) {
+                    clearInterval(state.intervalLatarki);
+                    state.intervalLatarki = null;
+                }
                 elements.latarkaElement.style.opacity = '0';
                 elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
             }
@@ -619,14 +628,17 @@
                 state.trybEkranu = elements.ekranTrybSelect.value;
                 state.szybkoscEkranu = parseInt(elements.ekranSzybkoscSlider.value);
                 
+                // Pokaz pełnoekranowy element
+                elements.ekranElement.style.display = 'block';
+                
                 if (state.trybEkranu === 'off') {
-                    document.body.style.backgroundColor = '#000000';
+                    elements.ekranElement.style.backgroundColor = '#000000';
                     elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
                     return;
                 }
                 
                 if (state.trybEkranu === 'solid') {
-                    document.body.style.backgroundColor = state.koloryEkranu[0];
+                    elements.ekranElement.style.backgroundColor = state.koloryEkranu[0];
                     elements.hexagonKsztalt.style.backgroundColor = invertColor(state.koloryEkranu[0]);
                     return;
                 }
@@ -651,30 +663,30 @@
                 }
                 
                 let step = 0;
-                document.body.style.backgroundColor = '#000000';
+                elements.ekranElement.style.backgroundColor = '#000000';
                 elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
                 
                 state.intervalEkranu = setInterval(() => {
                     if (['strobe', 'fire', 'ambulance', 'police', 'special'].includes(state.trybEkranu)) {
                         state.aktualnyKolorIndex = (state.aktualnyKolorIndex + 1) % state.koloryEkranu.length;
-                        document.body.style.backgroundColor = state.koloryEkranu[state.aktualnyKolorIndex];
+                        elements.ekranElement.style.backgroundColor = state.koloryEkranu[state.aktualnyKolorIndex];
                         elements.hexagonKsztalt.style.backgroundColor = invertColor(state.koloryEkranu[state.aktualnyKolorIndex]);
                     } else {
                         if (step >= pattern.length) step = 0;
                         const duration = pattern[step];
                         if (step % 2 === 0) {
-                            document.body.style.backgroundColor = state.koloryEkranu[0];
+                            elements.ekranElement.style.backgroundColor = state.koloryEkranu[0];
                             elements.hexagonKsztalt.style.backgroundColor = invertColor(state.koloryEkranu[0]);
                         } else {
-                            document.body.style.backgroundColor = '#000000';
+                            elements.ekranElement.style.backgroundColor = '#000000';
                             elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
                         }
                         setTimeout(() => {
                             if (step % 2 === 0) {
-                                document.body.style.backgroundColor = '#000000';
+                                elements.ekranElement.style.backgroundColor = '#000000';
                                 elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
                             } else {
-                                document.body.style.backgroundColor = state.koloryEkranu[0];
+                                elements.ekranElement.style.backgroundColor = state.koloryEkranu[0];
                                 elements.hexagonKsztalt.style.backgroundColor = invertColor(state.koloryEkranu[0]);
                             }
                         }, duration);
@@ -685,8 +697,12 @@
             
             // Stop ekranu
             function stopEkran() {
-                clearInterval(state.intervalEkranu);
-                document.body.style.backgroundColor = '#000000';
+                if (state.intervalEkranu) {
+                    clearInterval(state.intervalEkranu);
+                    state.intervalEkranu = null;
+                }
+                elements.ekranElement.style.backgroundColor = '#000000';
+                elements.ekranElement.style.display = 'none';
                 elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
             }
             
@@ -743,12 +759,6 @@
                 } else {
                     alert('Wprowadź poprawny kod koloru HEX (np. #FFFFFF)');
                 }
-            }
-            
-            // Zastosuj profil
-            function applyProfile(profil) {
-                elements.ekranTrybSelect.value = profil;
-                if (state.ekranWlaczony) startEkran();
             }
             
             // Obsługa zmiany trybu ekranu
