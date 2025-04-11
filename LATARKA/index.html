@@ -124,6 +124,7 @@
             cursor: pointer;
             border: 2px solid #333;
             transition: transform 0.15s;
+            position: relative;
         }
         
         .KOZLOWSKISEBASTIAN .latarka-kolor:hover {
@@ -133,6 +134,27 @@
         .KOZLOWSKISEBASTIAN .latarka-kolor.aktywny {
             border-color: #FF00FF;
             transform: scale(1.1);
+        }
+        
+        .KOZLOWSKISEBASTIAN .latarka-kolor-usun {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #FF0000;
+            color: white;
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            cursor: pointer;
+            display: none;
+        }
+        
+        .KOZLOWSKISEBASTIAN .latarka-kolor:hover .latarka-kolor-usun {
+            display: flex;
         }
         
         .KOZLOWSKISEBASTIAN .latarka-kolor-hex {
@@ -183,6 +205,37 @@
         .KOZLOWSKISEBASTIAN .latarka-profil:hover {
             color: #FF00FF;
             background: #333333;
+        }
+        
+        .KOZLOWSKISEBASTIAN .latarka-czasowy {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .KOZLOWSKISEBASTIAN .latarka-czasowy-input {
+            flex: 1;
+            background: #222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+        }
+        
+        .KOZLOWSKISEBASTIAN .latarka-czasowy-przycisk {
+            background: #222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+        
+        .KOZLOWSKISEBASTIAN .latarka-czasowy-przycisk:hover {
+            color: #FF00FF;
+            background: #333;
         }
         
         /* STYLE PRZYCISKU LATARKA */
@@ -274,6 +327,23 @@
             border: 1px solid #E0E0E0;
         }
         
+        .KOZLOWSKISEBASTIAN_JASNY .latarka-czasowy-input {
+            background: #EEEEEE;
+            color: #555555;
+            border: 1px solid #E0E0E0;
+        }
+        
+        .KOZLOWSKISEBASTIAN_JASNY .latarka-czasowy-przycisk {
+            background: #EEEEEE;
+            color: #555555;
+            border: 1px solid #E0E0E0;
+        }
+        
+        .KOZLOWSKISEBASTIAN_JASNY .latarka-czasowy-przycisk:hover {
+            color: #333333;
+            background: #E0E0E0;
+        }
+        
         /* STYLE PRZYCISKU LATARKA DLA JASNEGO MOTYWU */
         .KOZLOWSKISEBASTIAN_JASNY .latarka-glowny-przycisk {
             background: #EEEEEE;
@@ -361,6 +431,18 @@
                             <option value="strobe">Stroboskop</option>
                         </select>
                     </div>
+                    <div class="latarka-opcja" id="latarka-szybkosc-container" style="display: none;">
+                        <label for="KOZLOWSKISEBASTIAN_LATARKA-SZYBKOSC">Szybkość stroboskopu (ms):</label>
+                        <input type="range" min="50" max="1000" value="200" class="latarka-slider" id="KOZLOWSKISEBASTIAN_LATARKA-SZYBKOSC">
+                        <span id="latarka-szybkosc-value">200 ms</span>
+                    </div>
+                    <div class="latarka-opcja">
+                        <label>Wyłącznik czasowy:</label>
+                        <div class="latarka-czasowy">
+                            <input type="number" id="KOZLOWSKISEBASTIAN_LATARKA-CZAS" class="latarka-czasowy-input" placeholder="Minuty (0 = wyłącz)" min="0" max="60">
+                            <button class="latarka-czasowy-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-CZAS-USTAW">OK</button>
+                        </div>
+                    </div>
                 </div>
                 
                 <!-- Kontener opcji ekranu -->
@@ -377,25 +459,40 @@
                             <option value="special">Specjalistyczny Żółty</option>
                         </select>
                     </div>
-                    <div class="latarka-opcja">
-                        <label for="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-SZYBKOSC">Szybkość:</label>
+                    <div class="latarka-opcja" id="ekran-szybkosc-container">
+                        <label for="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-SZYBKOSC">Szybkość (ms):</label>
                         <input type="range" min="50" max="1000" value="200" class="latarka-slider" id="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-SZYBKOSC">
+                        <span id="ekran-szybkosc-value">200 ms</span>
                     </div>
                     <div class="latarka-opcja">
                         <label>Kolory:</label>
                         <div class="latarka-kolory" id="KOZLOWSKISEBASTIAN_LATARKA-KOLORY-LISTA">
-                            <div class="latarka-kolor aktywny" style="background: #FFFFFF;" data-kolor="#FFFFFF"></div>
-                            <div class="latarka-kolor" style="background: #FF0000;" data-kolor="#FF0000"></div>
-                            <div class="latarka-kolor" style="background: #00FF00;" data-kolor="#00FF00"></div>
-                            <div class="latarka-kolor" style="background: #0000FF;" data-kolor="#0000FF"></div>
-                            <div class="latarka-kolor" style="background: #FFFF00;" data-kolor="#FFFF00"></div>
+                            <div class="latarka-kolor aktywny" style="background: #FFFFFF;" data-kolor="#FFFFFF">
+                                <span class="latarka-kolor-usun">×</span>
+                            </div>
+                            <div class="latarka-kolor" style="background: #FF0000;" data-kolor="#FF0000">
+                                <span class="latarka-kolor-usun">×</span>
+                            </div>
+                            <div class="latarka-kolor" style="background: #00FF00;" data-kolor="#00FF00">
+                                <span class="latarka-kolor-usun">×</span>
+                            </div>
+                            <div class="latarka-kolor" style="background: #0000FF;" data-kolor="#0000FF">
+                                <span class="latarka-kolor-usun">×</span>
+                            </div>
+                            <div class="latarka-kolor" style="background: #FFFF00;" data-kolor="#FFFF00">
+                                <span class="latarka-kolor-usun">×</span>
+                            </div>
+                        </div>
+                        <div class="latarka-kolor-hex">
+                            <input type="text" id="KOZLOWSKISEBASTIAN_LATARKA-HEX" class="latarka-kolor-input" placeholder="#FFFFFF" maxlength="7">
+                            <button class="latarka-kolor-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-HEX-DODAJ">+</button>
                         </div>
                     </div>
                     <div class="latarka-opcja">
-                        <label for="KOZLOWSKISEBASTIAN_LATARKA-HEX">Własny kolor (HEX):</label>
-                        <div class="latarka-kolor-hex">
-                            <input type="text" id="KOZLOWSKISEBASTIAN_LATARKA-HEX" class="latarka-kolor-input" placeholder="#FFFFFF" maxlength="7">
-                            <button class="latarka-kolor-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-HEX-ZASTOSUJ">OK</button>
+                        <label>Wyłącznik czasowy:</label>
+                        <div class="latarka-czasowy">
+                            <input type="number" id="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-CZAS" class="latarka-czasowy-input" placeholder="Minuty (0 = wyłącz)" min="0" max="60">
+                            <button class="latarka-czasowy-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-CZAS-USTAW">OK</button>
                         </div>
                     </div>
                 </div>
@@ -427,10 +524,18 @@
                 opcjeEkran: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-OPCJE'),
                 latarkaTrybSelect: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-TRYB-LATARKA'),
                 ekranTrybSelect: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-TRYB'),
+                latarkaSzybkoscSlider: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-SZYBKOSC'),
+                latarkaSzybkoscValue: document.getElementById('latarka-szybkosc-value'),
+                latarkaSzybkoscContainer: document.getElementById('latarka-szybkosc-container'),
                 ekranSzybkoscSlider: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-SZYBKOSC'),
+                ekranSzybkoscValue: document.getElementById('ekran-szybkosc-value'),
                 koloryLista: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-KOLORY-LISTA'),
                 hexInput: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX'),
-                hexZastosujBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX-ZASTOSUJ')
+                hexDodajBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX-DODAJ'),
+                latarkaCzasInput: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-CZAS'),
+                latarkaCzasUstawBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-CZAS-USTAW'),
+                ekranCzasInput: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-CZAS'),
+                ekranCzasUstawBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-CZAS-USTAW')
             };
 
             // Stan aplikacji
@@ -438,6 +543,9 @@
                 menuWidoczne: false,
                 latarkaWlaczona: false,
                 latarkaTryb: 'solid', // Domyślnie stały
+                latarkaSzybkosc: 200,
+                latarkaCzasowy: 0,
+                latarkaTimer: null,
                 ekranWlaczony: false,
                 trybEkranu: 'solid', // Domyślnie stały
                 szybkoscEkranu: 200,
@@ -445,6 +553,8 @@
                 aktualnyKolorIndex: 0,
                 intervalEkranu: null,
                 intervalLatarki: null,
+                ekranCzasowy: 0,
+                ekranTimer: null,
                 videoTrack: null
             };
 
@@ -474,6 +584,7 @@
                 setupEventListeners();
                 ukryjElementyNaStarcie();
                 dodajPierwszyAktywnyKolor();
+                updateSzybkoscValues();
             }
 
             // Ustawienie nasłuchiwaczy zdarzeń
@@ -489,15 +600,24 @@
                 elements.opcjeEkranBtn.addEventListener('click', toggleOpcjeEkran);
                 elements.latarkaTrybSelect.addEventListener('change', handleLatarkaTrybChange);
                 elements.ekranTrybSelect.addEventListener('change', handleEkranTrybChange);
+                elements.latarkaSzybkoscSlider.addEventListener('input', handleLatarkaSzybkoscChange);
                 elements.ekranSzybkoscSlider.addEventListener('input', handleEkranSzybkoscChange);
                 elements.koloryLista.addEventListener('click', handleColorSelection);
-                elements.hexZastosujBtn.addEventListener('click', applyCustomColor);
+                elements.hexDodajBtn.addEventListener('click', addCustomColor);
+                elements.latarkaCzasUstawBtn.addEventListener('click', setLatarkaCzasowy);
+                elements.ekranCzasUstawBtn.addEventListener('click', setEkranCzasowy);
 
                 window.addEventListener('unload', () => {
                     if (state.videoTrack) {
                         state.videoTrack.stop();
                     }
                 });
+            }
+
+            // Aktualizuj wartości szybkości
+            function updateSzybkoscValues() {
+                elements.latarkaSzybkoscValue.textContent = `${state.latarkaSzybkosc} ms`;
+                elements.ekranSzybkoscValue.textContent = `${state.szybkoscEkranu} ms`;
             }
 
             // Ukryj elementy na starcie
@@ -544,8 +664,12 @@
 
                 if (state.latarkaWlaczona) {
                     await startLatarka();
+                    if (state.latarkaCzasowy > 0) {
+                        startLatarkaTimer();
+                    }
                 } else {
                     await stopLatarka();
+                    stopLatarkaTimer();
                 }
 
                 aktualizujPrzyciski();
@@ -636,7 +760,7 @@
                         aktualizujPrzyciski();
                         alert('Błąd w trybie stroboskopu. Latarka została wyłączona.');
                     }
-                }, 200); // Szybkość stroboskopu
+                }, state.latarkaSzybkosc);
             }
 
             // Stop latarki
@@ -652,6 +776,42 @@
                     state.videoTrack = null;
                 }
                 elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
+            }
+
+            // Timer dla latarki
+            function startLatarkaTimer() {
+                stopLatarkaTimer();
+                const minutes = state.latarkaCzasowy;
+                if (minutes <= 0) return;
+
+                state.latarkaTimer = setTimeout(async () => {
+                    state.latarkaWlaczona = false;
+                    await stopLatarka();
+                    aktualizujPrzyciski();
+                    alert(`Latarka została automatycznie wyłączona po ${minutes} minutach.`);
+                }, minutes * 60 * 1000);
+            }
+
+            function stopLatarkaTimer() {
+                if (state.latarkaTimer) {
+                    clearTimeout(state.latarkaTimer);
+                    state.latarkaTimer = null;
+                }
+            }
+
+            // Ustaw wyłącznik czasowy dla latarki
+            function setLatarkaCzasowy() {
+                const minutes = parseInt(elements.latarkaCzasInput.value) || 0;
+                if (minutes < 0 || minutes > 60) {
+                    alert('Wprowadź wartość od 0 do 60 minut');
+                    return;
+                }
+
+                state.latarkaCzasowy = minutes;
+                if (state.latarkaWlaczona && minutes > 0) {
+                    startLatarkaTimer();
+                }
+                alert(`Wyłącznik czasowy latarki ustawiony na ${minutes} minut.`);
             }
 
             // Start ekranu
@@ -720,6 +880,59 @@
                 elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
             }
 
+            // Timer dla ekranu
+            function startEkranTimer() {
+                stopEkranTimer();
+                const minutes = state.ekranCzasowy;
+                if (minutes <= 0) return;
+
+                state.ekranTimer = setTimeout(() => {
+                    state.ekranWlaczony = false;
+                    stopEkran();
+                    aktualizujPrzyciski();
+                    alert(`Ekran został automatycznie wyłączony po ${minutes} minutach.`);
+                }, minutes * 60 * 1000);
+            }
+
+            function stopEkranTimer() {
+                if (state.ekranTimer) {
+                    clearTimeout(state.ekranTimer);
+                    state.ekranTimer = null;
+                }
+            }
+
+            // Ustaw wyłącznik czasowy dla ekranu
+            function setEkranCzasowy() {
+                const minutes = parseInt(elements.ekranCzasInput.value) || 0;
+                if (minutes < 0 || minutes > 60) {
+                    alert('Wprowadź wartość od 0 do 60 minut');
+                    return;
+                }
+
+                state.ekranCzasowy = minutes;
+                if (state.ekranWlaczony && minutes > 0) {
+                    startEkranTimer();
+                }
+                alert(`Wyłącznik czasowy ekranu ustawiony na ${minutes} minut.`);
+            }
+
+            // Włącz/wyłącz ekran
+            function toggleEkran() {
+                state.ekranWlaczony = !state.ekranWlaczony;
+
+                if (state.ekranWlaczony) {
+                    startEkran();
+                    if (state.ekranCzasowy > 0) {
+                        startEkranTimer();
+                    }
+                } else {
+                    stopEkran();
+                    stopEkranTimer();
+                }
+
+                aktualizujPrzyciski();
+            }
+
             // Odwróć kolor HEX
             function invertColor(hex) {
                 if (hex.indexOf('#') === 0) {
@@ -756,16 +969,52 @@
                     if (state.ekranWlaczony) {
                         startEkran();
                     }
+                } else if (e.target.classList.contains('latarka-kolor-usun')) {
+                    e.stopPropagation();
+                    const kolor = e.target.parentElement;
+                    if (document.querySelectorAll('.latarka-kolor').length <= 1) {
+                        alert('Musisz mieć przynajmniej jeden kolor');
+                        return;
+                    }
+
+                    const isActive = kolor.classList.contains('aktywny');
+                    kolor.remove();
+
+                    if (isActive) {
+                        document.querySelector('.latarka-kolor').classList.add('aktywny');
+                        state.koloryEkranu = [document.querySelector('.latarka-kolor').dataset.kolor];
+                    }
+
+                    if (state.ekranWlaczony) {
+                        startEkran();
+                    }
                 }
             }
 
-            // Zastosuj własny kolor HEX
-            function applyCustomColor() {
+            // Dodaj własny kolor HEX
+            function addCustomColor() {
                 const hexValue = elements.hexInput.value.trim();
                 if (isValidHexColor(hexValue)) {
-                    document.querySelectorAll('.latarka-kolor').forEach(k => k.classList.remove('aktywny'));
+                    const colorExists = Array.from(document.querySelectorAll('.latarka-kolor'))
+                        .some(el => el.dataset.kolor.toLowerCase() === hexValue.toLowerCase());
+                    
+                    if (colorExists) {
+                        alert('Ten kolor już istnieje na liście!');
+                        return;
+                    }
 
+                    const newColor = document.createElement('div');
+                    newColor.className = 'latarka-kolor';
+                    newColor.style.backgroundColor = hexValue;
+                    newColor.dataset.kolor = hexValue;
+                    newColor.innerHTML = '<span class="latarka-kolor-usun">×</span>';
+                    
+                    document.querySelectorAll('.latarka-kolor').forEach(el => el.classList.remove('aktywny'));
+                    newColor.classList.add('aktywny');
                     state.koloryEkranu = [hexValue];
+                    
+                    elements.koloryLista.appendChild(newColor);
+                    elements.hexInput.value = '';
 
                     if (state.ekranWlaczony) {
                         startEkran();
@@ -777,13 +1026,39 @@
 
             // Obsługa zmiany trybu latarki
             function handleLatarkaTrybChange() {
+                state.latarkaTryb = elements.latarkaTrybSelect.value;
+                
+                if (state.latarkaTryb === 'strobe') {
+                    elements.latarkaSzybkoscContainer.style.display = 'block';
+                } else {
+                    elements.latarkaSzybkoscContainer.style.display = 'none';
+                }
+                
                 if (state.latarkaWlaczona) {
+                    startLatarka();
+                }
+            }
+
+            // Obsługa zmiany szybkości latarki
+            function handleLatarkaSzybkoscChange() {
+                state.latarkaSzybkosc = parseInt(elements.latarkaSzybkoscSlider.value);
+                elements.latarkaSzybkoscValue.textContent = `${state.latarkaSzybkosc} ms`;
+                
+                if (state.latarkaWlaczona && state.latarkaTryb === 'strobe') {
                     startLatarka();
                 }
             }
 
             // Obsługa zmiany trybu ekranu
             function handleEkranTrybChange() {
+                state.trybEkranu = elements.ekranTrybSelect.value;
+                
+                if (state.trybEkranu === 'solid') {
+                    elements.ekranSzybkoscContainer.style.display = 'none';
+                } else {
+                    elements.ekranSzybkoscContainer.style.display = 'block';
+                }
+                
                 if (state.ekranWlaczony) {
                     startEkran();
                 }
@@ -792,6 +1067,8 @@
             // Obsługa zmiany szybkości ekranu
             function handleEkranSzybkoscChange() {
                 state.szybkoscEkranu = parseInt(elements.ekranSzybkoscSlider.value);
+                elements.ekranSzybkoscValue.textContent = `${state.szybkoscEkranu} ms`;
+                
                 if (state.ekranWlaczony) {
                     startEkran();
                 }
