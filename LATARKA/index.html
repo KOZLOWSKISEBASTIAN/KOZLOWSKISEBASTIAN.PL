@@ -399,13 +399,11 @@
             let state = {
                 menuWidoczne: false,
                 latarkaWlaczona: false,
-                trybLatarki: 'off',
                 ekranWlaczony: false,
                 trybEkranu: 'off',
                 szybkoscEkranu: 200,
                 koloryEkranu: ['#FFFFFF'],
                 aktualnyKolorIndex: 0,
-                intervalLatarki: null,
                 intervalEkranu: null,
                 videoTrack: null
             };
@@ -437,7 +435,6 @@
                 
                 // Przyciski funkcjonalności latarki
                 elements.wlaczBtn.addEventListener('click', toggleLatarke);
-                elements.trybBtn.addEventListener('click', zmienTrybLatarki);
                 elements.ekranBtn.addEventListener('click', toggleEkran);
                 elements.opcjeBtn.addEventListener('click', toggleOpcje);
                 
@@ -462,6 +459,7 @@
                 elements.hexagonKontener.style.display = 'none';
                 elements.latarkaKontener.style.display = 'none';
                 elements.przybornikPrzycisk.style.display = 'none';
+                elements.trybBtn.style.display = 'none';
             }
             
             // Dodaj pierwszy aktywny kolor
@@ -491,9 +489,6 @@
                 elements.wlaczBtn.textContent = state.latarkaWlaczona ? 'WYŁĄCZ LATARKĘ' : 'WŁĄCZ LATARKĘ';
                 elements.wlaczBtn.classList.toggle('aktywny', state.latarkaWlaczona);
                 
-                elements.trybBtn.textContent = `TRYB: ${state.trybLatarki.toUpperCase()}`;
-                elements.trybBtn.classList.remove('aktywny');
-                
                 elements.ekranBtn.textContent = state.ekranWlaczony ? 'WYŁĄCZ EKRAN' : 'WŁĄCZ EKRAN';
                 elements.ekranBtn.classList.toggle('aktywny', state.ekranWlaczony);
             }
@@ -506,19 +501,6 @@
                     await startLatarka();
                 } else {
                     await stopLatarka();
-                }
-                
-                aktualizujPrzyciski();
-            }
-            
-            // Zmień tryb latarki
-            function zmienTrybLatarki() {
-                const tryby = ['off', 'sos', 'strobe', 'solid'];
-                const obecnyIndex = tryby.indexOf(state.trybLatarki);
-                state.trybLatarki = tryby[(obecnyIndex + 1) % tryby.length];
-                
-                if (state.latarkaWlaczona) {
-                    startLatarka();
                 }
                 
                 aktualizujPrzyciski();
@@ -544,94 +526,26 @@
             
             // Start latarki
             async function startLatarka() {
-                stopLatarka();
-                
-                if (state.trybLatarki === 'off') {
-                    elements.latarkaElement.style.opacity = '0';
-                    elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                    return;
-                }
-                
                 try {
-                    if (state.trybLatarki === 'solid') {
-                        const stream = await navigator.mediaDevices.getUserMedia({
-                            video: { facingMode: 'environment', torch: true }
-                        });
-                        state.videoTrack = stream.getVideoTracks()[0];
-                        await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
-                        elements.latarkaElement.style.opacity = '1';
-                        elements.hexagonKsztalt.style.backgroundColor = '#333333';
-                        return;
-                    }
-                    
                     const stream = await navigator.mediaDevices.getUserMedia({
                         video: { facingMode: 'environment', torch: true }
                     });
                     state.videoTrack = stream.getVideoTracks()[0];
-                    
-                    let pattern = [];
-                    if (state.trybLatarki === 'sos') {
-                        pattern = [100, 100, 100, 300, 300, 300, 100, 100, 100, 600];
-                    } else if (state.trybLatarki === 'strobe') {
-                        pattern = [200, 200];
-                    }
-                    
-                    let step = 0;
-                    elements.latarkaElement.style.opacity = '0';
-                    elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                    
-                    state.intervalLatarki = setInterval(async () => {
-                        try {
-                            if (state.trybLatarki === 'strobe') {
-                                if (elements.latarkaElement.style.opacity === '0') {
-                                    await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
-                                    elements.latarkaElement.style.opacity = '1';
-                                    elements.hexagonKsztalt.style.backgroundColor = '#333333';
-                                } else {
-                                    await state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
-                                    elements.latarkaElement.style.opacity = '0';
-                                    elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                                }
-                            } else {
-                                if (step >= pattern.length) step = 0;
-                                const duration = pattern[step];
-                                if (step % 2 === 0) {
-                                    await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
-                                    elements.latarkaElement.style.opacity = '1';
-                                    elements.hexagonKsztalt.style.backgroundColor = '#333333';
-                                } else {
-                                    await state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
-                                    elements.latarkaElement.style.opacity = '0';
-                                    elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                                }
-                                setTimeout(async () => {
-                                    if (step % 2 === 0) {
-                                        await state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
-                                        elements.latarkaElement.style.opacity = '0';
-                                        elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                                    } else {
-                                        await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
-                                        elements.latarkaElement.style.opacity = '1';
-                                        elements.hexagonKsztalt.style.backgroundColor = '#333333';
-                                    }
-                                }, duration);
-                                step++;
-                            }
-                        } catch (error) {
-                            console.error('Błąd sterowania latarką:', error);
-                        }
-                    }, state.trybLatarki === 'strobe' ? 200 : 100);
+                    await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
+                    elements.latarkaElement.style.opacity = '1';
+                    elements.hexagonKsztalt.style.backgroundColor = '#333333';
                 } catch (error) {
                     console.error('Błąd włączenia latarki:', error);
                     state.latarkaWlaczona = false;
+                    elements.latarkaElement.style.opacity = '0';
+                    elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
                     aktualizujPrzyciski();
-                    alert('Nie można włączyć latarki. Sprawdź uprawnienia kamery.');
+                    alert('Nie można włączyć latarki. Sprawdź uprawnienia kamery lub dostępność latarki.');
                 }
             }
             
             // Stop latarki
             async function stopLatarka() {
-                clearInterval(state.intervalLatarki);
                 if (state.videoTrack) {
                     try {
                         await state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
