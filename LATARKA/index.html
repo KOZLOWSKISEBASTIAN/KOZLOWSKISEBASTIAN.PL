@@ -297,14 +297,6 @@
             z-index: -1;
             transition: opacity 0.3s, background-color 0.3s;
         }
-        
-        /* Komunikat o błędzie */
-        .KOZLOWSKISEBASTIAN .latarka-blad {
-            color: #ff4444;
-            font-size: 14px;
-            margin-top: 8px;
-            display: none;
-        }
     </style>
 </head>
 <body class="KOZLOWSKISEBASTIAN">
@@ -334,7 +326,6 @@
                     </div>
                     <button class="latarka-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-OPCJE-BTN">OPCJE</button>
                     <button class="latarka-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-TRYB" style="display:none;">TRYB: WYŁ.</button>
-                    <div class="latarka-blad" id="KOZLOWSKISEBASTIAN_LATARKA-BLAD"></div>
                 </div>
                 
                 <div class="latarka-opcje" id="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-OPCJE">
@@ -401,22 +392,21 @@
                 ekranSzybkoscSlider: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-SZYBKOSC'),
                 koloryLista: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-KOLORY-LISTA'),
                 hexInput: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX'),
-                hexZastosujBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX-ZASTOSUJ'),
-                bladInfo: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-BLAD')
+                hexZastosujBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX-ZASTOSUJ')
             };
             
             // Stan aplikacji
             let state = {
                 menuWidoczne: false,
                 latarkaWlaczona: false,
-                trybLatarki: 'off',
+                latarkaSos: false,
                 ekranWlaczony: false,
                 trybEkranu: 'off',
                 szybkoscEkranu: 200,
                 koloryEkranu: ['#FFFFFF'],
                 aktualnyKolorIndex: 0,
-                intervalLatarki: null,
                 intervalEkranu: null,
+                intervalLatarki: null,
                 videoTrack: null
             };
             
@@ -447,7 +437,6 @@
                 
                 // Przyciski funkcjonalności latarki
                 elements.wlaczBtn.addEventListener('click', toggleLatarke);
-                elements.trybBtn.addEventListener('click', zmienTrybLatarki);
                 elements.ekranBtn.addEventListener('click', toggleEkran);
                 elements.opcjeBtn.addEventListener('click', toggleOpcje);
                 
@@ -458,6 +447,13 @@
                 // Zmiana trybu ekranu
                 elements.ekranTrybSelect.addEventListener('change', handleEkranTrybChange);
                 elements.ekranSzybkoscSlider.addEventListener('input', handleEkranSzybkoscChange);
+
+                // Czyszczenie po zamknięciu strony
+                window.addEventListener('unload', () => {
+                    if (state.videoTrack) {
+                        state.videoTrack.stop();
+                    }
+                });
             }
             
             // Ukryj elementy na starcie
@@ -465,6 +461,7 @@
                 elements.hexagonKontener.style.display = 'none';
                 elements.latarkaKontener.style.display = 'none';
                 elements.przybornikPrzycisk.style.display = 'none';
+                elements.trybBtn.style.display = 'none';
             }
             
             // Dodaj pierwszy aktywny kolor
@@ -491,64 +488,36 @@
             
             // Aktualizuj przyciski
             function aktualizujPrzyciski() {
-                elements.wlaczBtn.textContent = state.latarkaWlaczona ? 'WYŁĄCZ LATARKĘ' : 'WŁĄCZ LATARKĘ';
-                elements.wlaczBtn.classList.toggle('aktywny', state.latarkaWlaczona);
-                
-                elements.trybBtn.textContent = `TRYB: ${state.trybLatarki.toUpperCase()}`;
-                elements.trybBtn.classList.remove('aktywny');
+                if (!state.latarkaWlaczona) {
+                    elements.wlaczBtn.textContent = 'WŁĄCZ LATARKĘ';
+                    elements.wlaczBtn.classList.remove('aktywny');
+                } else if (state.latarkaWlaczona && !state.latarkaSos) {
+                    elements.wlaczBtn.textContent = 'WŁĄCZ SOS';
+                    elements.wlaczBtn.classList.add('aktywny');
+                } else if (state.latarkaSos) {
+                    elements.wlaczBtn.textContent = 'WYŁĄCZ LATARKĘ';
+                    elements.wlaczBtn.classList.add('aktywny');
+                }
                 
                 elements.ekranBtn.textContent = state.ekranWlaczony ? 'WYŁĄCZ EKRAN' : 'WŁĄCZ EKRAN';
                 elements.ekranBtn.classList.toggle('aktywny', state.ekranWlaczony);
             }
             
-            // Włącz/wyłącz latarkę (flashlight)
+            // Włącz/wyłącz latarkę
             async function toggleLatarke() {
-                try {
-                    if (!state.latarkaWlaczona) {
-                        // Włączanie latarki
-                        const stream = await navigator.mediaDevices.getUserMedia({
-                            video: { facingMode: 'environment', torch: true }
-                        });
-                        state.videoTrack = stream.getVideoTracks()[0];
-                        await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
-                        state.latarkaWlaczona = true;
-                        elements.bladInfo.style.display = 'none';
-                    } else {
-                        // Wyłączanie latarki
-                        if (state.videoTrack) {
-                            await state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
-                            state.videoTrack.stop();
-                            state.videoTrack = null;
-                        }
-                        state.latarkaWlaczona = false;
-                    }
-                    
-                    aktualizujPrzyciski();
-                } catch (error) {
-                    console.error('Błąd latarki:', error);
+                if (!state.latarkaWlaczona) {
+                    // Włącz latarkę
+                    state.latarkaWlaczona = true;
+                    await startLatarka();
+                } else if (state.latarkaWlaczona && !state.latarkaSos) {
+                    // Włącz SOS
+                    state.latarkaSos = true;
+                    await startSosLatarka();
+                } else if (state.latarkaSos) {
+                    // Wyłącz latarkę
                     state.latarkaWlaczona = false;
-                    elements.bladInfo.textContent = 'Błąd: Nie można sterować latarką. Upewnij się, że masz latarkę i dałeś odpowiednie uprawnienia.';
-                    elements.bladInfo.style.display = 'block';
-                    aktualizujPrzyciski();
-                    
-                    // Fallback - użyj ekranu jako latarki
-                    if (!state.latarkaWlaczona && !state.ekranWlaczony) {
-                        state.trybLatarki = 'solid';
-                        state.latarkaWlaczona = true;
-                        startLatarka();
-                        aktualizujPrzyciski();
-                    }
-                }
-            }
-            
-            // Zmień tryb latarki (tylko dla fallback)
-            function zmienTrybLatarki() {
-                const tryby = ['off', 'sos', 'strobe', 'solid'];
-                const obecnyIndex = tryby.indexOf(state.trybLatarki);
-                state.trybLatarki = tryby[(obecnyIndex + 1) % tryby.length];
-                
-                if (state.latarkaWlaczona && !state.videoTrack) {
-                    startLatarka();
+                    state.latarkaSos = false;
+                    await stopLatarka();
                 }
                 
                 aktualizujPrzyciski();
@@ -557,16 +526,6 @@
             // Włącz/wyłącz ekran
             function toggleEkran() {
                 state.ekranWlaczony = !state.ekranWlaczony;
-                
-                // Wyłącz latarkę jeśli włączamy ekran
-                if (state.ekranWlaczony && state.latarkaWlaczona) {
-                    if (state.videoTrack) {
-                        state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
-                        state.videoTrack.stop();
-                        state.videoTrack = null;
-                    }
-                    state.latarkaWlaczona = false;
-                }
                 
                 if (state.ekranWlaczony) {
                     startEkran();
@@ -582,70 +541,83 @@
                 elements.ekranOpcje.classList.toggle('aktywne');
             }
             
-            // Start latarki (fallback - gdy nie ma dostępu do flashlight API)
-            function startLatarka() {
-                stopLatarka();
-                
-                if (state.trybLatarki === 'off') {
-                    elements.latarkaElement.style.opacity = '0';
-                    elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                    return;
-                }
-                
-                if (state.trybLatarki === 'solid') {
-                    elements.latarkaElement.style.opacity = '1';
+            // Start latarki (stałe światło)
+            async function startLatarka() {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: 'environment', torch: true }
+                    });
+                    state.videoTrack = stream.getVideoTracks()[0];
+                    await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
                     elements.hexagonKsztalt.style.backgroundColor = '#333333';
-                    return;
+                } catch (error) {
+                    console.error('Błąd włączenia latarki:', error);
+                    state.latarkaWlaczona = false;
+                    elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
+                    aktualizujPrzyciski();
+                    alert('Nie można włączyć latarki. Sprawdź uprawnienia kamery lub dostępność latarki.');
                 }
-                
-                let pattern = [];
-                if (state.trybLatarki === 'sos') {
-                    pattern = [100, 100, 100, 300, 300, 300, 100, 100, 100, 600];
-                } else if (state.trybLatarki === 'strobe') {
-                    pattern = [200, 200];
-                }
-                
-                let step = 0;
-                elements.latarkaElement.style.opacity = '0';
-                elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                
-                state.intervalLatarki = setInterval(() => {
-                    if (state.trybLatarki === 'strobe') {
-                        if (elements.latarkaElement.style.opacity === '0') {
-                            elements.latarkaElement.style.opacity = '1';
-                            elements.hexagonKsztalt.style.backgroundColor = '#333333';
-                        } else {
-                            elements.latarkaElement.style.opacity = '0';
-                            elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                        }
-                    } else {
-                        if (step >= pattern.length) step = 0;
-                        const duration = pattern[step];
-                        if (step % 2 === 0) {
-                            elements.latarkaElement.style.opacity = '1';
-                            elements.hexagonKsztalt.style.backgroundColor = '#333333';
-                        } else {
-                            elements.latarkaElement.style.opacity = '0';
-                            elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                        }
-                        setTimeout(() => {
-                            if (step % 2 === 0) {
-                                elements.latarkaElement.style.opacity = '0';
-                                elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                            } else {
-                                elements.latarkaElement.style.opacity = '1';
-                                elements.hexagonKsztalt.style.backgroundColor = '#333333';
-                            }
-                        }, duration);
-                        step++;
-                    }
-                }, state.trybLatarki === 'strobe' ? 200 : 100);
             }
             
-            // Stop latarki (fallback)
-            function stopLatarka() {
+            // Start latarki w trybie SOS
+            async function startSosLatarka() {
+                stopLatarka(); // Zatrzymaj poprzedni stan latarki
+                
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: 'environment', torch: true }
+                    });
+                    state.videoTrack = stream.getVideoTracks()[0];
+                    
+                    const sosPattern = [200, 200, 200, 200, 200, 600, 600, 600, 200, 200, 200, 1000]; // S-O-S
+                    let step = 0;
+                    
+                    elements.hexagonKsztalt.style.backgroundColor = '#333333';
+                    
+                    state.intervalLatarki = setInterval(async () => {
+                        try {
+                            if (step >= sosPattern.length) step = 0;
+                            const duration = sosPattern[step];
+                            
+                            if (step % 2 === 0) {
+                                await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
+                            } else {
+                                await state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
+                            }
+                            
+                            step++;
+                        } catch (error) {
+                            console.error('Błąd w trybie SOS:', error);
+                            clearInterval(state.intervalLatarki);
+                            state.latarkaWlaczona = false;
+                            state.latarkaSos = false;
+                            elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
+                            aktualizujPrzyciski();
+                            alert('Błąd w trybie SOS. Latarka została wyłączona.');
+                        }
+                    }, 200); // Szybkość przełączania dostosowana do wzoru SOS
+                } catch (error) {
+                    console.error('Błąd włączenia latarki w trybie SOS:', error);
+                    state.latarkaWlaczona = false;
+                    state.latarkaSos = false;
+                    elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
+                    aktualizujPrzyciski();
+                    alert('Nie można włączyć latarki. Sprawdź uprawnienia kamery lub dostępność latarki.');
+                }
+            }
+            
+            // Stop latarki
+            async function stopLatarka() {
                 clearInterval(state.intervalLatarki);
-                elements.latarkaElement.style.opacity = '0';
+                if (state.videoTrack) {
+                    try {
+                        await state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
+                        state.videoTrack.stop();
+                    } catch (error) {
+                        console.error('Błąd wyłączania latarki:', error);
+                    }
+                    state.videoTrack = null;
+                }
                 elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
             }
             
@@ -697,7 +669,7 @@
                         document.body.style.backgroundColor = state.koloryEkranu[state.aktualnyKolorIndex];
                         elements.hexagonKsztalt.style.backgroundColor = invertColor(state.koloryEkranu[state.aktualnyKolorIndex]);
                     } else {
-                        if (step >= pattern.length) step = 0;
+                        if (step >= sosPattern.length) step = 0;
                         const duration = pattern[step];
                         if (step % 2 === 0) {
                             document.body.style.backgroundColor = state.koloryEkranu[0];
@@ -796,15 +768,6 @@
                     startEkran();
                 }
             }
-            
-            // Czyszczenie przy zamknięciu
-            window.addEventListener('beforeunload', () => {
-                if (state.videoTrack) {
-                    state.videoTrack.stop();
-                }
-                stopEkran();
-                stopLatarka();
-            });
             
             // Publiczne metody
             return {
