@@ -5,264 +5,210 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LICZYDŁO</title>
     <meta name="theme-color" content="#000000">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
     <style>
-/* LICZYDŁO POCZĄTEK */
-.KOZLOWSKISEBASTIAN .liczydlo-kontener {
-    max-width: 520px;
-    width: 100%;
-    background: #333333;
-    padding: 8px;
-    border-radius: 8px;
-    margin: 0 auto;
-    box-shadow: 0 0 15px rgba(0,0,0,0.5);
-}
+        /* STYLE PRZYBORNIKA - DOKŁADNIE TAKIE JAK W PODANYM PRZYKŁADZIE */
+        .KOZLOWSKISEBASTIAN {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: #000000;
+            transition: background-color 0.3s;
+        }
 
-.KOZLOWSKISEBASTIAN_JASNY .liczydlo-kontener {
-    background: #F5F5F5 !important;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
+        .KOZLOWSKISEBASTIAN_CIEMNY {
+            background: #000000;
+        }
 
-.KOZLOWSKISEBASTIAN .liczydlo-wiersz {
-    display: flex;
-    gap: 10px;
-    margin-top: 4px;
-    margin-bottom: 4px;
-}
+        .KOZLOWSKISEBASTIAN_JASNY {
+            background: #FFFFFF;
+        }
 
-.KOZLOWSKISEBASTIAN .liczydlo-przycisk,
-.KOZLOWSKISEBASTIAN .liczydlo-pole,
-.KOZLOWSKISEBASTIAN .liczydlo-select {
-    background: #222222;
-    color: #B0B0B0;
-    border: none;
-    padding: 8px;
-    border-radius: 8px;
-    transition: all 0.15s;
-}
+        .KOZLOWSKISEBASTIAN_HEXAGON_KONTENER {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            cursor: default;
+            z-index: 1000;
+            user-select: none;
+            -webkit-user-select: none;
+        }
 
-.KOZLOWSKISEBASTIAN_JASNY .liczydlo-przycisk,
-.KOZLOWSKISEBASTIAN_JASNY .liczydlo-pole,
-.KOZLOWSKISEBASTIAN_JASNY .liczydlo-select {
-    background: #EEEEEE;
-    color: #555555;
-}
+        .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #F5F5F5;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            transition: all 0.3s ease;
+            transform-origin: center;
+            cursor: pointer;
+        }
 
-.KOZLOWSKISEBASTIAN .liczydlo-przycisk {
-    flex: 1;
-}
+        .KOZLOWSKISEBASTIAN_CIEMNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
+            background-color: #F5F5F5;
+        }
 
-.KOZLOWSKISEBASTIAN .liczydlo-pole,
-.KOZLOWSKISEBASTIAN .liczydlo-select {
-    flex: 2;
-}
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
+            background-color: #333333;
+        }
 
-.KOZLOWSKISEBASTIAN .liczydlo-przycisk:hover {
-    color: #FF00FF;
-    background: #333333;
-    transform: translateY(-2px);
-}
+        .OBRACAJ {
+            animation: obrot 0.2s ease-out;
+        }
 
-.KOZLOWSKISEBASTIAN_JASNY .liczydlo-przycisk:hover {
-    color: #333333;
-    background: #E0E0E0;
-}
+        @keyframes obrot {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
-.KOZLOWSKISEBASTIAN .liczydlo-pole:focus,
-.KOZLOWSKISEBASTIAN .liczydlo-select:focus {
-    box-shadow: 0 0 0 2px #FFF;
-    outline: none;
-}
+        .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
 
-.KOZLOWSKISEBASTIAN_JASNY .liczydlo-pole:focus,
-.KOZLOWSKISEBASTIAN_JASNY .liczydlo-select:focus {
-    box-shadow: 0 0 0 2px #333;
-}
+        .ROZSZERZONY + .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
-.KOZLOWSKISEBASTIAN .liczydlo-wynik {
-    background: #222222;
-    color: #B0B0B0;
-    padding: 8px;
-    border-radius: 8px;
-    margin-top: 4px;
-    margin-bottom: 4px;
-    min-height: 20px;
-}
+        .KOZLOWSKISEBASTIAN_TROJKAT {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
 
-.KOZLOWSKISEBASTIAN_JASNY .liczydlo-wynik {
-    background: #EEEEEE;
-    color: #555555;
-}
+        .KOZLOWSKISEBASTIAN_TROJKAT_JEDEN {
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+            background-color: #333333;
+        }
 
-.KOZLOWSKISEBASTIAN .liczydlo-wynik:hover {
-    color: #FF00FF;
-    background: #333333;
-}
+        .KOZLOWSKISEBASTIAN_TROJKAT_DWA {
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+            background-color: #f5f5f5;
+        }
 
-.KOZLOWSKISEBASTIAN_JASNY .liczydlo-wynik:hover {
-    color: #333333;
-    background: #E0E0E0;
-}
-/* LICZYDŁO KONIEC */
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK {
+            font-family: sans-serif;
+            background: inherit;
+            color: #FF00FF;
+            margin: 0;
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+            box-sizing: border-box;
+        }
 
-/* PRZYBORNIK POCZĄTEK */
-.KOZLOWSKISEBASTIAN {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    background: #000000;
-    transition: background-color 0.3s;
-}
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
+            max-width: 520px;
+            width: 100%;
+            background: #333333;
+            padding: 8px;
+            border-radius: 8px;
+            margin: 0 auto;
+            box-shadow: 0 0 0px rgba(0,0,0,0.5);
+        }
 
-.KOZLOWSKISEBASTIAN_CIEMNY {
-    background: #000000;
-}
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
 
-.KOZLOWSKISEBASTIAN_JASNY {
-    background: #FFFFFF;
-}
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px;
+            flex: 1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
 
-.KOZLOWSKISEBASTIAN_HEXAGON_KONTENER {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    width: 50px;
-    height: 50px;
-    cursor: default;
-    z-index: 1000;
-    user-select: none;
-    -webkit-user-select: none;
-}
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
+            color: #FF00FF;
+            background: #333333;
+            transform: translateY(-2px);
+        }
 
-.KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: #F5F5F5;
-    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    transition: all 0.3s ease;
-    transform-origin: center;
-    cursor: pointer;
-}
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK {
+            color: #333333;
+        }
 
-.KOZLOWSKISEBASTIAN_CIEMNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
-    background-color: #F5F5F5;
-}
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
+            background: #F5F5F5 !important;
+            box-shadow: 0 0px 0px rgba(0,0,0,0.1);
+        }
 
-.KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
-    background-color: #333333;
-}
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
+            background: #EEEEEE;
+            color: #555555;
+        }
 
-.OBRACAJ {
-    animation: obrot 0.1s ease-out;
-}
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
+            color: #333333;
+            background: #E0E0E0;
+            transform: translateY(-2px);
+        }
 
-@keyframes obrot {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
+        /* SPECJALNE STYLE DLA LICZYDŁA */
+        .KOZLOWSKISEBASTIAN_LICZYDLO-POLE {
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            flex: 1;
+            font-family: sans-serif;
+        }
 
-.KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.2s;
-}
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_LICZYDLO-POLE {
+            background: #EEEEEE;
+            color: #555555;
+        }
 
-.ROZSZERZONY + .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
-    opacity: 1;
-    pointer-events: auto;
-}
+        .KOZLOWSKISEBASTIAN_LICZYDLO-SELECT {
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            flex: 1;
+            font-family: sans-serif;
+        }
 
-.KOZLOWSKISEBASTIAN_TROJKAT {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-}
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_LICZYDLO-SELECT {
+            background: #EEEEEE;
+            color: #555555;
+        }
 
-.KOZLOWSKISEBASTIAN_TROJKAT_JEDEN {
-    clip-path: polygon(100% 0, 100% 100%, 0 100%);
-    background-color: #333333;
-}
+        .KOZLOWSKISEBASTIAN_LICZYDLO-WYNIK {
+            background: #222222;
+            color: #B0B0B0;
+            padding: 4px;
+            border-radius: 8px;
+            font-family: sans-serif;
+            width: 100%;
+            box-sizing: border-box;
+            
+        }
 
-.KOZLOWSKISEBASTIAN_TROJKAT_DWA {
-    clip-path: polygon(0 0, 100% 0, 0 100%);
-    background-color: #f5f5f5;
-}
-
-.KOZLOWSKISEBASTIAN_PRZYBORNIK {
-    font-family: sans-serif;
-    background: inherit;
-    color: #FF00FF;
-    margin: 0;
-    padding: 8px;
-    display: flex;
-    justify-content: center;
-    box-sizing: border-box;
-}
-
-.KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
-    max-width: 520px;
-    width: 100%;
-    background: #333333;
-    padding: 8px;
-    border-radius: 8px;
-    margin: 0 auto;
-    box-shadow: 0 0 0px rgba(0,0,0,0.5);
-}
-
-.KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ {
-    display: flex;
-    gap: 10px;
-    margin-top: 4px;
-    margin-bottom: 4px;
-}
-
-.KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
-    background: #222222;
-    color: #B0B0B0;
-    border: none;
-    padding: 8px;
-    flex: 1;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.15s;
-    -webkit-tap-highlight-color: transparent;
-}
-
-.KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
-    color: #FF00FF;
-    background: #333333;
-    transform: translateY(-2px);
-}
-
-.KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK {
-    color: #333333;
-}
-
-.KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
-    background: #F5F5F5 !important;
-    box-shadow: 0 0px 0px rgba(0,0,0,0.1);
-}
-
-.KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
-    background: #EEEEEE;
-    color: #555555;
-}
-
-.KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
-    color: #333333;
-    background: #E0E0E0;
-    transform: translateY(-2px);
-}
-/* PRZYBORNIK KONIEC */
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_LICZYDLO-WYNIK {
+            background: #EEEEEE;
+            color: #555555;
+        }
     </style>
 </head>
 <body class="KOZLOWSKISEBASTIAN">
@@ -273,39 +219,47 @@
             <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_DWA"></div>
         </div>
     </div>
-    <div class="liczydlo-kontener">
-        <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
-            <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
+    
+    <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK">
+        <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER">
+            <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" onclick="window.location.href='https://kozlowskisebastian.pl/PRZYBORNIK'">PRZYBORNIK</button>
+            </div>
+            
+            <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
+                <input type="number" id="KOZLOWSKISEBASTIAN_LICZYDLO-CENA" class="KOZLOWSKISEBASTIAN_LICZYDLO-POLE" placeholder="CENA" step="0.01">
+                <input type="number" id="KOZLOWSKISEBASTIAN_LICZYDLO-ILOSC" class="KOZLOWSKISEBASTIAN_LICZYDLO-POLE" placeholder="ILOŚĆ" step="0.01">
+            </div>
+            
+            <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ" id="KOZLOWSKISEBASTIAN_LICZYDLO-KILOMETRY-WIERSZ" style="display: none;">
+                <input type="number" id="KOZLOWSKISEBASTIAN_LICZYDLO-KILOMETRY" class="KOZLOWSKISEBASTIAN_LICZYDLO-POLE" placeholder="KILOMETRY" step="0.01">
+            </div>
+            
+            <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
+                <select id="KOZLOWSKISEBASTIAN_LICZYDLO-JEDNOSTKA" class="KOZLOWSKISEBASTIAN_LICZYDLO-SELECT">
+                    <option value="ML">MILILITR ml - l LITR</option>
+                    <option value="DAG">DEKAGRAM dag - kg KILOGRAM</option>
+                    <option value="PALIWO">SPALANIE PALIWA</option>
+                    <option value="TRASA">PLANOWANY KOSZT TRASY</option>
+                </select>
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_LICZYDLO-PRZYCISK">PRZELICZ</button>
+            </div>
+            
+            <div id="KOZLOWSKISEBASTIAN_LICZYDLO-WYNIK" class="KOZLOWSKISEBASTIAN_LICZYDLO-WYNIK">&nbsp;</div>
         </div>
-        <div class="liczydlo-wiersz">
-            <input type="number" id="KOZLOWSKISEBASTIAN_LICZYDLO-CENA" class="liczydlo-pole" placeholder="CENA" step="0.01">
-            <input type="number" id="KOZLOWSKISEBASTIAN_LICZYDLO-ILOSC" class="liczydlo-pole" placeholder="ILOŚĆ" step="0.01">
-        </div>
-        <div class="liczydlo-wiersz">
-            <input type="number" id="KOZLOWSKISEBASTIAN_LICZYDLO-KILOMETRY" class="liczydlo-pole" placeholder="KILOMETRY" step="0.01" style="display: none;">
-        </div>
-        <div class="liczydlo-wiersz">
-            <select id="KOZLOWSKISEBASTIAN_LICZYDLO-JEDNOSTKA" class="liczydlo-select">
-                <option value="ML">MILILITR ml - l LITR</option>
-                <option value="DAG">DEKAGRAM dag - kg KILOGRAM</option>
-                <option value="PALIWO">SPALANIE PALIWA</option>
-                <option value="TRASA">PLANOWANY KOSZT TRASY</option>
-            </select>
-            <button class="liczydlo-przycisk" id="KOZLOWSKISEBASTIAN_LICZYDLO-PRZYCISK">PRZELICZ</button>
-        </div>
-        <div id="KOZLOWSKISEBASTIAN_LICZYDLO-WYNIK" class="liczydlo-wynik">&nbsp;</div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const jednostkaSelect = document.getElementById('KOZLOWSKISEBASTIAN_LICZYDLO-JEDNOSTKA');
             const iloscInput = document.getElementById('KOZLOWSKISEBASTIAN_LICZYDLO-ILOSC');
+            const kilometryWiersz = document.getElementById('KOZLOWSKISEBASTIAN_LICZYDLO-KILOMETRY-WIERSZ');
             const kilometryInput = document.getElementById('KOZLOWSKISEBASTIAN_LICZYDLO-KILOMETRY');
             const przycisk = document.getElementById('KOZLOWSKISEBASTIAN_LICZYDLO-PRZYCISK');
             
             jednostkaSelect.addEventListener('change', () => {
                 const pokazKilometry = ['PALIWO', 'TRASA'].includes(jednostkaSelect.value);
-                kilometryInput.style.display = pokazKilometry ? 'block' : 'none';
+                kilometryWiersz.style.display = pokazKilometry ? 'flex' : 'none';
                 iloscInput.placeholder = jednostkaSelect.value === 'TRASA' ? 'ŚREDNIE SPALANIE' : 'ILOŚĆ';
             });
             
@@ -343,9 +297,10 @@
                 wynikElement.innerHTML = obliczenia[jednostka]();
             });
             
-            kilometryInput.style.display = 'none';
+            kilometryWiersz.style.display = 'none';
         });
 
+        // Skrypt dla hexagona (zachowany bez zmian)
         const kontener = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KONTENER');
         const ksztalt = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT');
         const trojkatKontener = document.querySelector('.KOZLOWSKISEBASTIAN_TROJKAT_KONTENER');
@@ -454,16 +409,6 @@
             }
         });
 
-        document.querySelectorAll('.KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                const polish = {'Ą':'A','Ć':'C','Ę':'E','Ł':'L','Ń':'N','Ó':'O','Ś':'S','Ź':'Z','Ż':'Z','ą':'a','ć':'c','ę':'e','ł':'l','ń':'n','ó':'o','ś':'s','ź':'z','ż':'z'};
-                const path = btn.innerText.toUpperCase().replace(/[ĄĆĘŁŃÓŚŹŻąćęłńóśźż]/g, m => polish[m]).replace(/ /g, '-');
-                if (btn.innerText.trim() !== '') {
-                    location.href = `https://kozlowskisebastian.pl/${path}/`;
-                }
-            });
-        });
-
         function initHexagonPosition() {
             if (window.innerWidth <= 768) {
                 kontener.style.left = '20px';
@@ -476,7 +421,6 @@
         window.addEventListener('load', initHexagonPosition);
         window.addEventListener('resize', initHexagonPosition);
     </script>
-    <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
-    <script src="https://kozlowskisebastian.pl/JS/LICZYDLO.js"></script>
+   <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
 </body>
 </html>
