@@ -4,80 +4,216 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GENERATOR KODÓW</title>
+    <meta name="theme-color" content="#000000">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bwip-js@3.1.0/dist/bwip-js-min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 420px;
-            margin: 0 auto;
-            padding: 10px;
+        /* STYLE PRZYBORNIKA - DOKŁADNIE TAKIE JAK W PODANYM PRZYKŁADZIE */
+        .KOZLOWSKISEBASTIAN {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
             background: #000000;
-            color: #FF00FF;
-        }
-        .container {
-            background: #333333;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .input-section {
-            margin-bottom: 0px;
-        }
-        input[type="text"] {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 0px solid #222;
-            border-radius: 4px;
-            box-sizing: border-box;
-            background: #222;
-            color: #FF00FF;
-        }
-    button {
-        background: #333333;
-        color: #FF00FF;
-        border: none;
-        padding: 10px 10px;
-        border-radius: 4px;
-        cursor: pointer;
-        width: 100%;
-        box-sizing: border-box;
-    }
-            button:hover {
-            background: #222222;
-        }
-    .save-button {
-        background: #333333;
-        color: #FF00FF;
-        margin-top: 10px;
-        padding: 10px 10px;
-        width: 100%;
-        display: block;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        box-sizing: border-box;
-    }
-        .save-button:hover {
-            background: #222222;
+            transition: background-color 0.3s;
         }
 
-        .code-container {
-            margin: 20px 0;
-            text-align: center;
+        .KOZLOWSKISEBASTIAN_CIEMNY {
+            background: #000000;
         }
-        .code-title {
+
+        .KOZLOWSKISEBASTIAN_JASNY {
+            background: #FFFFFF;
+        }
+
+        .KOZLOWSKISEBASTIAN_HEXAGON_KONTENER {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            cursor: default;
+            z-index: 1000;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #F5F5F5;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            transition: all 0.3s ease;
+            transform-origin: center;
+            cursor: pointer;
+        }
+
+        .KOZLOWSKISEBASTIAN_CIEMNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
+            background-color: #F5F5F5;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
+            background-color: #333333;
+        }
+
+        .OBRACAJ {
+            animation: obrot 0.2s ease-out;
+        }
+
+        @keyframes obrot {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .ROZSZERZONY + .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .KOZLOWSKISEBASTIAN_TROJKAT {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .KOZLOWSKISEBASTIAN_TROJKAT_JEDEN {
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+            background-color: #333333;
+        }
+
+        .KOZLOWSKISEBASTIAN_TROJKAT_DWA {
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+            background-color: #f5f5f5;
+        }
+
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK {
+            font-family: sans-serif;
+            background: inherit;
+            color: #FF00FF;
+            margin: 0;
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
+            max-width: 520px;
+            width: 100%;
+            background: #333333;
+            padding: 8px;
+            border-radius: 8px;
+            margin: 0 auto;
+            box-shadow: 0 0 0px rgba(0,0,0,0.5);
+        }
+
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px;
+            flex: 1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
+            color: #FF00FF;
+            background: #333333;
+            transform: translateY(-2px);
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK {
+            color: #333333;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
+            background: #F5F5F5 !important;
+            box-shadow: 0 0px 0px rgba(0,0,0,0.1);
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
+            background: #EEEEEE;
+            color: #555555;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
+            color: #333333;
+            background: #E0E0E0;
+            transform: translateY(-2px);
+        }
+
+        /* SPECJALNE STYLE DLA GENERATORA KODÓW */
+        .KOZLOWSKISEBASTIAN_KODY-POLE {
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            flex: 1;
+            font-family: sans-serif;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KODY-POLE {
+            background: #EEEEEE;
+            color: #555555;
+        }
+
+        .KOZLOWSKISEBASTIAN_KODY-WYNIK {
+            background: #222222;
+            color: #B0B0B0;
+            padding: 4px;
+            border-radius: 8px;
+            font-family: sans-serif;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KODY-WYNIK {
+            background: #EEEEEE;
+            color: #555555;
+        }
+
+        .KOZLOWSKISEBASTIAN_KODY-TYTUL {
             color: #FF00FF;
             margin: 10px 0;
             text-transform: uppercase;
+            text-align: center;
         }
-        .error {
-            color: #FF0000;
-            font-size: 14px;
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KODY-TYTUL {
+            color: #333333;
         }
-        .code-wrapper {
+
+        .KOZLOWSKISEBASTIAN_KODY-KONTENER {
+            margin: 10px 0;
+            text-align: center;
+        }
+
+        .KOZLOWSKISEBASTIAN_KODY-ZAWIJANIE {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -87,115 +223,261 @@
             width: 100%;
             box-sizing: border-box;
         }
-        svg {
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KODY-ZAWIJANIE {
+            background: #F5F5F5;
+        }
+
+        .KOZLOWSKISEBASTIAN_KODY-SVG {
             max-width: 100%;
             height: auto;
-            background: #333333;
-        }
-        .barcode-svg {
-            width: auto;
-            height: auto;
-            max-height: 150px;
-            background: white;
-        }
-        .qrcode-svg {
-            width: auto;
-            height: auto;
-            max-width: 200px;
-            max-height: 200px;
             background: white;
         }
 
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-            }
-            .container {
-                padding: 10px;
-            }
+        .KOZLOWSKISEBASTIAN_KODY-BLAD {
+            color: #FF0000;
+            font-size: 14px;
+        }
+
+        .KOZLOWSKISEBASTIAN_KODY-ZAPISZ {
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KODY-ZAPISZ {
+            background: #EEEEEE;
+            color: #555555;
+        }
+
+        .KOZLOWSKISEBASTIAN_KODY-ZAPISZ:hover {
+            color: #FF00FF;
+            background: #333333;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KODY-ZAPISZ:hover {
+            color: #333333;
+            background: #E0E0E0;
+        }
+
+        /* Nowy styl dla kontenera wyników */
+        #KOZLOWSKISEBASTIAN_KODY-WYNIKI {
+            display: none;
+        }
+
+        #KOZLOWSKISEBASTIAN_KODY-WYNIKI.WIDOCZNE {
+            display: block;
         }
     </style>
 </head>
-<body>
-    <div class="container">
-        <h1><center>GENERATOR KODÓW</center></h1>
-        <div class="input-section">
-            <input type="text" id="cardNumber" value="" placeholder="WPROWADŹ NUMER KARTY">
-            <button onclick="generateCodes()">GENERUJ</button>
+<body class="KOZLOWSKISEBASTIAN">
+    <div class="KOZLOWSKISEBASTIAN_HEXAGON_KONTENER">
+        <div class="KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT"></div>
+        <div class="KOZLOWSKISEBASTIAN_TROJKAT_KONTENER">
+            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_JEDEN"></div>
+            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_DWA"></div>
         </div>
-      </div>
-      <div>
-        <div class="code-container"><h3 class="code-title">AZTEC</h3><div id="aztec"></div></div>
-        <div class="code-container"><h3 class="code-title">CODE 39</h3><div id="code39"></div></div>
-        <div class="code-container"><h3 class="code-title">CODE 93</h3><div id="code93"></div></div>
-        <div class="code-container"><h3 class="code-title">CODE 128</h3><div id="code128"></div></div>
-        <div class="code-container"><h3 class="code-title">CODABAR</h3><div id="codabar"></div></div>
-        <div class="code-container"><h3 class="code-title">DATA MATRIX</h3><div id="datamatrix"></div></div>
-        <div class="code-container"><h3 class="code-title">EAN 8</h3><div id="ean8"></div></div>
-        <div class="code-container"><h3 class="code-title">EAN 13</h3><div id="ean13"></div></div>
-        <div class="code-container"><h3 class="code-title">ITF (PRZEPLATANY 2 Z 5)</h3><div id="itf"></div></div>
-        <div class="code-container"><h3 class="code-title">PDF 417</h3><div id="pdf417"></div></div>
-        <div class="code-container"><h3 class="code-title">QR CODE</h3><div id="qrcode"></div></div>
-        <div class="code-container"><h3 class="code-title">UPC A</h3><div id="upca"></div></div>
-        <div class="code-container"><h3 class="code-title">UPC E</h3><div id="upce"></div></div>
-        <div class="code-container"><h3 class="code-title">MSI PLESSEY</h3><div id="msi"></div></div>
-        <div class="code-container"><h3 class="code-title">CODE 11</h3><div id="code11"></div></div>
-        <div class="code-container"><h3 class="code-title">ISBN</h3><div id="isbn"></div></div>
-        <div class="code-container"><h3 class="code-title">ISSN</h3><div id="issn"></div></div>
-        <div class="code-container"><h3 class="code-title">EAN-14 (GTIN-14)</h3><div id="ean14"></div></div>
-        <div class="code-container"><h3 class="code-title">EAN-18 (SSCC-18)</h3><div id="ean18"></div></div>
-        <div class="code-container"><h3 class="code-title">EAN-128 (GS1-128)</h3><div id="ean128"></div></div>
-        <div class="code-container"><h3 class="code-title">DATABAR (RSS-14)</h3><div id="databar"></div></div>
-        <div class="code-container"><h3 class="code-title">DATABAR SPIĘTRZONY (RSS-14 STACKED)</h3><div id="databarstacked"></div></div>
-        <div class="code-container"><h3 class="code-title">DATABAR OGRANICZONY (RSS LIMITED)</h3><div id="databarlimited"></div></div>
-        <div class="code-container"><h3 class="code-title">CODE-32</h3><div id="code32"></div></div>
-        <div class="code-container"><h3 class="code-title">STANDARD 2 Z 5</h3><div id="standard2of5"></div></div>
-        <div class="code-container"><h3 class="code-title">ITF-14</h3><div id="itf14"></div></div>
-        <div class="code-container"><h3 class="code-title">PHARMACODE TWO TRACK</h3><div id="pharmacodetwotrack"></div></div>
-        <div class="code-container"><h3 class="code-title">POSTNET</h3><div id="postnet"></div></div>
-        <div class="code-container"><h3 class="code-title">PLANET</h3><div id="planet"></div></div>
-        <div class="code-container"><h3 class="code-title">ROYALMAIL (RM4SCC)</h3><div id="rm4scc"></div></div>
-        <div class="code-container"><h3 class="code-title">CODE 16K</h3><div id="code16k"></div></div>
-        <div class="code-container"><h3 class="code-title">IDENTCODE</h3><div id="identcode"></div></div>
-        <div class="code-container"><h3 class="code-title">LEITCODE</h3><div id="leitcode"></div></div>
-        <div class="code-container"><h3 class="code-title">PHARMACODE ONE TRACK</h3><div id="pharmacodeonetrack"></div></div>
-        <div class="code-container"><h3 class="code-title">CODABAR RATIONALIZED</h3><div id="codabarrationalized"></div></div>
     </div>
+    
+    <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK">
+        <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER">
+            <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" onclick="window.location.href='https://kozlowskisebastian.pl/PRZYBORNIK'">PRZYBORNIK</button>
+            </div>
+            
+            <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
+                <input type="text" id="KOZLOWSKISEBASTIAN_KODY-NUMER" class="KOZLOWSKISEBASTIAN_KODY-POLE" placeholder="WPROWADŹ NUMER KARTY">
+            </div>
+            
+            <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_KODY-PRZYCISK">GENERUJ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kontener dla wyników - początkowo ukryty -->
+    <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK" id="KOZLOWSKISEBASTIAN_KODY-WYNIKI">
+        <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER" id="KOZLOWSKISEBASTIAN_KODY-KODY">
+            <!-- Kody będą generowane tutaj -->
+        </div>
+    </div>
+
     <script>
-        window.onload = function() {
-            if (typeof bwipjs === 'undefined') {
-                console.error('Biblioteka bwip-js nie załadowała się!');
-                alert('Błąd: bwip-js nie załadowane.');
-                return;
+        // Skrypt dla hexagona (zachowany bez zmian)
+        const kontener = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KONTENER');
+        const ksztalt = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT');
+        const trojkatKontener = document.querySelector('.KOZLOWSKISEBASTIAN_TROJKAT_KONTENER');
+        const trojkaty = document.querySelectorAll('.KOZLOWSKISEBASTIAN_TROJKAT');
+        const body = document.body;
+
+        let isDragging = false;
+        let startX, startY, initialLeft, initialTop;
+        let clickStartTime = 0;
+        const CLICK_MAX_DURATION = 150;
+        const CLICK_MAX_DISTANCE = 8;
+
+        ksztalt.addEventListener('mousedown', startInteraction);
+        ksztalt.addEventListener('touchstart', startInteraction);
+
+        function startInteraction(e) {
+            clickStartTime = Date.now();
+            isDragging = false;
+            
+            const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
+            
+            startX = clientX;
+            startY = clientY;
+            
+            const rect = kontener.getBoundingClientRect();
+            initialLeft = rect.left;
+            initialTop = rect.top;
+            
+            document.addEventListener('mousemove', handleMove);
+            document.addEventListener('touchmove', handleMove);
+            document.addEventListener('mouseup', endInteraction);
+            document.addEventListener('touchend', endInteraction);
+        }
+
+        function handleMove(e) {
+            const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
+            
+            const dx = clientX - startX;
+            const dy = clientY - startY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (!isDragging && distance > CLICK_MAX_DISTANCE) {
+                isDragging = true;
             }
-            if (typeof QRCode === 'undefined') {
-                console.error('Biblioteka QRCode.js nie załadowała się!');
-                alert('Błąd: QRCode.js nie załadowane.');
-                return;
+            
+            if (isDragging) {
+                const newX = initialLeft + dx;
+                const newY = initialTop + dy;
+                
+                const maxX = window.innerWidth - kontener.offsetWidth;
+                const maxY = window.innerHeight - kontener.offsetHeight;
+                
+                kontener.style.left = `${Math.min(Math.max(0, newX), maxX)}px`;
+                kontener.style.top = `${Math.min(Math.max(0, newY), maxY)}px`;
             }
-            if (typeof JsBarcode === 'undefined') {
-                console.error('Biblioteka JsBarcode nie załadowała się!');
-                alert('Błąd: JsBarcode nie załadowane.');
-                return;
+        }
+
+        function endInteraction(e) {
+            const clickDuration = Date.now() - clickStartTime;
+            const isClick = !isDragging && clickDuration < CLICK_MAX_DURATION;
+            
+            document.removeEventListener('mousemove', handleMove);
+            document.removeEventListener('touchmove', handleMove);
+            document.removeEventListener('mouseup', endInteraction);
+            document.removeEventListener('touchend', endInteraction);
+            
+            if (isClick) {
+                handleClick();
             }
-            console.log('Biblioteki załadowane poprawnie.');
-        };
-        function generateCodes() {
-            const cardNumber = document.getElementById('cardNumber').value.trim();
+            
+            isDragging = false;
+        }
+
+        function handleClick() {
+            if (!ksztalt.classList.contains('ROZSZERZONY')) {
+                ksztalt.classList.add('OBRACAJ');
+                
+                setTimeout(() => {
+                    ksztalt.classList.remove('OBRACAJ');
+                    ksztalt.classList.add('ROZSZERZONY');
+                }, 300);
+            }
+        }
+
+        trojkaty.forEach(trojkat => {
+            trojkat.addEventListener('click', function(e) {
+                ksztalt.classList.remove('ROZSZERZONY');
+                
+                body.classList.remove('KOZLOWSKISEBASTIAN_CIEMNY', 'KOZLOWSKISEBASTIAN_JASNY');
+
+                if (this.classList.contains('KOZLOWSKISEBASTIAN_TROJKAT_JEDEN')) {
+                    body.classList.add('KOZLOWSKISEBASTIAN_CIEMNY');
+                } else if (this.classList.contains('KOZLOWSKISEBASTIAN_TROJKAT_DWA')) {
+                    body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
+                }
+
+                e.stopPropagation();
+            });
+        });
+
+        document.addEventListener('click', function(e) {
+            if (ksztalt.classList.contains('ROZSZERZONY') && !kontener.contains(e.target)) {
+                ksztalt.classList.remove('ROZSZERZONY');
+            }
+        });
+
+        function initHexagonPosition() {
+            if (window.innerWidth <= 768) {
+                kontener.style.left = '20px';
+                kontener.style.top = 'auto';
+                kontener.style.bottom = '20px';
+                kontener.style.right = 'auto';
+            }
+        }
+
+        window.addEventListener('load', initHexagonPosition);
+        window.addEventListener('resize', initHexagonPosition);
+
+        // Skrypt dla generatora kodów
+        document.addEventListener('DOMContentLoaded', () => {
+            const przycisk = document.getElementById('KOZLOWSKISEBASTIAN_KODY-PRZYCISK');
+            const kontenerWynikow = document.getElementById('KOZLOWSKISEBASTIAN_KODY-WYNIKI');
+            
+            przycisk.addEventListener('click', generujKody);
+            
+            // Obsługa klawisza Enter w polu wprowadzania
+            document.getElementById('KOZLOWSKISEBASTIAN_KODY-NUMER').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    generujKody();
+                }
+            });
+        });
+
+        function generujKody() {
+            const cardNumber = document.getElementById('KOZLOWSKISEBASTIAN_KODY-NUMER').value.trim();
+            const kontenerKodow = document.getElementById('KOZLOWSKISEBASTIAN_KODY-KODY');
+            const kontenerWynikow = document.getElementById('KOZLOWSKISEBASTIAN_KODY-WYNIKI');
             
             if (!cardNumber) {
-                alert('PROSZĘ WPROWADZIĆ NUMER KARTY!');
+                kontenerKodow.innerHTML = '<div class="KOZLOWSKISEBASTIAN_KODY-WYNIK">PROSZĘ WPROWADZIĆ NUMER KARTY!</div>';
+                kontenerWynikow.classList.add('WIDOCZNE');
                 return;
             }
-            console.log('Generowanie kodów dla:', cardNumber);
-            function clearElement(id) {
-                const element = document.getElementById(id);
-                element.innerHTML = '';
+            
+            kontenerKodow.innerHTML = '';
+            
+            function utworzKontenerKodu(tytul) {
+                const div = document.createElement('div');
+                div.className = 'KOZLOWSKISEBASTIAN_KODY-KONTENER';
+                
+                const h3 = document.createElement('h3');
+                h3.className = 'KOZLOWSKISEBASTIAN_KODY-TYTUL';
+                h3.textContent = tytul;
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'KOZLOWSKISEBASTIAN_KODY-ZAWIJANIE';
+                wrapper.id = tytul.toLowerCase().replace(/ /g, '');
+                
+                div.appendChild(h3);
+                div.appendChild(wrapper);
+                kontenerKodow.appendChild(div);
+                
+                return wrapper;
             }
-            function clearErrors() {
-                document.querySelectorAll('.error').forEach(el => el.remove());
-            }
-            function saveSvg(svgContent, fileName) {
+            
+            function zapiszSvg(svgContent, fileName) {
                 const blob = new Blob([svgContent], { type: 'image/svg+xml' });
                 const url = URL.createObjectURL(blob);
                 const link = document.createElement('a');
@@ -206,14 +488,15 @@
                 document.body.removeChild(link);
                 URL.revokeObjectURL(url);
             }
-            function generateJsBarcode(id, format, text, validation = () => true, errorMessage = `${format} WYMAGA SPECYFICZNEGO FORMATU`) {
-                clearElement(id);
-                console.log(`Próba generowania ${format} dla ${text} z JsBarcode`);
+            
+            function generujJsBarcode(id, format, text, validation = () => true, errorMessage = `${format} WYMAGA SPECYFICZNEGO FORMATU`) {
+                const element = utworzKontenerKodu(format);
+                
                 if (!validation(text)) {
-                    document.getElementById(id).innerHTML = `<span class="error">${errorMessage}</span>`;
-                    console.log(`${format}: Walidacja nieudana - ${errorMessage}`);
+                    element.innerHTML = `<span class="KOZLOWSKISEBASTIAN_KODY-BLAD">${errorMessage}</span>`;
                     return;
                 }
+                
                 try {
                     const svgElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                     JsBarcode(svgElement, text, {
@@ -226,14 +509,11 @@
                         background: '#ffffff'
                     });
                     
-                    svgElement.classList.add('barcode-svg');
+                    svgElement.classList.add('KOZLOWSKISEBASTIAN_KODY-SVG');
                     
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'code-wrapper';
-                    wrapper.appendChild(svgElement);
                     const saveButton = document.createElement('button');
+                    saveButton.className = 'KOZLOWSKISEBASTIAN_KODY-ZAPISZ';
                     saveButton.textContent = 'ZAPISZ';
-                    saveButton.className = 'save-button';
                     saveButton.onclick = () => {
                         const highResSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
                         JsBarcode(highResSvg, text, {
@@ -246,24 +526,24 @@
                             background: '#ffffff'
                         });
                         
-                        saveSvg(new XMLSerializer().serializeToString(highResSvg), `${id}_KSGROUP`);
+                        zapiszSvg(new XMLSerializer().serializeToString(highResSvg), `${id}_KSGROUP`);
                     };
-                    wrapper.appendChild(saveButton);
-                    document.getElementById(id).appendChild(wrapper);
-                    console.log(`${format}: Wygenerowano natywne SVG z JsBarcode`);
+                    
+                    element.appendChild(svgElement);
+                    element.appendChild(saveButton);
                 } catch (e) {
-                    document.getElementById(id).innerHTML = `<span class="error">BŁĄD GENEROWANIA ${format}: ${e.message}</span>`;
-                    console.error(`${format}: Błąd - ${e.message}`);
+                    element.innerHTML = `<span class="KOZLOWSKISEBASTIAN_KODY-BLAD">BŁĄD GENEROWANIA ${format}: ${e.message}</span>`;
                 }
             }
-            function generateBarcode(id, format, text, validation = () => true, errorMessage = `${format} WYMAGA SPECYFICZNEGO FORMATU`) {
-                clearElement(id);
-                console.log(`Próba generowania ${format} dla ${text} z bwip-js`);
+            
+            function generujBarcode(id, format, text, validation = () => true, errorMessage = `${format} WYMAGA SPECYFICZNEGO FORMATU`) {
+                const element = utworzKontenerKodu(format);
+                
                 if (!validation(text)) {
-                    document.getElementById(id).innerHTML = `<span class="error">${errorMessage}</span>`;
-                    console.log(`${format}: Walidacja nieudana - ${errorMessage}`);
+                    element.innerHTML = `<span class="KOZLOWSKISEBASTIAN_KODY-BLAD">${errorMessage}</span>`;
                     return;
                 }
+                
                 try {
                     const canvas = document.createElement('canvas');
                     bwipjs.toCanvas(canvas, {
@@ -282,7 +562,7 @@
                     svg.setAttribute('width', canvas.width);
                     svg.setAttribute('height', canvas.height);
                     svg.setAttribute('viewBox', `0 0 ${canvas.width} ${canvas.height}`);
-                    svg.classList.add('barcode-svg');
+                    svg.classList.add('KOZLOWSKISEBASTIAN_KODY-SVG');
                     
                     const bgRect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
                     bgRect.setAttribute('width', '100%');
@@ -326,13 +606,9 @@
                     svg.appendChild(barsGroup);
                     svg.appendChild(textGroup);
                     
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'code-wrapper';
-                    wrapper.appendChild(svg);
-                    
                     const saveButton = document.createElement('button');
+                    saveButton.className = 'KOZLOWSKISEBASTIAN_KODY-ZAPISZ';
                     saveButton.textContent = 'ZAPISZ';
-                    saveButton.className = 'save-button';
                     saveButton.onclick = () => {
                         const highResCanvas = document.createElement('canvas');
                         bwipjs.toCanvas(highResCanvas, {
@@ -394,20 +670,19 @@
                         highResSvg.appendChild(highResBarsGroup);
                         highResSvg.appendChild(highResTextGroup);
                         
-                        saveSvg(new XMLSerializer().serializeToString(highResSvg), `${id}_KSGROUP`);
+                        zapiszSvg(new XMLSerializer().serializeToString(highResSvg), `${id}_KSGROUP`);
                     };
                     
-                    wrapper.appendChild(saveButton);
-                    document.getElementById(id).appendChild(wrapper);
-                    console.log(`${format}: Wygenerowano kod z bwip-js jako SVG`);
+                    element.appendChild(svg);
+                    element.appendChild(saveButton);
                 } catch (e) {
-                    document.getElementById(id).innerHTML = `<span class="error">BŁĄD GENEROWANIA ${format}: ${e.message}</span>`;
-                    console.error(`${format}: Błąd - ${e.message}`);
+                    element.innerHTML = `<span class="KOZLOWSKISEBASTIAN_KODY-BLAD">BŁĄD GENEROWANIA ${format}: ${e.message}</span>`;
                 }
             }
-            function generateQRCode(id, text) {
-                clearElement(id);
-                console.log('Próba generowania QR Code');
+            
+            function generujQRCode(id, text) {
+                const element = utworzKontenerKodu(id);
+                
                 try {
                     QRCode.toString(text, { 
                         type: 'svg', 
@@ -416,18 +691,16 @@
                         color: { dark: '#000000', light: '#ffffff' }
                     }, function (error, svg) {
                         if (error) {
-                            document.getElementById(id).innerHTML = `<span class="error">BŁĄD GENEROWANIA QR CODE: ${error.message}</span>`;
-                            console.error('QR Code: Błąd - ' + error.message);
+                            element.innerHTML = `<span class="KOZLOWSKISEBASTIAN_KODY-BLAD">BŁĄD GENEROWANIA QR CODE: ${error.message}</span>`;
                         } else {
-                            const wrapper = document.createElement('div');
-                            wrapper.className = 'code-wrapper';
-                            wrapper.innerHTML = svg;
-                            const svgElement = wrapper.querySelector('svg');
-                            svgElement.classList.add('qrcode-svg');
+                            const div = document.createElement('div');
+                            div.innerHTML = svg;
+                            const svgElement = div.querySelector('svg');
+                            svgElement.classList.add('KOZLOWSKISEBASTIAN_KODY-SVG');
                             
                             const saveButton = document.createElement('button');
+                            saveButton.className = 'KOZLOWSKISEBASTIAN_KODY-ZAPISZ';
                             saveButton.textContent = 'ZAPISZ';
-                            saveButton.className = 'save-button';
                             saveButton.onclick = () => {
                                 QRCode.toString(text, { 
                                     type: 'svg', 
@@ -436,57 +709,61 @@
                                     color: { dark: '#000000', light: '#ffffff' }
                                 }, function (error, highResSvg) {
                                     if (!error) {
-                                        saveSvg(highResSvg, `${id}_KSGROUP`);
+                                        zapiszSvg(highResSvg, `${id}_KSGROUP`);
                                     }
                                 });
                             };
-                            wrapper.appendChild(saveButton);
-                            document.getElementById(id).appendChild(wrapper);
-                            console.log('QR Code: Wygenerowano natywne SVG');
+                            
+                            element.appendChild(svgElement);
+                            element.appendChild(saveButton);
                         }
                     });
                 } catch (e) {
-                    document.getElementById(id).innerHTML = `<span class="error">BŁĄD GENEROWANIA QR CODE: ${e.message}</span>`;
-                    console.error('QR Code: Wyjątek - ' + e.message);
+                    element.innerHTML = `<span class="KOZLOWSKISEBASTIAN_KODY-BLAD">BŁĄD GENEROWANIA QR CODE: ${e.message}</span>`;
                 }
             }
-            clearErrors();
-            generateBarcode('aztec', 'azteccode', cardNumber);
-            generateJsBarcode('code39', 'CODE39', cardNumber);
-            generateBarcode('code93', 'code93', cardNumber);
-            generateJsBarcode('code128', 'CODE128', cardNumber);
-            generateJsBarcode('codabar', 'CODABAR', cardNumber);
-            generateBarcode('datamatrix', 'datamatrix', cardNumber);
-            generateJsBarcode('ean8', 'EAN8', cardNumber, (text) => text.length === 8, 'NUMER MUSI MIEĆ 8 CYFR DLA EAN8');
-            generateJsBarcode('ean13', 'EAN13', cardNumber, (text) => text.length === 12 || text.length === 13, 'NUMER MUSI MIEĆ 12 LUB 13 CYFR DLA EAN13');
-            generateJsBarcode('itf', 'ITF', cardNumber, (text) => text.length % 2 === 0, 'NUMER MUSI MIEĆ PARZYSTĄ LICZBĘ CYFR DLA ITF');
-            generateBarcode('pdf417', 'pdf417', cardNumber);
-            generateQRCode('qrcode', cardNumber);
-            generateJsBarcode('upca', 'UPCA', cardNumber, (text) => text.length === 11 || text.length === 12, 'NUMER MUSI MIEĆ 11 LUB 12 CYFR DLA UPC-A');
-            generateJsBarcode('upce', 'UPCE', cardNumber, (text) => text.length >= 6 && text.length <= 8, 'NUMER MUSI MIEĆ 6-8 CYFR DLA UPC-E');
-            generateJsBarcode('msi', 'MSI', cardNumber);
-            generateBarcode('code11', 'code11', cardNumber);
-            generateJsBarcode('isbn', 'EAN13', cardNumber, (text) => text.length === 13 && (text.startsWith('978') || text.startsWith('979')), 'NUMER MUSI MIEĆ 13 CYFR I ZACZYNAĆ SIĘ OD 978 LUB 979 DLA ISBN');
-            generateBarcode('issn', 'ean13', '977' + cardNumber.slice(0, 7) + '00', (text) => text.length >= 8, 'NUMER MUSI MIEĆ CO NAJMNIEJ 8 CYFR DLA ISSN');
-            generateBarcode('ean14', 'ean14', '(01)' + cardNumber, (text) => text.length === 13 || text.length === 14, 'NUMER MUSI MIEĆ 13 LUB 14 CYFR DLA EAN-14');
-            generateBarcode('ean18', 'sscc18', cardNumber, (text) => text.length === 17 || text.length === 18, 'NUMER MUSI MIEĆ 17 LUB 18 CYFR DLA EAN-18');
-            generateBarcode('ean128', 'gs1-128', '(01)' + cardNumber.padStart(14, '0'), (text) => text.length >= 14, 'NUMER MUSI MIEĆ CO NAJMNIEJ 14 CYFR PO (01) DLA EAN-128');
-            generateBarcode('databar', 'gs1databar', '(01)' + cardNumber, (text) => text.length <= 14, 'NUMER NIE MOŻE PRZEKRACZAĆ 14 CYFR DLA DATABAR');
-            generateBarcode('databarstacked', 'gs1databarstacked', '(01)' + cardNumber, (text) => text.length <= 14, 'NUMER NIE MOŻE PRZEKRACZAĆ 14 CYFR DLA DATABAR STACKED');
-            generateBarcode('databarlimited', 'databarlimited', cardNumber, (text) => text.length <= 14 && parseInt(text) <= 1999999999999, 'NUMER MUSI MIEĆ MAX 14 CYFR I BYĆ MNIEJSZY NIŻ 2 BILIONY DLA DATABAR LIMITED');
-            generateBarcode('code32', 'code32', cardNumber, (text) => text.length === 9, 'NUMER MUSI MIEĆ 9 CYFR DLA CODE-32');
-            generateBarcode('standard2of5', 'code2of5', cardNumber);
-            generateBarcode('itf14', 'itf14', cardNumber, (text) => text.length === 14, 'NUMER MUSI MIEĆ 14 CYFR DLA ITF-14');
-            generateBarcode('pharmacodetwotrack', 'pharmacode2', cardNumber, (text) => /^[0-1]+$/.test(text), 'NUMER MUSI ZAWIERAĆ TYLKO 0 I 1 DLA PHARMACODE TWO TRACK');
-            generateBarcode('postnet', 'postnet', cardNumber, (text) => text.length === 5 || text.length === 9 || text.length === 11, 'NUMER MUSI MIEĆ 5, 9 LUB 11 CYFR DLA POSTNET');
-            generateBarcode('planet', 'planet', cardNumber, (text) => text.length === 11 || text.length === 13, 'NUMER MUSI MIEĆ 11 LUB 13 CYFR DLA PLANET');
-            generateBarcode('rm4scc', 'royalmail', cardNumber);
-            generateBarcode('code16k', 'code16k', cardNumber);
-            generateBarcode('identcode', 'identcode', cardNumber, (text) => text.length === 11 || text.length === 12, 'NUMER MUSI MIEĆ 11 LUB 12 CYFR DLA IDENTCODE');
-            generateBarcode('leitcode', 'leitcode', cardNumber, (text) => text.length === 13 || text.length === 14, 'NUMER MUSI MIEĆ 13 LUB 14 CYFR DLA LEITCODE');
-            generateBarcode('pharmacodeonetrack', 'pharmacode', cardNumber, (text) => /^[0-1]+$/.test(text), 'NUMER MUSI ZAWIERAĆ TYLKO 0 I 1 DLA PHARMACODE ONE TRACK');
-            generateJsBarcode('codabarrationalized', 'CODABAR', cardNumber);
+            
+            // Pokazujemy kontener wyników przed generowaniem kodów
+            kontenerWynikow.classList.add('WIDOCZNE');
+            
+            // Generowanie wszystkich kodów
+            generujBarcode('AZTEC', 'azteccode', cardNumber);
+            generujJsBarcode('CODE 39', 'CODE39', cardNumber);
+            generujBarcode('CODE 93', 'code93', cardNumber);
+            generujJsBarcode('CODE 128', 'CODE128', cardNumber);
+            generujJsBarcode('CODABAR', 'CODABAR', cardNumber);
+            generujBarcode('DATA MATRIX', 'datamatrix', cardNumber);
+            generujJsBarcode('EAN 8', 'EAN8', cardNumber, (text) => text.length === 8, 'NUMER MUSI MIEĆ 8 CYFR DLA EAN8');
+            generujJsBarcode('EAN 13', 'EAN13', cardNumber, (text) => text.length === 12 || text.length === 13, 'NUMER MUSI MIEĆ 12 LUB 13 CYFR DLA EAN13');
+            generujJsBarcode('ITF (PRZEPLATANY 2 Z 5)', 'ITF', cardNumber, (text) => text.length % 2 === 0, 'NUMER MUSI MIEĆ PARZYSTĄ LICZBĘ CYFR DLA ITF');
+            generujBarcode('PDF 417', 'pdf417', cardNumber);
+            generujQRCode('QR CODE', cardNumber);
+            generujJsBarcode('UPC A', 'UPCA', cardNumber, (text) => text.length === 11 || text.length === 12, 'NUMER MUSI MIEĆ 11 LUB 12 CYFR DLA UPC-A');
+            generujJsBarcode('UPC E', 'UPCE', cardNumber, (text) => text.length >= 6 && text.length <= 8, 'NUMER MUSI MIEĆ 6-8 CYFR DLA UPC-E');
+            generujJsBarcode('MSI PLESSEY', 'MSI', cardNumber);
+            generujBarcode('CODE 11', 'code11', cardNumber);
+            generujJsBarcode('ISBN', 'EAN13', cardNumber, (text) => text.length === 13 && (text.startsWith('978') || text.startsWith('979')), 'NUMER MUSI MIEĆ 13 CYFR I ZACZYNAĆ SIĘ OD 978 LUB 979 DLA ISBN');
+            generujBarcode('ISSN', 'ean13', '977' + cardNumber.slice(0, 7) + '00', (text) => text.length >= 8, 'NUMER MUSI MIEĆ CO NAJMNIEJ 8 CYFR DLA ISSN');
+            generujBarcode('EAN-14 (GTIN-14)', 'ean14', '(01)' + cardNumber, (text) => text.length === 13 || text.length === 14, 'NUMER MUSI MIEĆ 13 LUB 14 CYFR DLA EAN-14');
+            generujBarcode('EAN-18 (SSCC-18)', 'sscc18', cardNumber, (text) => text.length === 17 || text.length === 18, 'NUMER MUSI MIEĆ 17 LUB 18 CYFR DLA EAN-18');
+            generujBarcode('EAN-128 (GS1-128)', 'gs1-128', '(01)' + cardNumber.padStart(14, '0'), (text) => text.length >= 14, 'NUMER MUSI MIEĆ CO NAJMNIEJ 14 CYFR PO (01) DLA EAN-128');
+            generujBarcode('DATABAR (RSS-14)', 'gs1databar', '(01)' + cardNumber, (text) => text.length <= 14, 'NUMER NIE MOŻE PRZEKRACZAĆ 14 CYFR DLA DATABAR');
+            generujBarcode('DATABAR SPIĘTRZONY (RSS-14 STACKED)', 'gs1databarstacked', '(01)' + cardNumber, (text) => text.length <= 14, 'NUMER NIE MOŻE PRZEKRACZAĆ 14 CYFR DLA DATABAR STACKED');
+            generujBarcode('DATABAR OGRANICZONY (RSS LIMITED)', 'databarlimited', cardNumber, (text) => text.length <= 14 && parseInt(text) <= 1999999999999, 'NUMER MUSI MIEĆ MAX 14 CYFR I BYĆ MNIEJSZY NIŻ 2 BILIONY DLA DATABAR LIMITED');
+            generujBarcode('CODE-32', 'code32', cardNumber, (text) => text.length === 9, 'NUMER MUSI MIEĆ 9 CYFR DLA CODE-32');
+            generujBarcode('STANDARD 2 Z 5', 'code2of5', cardNumber);
+            generujBarcode('ITF-14', 'itf14', cardNumber, (text) => text.length === 14, 'NUMER MUSI MIEĆ 14 CYFR DLA ITF-14');
+            generujBarcode('PHARMACODE TWO TRACK', 'pharmacode2', cardNumber, (text) => /^[0-1]+$/.test(text), 'NUMER MUSI ZAWIERAĆ TYLKO 0 I 1 DLA PHARMACODE TWO TRACK');
+            generujBarcode('POSTNET', 'postnet', cardNumber, (text) => text.length === 5 || text.length === 9 || text.length === 11, 'NUMER MUSI MIEĆ 5, 9 LUB 11 CYFR DLA POSTNET');
+            generujBarcode('PLANET', 'planet', cardNumber, (text) => text.length === 11 || text.length === 13, 'NUMER MUSI MIEĆ 11 LUB 13 CYFR DLA PLANET');
+            generujBarcode('ROYALMAIL (RM4SCC)', 'royalmail', cardNumber);
+            generujBarcode('CODE 16K', 'code16k', cardNumber);
+            generujBarcode('IDENTCODE', 'identcode', cardNumber, (text) => text.length === 11 || text.length === 12, 'NUMER MUSI MIEĆ 11 LUB 12 CYFR DLA IDENTCODE');
+            generujBarcode('LEITCODE', 'leitcode', cardNumber, (text) => text.length === 13 || text.length === 14, 'NUMER MUSI MIEĆ 13 LUB 14 CYFR DLA LEITCODE');
+            generujBarcode('PHARMACODE ONE TRACK', 'pharmacode', cardNumber, (text) => /^[0-1]+$/.test(text), 'NUMER MUSI ZAWIERAĆ TYLKO 0 I 1 DLA PHARMACODE ONE TRACK');
+            generujJsBarcode('CODABAR RATIONALIZED', 'CODABAR', cardNumber);
         }
     </script>
+   <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
 </body>
 </html>
