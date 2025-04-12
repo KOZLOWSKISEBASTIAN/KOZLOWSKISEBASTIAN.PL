@@ -185,11 +185,14 @@
         .KOZLOWSKISEBASTIAN_KODY-WYNIK {
             background: #222222;
             color: #B0B0B0;
-            padding: 4px;
+            padding: 8px;
             border-radius: 8px;
             font-family: sans-serif;
             width: 100%;
             box-sizing: border-box;
+            margin-top: 4px; /* Zmniejszony odstęp z 8px na 4px */
+            min-height: 20px;
+            display: none; /* Domyślnie ukryte */
         }
 
         .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KODY-WYNIK {
@@ -198,18 +201,19 @@
         }
 
         .KOZLOWSKISEBASTIAN_KODY-TYTUL {
-            color: #FF00FF;
-            margin: 10px 0;
+            color: #B0B0B0; /* Zmieniony kolor z #FF00FF na #222222 */
+            margin: 5px 0 2px 0; /* Zmniejszone marginesy */
             text-transform: uppercase;
             text-align: center;
+            font-size: 14px;
         }
 
         .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KODY-TYTUL {
-            color: #333333;
+            color: #555555;
         }
 
         .KOZLOWSKISEBASTIAN_KODY-KONTENER {
-            margin: 10px 0;
+            margin: 2px 0; /* Zmniejszony odstęp z 5px na 2px */
             text-align: center;
         }
 
@@ -217,62 +221,57 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: #333333;
-            padding: 10px;
-            border-radius: 4px;
+            background: #222222;
+            padding: 8px; /* Zmniejszony padding z 10px na 8px */
+            border-radius: 8px;
             width: 100%;
             box-sizing: border-box;
+            margin-bottom: 4px; /* Zmniejszony odstęp z 8px na 4px */
         }
 
         .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KODY-ZAWIJANIE {
-            background: #F5F5F5;
+            background: #EEEEEE;
         }
 
         .KOZLOWSKISEBASTIAN_KODY-SVG {
             max-width: 100%;
             height: auto;
             background: white;
+            border-radius: 4px;
         }
 
         .KOZLOWSKISEBASTIAN_KODY-BLAD {
             color: #FF0000;
             font-size: 14px;
+            padding: 8px;
         }
 
         .KOZLOWSKISEBASTIAN_KODY-ZAPISZ {
-            background: #222222;
+            background: #333333;
             color: #B0B0B0;
             border: none;
-            padding: 8px;
+            padding: 6px; /* Zmniejszony padding z 8px na 6px */
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.15s;
-            margin-top: 8px;
+            margin-top: 4px; /* Zmniejszony odstęp z 8px na 4px */
             width: 100%;
+            font-size: 14px;
         }
 
         .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KODY-ZAPISZ {
-            background: #EEEEEE;
+            background: #DDDDDD;
             color: #555555;
         }
 
         .KOZLOWSKISEBASTIAN_KODY-ZAPISZ:hover {
             color: #FF00FF;
-            background: #333333;
+            background: #444444;
         }
 
         .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KODY-ZAPISZ:hover {
             color: #333333;
-            background: #E0E0E0;
-        }
-
-        /* Nowy styl dla kontenera wyników */
-        #KOZLOWSKISEBASTIAN_KODY-WYNIKI {
-            display: none;
-        }
-
-        #KOZLOWSKISEBASTIAN_KODY-WYNIKI.WIDOCZNE {
-            display: block;
+            background: #CCCCCC;
         }
     </style>
 </head>
@@ -298,13 +297,11 @@
             <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
                 <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_KODY-PRZYCISK">GENERUJ</button>
             </div>
-        </div>
-    </div>
-
-    <!-- Kontener dla wyników - początkowo ukryty -->
-    <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK" id="KOZLOWSKISEBASTIAN_KODY-WYNIKI">
-        <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER" id="KOZLOWSKISEBASTIAN_KODY-KODY">
-            <!-- Kody będą generowane tutaj -->
+            
+            <!-- Kontener wyników - początkowo ukryty -->
+            <div id="KOZLOWSKISEBASTIAN_KODY-WYNIK" class="KOZLOWSKISEBASTIAN_KODY-WYNIK">
+                &nbsp;
+            </div>
         </div>
     </div>
 
@@ -433,7 +430,7 @@
         // Skrypt dla generatora kodów
         document.addEventListener('DOMContentLoaded', () => {
             const przycisk = document.getElementById('KOZLOWSKISEBASTIAN_KODY-PRZYCISK');
-            const kontenerWynikow = document.getElementById('KOZLOWSKISEBASTIAN_KODY-WYNIKI');
+            const poleWynikow = document.getElementById('KOZLOWSKISEBASTIAN_KODY-WYNIK');
             
             przycisk.addEventListener('click', generujKody);
             
@@ -447,16 +444,17 @@
 
         function generujKody() {
             const cardNumber = document.getElementById('KOZLOWSKISEBASTIAN_KODY-NUMER').value.trim();
-            const kontenerKodow = document.getElementById('KOZLOWSKISEBASTIAN_KODY-KODY');
-            const kontenerWynikow = document.getElementById('KOZLOWSKISEBASTIAN_KODY-WYNIKI');
+            const poleWynikow = document.getElementById('KOZLOWSKISEBASTIAN_KODY-WYNIK');
+            
+            // Pokazujemy pole wyników
+            poleWynikow.style.display = 'block';
             
             if (!cardNumber) {
-                kontenerKodow.innerHTML = '<div class="KOZLOWSKISEBASTIAN_KODY-WYNIK">PROSZĘ WPROWADZIĆ NUMER KARTY!</div>';
-                kontenerWynikow.classList.add('WIDOCZNE');
+                poleWynikow.innerHTML = 'PROSZĘ WPROWADZIĆ NUMER KARTY!';
                 return;
             }
             
-            kontenerKodow.innerHTML = '';
+            poleWynikow.innerHTML = '';
             
             function utworzKontenerKodu(tytul) {
                 const div = document.createElement('div');
@@ -472,7 +470,7 @@
                 
                 div.appendChild(h3);
                 div.appendChild(wrapper);
-                kontenerKodow.appendChild(div);
+                poleWynikow.appendChild(div);
                 
                 return wrapper;
             }
@@ -722,9 +720,6 @@
                     element.innerHTML = `<span class="KOZLOWSKISEBASTIAN_KODY-BLAD">BŁĄD GENEROWANIA QR CODE: ${e.message}</span>`;
                 }
             }
-            
-            // Pokazujemy kontener wyników przed generowaniem kodów
-            kontenerWynikow.classList.add('WIDOCZNE');
             
             // Generowanie wszystkich kodów
             generujBarcode('AZTEC', 'azteccode', cardNumber);
