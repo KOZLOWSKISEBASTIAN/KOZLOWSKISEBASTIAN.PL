@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POGODA</title>
     <meta name="theme-color" content="#000000">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
     <style>
-        /* GŁÓWNE STYLE */
+        /* STYLE PRZYBORNIKA - DOKŁADNIE TAKIE JAK W PODANYM PRZYKŁADZIE */
         .KOZLOWSKISEBASTIAN {
             margin: 0;
             padding: 0;
@@ -26,7 +25,6 @@
             background: #FFFFFF;
         }
 
-        /* STYLE HEXAGONU */
         .KOZLOWSKISEBASTIAN_HEXAGON_KONTENER {
             position: fixed;
             bottom: 20px;
@@ -58,7 +56,6 @@
             background-color: #333333;
         }
 
-        /* ANIMACJA OBROTU */
         .OBRACAJ {
             animation: obrot 0.2s ease-out;
         }
@@ -68,7 +65,6 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* STYLE PRZEŁĄCZNIKA */
         .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
             position: fixed;
             top: 0;
@@ -102,7 +98,6 @@
             background-color: #f5f5f5;
         }
 
-        /* STYLE POGODY */
         .KOZLOWSKISEBASTIAN_PRZYBORNIK {
             font-family: sans-serif;
             background: inherit;
@@ -127,7 +122,6 @@
         .KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ {
             display: flex;
             gap: 10px;
-            margin-top: 4px;
             margin-bottom: 4px;
         }
 
@@ -149,7 +143,6 @@
             transform: translateY(-2px);
         }
 
-        /* STYLE JASNEGO MOTYWU */
         .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK {
             color: #333333;
         }
@@ -170,257 +163,223 @@
             transform: translateY(-2px);
         }
 
-        /* STYLE SPECJALNE DLA POGODY */
-        .pogoda-kontener {
-            width: 320px;
-            background: #222;
-            padding: 12px;
-            border-radius: 10px;
-            margin: 8px auto;
-        }
-        
-        .pogoda-wiersz {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-        
-        .pogoda-przycisk {
-            background: #333;
+        /* SPECJALNE STYLE DLA POGODY */
+        .KOZLOWSKISEBASTIAN_POGODA-SELECT {
+            background: #222222;
             color: #B0B0B0;
             border: none;
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
-            transition: all 0.2s;
             flex: 1;
-            text-align: center;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-size: 14px;
-        }
-        
-        .pogoda-przycisk:hover {
-            background: #3a3a3a;
-            color: #FF00FF;
-            transform: translateY(-1px);
-        }
-        
-        .pogoda-select {
-            background: #333;
-            color: #B0B0B0;
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
+            font-family: sans-serif;
             width: 100%;
-            margin-bottom: 12px;
-            font-size: 14px;
+            margin-bottom: 4px;
         }
-        
-        .pogoda-karta {
-            background: #222;
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_POGODA-SELECT {
+            background: #EEEEEE;
+            color: #555555;
+        }
+
+        .KOZLOWSKISEBASTIAN_POGODA-WYNIK {
+            background: #222222;
+            color: #B0B0B0;
+            padding: 8px;
             border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 12px;
-            position: relative;
-            overflow: hidden;
-            border-left: 3px solid #FF00FF;
+            font-family: sans-serif;
+            width: 100%;
+            box-sizing: border-box;
+            margin-top: 4px;
+            min-height: 20px;
+            display: none;
         }
-        
-        .pogoda-lokalizacja {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            color: #FF00FF;
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_POGODA-WYNIK {
+            background: #EEEEEE;
+            color: #555555;
         }
-        
-        .pogoda-miasto {
-            font-size: 20px;
-            font-weight: 400;
+
+        .KOZLOWSKISEBASTIAN_POGODA-KARTA {
+            background: #222222;
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 4px;
         }
-        
-        .pogoda-data {
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_POGODA-KARTA {
+            background: #EEEEEE;
+        }
+
+        .KOZLOWSKISEBASTIAN_POGODA-MIASTO {
+            font-size: 16px;
+            color: #B0B0B0;
+            margin-bottom: 4px;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_POGODA-MIASTO {
+            color: #333333;
+        }
+
+        .KOZLOWSKISEBASTIAN_POGODA-DATA {
             font-size: 12px;
             color: #B0B0B0;
+            margin-bottom: 8px;
         }
-        
-        .pogoda-glowne {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_POGODA-DATA {
+            color: #555555;
         }
-        
-        .pogoda-temperatura {
-            font-size: 42px;
-            font-weight: 300;
-            color: #FF00FF;
+
+        .KOZLOWSKISEBASTIAN_POGODA-TEMPERATURA {
+            font-size: 24px;
+            color: #B0B0B0;
+            margin-bottom: 8px;
             position: relative;
         }
-        
-        .pogoda-temperatura::after {
+
+        .KOZLOWSKISEBASTIAN_POGODA-TEMPERATURA::after {
             content: '°C';
             position: absolute;
-            font-size: 20px;
-            top: 5px;
+            font-size: 16px;
+            top: 2px;
             right: -20px;
         }
-        
-        .pogoda-ikona {
-            font-size: 50px;
-            color: #FF00FF;
-            animation: float 3s ease-in-out infinite;
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_POGODA-TEMPERATURA {
+            color: #333333;
         }
-        
-        @keyframes float {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0); }
-        }
-        
-        .pogoda-opis {
+
+        .KOZLOWSKISEBASTIAN_POGODA-OPIS {
             text-transform: capitalize;
-            font-size: 16px;
+            font-size: 14px;
             color: #B0B0B0;
-            margin-bottom: 15px;
+            margin-bottom: 8px;
             text-align: center;
         }
-        
-        .pogoda-szczegoly {
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_POGODA-OPIS {
+            color: #555555;
+        }
+
+        .KOZLOWSKISEBASTIAN_POGODA-SZCZEGOLY {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 0;
+            gap: 4px;
         }
-        
-        .pogoda-szczegol {
-            background: #333;
-            padding: 12px;
-            border-radius: 6px;
+
+        .KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL {
+            background: #333333;
+            padding: 8px;
+            border-radius: 4px;
             text-align: center;
-            transition: all 0.2s;
         }
-        
-        .pogoda-szczegol:hover {
-            transform: translateY(-2px);
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL {
+            background: #DDDDDD;
         }
-        
-        .pogoda-szczegol-ikona {
-            font-size: 18px;
-            color: #FF00FF;
-            margin-bottom: 5px;
-        }
-        
-        .pogoda-szczegol-wartosc {
+
+        .KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-IKONA {
             font-size: 16px;
-            font-weight: 400;
-            margin-bottom: 3px;
-            color: #FF00FF;
+            color: #B0B0B0;
+            margin-bottom: 2px;
         }
-        
-        .pogoda-szczegol-etykieta {
-            font-size: 11px;
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-IKONA {
+            color: #333333;
+        }
+
+        .KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-WARTOSC {
+            font-size: 14px;
+            color: #B0B0B0;
+            margin-bottom: 2px;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-WARTOSC {
+            color: #333333;
+        }
+
+        .KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-ETYKIETA {
+            font-size: 10px;
             color: #B0B0B0;
             text-transform: uppercase;
         }
-        
-        .pogoda-ladowanie {
-            text-align: center;
-            padding: 30px 0;
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-ETYKIETA {
+            color: #555555;
         }
-        
-        .pogoda-spinner {
+
+        .KOZLOWSKISEBASTIAN_POGODA-LADOWANIE {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .KOZLOWSKISEBASTIAN_POGODA-SPINNER {
             border: 3px solid rgba(255, 0, 255, 0.2);
             border-radius: 50%;
-            border-top: 3px solid #FF00FF;
-            width: 30px;
-            height: 30px;
+            border-top: 3px solid #B0B0B0;
+            width: 20px;
+            height: 20px;
             animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+            margin: 0 auto 10px;
         }
-        
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        .pogoda-blad {
-            color: #ff4b4b;
-            text-align: center;
-            padding: 15px;
-            background: rgba(255, 75, 75, 0.1);
-            border-radius: 6px;
-            border-left: 3px solid #ff4b4b;
+
+        .KOZLOWSKISEBASTIAN_POGODA-BLAD {
+            color: #FF0000;
             font-size: 14px;
-        }
-        
-        .pogoda-zrodlo {
-            margin-top: 15px;
-            font-size: 11px;
-            color: #666;
+            padding: 8px;
             text-align: center;
         }
-        
-        .pogoda-zrodlo a {
-            color: #FF00FF;
+
+        .KOZLOWSKISEBASTIAN_POGODA-ZRODLO {
+            font-size: 10px;
+            color: #666666;
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .KOZLOWSKISEBASTIAN_POGODA-ZRODLO a {
+            color: #B0B0B0;
             text-decoration: none;
         }
-        
-        .pogoda-mapa-link {
-            display: block;
-            margin-top: 10px;
-            color: #FF00FF;
-            text-align: center;
-            font-size: 14px;
-        }
-        
-        @media (max-width: 400px) {
-            .pogoda-kontener {
-                width: 95%;
-                max-width: 320px;
-            }
-            
-            .pogoda-szczegoly {
-                grid-template-columns: 1fr;
-            }
-        }
 
-        /* STYLE JASNEGO MOTYWU DLA POGODY */
-        .KOZLOWSKISEBASTIAN_JASNY .pogoda-kontener,
-        .KOZLOWSKISEBASTIAN_JASNY .pogoda-karta,
-        .KOZLOWSKISEBASTIAN_JASNY .pogoda-select,
-        .KOZLOWSKISEBASTIAN_JASNY .pogoda-przycisk,
-        .KOZLOWSKISEBASTIAN_JASNY .pogoda-szczegol {
-            background: #F5F5F5 !important;
-        }
-
-        .KOZLOWSKISEBASTIAN_JASNY .pogoda-przycisk {
-            background: #EEEEEE !important;
-            color: #555555;
-        }
-
-        .KOZLOWSKISEBASTIAN_JASNY .pogoda-przycisk:hover {
-            background: #E0E0E0 !important;
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_POGODA-ZRODLO a {
             color: #333333;
         }
 
-        .KOZLOWSKISEBASTIAN_JASNY .pogoda-data,
-        .KOZLOWSKISEBASTIAN_JASNY .pogoda-opis,
-        .KOZLOWSKISEBASTIAN_JASNY .pogoda-szczegol-etykieta {
-            color: #555555;
+        .KOZLOWSKISEBASTIAN_POGODA-MAPA {
+            color: #B0B0B0;
+            font-size: 12px;
+            text-align: center;
+            margin-top: 4px;
+            display: block;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_POGODA-MAPA {
+            color: #333333;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="KOZLOWSKISEBASTIAN">
+    <div class="KOZLOWSKISEBASTIAN_HEXAGON_KONTENER">
+        <div class="KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT"></div>
+        <div class="KOZLOWSKISEBASTIAN_TROJKAT_KONTENER">
+            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_JEDEN"></div>
+            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_DWA"></div>
+        </div>
+    </div>
+    
     <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK">
-        <div class="pogoda-kontener">
-            <h1><i class="fas fa-cloud-moon"></i> Pogoda IMGW</h1>
+        <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER">
+            <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" onclick="window.location.href='https://kozlowskisebastian.pl/PRZYBORNIK'">PRZYBORNIK</button>
+            </div>
             
-            <select class="pogoda-select" id="pogoda-wybor-miasta">
+            <select class="KOZLOWSKISEBASTIAN_POGODA-SELECT" id="KOZLOWSKISEBASTIAN_POGODA-WYBOR-MIASTA">
                 <option value="12566">Kraków Małopolskie</option>
                 <option value="12415">Wrocław Dolnośląskie</option>
                 <option value="12330">Poznań Wielkopolskie</option>
@@ -436,67 +395,63 @@
                 <option value="12351">Potrznowo Wielkopolskie</option>
             </select>
             
-            <div class="pogoda-wiersz">
-                <button class="pogoda-przycisk" id="pogoda-szukaj"><i class="fas fa-sync-alt"></i> Odśwież</button>
-                <button class="pogoda-przycisk" id="pogoda-lokalizacja"><i class="fas fa-location-arrow"></i> Lokalizacja</button>
+            <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_POGODA-SZUKAJ"><i class="fas fa-sync-alt"></i> Odśwież</button>
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_POGODA-LOKALIZACJA"><i class="fas fa-location-arrow"></i> Lokalizacja</button>
             </div>
             
-            <div id="pogoda-tresc">
-                <div class="pogoda-ladowanie">
-                    <div class="pogoda-spinner"></div>
-                    <p>Ładowanie danych...</p>
+            <div id="KOZLOWSKISEBASTIAN_POGODA-WYNIK" class="KOZLOWSKISEBASTIAN_POGODA-WYNIK">
+                <div class="KOZLOWSKISEBASTIAN_POGODA-LADOWANIE">
+                    <div class="KOZLOWSKISEBASTIAN_POGODA-SPINNER"></div>
+                    <div>Ładowanie danych...</div>
                 </div>
             </div>
             
-            <div class="pogoda-zrodlo">
+            <div class="KOZLOWSKISEBASTIAN_POGODA-ZRODLO">
                 Dane z <a href="https://danepubliczne.imgw.pl/" target="_blank">IMGW-PIB</a>
-                <div>Ostatnia aktualizacja: <span id="pogoda-ostatnia-aktualizacja">-</span></div>
+                <div>Ostatnia aktualizacja: <span id="KOZLOWSKISEBASTIAN_POGODA-OSTATNIA-AKTUALIZACJA">-</span></div>
+                <div>Godzina pomiaru: <span id="KOZLOWSKISEBASTIAN_POGODA-GODZINA-POMIARU">-</span></div>
             </div>
-        </div>
-    </div>
-
-    <div class="KOZLOWSKISEBASTIAN_HEXAGON_KONTENER">
-        <div class="KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT"></div>
-        <div class="KOZLOWSKISEBASTIAN_TROJKAT_KONTENER">
-            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_JEDEN"></div>
-            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_DWA"></div>
         </div>
     </div>
 
     <script>
         // Mapowanie ID stacji IMGW
         const stacjeIMGW = {
-            "12295": { nazwa: "Kostrzyn Wielkopolskie", wsp: { lat: 52.398, lon: 17.211 } },
-            "12330": { nazwa: "Poznań Wielkopolskie", wsp: { lat: 52.421, lon: 16.826 } },
-            "12415": { nazwa: "Wrocław Dolnośląskie", wsp: { lat: 51.102, lon: 16.886 } },
-            "12566": { nazwa: "Kraków Małopolskie", wsp: { lat: 50.078, lon: 19.785 } },
-            "12235": { nazwa: "Bydgoszcz", wsp: { lat: 53.096, lon: 17.978 } },
-            "12150": { nazwa: "Gdańsk", wsp: { lat: 54.377, lon: 18.466 } },
-            "12345": { nazwa: "Wojnowo Wielkopolskie", wsp: { lat: 52.237, lon: 17.289 } },
-            "12346": { nazwa: "Swarzędz Wielkopolskie", wsp: { lat: 52.412, lon: 17.085 } },
-            "12347": { nazwa: "Kobylnica Wielkopolskie", wsp: { lat: 52.445, lon: 16.998 } },
-            "12348": { nazwa: "Murowana Goślina Wielkopolskie", wsp: { lat: 52.574, lon: 17.009 } },
-            "12349": { nazwa: "Koziegłowy Wielkopolskie", wsp: { lat: 52.456, lon: 16.982 } },
-            "12350": { nazwa: "Czerwonak Wielkopolskie", wsp: { lat: 52.469, lon: 16.981 } },
-            "12351": { nazwa: "Potrznowo Wielkopolskie", wsp: { lat: 52.216, lon: 17.478 } }
+            "12295": { nazwa: "Kostrzyn", wsp: { lat: 52.398, lon: 17.211 } },
+            "12330": { nazwa: "Poznań", wsp: { lat: 52.421, lon: 16.826 } },
+            "12415": { nazwa: "Wrocław", wsp: { lat: 51.102, lon: 16.886 } },
+            "12566": { nazwa: "Kraków", wsp: { lat: 50.078, lon: 19.785 } },
+            "12345": { nazwa: "Wojnowo", wsp: { lat: 52.237, lon: 17.289 } },
+            "12346": { nazwa: "Swarzędz", wsp: { lat: 52.412, lon: 17.085 } },
+            "12347": { nazwa: "Kobylnica", wsp: { lat: 52.445, lon: 16.998 } },
+            "12348": { nazwa: "Murowana Goślina", wsp: { lat: 52.574, lon: 17.009 } },
+            "12349": { nazwa: "Koziegłowy", wsp: { lat: 52.456, lon: 16.982 } },
+            "12350": { nazwa: "Czerwonak", wsp: { lat: 52.469, lon: 16.981 } },
+            "12351": { nazwa: "Potrznowo", wsp: { lat: 52.216, lon: 17.478 } }
         };
 
         // Elementy DOM
-        const wyborMiasta = document.getElementById('pogoda-wybor-miasta');
-        const szukajBtn = document.getElementById('pogoda-szukaj');
-        const lokalizacjaBtn = document.getElementById('pogoda-lokalizacja');
-        const pogodaTresc = document.getElementById('pogoda-tresc');
-        const ostatniaAktualizacja = document.getElementById('pogoda-ostatnia-aktualizacja');
+        const wyborMiasta = document.getElementById('KOZLOWSKISEBASTIAN_POGODA-WYBOR-MIASTA');
+        const szukajBtn = document.getElementById('KOZLOWSKISEBASTIAN_POGODA-SZUKAJ');
+        const lokalizacjaBtn = document.getElementById('KOZLOWSKISEBASTIAN_POGODA-LOKALIZACJA');
+        const pogodaWynik = document.getElementById('KOZLOWSKISEBASTIAN_POGODA-WYNIK');
+        const ostatniaAktualizacja = document.getElementById('KOZLOWSKISEBASTIAN_POGODA-OSTATNIA-AKTUALIZACJA');
+        const godzinaPomiaru = document.getElementById('KOZLOWSKISEBASTIAN_POGODA-GODZINA-POMIARU');
 
-        // Pobierz rzeczywiste dane z API IMGW
+        // Pobierz dane pogodowe
         async function pobierzDaneIMGW(stacjaId) {
             try {
                 const response = await fetch(`https://danepubliczne.imgw.pl/api/data/synop/id/${stacjaId}`);
                 if (!response.ok) throw new Error('Błąd pobierania danych');
                 const dane = await response.json();
                 
-                // Zaokrąglij temperaturę do pełnych liczb
-                dane.temperatura = Math.round(dane.temperatura);
+                // Sprawdź czy dane są kompletne
+                if (!dane.temperatura || !dane.wilgotnosc_wzgledna || !dane.predkosc_wiatru) {
+                    throw new Error('Niekompletne dane pogodowe');
+                }
+                
+                // Zwróć surowe dane bez zaokrąglania
                 return dane;
             } catch (error) {
                 console.error("Błąd API IMGW:", error);
@@ -524,12 +479,11 @@
             return najblizszaStacja;
         }
 
-        // Wyświetl pogodę
+        // Wyświetl dane pogodowe
         async function wyswietlPogode(stacjaId) {
             pokazLadowanie();
             
             try {
-                // Sprawdź czy stacja istnieje w naszym zbiorze
                 if (!stacjeIMGW[stacjaId]) {
                     throw new Error('Stacja nieznana');
                 }
@@ -537,67 +491,75 @@
                 const dane = await pobierzDaneIMGW(stacjaId);
                 const stacja = stacjeIMGW[stacjaId];
                 
-                // Formatowanie danych
-                const dataAktualizacji = new Date(dane.data_pomiaru + 'T' + dane.godzina_pomiaru + ':00');
-                ostatniaAktualizacja.textContent = dataAktualizacji.toLocaleString('pl-PL');
+                // Formatuj datę
+                let dataAktualizacji;
+                try {
+                    dataAktualizacji = new Date(dane.data_pomiaru + 'T' + dane.godzina_pomiaru + ':00');
+                    ostatniaAktualizacja.textContent = dataAktualizacji.toLocaleString('pl-PL');
+                    godzinaPomiaru.textContent = dane.godzina_pomiaru + ':00';
+                } catch (e) {
+                    console.error("Błąd formatowania daty:", e);
+                    ostatniaAktualizacja.textContent = "Nieznana";
+                    godzinaPomiaru.textContent = "Nieznana";
+                }
                 
-                // Generuj link do mapy IMGW z koordynatami miasta
                 const mapaLink = `https://meteo.imgw.pl/dyn/index.html#loc=${stacja.wsp.lat},${stacja.wsp.lon},10`;
                 
+                // Wyświetl temperaturę z większą dokładnością
+                const temperatura = parseFloat(dane.temperatura).toFixed(2);
+                
                 const html = `
-                    <div class="pogoda-karta">
-                        <div class="pogoda-lokalizacja">
-                            <div class="pogoda-miasto">${stacja.nazwa}</div>
-                            <div class="pogoda-data">${dataAktualizacji.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}</div>
+                    <div class="KOZLOWSKISEBASTIAN_POGODA-KARTA">
+                        <div class="KOZLOWSKISEBASTIAN_POGODA-MIASTO">${stacja.nazwa}</div>
+                        <div class="KOZLOWSKISEBASTIAN_POGODA-DATA">${dataAktualizacji ? dataAktualizacji.toLocaleDateString('pl-PL', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : 'Brak danych'}</div>
+                        
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <div class="KOZLOWSKISEBASTIAN_POGODA-TEMPERATURA">${temperatura}</div>
+                            <div><i class="fas ${getIkonaPogody(dane)}" style="font-size: 24px; color: #B0B0B0;"></i></div>
                         </div>
                         
-                        <div class="pogoda-glowne">
-                            <div>
-                                <div class="pogoda-temperatura">${dane.temperatura}</div>
-                                <div class="pogoda-opis">${getOpisPogody(dane)}</div>
-                            </div>
-                            <div>
-                                <i class="fas ${getIkonaPogody(dane)} pogoda-ikona"></i>
-                            </div>
-                        </div>
+                        <div class="KOZLOWSKISEBASTIAN_POGODA-OPIS">${getOpisPogody(dane)}</div>
                         
-                        <div class="pogoda-szczegoly">
-                            <div class="pogoda-szczegol">
-                                <div class="pogoda-szczegol-ikona"><i class="fas fa-temperature-low"></i></div>
-                                <div class="pogoda-szczegol-wartosc">${dane.temperatura}°C</div>
-                                <div class="pogoda-szczegol-etykieta">Temperatura</div>
+                        <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOLY">
+                            <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL">
+                                <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-IKONA"><i class="fas fa-tint"></i></div>
+                                <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-WARTOSC">${dane.wilgotnosc_wzgledna}%</div>
+                                <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-ETYKIETA">Wilgotność</div>
                             </div>
-                            <div class="pogoda-szczegol">
-                                <div class="pogoda-szczegol-ikona"><i class="fas fa-tint"></i></div>
-                                <div class="pogoda-szczegol-wartosc">${dane.wilgotnosc_wzgledna}%</div>
-                                <div class="pogoda-szczegol-etykieta">Wilgotność</div>
+                            <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL">
+                                <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-IKONA"><i class="fas fa-wind"></i></div>
+                                <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-WARTOSC">${dane.predkosc_wiatru} km/h</div>
+                                <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-ETYKIETA">Wiatr</div>
                             </div>
-                            <div class="pogoda-szczegol">
-                                <div class="pogoda-szczegol-ikona"><i class="fas fa-wind"></i></div>
-                                <div class="pogoda-szczegol-wartosc">${dane.predkosc_wiatru} km/h</div>
-                                <div class="pogoda-szczegol-etykieta">Wiatr</div>
+                            <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL">
+                                <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-IKONA"><i class="fas fa-cloud-rain"></i></div>
+                                <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-WARTOSC">${dane.suma_opadu || '0.0'} mm</div>
+                                <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-ETYKIETA">Opady</div>
                             </div>
-                            <div class="pogoda-szczegol">
-                                <div class="pogoda-szczegol-ikona"><i class="fas fa-cloud-rain"></i></div>
-                                <div class="pogoda-szczegol-wartosc">${dane.suma_opadu || '0.0'} mm</div>
-                                <div class="pogoda-szczegol-etykieta">Opady</div>
+                            <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL">
+                                <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-IKONA"><i class="fas fa-temperature-low"></i></div>
+                                <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-WARTOSC">${temperatura}°C</div>
+                                <div class="KOZLOWSKISEBASTIAN_POGODA-SZCZEGOL-ETYKIETA">Temperatura</div>
                             </div>
                         </div>
                         
-                        <a href="${mapaLink}" target="_blank" class="pogoda-mapa-link">
+                        <a href="${mapaLink}" target="_blank" class="KOZLOWSKISEBASTIAN_POGODA-MAPA">
                             <i class="fas fa-map-marked-alt"></i> Pokaż na mapie IMGW
                         </a>
                     </div>
                 `;
                 
-                pogodaTresc.innerHTML = html;
+                pogodaWynik.innerHTML = html;
+                pogodaWynik.style.display = 'block';
             } catch (error) {
-                pokazBlad("Nie udało się pobrać danych dla wybranej lokalizacji. Spróbuj innej stacji.");
+                console.error("Błąd wyświetlania pogody:", error);
+                pokazBlad("Nie udało się pobrać aktualnych danych pogodowych. Spróbuj ponownie później.");
             }
         }
 
         // Funkcje pomocnicze
         function getOpisPogody(dane) {
+            if (!dane) return 'Brak danych';
             if (dane.suma_opadu > 5) return 'Ulewny deszcz';
             if (dane.suma_opadu > 0) return 'Deszcz';
             if (dane.zachmurzenie > 70) return 'Pochmurno';
@@ -606,6 +568,7 @@
         }
 
         function getIkonaPogody(dane) {
+            if (!dane) return 'fa-question';
             if (dane.suma_opadu > 5) return 'fa-cloud-showers-heavy';
             if (dane.suma_opadu > 0) return 'fa-cloud-rain';
             if (dane.zachmurzenie > 70) return 'fa-cloud';
@@ -614,21 +577,23 @@
         }
 
         function pokazLadowanie() {
-            pogodaTresc.innerHTML = `
-                <div class="pogoda-ladowanie">
-                    <div class="pogoda-spinner"></div>
-                    <p>Ładowanie danych...</p>
+            pogodaWynik.innerHTML = `
+                <div class="KOZLOWSKISEBASTIAN_POGODA-LADOWANIE">
+                    <div class="KOZLOWSKISEBASTIAN_POGODA-SPINNER"></div>
+                    <div>Ładowanie danych...</div>
                 </div>
             `;
+            pogodaWynik.style.display = 'block';
         }
         
         function pokazBlad(wiadomosc) {
-            pogodaTresc.innerHTML = `
-                <div class="pogoda-blad">
+            pogodaWynik.innerHTML = `
+                <div class="KOZLOWSKISEBASTIAN_POGODA-BLAD">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <p>${wiadomosc}</p>
+                    <div>${wiadomosc}</div>
                 </div>
             `;
+            pogodaWynik.style.display = 'block';
         }
 
         // Obsługa zdarzeń
@@ -649,10 +614,15 @@
                             position.coords.latitude,
                             position.coords.longitude
                         );
-                        wyborMiasta.value = stacjaId;
-                        wyswietlPogode(stacjaId);
+                        if (stacjaId) {
+                            wyborMiasta.value = stacjaId;
+                            wyswietlPogode(stacjaId);
+                        } else {
+                            pokazBlad("Nie znaleziono stacji pogodowej w pobliżu.");
+                        }
                     },
                     (error) => {
+                        console.error("Błąd geolokalizacji:", error);
                         pokazBlad("Nie udało się określić lokalizacji. Wybierz stację ręcznie.");
                     }
                 );
@@ -666,21 +636,19 @@
             wyswietlPogode(wyborMiasta.value);
         });
 
-        // Skrypt dla hexagonu
+        // Skrypt dla hexagona
         const kontener = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KONTENER');
         const ksztalt = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT');
         const trojkatKontener = document.querySelector('.KOZLOWSKISEBASTIAN_TROJKAT_KONTENER');
         const trojkaty = document.querySelectorAll('.KOZLOWSKISEBASTIAN_TROJKAT');
         const body = document.body;
 
-        // Zmienne do przeciągania
         let isDragging = false;
         let startX, startY, initialLeft, initialTop;
         let clickStartTime = 0;
         const CLICK_MAX_DURATION = 150;
         const CLICK_MAX_DISTANCE = 8;
 
-        // Rozpoczęcie interakcji
         ksztalt.addEventListener('mousedown', startInteraction);
         ksztalt.addEventListener('touchstart', startInteraction);
 
@@ -704,7 +672,6 @@
             document.addEventListener('touchend', endInteraction);
         }
 
-        // Obsługa ruchu
         function handleMove(e) {
             const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
             const clientY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
@@ -729,7 +696,6 @@
             }
         }
 
-        // Zakończenie interakcji
         function endInteraction(e) {
             const clickDuration = Date.now() - clickStartTime;
             const isClick = !isDragging && clickDuration < CLICK_MAX_DURATION;
@@ -746,7 +712,6 @@
             isDragging = false;
         }
 
-        // Obsługa kliknięcia
         function handleClick() {
             if (!ksztalt.classList.contains('ROZSZERZONY')) {
                 ksztalt.classList.add('OBRACAJ');
@@ -758,7 +723,6 @@
             }
         }
 
-        // Obsługa wyboru motywu
         trojkaty.forEach(trojkat => {
             trojkat.addEventListener('click', function(e) {
                 ksztalt.classList.remove('ROZSZERZONY');
@@ -775,14 +739,12 @@
             });
         });
 
-        // Zamknięcie menu po kliknięciu gdzie indziej
         document.addEventListener('click', function(e) {
             if (ksztalt.classList.contains('ROZSZERZONY') && !kontener.contains(e.target)) {
                 ksztalt.classList.remove('ROZSZERZONY');
             }
         });
 
-        // Inicjalizacja pozycji hexagonu na mobilnych
         function initHexagonPosition() {
             if (window.innerWidth <= 768) {
                 kontener.style.left = '20px';
