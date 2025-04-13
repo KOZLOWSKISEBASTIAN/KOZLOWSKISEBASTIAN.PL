@@ -136,6 +136,7 @@
             transition: all 0.15s;
             -webkit-tap-highlight-color: transparent;
             line-height: 1.2;
+            min-width: 0;
         }
 
         .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
@@ -175,6 +176,9 @@
             font-family: sans-serif;
             height: auto;
             line-height: 1.2;
+            min-width: 0;
+            box-sizing: border-box;
+            width: 50%;
         }
 
         .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_LICZYDLO-POLE {
@@ -192,6 +196,7 @@
             font-family: sans-serif;
             height: auto;
             line-height: 1.2;
+            min-width: 0;
         }
 
         .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_LICZYDLO-SELECT {
@@ -217,6 +222,15 @@
         .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_LICZYDLO-WYNIK {
             background: #EEEEEE;
             color: #555555;
+        }
+
+        @media (max-width: 520px) {
+            .KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ {
+                flex-wrap: wrap;
+            }
+            .KOZLOWSKISEBASTIAN_LICZYDLO-POLE {
+                width: calc(50% - 5px);
+            }
         }
     </style>
 </head>
