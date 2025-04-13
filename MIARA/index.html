@@ -2,11 +2,10 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WERYFIKATOR WYMIARÓW DOWODU OSOBISTEGO</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MIARA</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
-    
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
@@ -14,6 +13,7 @@
             padding: 0;
             overflow: hidden;
             background-color: #000000;
+            touch-action: none;
         }
         .ruler-container {
             position: absolute;
@@ -25,7 +25,7 @@
         
         /* LEWA LINIJKA (mm) - RÓŻOWA */
         .ruler-mm {
-            width: 30px;
+            width: 40px;
             height: 100vh;
             position: absolute;
             left: 0;
@@ -36,7 +36,7 @@
         
         /* PRAWA LINIJKA (cale) - CYJANOWA */
         .ruler-in {
-            width: 30px;
+            width: 40px;
             height: 100vh;
             position: absolute;
             right: 0;
@@ -52,22 +52,22 @@
         /* STYLE DLA MILIMETRÓW (LEWO) */
         .mark-mm {
             border-top: 1px solid #FF00FF;
-            width: 50px;
+            width: 20px;
             left: 0;
         }
         .mark-mm-5 {
             border-top: 1px solid #FF00FF;
-            width: 100px;
+            width: 30px;
             left: 0;
         }
         .mark-mm-10 {
             border-top: 2px solid #FF00FF;
-            width: 150px;
+            width: 40px;
             left: 0;
         }
         .mark-mm-100 {
             border-top: 3px solid #FF00FF;
-            width: 200px;
+            width: 50px;
             left: 0;
             opacity: 0.7;
         }
@@ -75,29 +75,29 @@
         /* STYLE DLA CALI (PRAWO) */
         .mark-in {
             border-top: 1px solid #00FFFF;
-            width: 50px;
+            width: 20px;
             right: 0;
         }
         .mark-in-05 {
             border-top: 1px solid #00FFFF;
-            width: 100px;
+            width: 30px;
             right: 0;
         }
         .mark-in-1 {
             border-top: 2px solid #00FFFF;
-            width: 150px;
+            width: 40px;
             right: 0;
         }
         .mark-in-10 {
             border-top: 3px solid #00FFFF;
-            width: 200px;
+            width: 50px;
             right: 0;
             opacity: 0.7;
         }
         
         .mark-label {
             position: absolute;
-            font-size: 12px;
+            font-size: 14px;
             text-shadow: 0 0 3px #000;
             font-weight: 500;
             z-index: 20;
@@ -107,14 +107,14 @@
         /* ETYKIETY MILIMETRÓW (LEWO) */
         .label-mm {
             color: #FF00FF;
-            left: 50px;
+            left: 25px;
             transform-origin: left top;
         }
         
         /* ETYKIETY CALI (PRAWO) */
         .label-in {
             color: #00FFFF;
-            right: 50px;
+            right: 25px;
             text-align: right;
             transform-origin: right top;
         }
@@ -122,9 +122,9 @@
         /* RAMKA DOWODU OSOBISTEGO (PIONOWA) */
         .id-frame {
             position: absolute;
-            top: 0; /* Zaczyna się w punkcie zero linijki */
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
+            transform: translate(-50%, -50%);
             width: 54.0mm;  /* Standardowa szerokość dowodu */
             height: 85.6mm; /* Standardowa wysokość dowodu */
             border: 2px dashed #FFFFFF;
@@ -135,59 +135,239 @@
         /* PODPIS POD RAMKĄ */
         .frame-label {
             position: absolute;
-            top: 85.6mm; /* Na wysokości końca ramki */
+            top: calc(50% + 85.6mm / 2 + 10px);
             left: 50%;
             transform: translateX(-50%);
             color: white;
-            font-size: 14px;
+            font-size: 16px;
             text-align: center;
             width: 100%;
-            margin-top: 10px;
         }
         
-        #video-background {
+        /* KALIBRACJA */
+        .calibration-square {
+            position: absolute;
+            width: 25.4mm;
+            height: 25.4mm;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 2px solid yellow;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        /* PRZYBORNIK */
+        .KOZLOWSKISEBASTIAN {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: #000000;
+            transition: background-color 0.3s;
+        }
+
+        .KOZLOWSKISEBASTIAN_CIEMNY {
+            background: #000000;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY {
+            background: #FFFFFF;
+        }
+
+        .KOZLOWSKISEBASTIAN_HEXAGON_KONTENER {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            cursor: default;
+            z-index: 1000;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #F5F5F5;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            transition: all 0.3s ease;
+            transform-origin: center;
+            cursor: pointer;
+        }
+
+        .KOZLOWSKISEBASTIAN_CIEMNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
+            background-color: #F5F5F5;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
+            background-color: #333333;
+        }
+
+        .OBRACAJ {
+            animation: obrot 0.2s ease-out;
+        }
+
+        @keyframes obrot {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .ROZSZERZONY + .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .KOZLOWSKISEBASTIAN_TROJKAT {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .KOZLOWSKISEBASTIAN_TROJKAT_JEDEN {
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+            background-color: #333333;
+        }
+
+        .KOZLOWSKISEBASTIAN_TROJKAT_DWA {
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+            background-color: #f5f5f5;
+        }
+
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK {
+            font-family: sans-serif;
+            background: inherit;
+            color: #FF00FF;
+            margin: 0;
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+            box-sizing: border-box;
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            z-index: -1;
+            z-index: 999;
             display: none;
         }
 
-        @media only screen and (max-width: 768px) {
-            body {
-                background-color: transparent;
-            }
-            #video-background {
-                display: block;
-            }
-            .ruler-mm, .ruler-in {
-                background-color: rgba(0, 0, 0, 0.5);
-            }
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
+            max-width: 520px;
+            width: 100%;
+            background: #333333;
+            padding: 8px;
+            border-radius: 8px;
+            margin: 0 auto;
+            box-shadow: 0 0 0px rgba(0,0,0,0.5);
+        }
+
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px;
+            flex: 1;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.15s;
+            -webkit-tap-highlight-color: transparent;
+            line-height: 1.2;
+            min-width: 0;
+        }
+
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
+            color: #FF00FF;
+            background: #333333;
+            transform: translateY(-2px);
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK {
+            color: #333333;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
+            background: #F5F5F5 !important;
+            box-shadow: 0 0px 0px rgba(0,0,0,0.1);
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
+            background: #EEEEEE;
+            color: #555555;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
+            color: #333333;
+            background: #E0E0E0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
             .mark-label {
-                font-size: 10px;
+                font-size: 12px;
             }
             .label-mm {
-                left: 30px;
+                left: 20px;
             }
             .label-in {
-                right: 30px;
+                right: 20px;
             }
             .frame-label {
-                font-size: 12px;
+                font-size: 14px;
+                top: calc(50% + 85.6mm / 2 + 5px);
+            }
+            .calibration-square {
+                bottom: 80px;
             }
         }
     </style>
 </head>
-<body>
-    <video id="video-background" autoplay playsinline muted></video>
+<body class="KOZLOWSKISEBASTIAN KOZLOWSKISEBASTIAN_CIEMNY">
     <div class="ruler-container">
         <div class="ruler-mm" id="rulerMm"></div>
         <div class="ruler-in" id="rulerIn"></div>
         <div class="id-frame" id="idFrame"></div>
         <div class="frame-label">STANDARDOWY DOWÓD OSOBISTY (54.0 × 85.6 mm)</div>
+        <div class="calibration-square" id="calibrationSquare">1 cal = 25.4 mm</div>
+    </div>
+
+    <!-- PRZYBORNIK -->
+    <div class="KOZLOWSKISEBASTIAN_HEXAGON_KONTENER">
+        <div class="KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT"></div>
+        <div class="KOZLOWSKISEBASTIAN_TROJKAT_KONTENER">
+            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_JEDEN"></div>
+            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_DWA"></div>
+        </div>
+    </div>
+    
+    <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK" id="przybornik">
+        <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER">
+            <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" onclick="window.location.href='https://kozlowskisebastian.pl/PRZYBORNIK'">PRZYBORNIK</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -196,11 +376,18 @@
         const ID_WIDTH_MM = 54.0;
         const ID_HEIGHT_MM = 85.6;
         
+        // Funkcja do rysowania linijek
         function drawRulers() {
             const rulerMm = document.getElementById('rulerMm');
             const rulerIn = document.getElementById('rulerIn');
             const idFrame = document.getElementById('idFrame');
+            const calibrationSquare = document.getElementById('calibrationSquare');
             const windowHeight = window.innerHeight;
+            const windowWidth = window.innerWidth;
+
+            // Wyczyszczenie poprzednich linijek
+            rulerMm.innerHTML = '';
+            rulerIn.innerHTML = '';
 
             // LEWA LINIJKA MILIMETROWA
             const maxMm = Math.floor(windowHeight / MM_TO_PX);
@@ -272,32 +459,171 @@
             
             // Ustawienie etykiety
             const frameLabel = document.querySelector('.frame-label');
-            frameLabel.style.top = `${ID_HEIGHT_MM * MM_TO_PX}px`;
+            frameLabel.style.top = `calc(50% + ${ID_HEIGHT_MM * MM_TO_PX / 2}px + 10px)`;
+            
+            // Ustawienie kwadratu kalibracyjnego (1 cal = 25.4mm)
+            calibrationSquare.style.width = `${25.4 * MM_TO_PX}px`;
+            calibrationSquare.style.height = `${25.4 * MM_TO_PX}px`;
+            
+            // Sprawdzenie kalibracji
+            checkCalibration();
         }
 
-        function setupCamera() {
-            const video = document.getElementById('video-background');
-            if (window.innerWidth <= 768) {
-                if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
-                        .then(stream => {
-                            video.srcObject = stream;
-                        })
-                        .catch(err => {
-                            console.error("Błąd dostępu do kamery: ", err);
-                        });
-                }
+        // Funkcja sprawdzająca kalibrację
+        function checkCalibration() {
+            const calibrationSquare = document.getElementById('calibrationSquare');
+            const squareSize = 25.4 * MM_TO_PX; // 1 cal w pikselach
+            
+            // Pobierz rzeczywisty rozmiar kwadratu na ekranie
+            const actualSize = calibrationSquare.getBoundingClientRect().width;
+            
+            // Oblicz współczynnik skalowania
+            const scaleFactor = actualSize / squareSize;
+            
+            // Jeśli skalowanie różni się znacząco od 1, wyświetl ostrzeżenie
+            if (Math.abs(scaleFactor - 1) > 0.05) {
+                calibrationSquare.innerHTML = `1 cal = 25.4 mm<br>UWAGA: Skala ${(scaleFactor * 100).toFixed(0)}%`;
+                calibrationSquare.style.color = 'red';
+                calibrationSquare.style.borderColor = 'red';
+            } else {
+                calibrationSquare.innerHTML = '1 cal = 25.4 mm';
+                calibrationSquare.style.color = 'white';
+                calibrationSquare.style.borderColor = 'yellow';
             }
+        }
+
+        // Skrypt dla hexagona (przybornik)
+        const kontener = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KONTENER');
+        const ksztalt = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT');
+        const trojkatKontener = document.querySelector('.KOZLOWSKISEBASTIAN_TROJKAT_KONTENER');
+        const trojkaty = document.querySelectorAll('.KOZLOWSKISEBASTIAN_TROJKAT');
+        const body = document.body;
+        const przybornik = document.getElementById('przybornik');
+
+        let isDragging = false;
+        let startX, startY, initialLeft, initialTop;
+        let clickStartTime = 0;
+        const CLICK_MAX_DURATION = 150;
+        const CLICK_MAX_DISTANCE = 8;
+
+        ksztalt.addEventListener('mousedown', startInteraction);
+        ksztalt.addEventListener('touchstart', startInteraction);
+
+        function startInteraction(e) {
+            clickStartTime = Date.now();
+            isDragging = false;
+            
+            const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
+            
+            startX = clientX;
+            startY = clientY;
+            
+            const rect = kontener.getBoundingClientRect();
+            initialLeft = rect.left;
+            initialTop = rect.top;
+            
+            document.addEventListener('mousemove', handleMove);
+            document.addEventListener('touchmove', handleMove);
+            document.addEventListener('mouseup', endInteraction);
+            document.addEventListener('touchend', endInteraction);
+        }
+
+        function handleMove(e) {
+            const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
+            
+            const dx = clientX - startX;
+            const dy = clientY - startY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (!isDragging && distance > CLICK_MAX_DISTANCE) {
+                isDragging = true;
+            }
+            
+            if (isDragging) {
+                const newX = initialLeft + dx;
+                const newY = initialTop + dy;
+                
+                const maxX = window.innerWidth - kontener.offsetWidth;
+                const maxY = window.innerHeight - kontener.offsetHeight;
+                
+                kontener.style.left = 'auto';
+                kontener.style.right = `${Math.min(Math.max(0, window.innerWidth - newX - kontener.offsetWidth), maxX)}px`;
+                kontener.style.top = `${Math.min(Math.max(0, newY), maxY)}px`;
+            }
+        }
+
+        function endInteraction(e) {
+            const clickDuration = Date.now() - clickStartTime;
+            const isClick = !isDragging && clickDuration < CLICK_MAX_DURATION;
+            
+            document.removeEventListener('mousemove', handleMove);
+            document.removeEventListener('touchmove', handleMove);
+            document.removeEventListener('mouseup', endInteraction);
+            document.removeEventListener('touchend', endInteraction);
+            
+            if (isClick) {
+                handleClick();
+            }
+            
+            isDragging = false;
+        }
+
+        function handleClick() {
+            if (!ksztalt.classList.contains('ROZSZERZONY')) {
+                ksztalt.classList.add('OBRACAJ');
+                
+                setTimeout(() => {
+                    ksztalt.classList.remove('OBRACAJ');
+                    ksztalt.classList.add('ROZSZERZONY');
+                }, 300);
+            }
+        }
+
+        trojkaty.forEach(trojkat => {
+            trojkat.addEventListener('click', function(e) {
+                ksztalt.classList.remove('ROZSZERZONY');
+                
+                body.classList.remove('KOZLOWSKISEBASTIAN_CIEMNY', 'KOZLOWSKISEBASTIAN_JASNY');
+
+                if (this.classList.contains('KOZLOWSKISEBASTIAN_TROJKAT_JEDEN')) {
+                    body.classList.add('KOZLOWSKISEBASTIAN_CIEMNY');
+                } else if (this.classList.contains('KOZLOWSKISEBASTIAN_TROJKAT_DWA')) {
+                    body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
+                }
+
+                e.stopPropagation();
+            });
+        });
+
+        document.addEventListener('click', function(e) {
+            if (ksztalt.classList.contains('ROZSZERZONY') && !kontener.contains(e.target)) {
+                ksztalt.classList.remove('ROZSZERZONY');
+            }
+            
+            // Pokazanie/ukrycie przybornika po kliknięciu hexagona
+            if (kontener.contains(e.target)) {
+                przybornik.style.display = przybornik.style.display === 'none' ? 'flex' : 'none';
+            } else if (!przybornik.contains(e.target)) {
+                przybornik.style.display = 'none';
+            }
+        });
+
+        function initHexagonPosition() {
+            kontener.style.left = 'auto';
+            kontener.style.right = '20px';
+            kontener.style.bottom = '20px';
+            kontener.style.top = 'auto';
         }
 
         window.onload = function() {
             drawRulers();
-            setupCamera();
+            initHexagonPosition();
+            przybornik.style.display = 'none';
         };
 
         window.onresize = function() {
-            document.getElementById('rulerMm').innerHTML = '';
-            document.getElementById('rulerIn').innerHTML = '';
             drawRulers();
         };
     </script>
