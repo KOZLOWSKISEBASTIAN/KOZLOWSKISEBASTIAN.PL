@@ -1,0 +1,43 @@
+<svg
+   width="360"
+   height="314.15494"
+   viewBox="0 0 95.25 83.120163"
+   version="1.1"
+   id="svg19731"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs19725" />
+  <metadata
+     id="metadata19728">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     transform="translate(52.916667,-213.86254)">
+    <g
+       id="g19710"
+       transform="matrix(0.9171571,0,0,0.9171571,5870.3132,-1330.8599)"
+       style="fill:#000000;fill-opacity:1;stroke-width:1.09033">
+      <path
+         id="path19657-0"
+         d="m -6436.4715,1742.927 c 6.3877,7.2306 14.9631,12.5027 24.2986,14.9388 6.0562,1.5804 12.4727,1.9787 18.5965,0.6845 6.1237,-1.2941 11.9377,-4.3356 16.1581,-8.9577 4.5749,-5.0104 7.113,-11.7014 7.641,-18.4656 0.528,-6.7643 -0.8715,-13.5935 -3.4281,-19.8782 -4.5603,-11.2102 -12.8837,-20.8511 -23.3087,-26.9982 8.5128,0.7096 16.806,3.8828 23.6181,9.037 6.8122,5.1542 12.1207,12.2722 15.118,20.2714 2.9974,7.9992 3.6736,16.8529 1.9259,25.2145 -1.7476,8.3616 -5.9134,16.2033 -11.8638,22.3323 -8.683,8.9438 -21.18,14.0555 -33.6419,13.7608 -12.4619,-0.2947 -24.7034,-5.9915 -32.9539,-15.3357 l -14.5565,14.5567 -9.3819,-9.3819 z"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.0576964;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+      <path
+         id="path19683-5"
+         d="m -6392.6997,1702.5038 -10.9594,10.9594 49.2626,49.2625 -11.1309,11.241 -49.3176,-49.3176 -8.6544,8.6544 -12.7908,-12.7907 21.5727,-21.5727 c 2.6809,0.2758 5.4027,0.1505 8.0469,-0.3706 2.5814,-0.5087 5.0883,-1.3943 7.4165,-2.62 z"
+         style="fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.288482px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
+  </g>
+</svg>
