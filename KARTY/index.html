@@ -26,7 +26,12 @@
             -webkit-text-size-adjust: 100%;
         }
 
-        .header {
+        body.KOZLOWSKISEBASTIAN_JASNY {
+            background-color: #F5F5F5;
+            color: #333333;
+        }
+
+        .header, .modal-content {
             width: calc(100% - 40px);
             max-width: 520px;
             margin: 10px auto;
@@ -35,6 +40,12 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             box-sizing: border-box;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .header,
+        .KOZLOWSKISEBASTIAN_JASNY .modal-content {
+            background-color: #F5F5F5;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
         .fullscreen-mode .header {
@@ -55,6 +66,11 @@
             box-sizing: border-box;
             margin: 0 auto;
             display: block;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KSGROUP-PASEK-WYSZUKIWANIA input {
+            background-color: #EEEEEE;
+            color: #555555;
         }
 
         .KSGROUP-WYSZUKIWARKA-NORMALNA {
@@ -124,6 +140,11 @@
             max-width: 520px;
         }
 
+        .KOZLOWSKISEBASTIAN_JASNY .KSGROUP-PASEK-LINKU-OBRAZU a {
+            background-color: #EEEEEE;
+            color: #555555;
+        }
+
         .card-number-fullscreen {
             position: fixed;
             top: 50px;
@@ -145,6 +166,11 @@
             color: #FF00FF;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KSGROUP-PASEK-LINKU-OBRAZU a:hover {
+            background-color: #E0E0E0;
+            color: #333333;
         }
 
         .container {
@@ -219,10 +245,19 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
+        .KOZLOWSKISEBASTIAN_JASNY .karty a {
+            background: #EEEEEE;
+            color: #333333;
+        }
+
         .karty a:hover {
             background: #222222;
             transform: translateY(-3px);
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .karty a:hover {
+            background: #E0E0E0;
         }
 
         .karty a:active {
@@ -238,9 +273,17 @@
             margin-bottom: 5px;
         }
 
+        .KOZLOWSKISEBASTIAN_JASNY .karty a img {
+            filter: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+        }
+
         .karty a:hover img {
             filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
             transform: scale(1.1);
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .karty a:hover img {
+            filter: brightness(0) saturate(100%) invert(0%) sepia(100%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
         }
 
         .karty a .nazwa {
@@ -250,8 +293,16 @@
             transition: color 0.3s;
         }
 
+        .KOZLOWSKISEBASTIAN_JASNY .karty a .nazwa {
+            color: #555555;
+        }
+
         .karty a:hover .nazwa {
             color: #FF00FF;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .karty a:hover .nazwa {
+            color: #333333;
         }
 
         .fullscreen-mode {
@@ -299,13 +350,13 @@
 
         .buttons-container {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             width: 100%;
             max-width: 520px;
             gap: 10px;
         }
 
-        .przelacz-rzadkie, .przybornik-btn {
+        .przelacz-rzadkie {
             background-color: #222;
             color: #B0B0B0;
             border: none;
@@ -317,22 +368,69 @@
             font-size: 14px;
             transition: all 0.3s;
             white-space: nowrap;
-            flex: 1;
             box-sizing: border-box;
             text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
-        .przelacz-rzadkie:hover, 
-        .przybornik-btn:hover {
+        .KOZLOWSKISEBASTIAN_JASNY .przelacz-rzadkie {
+            background-color: #EEEEEE;
+            color: #555555;
+        }
+
+        .przelacz-rzadkie:hover {
             background-color: #333;
             color: #FF00FF;
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
-        .przelacz-rzadkie:active, 
-        .przybornik-btn:active {
+        .KOZLOWSKISEBASTIAN_JASNY .przelacz-rzadkie:hover {
+            background-color: #E0E0E0;
+            color: #333333;
+        }
+
+        .przelacz-rzadkie:active {
+            transform: scale(0.98);
+        }
+
+        .fullscreen-image-content {
+            transition: transform 0.3s ease;
+        }
+
+        #installButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #FF00FF;
+            color: white;
+            border: none;
+            padding: 8px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: bold;
+            z-index: 1000;
+            display: none;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY #installButton {
+            background-color: #333333;
+        }
+
+        #installButton:hover {
+            background-color: #cc00cc;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY #installButton:hover {
+            background-color: #555555;
+        }
+
+        #installButton:active {
             transform: scale(0.98);
         }
 
@@ -370,27 +468,103 @@
                 padding: 8px;
             }
             
-            .KSGROUP-PASEK-WYSZUKIWANIA input,
-            .buttons-container {
-                max-width: none;
-            }
-            
             .karty a {
                 height: 70px;
                 min-width: 100px;
                 padding: 8px 8px;
             }
         }
+
+        @supports (-webkit-touch-callout: none) {
+            body {
+                height: 100%;
+                overflow: hidden;
+            }
+            
+            html {
+                height: 100%;
+                overflow: hidden;
+            }
+        }
+
+        /* STYLE HEXAGONA NA DOLE PO LEWEJ */
+        .KOZLOWSKISEBASTIAN_HEXAGON_KONTENER {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            z-index: 1000;
+            cursor: default;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #F5F5F5;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            transition: all 0.3s ease;
+            transform-origin: center;
+            cursor: pointer;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
+            background-color: #333333;
+        }
+
+        .OBRACAJ {
+            animation: obrot 0.2s ease-out;
+        }
+
+        @keyframes obrot {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .ROZSZERZONY + .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .KOZLOWSKISEBASTIAN_TROJKAT {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .KOZLOWSKISEBASTIAN_TROJKAT_JEDEN {
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+            background-color: #333333;
+        }
+
+        .KOZLOWSKISEBASTIAN_TROJKAT_DWA {
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+            background-color: #f5f5f5;
+        }
     </style>
 </head>
-<body>
+<body class="KOZLOWSKISEBASTIAN">
     <div class="header">
         <div class="KSGROUP-WYSZUKIWARKA-NORMALNA">
             <div class="KSGROUP-PASEK-WYSZUKIWANIA">
                 <input type="text" id="wyszukaj-input" placeholder="WYSZUKAJ KARTĘ">
                 <div class="buttons-container">
                     <button class="przelacz-rzadkie" id="przelacz-rzadkie" title="INNE">INNE</button>
-                    <button class="przybornik-btn" id="przybornik-btn" title="PRZYBORNIK">PRZYBORNIK</button>
                 </div>
             </div>
         </div>
@@ -410,10 +584,70 @@
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
                     <span class="nazwa">PL</span>
                 </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
+                <li data-name="KSGROUP-BIEDRONKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/BIEDRONKA.svg">
+                    <span class="nazwa">PL</span>
+                </a></li>
                 <li data-name="KSGROUP-CHATA POLSKA" data-usage="0" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
                     <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
                 </a></li>
-                <!-- Pozostałe karty można dodać tutaj -->
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="5" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="5" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-CHATA POLSKA" data-usage="5" class="7878878"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/CHATAPOLSKA.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878879"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
+                <li data-name="KSGROUP-INTERMARCHE" data-usage="5" class="7878880"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/CHATAPOLSKA.png">
+                    <img src="https://kozlowskisebastian.pl/GRAFIKA/INTERMARCHE.svg">
+                </a></li>
             </ul>
         </div>
     </div>
@@ -421,18 +655,71 @@
         <img id="fullscreen-img" src="" alt="PEŁNY EKRAN" class="fullscreen-image-content">
     </div>
 
+    <!-- Hexagon na dole po lewej -->
+    <div class="KOZLOWSKISEBASTIAN_HEXAGON_KONTENER" id="hexagon-btn">
+        <div class="KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT"></div>
+        <div class="KOZLOWSKISEBASTIAN_TROJKAT_KONTENER">
+            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_JEDEN"></div>
+            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_DWA"></div>
+        </div>
+    </div>
+
+    <button id="installButton">ZAINSTALUJ APLIKACJĘ</button>
+
     <script>
         let pelnyEkran = false;
         let pokazRzadkie = false;
         const fullscreenImage = document.querySelector('.fullscreen-image');
         const fullscreenImg = document.getElementById('fullscreen-img');
         const imageLink = document.getElementById('image-link');
+        const imageLinkBar = document.querySelector('.KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN');
         const wyszukajInput = document.getElementById('wyszukaj-input');
         const przelaczRzadkieBtn = document.getElementById('przelacz-rzadkie');
         const listaKart = document.getElementById('lista-kart');
         const wszystkieKarty = Array.from(listaKart.children);
         const fullscreenCardNumber = document.getElementById('fullscreen-card-number');
+        const installButton = document.getElementById('installButton');
+        
+        let deferredPrompt;
+        
+        function isIOS() {
+            return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
+                  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        }
+        
+        if (isIOS()) {
+            document.body.style.height = '100%';
+            document.documentElement.style.height = '100%';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installButton.style.display = 'block';
+            
+            installButton.style.animation = 'pulse 2s infinite';
+            setTimeout(() => {
+                installButton.style.animation = '';
+            }, 2000);
+        });
 
+        installButton.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    installButton.style.display = 'none';
+                }
+                deferredPrompt = null;
+            }
+        });
+
+        window.addEventListener('appinstalled', () => {
+            installButton.style.display = 'none';
+            deferredPrompt = null;
+        });
+        
         function oznaczRzadkieKarty() {
             wszystkieKarty.forEach(karta => {
                 if (karta.getAttribute('data-usage') === "0") {
@@ -442,35 +729,39 @@
                 }
             });
         }
-
-        function aktualizujWidocznoscKart() {
-            const fraza = wyszukajInput.value.trim().toLowerCase();
-            
-            if (fraza !== '') {
-                wszystkieKarty.forEach(karta => {
-                    const nazwa = karta.getAttribute('data-name').toLowerCase();
-                    const czyPasuje = nazwa.includes(fraza);
-                    
-                    if (czyPasuje) {
-                        karta.style.display = 'block';
-                        karta.classList.remove('ukryta');
-                    } else {
-                        karta.style.display = 'none';
-                        karta.classList.add('ukryta');
-                    }
-                });
-            } else {
-                wszystkieKarty.forEach(karta => {
-                    karta.style.display = '';
-                    if (pokazRzadkie) {
-                        karta.classList.toggle('ukryta', !karta.classList.contains('rzadko-uzywana'));
-                    } else {
-                        karta.classList.toggle('ukryta', karta.classList.contains('rzadko-uzywana'));
-                    }
-                });
-            }
+        
+      function aktualizujWidocznoscKart() {
+        const fraza = wyszukajInput.value.trim().toLowerCase();
+        
+        if (fraza !== '') {
+            wszystkieKarty.forEach(karta => {
+                const nazwa = karta.getAttribute('data-name').toLowerCase();
+                const klasa = karta.className.toLowerCase();
+                const tekstNazwy = karta.querySelector('.nazwa')?.textContent.toLowerCase() || '';
+                const czyPasuje = nazwa.includes(fraza) || 
+                                 klasa.includes(fraza) || 
+                                 tekstNazwy.includes(fraza);
+                
+                if (czyPasuje) {
+                    karta.style.display = 'block';
+                    karta.classList.remove('ukryta');
+                } else {
+                    karta.style.display = 'none';
+                    karta.classList.add('ukryta');
+                }
+            });
+        } else {
+            wszystkieKarty.forEach(karta => {
+                karta.style.display = '';
+                if (pokazRzadkie) {
+                    karta.classList.toggle('ukryta', !karta.classList.contains('rzadko-uzywana'));
+                } else {
+                    karta.classList.toggle('ukryta', karta.classList.contains('rzadko-uzywana'));
+                }
+            });
         }
-
+    }
+        
         function handleOrientationChange() {
             if (window.matchMedia("(max-width: 768px)").matches) {
                 if (window.orientation === 0 || window.orientation === 180) {
@@ -494,13 +785,13 @@
                 }
             }
         }
-
+        
         oznaczRzadkieKarty();
         aktualizujWidocznoscKart();
-
+        
         handleOrientationChange();
         window.addEventListener('orientationchange', handleOrientationChange);
-
+        
         przelaczRzadkieBtn.addEventListener('click', function() {
             if (wyszukajInput.value.trim() === '') {
                 pokazRzadkie = !pokazRzadkie;
@@ -517,6 +808,137 @@
             }
         });
 
+        // Skrypt dla hexagona na dole po lewej
+        const kontener = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KONTENER');
+        const ksztalt = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT');
+        const trojkatKontener = document.querySelector('.KOZLOWSKISEBASTIAN_TROJKAT_KONTENER');
+        const trojkaty = document.querySelectorAll('.KOZLOWSKISEBASTIAN_TROJKAT');
+        const body = document.body;
+
+        let isDragging = false;
+        let startX, startY, initialLeft, initialTop;
+        let clickStartTime = 0;
+        const CLICK_MAX_DURATION = 150;
+        const CLICK_MAX_DISTANCE = 8;
+
+        ksztalt.addEventListener('mousedown', startInteraction);
+        ksztalt.addEventListener('touchstart', startInteraction);
+
+        function startInteraction(e) {
+            clickStartTime = Date.now();
+            isDragging = false;
+            
+            const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
+            
+            startX = clientX;
+            startY = clientY;
+            
+            const rect = kontener.getBoundingClientRect();
+            initialLeft = rect.left;
+            initialTop = rect.top;
+            
+            document.addEventListener('mousemove', handleMove);
+            document.addEventListener('touchmove', handleMove);
+            document.addEventListener('mouseup', endInteraction);
+            document.addEventListener('touchend', endInteraction);
+        }
+
+        function handleMove(e) {
+            const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
+            
+            const dx = clientX - startX;
+            const dy = clientY - startY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (!isDragging && distance > CLICK_MAX_DISTANCE) {
+                isDragging = true;
+            }
+            
+            if (isDragging) {
+                const newX = initialLeft + dx;
+                const newY = initialTop + dy;
+                
+                const maxX = window.innerWidth - kontener.offsetWidth;
+                const maxY = window.innerHeight - kontener.offsetHeight;
+                
+                kontener.style.left = `${Math.min(Math.max(0, newX), maxX)}px`;
+                kontener.style.top = `${Math.min(Math.max(0, newY), maxY)}px`;
+            }
+        }
+
+        function endInteraction(e) {
+            const clickDuration = Date.now() - clickStartTime;
+            const isClick = !isDragging && clickDuration < CLICK_MAX_DURATION;
+            
+            document.removeEventListener('mousemove', handleMove);
+            document.removeEventListener('touchmove', handleMove);
+            document.removeEventListener('mouseup', endInteraction);
+            document.removeEventListener('touchend', endInteraction);
+            
+            if (isClick) {
+                handleClick();
+            }
+            
+            isDragging = false;
+        }
+
+        function handleClick() {
+            if (!ksztalt.classList.contains('ROZSZERZONY')) {
+                ksztalt.classList.add('OBRACAJ');
+                
+                setTimeout(() => {
+                    ksztalt.classList.remove('OBRACAJ');
+                    ksztalt.classList.add('ROZSZERZONY');
+                }, 300);
+            }
+        }
+
+        trojkaty.forEach(trojkat => {
+            trojkat.addEventListener('click', function(e) {
+                ksztalt.classList.remove('ROZSZERZONY');
+                
+                // Zmieniamy kolejność - najpierw ciemny, potem jasny
+                if (this.classList.contains('KOZLOWSKISEBASTIAN_TROJKAT_JEDEN')) {
+                    body.classList.remove('KOZLOWSKISEBASTIAN_JASNY');
+                    localStorage.setItem('motyw', 'ciemny');
+                } else if (this.classList.contains('KOZLOWSKISEBASTIAN_TROJKAT_DWA')) {
+                    body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
+                    localStorage.setItem('motyw', 'jasny');
+                }
+
+                e.stopPropagation();
+            });
+        });
+
+        document.addEventListener('click', function(e) {
+            if (ksztalt.classList.contains('ROZSZERZONY') && !kontener.contains(e.target)) {
+                ksztalt.classList.remove('ROZSZERZONY');
+            }
+        });
+
+        function initHexagonPosition() {
+            if (window.innerWidth <= 768) {
+                kontener.style.left = '20px';
+                kontener.style.top = 'auto';
+                kontener.style.bottom = '20px';
+                kontener.style.right = 'auto';
+            }
+        }
+
+        window.addEventListener('load', initHexagonPosition);
+        window.addEventListener('resize', initHexagonPosition);
+
+        // Sprawdź zapisany motyw przy ładowaniu strony
+        if (localStorage.getItem('motyw') === 'jasny') {
+            document.body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
+        } else {
+            // Domyślnie ustawiamy ciemny motyw
+            document.body.classList.remove('KOZLOWSKISEBASTIAN_JASNY');
+            localStorage.setItem('motyw', 'ciemny');
+        }
+
         wyszukajInput.addEventListener('input', function() {
             if (this.value.trim() !== '') {
                 document.body.classList.remove('pokaz-rzadkie');
@@ -525,7 +947,11 @@
             }
             aktualizujWidocznoscKart();
         });
-
+        
+        wyszukajInput.addEventListener('keydown', function(e) {
+            e.stopPropagation();
+        });
+        
         document.querySelectorAll('.link-btn').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -554,7 +980,7 @@
                 }
             });
         });
-
+        
         document.body.addEventListener('click', function(e) {
             if (pelnyEkran && (e.target === document.body || e.target === fullscreenImage || e.target === fullscreenImg)) {
                 pelnyEkran = false;
@@ -563,6 +989,37 @@
                 fullscreenCardNumber.textContent = '';
             }
         });
+
+        document.addEventListener('dblclick', function(e) {
+            if (isIOS()) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                20%, 60% { transform: translateX(-5px); }
+                40%, 80% { transform: translateX(5px); }
+            }
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.1); }
+                100% { transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js').then(registration => {
+                    console.log('ServiceWorker registration successful');
+                }).catch(err => {
+                    console.log('ServiceWorker registration failed: ', err);
+                });
+            });
+        }
     </script>
 </body>
 </html>
