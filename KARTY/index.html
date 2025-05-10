@@ -52,25 +52,12 @@
             display: none;
         }
 
-        .KSGROUP-PASEK-WYSZUKIWANIA input {
+        .KSGROUP-PASEK-WYSZUKIWANIA {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             width: 100%;
-            max-width: 520px;
-            padding: 8px;
-            font-size: 16px;
-            font-family: 'Montserrat', sans-serif;
-            border: none;
-            border-radius: 5px;
-            background-color: #222;
-            color: #B0B0B0;
-            outline: none;
-            box-sizing: border-box;
-            margin: 0 auto;
-            display: block;
-        }
-
-        .KOZLOWSKISEBASTIAN_JASNY .KSGROUP-PASEK-WYSZUKIWANIA input {
-            background-color: #EEEEEE;
-            color: #555555;
+            gap: 10px;
         }
 
         .KSGROUP-WYSZUKIWARKA-NORMALNA {
@@ -99,16 +86,6 @@
 
         .fullscreen-mode .KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN {
             display: flex;
-        }
-
-        .KSGROUP-PASEK-WYSZUKIWANIA {
-            order: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            gap: 10px;
-            padding: 0;
         }
 
         .KSGROUP-PASEK-LINKU-OBRAZU {
@@ -371,6 +348,7 @@
             box-sizing: border-box;
             text-align: center;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: calc(50% - 5px);
         }
 
         .KOZLOWSKISEBASTIAN_JASNY .przelacz-rzadkie {
@@ -500,6 +478,10 @@
             -webkit-user-select: none;
         }
 
+        .fullscreen-mode .KOZLOWSKISEBASTIAN_HEXAGON_KONTENER {
+            display: none;
+        }
+
         .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
             position: absolute;
             width: 100%;
@@ -556,14 +538,88 @@
             clip-path: polygon(0 0, 100% 0, 0 100%);
             background-color: #f5f5f5;
         }
+
+        /* STYLE PRZYBORNIKA */
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
+            background-color: #222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s;
+            white-space: nowrap;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: 100%;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
+            background-color: #EEEEEE;
+            color: #555555;
+        }
+
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
+            background-color: #333;
+            color: #FF00FF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
+            background-color: #E0E0E0;
+            color: #333333;
+        }
+
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:active {
+            transform: scale(0.98);
+        }
+
+        /* Nowe style dla wyszukiwania i przycisków obok siebie */
+        .search-row {
+            display: flex;
+            width: 100%;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .search-row input {
+            flex: 1;
+            min-width: 0;
+            padding: 8px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            border-radius: 5px;
+            background-color: #222;
+            color: #B0B0B0;
+            outline: none;
+            box-sizing: border-box;
+            width: calc(50% - 5px);
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .search-row input {
+            background-color: #EEEEEE;
+            color: #555555;
+        }
+
+        .search-row button {
+            flex: 0 0 auto;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body class="KOZLOWSKISEBASTIAN">
     <div class="header">
         <div class="KSGROUP-WYSZUKIWARKA-NORMALNA">
+            <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="przybornik-btn">PRZYBORNIK</button>
             <div class="KSGROUP-PASEK-WYSZUKIWANIA">
-                <input type="text" id="wyszukaj-input" placeholder="WYSZUKAJ KARTĘ">
-                <div class="buttons-container">
+                <div class="search-row">
+                    <input type="text" id="wyszukaj-input" placeholder="WYSZUKAJ KARTĘ">
                     <button class="przelacz-rzadkie" id="przelacz-rzadkie" title="INNE">INNE</button>
                 </div>
             </div>
@@ -679,6 +735,8 @@
         const wszystkieKarty = Array.from(listaKart.children);
         const fullscreenCardNumber = document.getElementById('fullscreen-card-number');
         const installButton = document.getElementById('installButton');
+        const przybornikBtn = document.getElementById('przybornik-btn');
+        const kontener = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KONTENER');
         
         let deferredPrompt;
         
@@ -730,37 +788,37 @@
             });
         }
         
-      function aktualizujWidocznoscKart() {
-        const fraza = wyszukajInput.value.trim().toLowerCase();
-        
-        if (fraza !== '') {
-            wszystkieKarty.forEach(karta => {
-                const nazwa = karta.getAttribute('data-name').toLowerCase();
-                const klasa = karta.className.toLowerCase();
-                const tekstNazwy = karta.querySelector('.nazwa')?.textContent.toLowerCase() || '';
-                const czyPasuje = nazwa.includes(fraza) || 
-                                 klasa.includes(fraza) || 
-                                 tekstNazwy.includes(fraza);
-                
-                if (czyPasuje) {
-                    karta.style.display = 'block';
-                    karta.classList.remove('ukryta');
-                } else {
-                    karta.style.display = 'none';
-                    karta.classList.add('ukryta');
-                }
-            });
-        } else {
-            wszystkieKarty.forEach(karta => {
-                karta.style.display = '';
-                if (pokazRzadkie) {
-                    karta.classList.toggle('ukryta', !karta.classList.contains('rzadko-uzywana'));
-                } else {
-                    karta.classList.toggle('ukryta', karta.classList.contains('rzadko-uzywana'));
-                }
-            });
+        function aktualizujWidocznoscKart() {
+            const fraza = wyszukajInput.value.trim().toLowerCase();
+            
+            if (fraza !== '') {
+                wszystkieKarty.forEach(karta => {
+                    const nazwa = karta.getAttribute('data-name').toLowerCase();
+                    const klasa = karta.className.toLowerCase();
+                    const tekstNazwy = karta.querySelector('.nazwa')?.textContent.toLowerCase() || '';
+                    const czyPasuje = nazwa.includes(fraza) || 
+                                     klasa.includes(fraza) || 
+                                     tekstNazwy.includes(fraza);
+                    
+                    if (czyPasuje) {
+                        karta.style.display = 'block';
+                        karta.classList.remove('ukryta');
+                    } else {
+                        karta.style.display = 'none';
+                        karta.classList.add('ukryta');
+                    }
+                });
+            } else {
+                wszystkieKarty.forEach(karta => {
+                    karta.style.display = '';
+                    if (pokazRzadkie) {
+                        karta.classList.toggle('ukryta', !karta.classList.contains('rzadko-uzywana'));
+                    } else {
+                        karta.classList.toggle('ukryta', karta.classList.contains('rzadko-uzywana'));
+                    }
+                });
+            }
         }
-    }
         
         function handleOrientationChange() {
             if (window.matchMedia("(max-width: 768px)").matches) {
@@ -809,7 +867,6 @@
         });
 
         // Skrypt dla hexagona na dole po lewej
-        const kontener = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KONTENER');
         const ksztalt = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT');
         const trojkatKontener = document.querySelector('.KOZLOWSKISEBASTIAN_TROJKAT_KONTENER');
         const trojkaty = document.querySelectorAll('.KOZLOWSKISEBASTIAN_TROJKAT');
@@ -966,6 +1023,9 @@
                     const cardNumber = this.parentElement.classList[0];
                     fullscreenCardNumber.textContent = `${cardNumber}`;
                     
+                    // Ukryj hexagon w trybie pełnoekranowym
+                    kontener.style.display = 'none';
+                    
                     handleOrientationChange();
                     
                     fullscreenImg.onerror = () => {
@@ -977,6 +1037,8 @@
                     document.body.classList.remove('fullscreen-mode');
                     fullscreenImg.src = '';
                     fullscreenCardNumber.textContent = '';
+                    // Pokaż hexagon po wyjściu z trybu pełnoekranowego
+                    kontener.style.display = '';
                 }
             });
         });
@@ -987,6 +1049,8 @@
                 document.body.classList.remove('fullscreen-mode');
                 fullscreenImg.src = '';
                 fullscreenCardNumber.textContent = '';
+                // Pokaż hexagon po wyjściu z trybu pełnoekranowego
+                kontener.style.display = '';
             }
         });
 
@@ -1020,6 +1084,11 @@
                 });
             });
         }
+
+        // Obsługa przycisku PRZYBORNIK
+        przybornikBtn.addEventListener('click', function() {
+            window.location.href = 'https://kozlowskisebastian.pl/PRZYBORNIK/';
+        });
     </script>
 </body>
 </html>
