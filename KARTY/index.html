@@ -402,6 +402,110 @@
             color: #333333;
         }
 
+        /* Style dla przycisku sortowania */
+        .sortuj-btn {
+            background-color: #222;
+            color: #B0B0B0;
+            border: none;
+            padding: 8px 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            transition: all 0.3s;
+            white-space: nowrap;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            width: calc(50% - 5px);
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .sortuj-btn {
+            background-color: #EEEEEE;
+            color: #555555;
+        }
+
+        .sortuj-btn:hover {
+            background-color: #333;
+            color: #FF00FF;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .sortuj-btn:hover {
+            background-color: #E0E0E0;
+            color: #333333;
+        }
+
+        .sortuj-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Style dla menu sortowania */
+        .sort-menu {
+            position: absolute;
+            background-color: #333;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            z-index: 100;
+            display: none;
+            width: 200px;
+            overflow: hidden;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .sort-menu {
+            background-color: #F5F5F5;
+        }
+
+        .sort-menu-item {
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #B0B0B0;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .sort-menu-item {
+            color: #555555;
+        }
+
+        .sort-menu-item:hover {
+            background-color: #444;
+            color: #FF00FF;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .sort-menu-item:hover {
+            background-color: #E0E0E0;
+            color: #333333;
+        }
+
+        /* Style dla pola wyszukiwania */
+        .search-input {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            font-family: 'Montserrat', sans-serif;
+            border: none;
+            border-radius: 5px;
+            background-color: #222;
+            color: #B0B0B0;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .search-input {
+            background-color: #EEEEEE;
+            color: #555555;
+        }
+
+        /* Style dla przycisków na dole */
+        .bottom-buttons {
+            display: flex;
+            width: 100%;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
         .fullscreen-image-content {
             transition: transform 0.3s ease;
         }
@@ -627,49 +731,29 @@
         .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:active {
             transform: scale(0.98);
         }
-
-        /* Nowe style dla wyszukiwania i przycisków obok siebie */
-        .search-row {
-            display: flex;
-            width: 100%;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .search-row input {
-            flex: 1;
-            min-width: 0;
-            padding: 8px;
-            font-size: 16px;
-            font-family: 'Montserrat', sans-serif;
-            border: none;
-            border-radius: 5px;
-            background-color: #222;
-            color: #B0B0B0;
-            outline: none;
-            box-sizing: border-box;
-            width: calc(50% - 5px);
-        }
-
-        .KOZLOWSKISEBASTIAN_JASNY .search-row input {
-            background-color: #EEEEEE;
-            color: #555555;
-        }
-
-        .search-row button {
-            flex: 0 0 auto;
-            white-space: nowrap;
-        }
     </style>
 </head>
 <body class="KOZLOWSKISEBASTIAN">
     <div class="header">
         <div class="KSGROUP-WYSZUKIWARKA-NORMALNA">
+            <!-- 1. Przycisk PRZYBORNIK (pełna szerokość) -->
             <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="przybornik-btn">PRZYBORNIK</button>
+            
+            <!-- 2. Pole WYSZUKAJ (pełna szerokość) -->
             <div class="KSGROUP-PASEK-WYSZUKIWANIA">
-                <div class="search-row">
-                    <input type="text" id="wyszukaj-input" placeholder="WYSZUKAJ KARTĘ">
+                <input type="text" id="wyszukaj-input" class="search-input" placeholder="WYSZUKAJ KARTĘ">
+                
+                <!-- 3. Przyciski INNE i SORTUJ obok siebie (każdy po 50%) -->
+                <div class="bottom-buttons">
                     <button class="przelacz-rzadkie" id="przelacz-rzadkie" title="INNE">INNE</button>
+                    <button class="sortuj-btn" id="sortuj-btn">SORTUJ</button>
+                    <div class="sort-menu" id="sort-menu">
+                        <div class="sort-menu-item" data-sort="name-asc">Nazwa A-Z</div>
+                        <div class="sort-menu-item" data-sort="name-desc">Nazwa Z-A</div>
+                        <div class="sort-menu-item" data-sort="usage-desc">Użycie (domyślne)</div>
+                        <div class="sort-menu-item" data-sort="desc-asc">Opis A-Z</div>
+                        <div class="sort-menu-item" data-sort="desc-desc">Opis Z-A</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -772,12 +856,15 @@
     <script>
         let pelnyEkran = false;
         let pokazRzadkie = false;
+        let currentSortMethod = 'usage-desc'; // Domyślne sortowanie według użycia
         const fullscreenImage = document.querySelector('.fullscreen-image');
         const fullscreenImg = document.getElementById('fullscreen-img');
         const imageLink = document.getElementById('image-link');
         const imageLinkBar = document.querySelector('.KSGROUP-WYSZUKIWARKA-PEŁNY_EKRAN');
         const wyszukajInput = document.getElementById('wyszukaj-input');
         const przelaczRzadkieBtn = document.getElementById('przelacz-rzadkie');
+        const sortujBtn = document.getElementById('sortuj-btn');
+        const sortMenu = document.getElementById('sort-menu');
         const listaKart = document.getElementById('lista-kart');
         const wszystkieKarty = Array.from(listaKart.children);
         const fullscreenCardNumber = document.getElementById('fullscreen-card-number');
@@ -786,6 +873,129 @@
         const kontener = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KONTENER');
         
         let deferredPrompt;
+        let db;
+        
+        // Inicjalizacja IndexedDB
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open('KartyDB', 1);
+                
+                request.onerror = function(event) {
+                    console.error('Błąd przy otwieraniu bazy danych:', event.target.error);
+                    reject(event.target.error);
+                };
+                
+                request.onsuccess = function(event) {
+                    db = event.target.result;
+                    resolve(db);
+                };
+                
+                request.onupgradeneeded = function(event) {
+                    const db = event.target.result;
+                    if (!db.objectStoreNames.contains('karty')) {
+                        const store = db.createObjectStore('karty', { keyPath: 'id' });
+                        store.createIndex('name', 'name', { unique: false });
+                        store.createIndex('usage', 'usage', { unique: false });
+                    }
+                };
+            });
+        }
+        
+        // Pobierz dane karty z IndexedDB
+        function getCardData(id) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['karty'], 'readonly');
+                const store = transaction.objectStore('karty');
+                const request = store.get(id);
+                
+                request.onerror = function(event) {
+                    reject(event.target.error);
+                };
+                
+                request.onsuccess = function(event) {
+                    resolve(event.target.result);
+                };
+            });
+        }
+        
+        // Aktualizuj dane karty w IndexedDB
+        function updateCardData(id, name, usage) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction(['karty'], 'readwrite');
+                const store = transaction.objectStore('karty');
+                
+                // Najpierw sprawdź, czy karta już istnieje
+                const getRequest = store.get(id);
+                
+                getRequest.onerror = function(event) {
+                    reject(event.target.error);
+                };
+                
+                getRequest.onsuccess = function(event) {
+                    const existingData = event.target.result;
+                    const newData = {
+                        id: id,
+                        name: name,
+                        usage: existingData ? existingData.usage + 1 : 1
+                    };
+                    
+                    const putRequest = store.put(newData);
+                    
+                    putRequest.onerror = function(event) {
+                        reject(event.target.error);
+                    };
+                    
+                    putRequest.onsuccess = function() {
+                        resolve(newData.usage);
+                    };
+                };
+            });
+        }
+        
+        // Funkcja sortująca karty
+        function sortKarty(method) {
+            const karty = Array.from(listaKart.children);
+            
+            karty.sort((a, b) => {
+                const nameA = a.getAttribute('data-name').toLowerCase();
+                const nameB = b.getAttribute('data-name').toLowerCase();
+                const descA = a.querySelector('.nazwa')?.textContent.toLowerCase() || '';
+                const descB = b.querySelector('.nazwa')?.textContent.toLowerCase() || '';
+                const usageA = parseInt(a.getAttribute('data-usage')) || 0;
+                const usageB = parseInt(b.getAttribute('data-usage')) || 0;
+                
+                switch(method) {
+                    case 'name-asc':
+                        return nameA.localeCompare(nameB);
+                    case 'name-desc':
+                        return nameB.localeCompare(nameA);
+                    case 'desc-asc':
+                        return descA.localeCompare(descB);
+                    case 'desc-desc':
+                        return descB.localeCompare(descA);
+                    case 'usage-desc':
+                    default:
+                        return usageB - usageA;
+                }
+            });
+            
+            // Usuń wszystkie karty z listy
+            while (listaKart.firstChild) {
+                listaKart.removeChild(listaKart.firstChild);
+            }
+            
+            // Dodaj posortowane karty z powrotem
+            karty.forEach(karta => {
+                listaKart.appendChild(karta);
+            });
+            
+            // Zapisz metodę sortowania w localStorage
+            localStorage.setItem('sortMethod', method);
+            currentSortMethod = method;
+            
+            // Zaktualizuj widoczność kart po sortowaniu
+            aktualizujWidocznoscKart();
+        }
         
         function isIOS() {
             return /iPad|iPhone|iPod/.test(navigator.userAgent) || 
@@ -891,8 +1101,27 @@
             }
         }
         
-        oznaczRzadkieKarty();
-        aktualizujWidocznoscKart();
+        // Inicjalizacja bazy danych i załadowanie danych
+        initDB().then(() => {
+            // Sprawdź zapisaną metodę sortowania
+            const savedSortMethod = localStorage.getItem('sortMethod');
+            if (savedSortMethod) {
+                currentSortMethod = savedSortMethod;
+            }
+            
+            // Posortuj karty zgodnie z zapisaną metodą
+            sortKarty(currentSortMethod);
+            
+            // Oznacz rzadko używane karty
+            oznaczRzadkieKarty();
+            aktualizujWidocznoscKart();
+        }).catch(error => {
+            console.error('Błąd inicjalizacji bazy danych:', error);
+            // W przypadku błędu, posortuj karty domyślnie
+            sortKarty(currentSortMethod);
+            oznaczRzadkieKarty();
+            aktualizujWidocznoscKart();
+        });
         
         handleOrientationChange();
         window.addEventListener('orientationchange', handleOrientationChange);
@@ -910,6 +1139,31 @@
                 }
                 
                 aktualizujWidocznoscKart();
+            }
+        });
+        
+        // Obsługa przycisku sortowania
+        sortujBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const rect = this.getBoundingClientRect();
+            sortMenu.style.display = 'block';
+            sortMenu.style.top = `${rect.bottom}px`;
+            sortMenu.style.left = `${rect.left}px`;
+        });
+        
+        // Obsługa wyboru metody sortowania
+        document.querySelectorAll('.sort-menu-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const method = this.getAttribute('data-sort');
+                sortKarty(method);
+                sortMenu.style.display = 'none';
+            });
+        });
+        
+        // Zamknij menu sortowania po kliknięciu poza nim
+        document.addEventListener('click', function(e) {
+            if (!sortujBtn.contains(e.target) && !sortMenu.contains(e.target)) {
+                sortMenu.style.display = 'none';
             }
         });
 
@@ -1055,8 +1309,27 @@
         });
         
         document.querySelectorAll('.link-btn').forEach(link => {
-            link.addEventListener('click', function(e) {
+            link.addEventListener('click', async function(e) {
                 e.preventDefault();
+                
+                // Zaktualizuj licznik użycia karty
+                const cardId = this.parentElement.className.split(' ')[0];
+                const cardName = this.parentElement.getAttribute('data-name');
+                
+                try {
+                    const newUsage = await updateCardData(cardId, cardName, 1);
+                    this.parentElement.setAttribute('data-usage', newUsage);
+                    
+                    // Oznacz rzadko używane karty na nowo
+                    oznaczRzadkieKarty();
+                    
+                    // Jeśli sortujemy według użycia, przetasuj karty
+                    if (currentSortMethod === 'usage-desc') {
+                        sortKarty(currentSortMethod);
+                    }
+                } catch (error) {
+                    console.error('Błąd aktualizacji danych karty:', error);
+                }
                 
                 pelnyEkran = !pelnyEkran;
                 if (pelnyEkran) {
