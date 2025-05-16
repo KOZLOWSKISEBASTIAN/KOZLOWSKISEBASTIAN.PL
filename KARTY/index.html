@@ -317,12 +317,18 @@
         }
 
         .fullscreen-image img {
-            max-width: 90%;
-            max-height: 90%;
+            max-width: 50%;
+            max-height: 50%;
             object-fit: contain;
-            position: relative;
-            margin: 0 auto;
-            display: block;
+            transition: transform 0.5s ease;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .fullscreen-image img:hover {
+            transform: translate(-50%, -50%) scale(1);
         }
 
         .buttons-container {
@@ -333,7 +339,6 @@
             gap: 10px;
         }
 
-        /* Style dla przycisku INNE w CIEMNYM motywie */
         .przelacz-rzadkie {
             background-color: #222;
             color: #B0B0B0;
@@ -368,7 +373,6 @@
             transform: scale(0.98);
         }
 
-        /* Style dla przycisku INNE w JASNYM motywie */
         .KOZLOWSKISEBASTIAN_JASNY .przelacz-rzadkie {
             background-color: #EEEEEE;
             color: #555555;
@@ -386,7 +390,6 @@
             color: #333333;
         }
 
-        /* Style dla przycisku sortowania */
         .sortuj-btn {
             background-color: #222;
             color: #B0B0B0;
@@ -426,7 +429,6 @@
             transform: scale(0.98);
         }
 
-        /* Style dla menu sortowania */
         .sort-menu {
             position: absolute;
             background-color: #333;
@@ -463,7 +465,6 @@
             color: #333333;
         }
 
-        /* Style dla pola wyszukiwania */
         .search-input {
             width: 100%;
             padding: 8px;
@@ -482,7 +483,6 @@
             color: #555555;
         }
 
-        /* Style dla przycisków na dole */
         .bottom-buttons {
             display: flex;
             width: 100%;
@@ -490,21 +490,11 @@
             margin-top: 5px;
         }
 
-        .card-number-fullscreen {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #000;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            z-index: 11;
+        .fullscreen-image-content {
+            transition: transform 0.3s ease;
+            position: relative;
             width: 100%;
-            display: block;
-            pointer-events: none;
-            padding: 0 20px;
-            box-sizing: border-box;
+            height: 100%;
         }
 
         #installButton {
@@ -545,22 +535,15 @@
 
         @media (max-width: 768px) and (orientation: portrait) {
             .fullscreen-image img {
-                max-width: 100%;
-                max-height: 60%;
-                transform: none;
-                top: auto;
-                left: auto;
-                transform: none;
+                max-width: 25%;
+                max-height: 25%;
+                transform: translate(-50%, -50%) rotate(90deg);
             }
             
             .card-number-fullscreen {
-                top: 20px;
+                top: 120px;
                 left: 50%;
                 transform: translateX(-50%);
-                width: 100%;
-                text-align: center;
-                padding: 0 20px;
-                box-sizing: border-box;
             }
 
             .karty li {
@@ -570,22 +553,26 @@
         }
 
         @media (max-width: 768px) and (orientation: landscape) {
-            .fullscreen-image img {
-                max-width: 60%;
-                max-height: 80%;
+            .fullscreen-image-content {
+                max-width: 100vh;
+                max-height: 100vw;
+                transform: rotate(0);
             }
             
             .card-number-fullscreen {
-                top: 20px;
-                left: 50%;
-                transform: translateX(-50%);
+                top: 50px;
+                left: 0;
+                right: 0;
+                margin: 0 auto;
+                transform: none !important;
             }
         }
 
         @media (max-width: 480px) {
             .card-number-fullscreen {
-                top: 15px;
+                top: 40px;
                 font-size: 16px;
+                padding: 0 10px;
             }
         }
 
@@ -621,7 +608,6 @@
             }
         }
 
-        /* STYLE HEXAGONA NA DOLE PO LEWEJ */
         .KOZLOWSKISEBASTIAN_HEXAGON_KONTENER {
             position: fixed;
             bottom: 20px;
@@ -695,7 +681,6 @@
             background-color: #f5f5f5;
         }
 
-        /* STYLE PRZYBORNIKA */
         .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
             background-color: #222;
             color: #B0B0B0;
@@ -734,19 +719,32 @@
         .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:active {
             transform: scale(0.98);
         }
+
+        .card-number-fullscreen {
+            position: fixed;
+            top: 50px;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            color: #000;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 11;
+            width: 100%;
+            display: block;
+            pointer-events: none;
+        }
     </style>
 </head>
 <body class="KOZLOWSKISEBASTIAN">
     <div class="header">
         <div class="KSGROUP-WYSZUKIWARKA-NORMALNA">
-            <!-- 1. Przycisk PRZYBORNIK (pełna szerokość) -->
             <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="przybornik-btn">PRZYBORNIK</button>
             
-            <!-- 2. Pole WYSZUKAJ (pełna szerokość) -->
             <div class="KSGROUP-PASEK-WYSZUKIWANIA">
                 <input type="text" id="wyszukaj-input" class="search-input" placeholder="WYSZUKAJ KARTĘ">
                 
-                <!-- 3. Przyciski INNE i SORTUJ obok siebie (każdy po 50%) -->
                 <div class="bottom-buttons">
                     <button class="przelacz-rzadkie" id="przelacz-rzadkie" title="INNE">INNE</button>
                     <button class="sortuj-btn" id="sortuj-btn">SORTUJ</button>
@@ -764,6 +762,7 @@
         <div class="row">
             <div class="karty-container">
                 <ul class="karty" id="lista-kart">
+
 
 
 <li data-name="KSGROUP-50STYLE" data-usage="0" class="000000013420"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/50STYLE.svg"><img src="https://kozlowskisebastian.pl/GRAFIKA/50STYLE.svg"><span class="nazwa"></span></a></li>
@@ -886,6 +885,8 @@
 <li data-name="KSGROUP-ZABKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/ZABKA.svg"><img src="https://kozlowskisebastian.pl/GRAFIKA/ZABKA.svg"><span class="nazwa"></span></a></li>
 
 
+
+
                 </ul>
             </div>
         </div>
@@ -899,7 +900,6 @@
             <div id="fullscreen-card-number" class="card-number-fullscreen"></div>
         </div>
     </div>
-    <!-- Hexagon na dole po lewej -->
     <div class="KOZLOWSKISEBASTIAN_HEXAGON_KONTENER" id="hexagon-btn">
         <div class="KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT"></div>
         <div class="KOZLOWSKISEBASTIAN_TROJKAT_KONTENER">
@@ -913,7 +913,7 @@
     <script>
         let pelnyEkran = false;
         let pokazRzadkie = false;
-        let currentSortMethod = 'usage-desc'; // Domyślne sortowanie według użycia
+        let currentSortMethod = 'usage-desc';
         const fullscreenImage = document.querySelector('.fullscreen-image');
         const fullscreenImg = document.getElementById('fullscreen-img');
         const imageLink = document.getElementById('image-link');
@@ -932,7 +932,6 @@
         let deferredPrompt;
         let db;
         
-        // Inicjalizacja IndexedDB
         function initDB() {
             return new Promise((resolve, reject) => {
                 const request = indexedDB.open('KartyDB', 1);
@@ -958,7 +957,6 @@
             });
         }
         
-        // Pobierz dane karty z IndexedDB
         function getCardData(id) {
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction(['karty'], 'readonly');
@@ -975,13 +973,11 @@
             });
         }
         
-        // Aktualizuj dane karty w IndexedDB
         function updateCardData(id, name, usage) {
             return new Promise((resolve, reject) => {
                 const transaction = db.transaction(['karty'], 'readwrite');
                 const store = transaction.objectStore('karty');
                 
-                // Najpierw sprawdź, czy karta już istnieje
                 const getRequest = store.get(id);
                 
                 getRequest.onerror = function(event) {
@@ -1009,7 +1005,6 @@
             });
         }
         
-        // Funkcja sortująca karty
         function sortKarty(method) {
             const karty = Array.from(listaKart.children);
             
@@ -1036,21 +1031,17 @@
                 }
             });
             
-            // Usuń wszystkie karty z listy
             while (listaKart.firstChild) {
                 listaKart.removeChild(listaKart.firstChild);
             }
             
-            // Dodaj posortowane karty z powrotem
             karty.forEach(karta => {
                 listaKart.appendChild(karta);
             });
             
-            // Zapisz metodę sortowania w localStorage
             localStorage.setItem('sortMethod', method);
             currentSortMethod = method;
             
-            // Zaktualizuj widoczność kart po sortowaniu
             aktualizujWidocznoscKart();
         }
         
@@ -1137,35 +1128,30 @@
         function handleOrientationChange() {
             if (window.matchMedia("(max-width: 768px)").matches) {
                 if (window.orientation === 0 || window.orientation === 180) {
-                    // Portrait mode
-                    fullscreenImg.style.maxWidth = '100%';
-                    fullscreenImg.style.maxHeight = '60%';
-                    fullscreenImg.style.transform = 'none';
-                    fullscreenImg.style.position = 'relative';
-                    fullscreenImg.style.margin = '0 auto';
+                    // Tryb portret na komórce
+                    fullscreenImg.style.maxWidth = '25%';
+                    fullscreenImg.style.maxHeight = '25%';
+                    fullscreenImg.style.transform = 'translate(-50%, -50%) rotate(90deg)';
                     
-                    fullscreenCardNumber.style.top = '20px';
+                    fullscreenCardNumber.style.top = '120px';
                     fullscreenCardNumber.style.left = '50%';
                     fullscreenCardNumber.style.transform = 'translateX(-50%)';
-                    fullscreenCardNumber.style.width = '100%';
-                    fullscreenCardNumber.style.textAlign = 'center';
                 } else {
-                    // Landscape mode
-                    fullscreenImg.style.maxWidth = '60%';
-                    fullscreenImg.style.maxHeight = '80%';
-                    fullscreenImg.style.transform = 'none';
+                    // Tryb landscape na komórce
+                    fullscreenImg.style.maxWidth = '50%';
+                    fullscreenImg.style.maxHeight = '50%';
+                    fullscreenImg.style.transform = 'translate(-50%, -50%)';
                     
-                    fullscreenCardNumber.style.top = '20px';
-                    fullscreenCardNumber.style.left = '50%';
-                    fullscreenCardNumber.style.transform = 'translateX(-50%)';
+                    fullscreenCardNumber.style.top = '50px';
+                    fullscreenCardNumber.style.left = '0';
+                    fullscreenCardNumber.style.right = '0';
+                    fullscreenCardNumber.style.margin = '0 auto';
+                    fullscreenCardNumber.style.transform = 'none';
                 }
             } else {
-                // Desktop
+                // Desktop - pozostawiamy bez zmian
                 fullscreenImg.style.maxWidth = '50%';
                 fullscreenImg.style.maxHeight = '50%';
-                fullscreenImg.style.position = 'absolute';
-                fullscreenImg.style.top = '50%';
-                fullscreenImg.style.left = '50%';
                 fullscreenImg.style.transform = 'translate(-50%, -50%)';
                 
                 fullscreenCardNumber.style.top = '50px';
@@ -1173,27 +1159,20 @@
                 fullscreenCardNumber.style.right = '0';
                 fullscreenCardNumber.style.margin = '0 auto';
                 fullscreenCardNumber.style.transform = 'none';
-                fullscreenCardNumber.style.width = 'auto';
             }
         }
         
-        // Inicjalizacja bazy danych i załadowanie danych
         initDB().then(() => {
-            // Sprawdź zapisaną metodę sortowania
             const savedSortMethod = localStorage.getItem('sortMethod');
             if (savedSortMethod) {
                 currentSortMethod = savedSortMethod;
             }
             
-            // Posortuj karty zgodnie z zapisaną metodą
             sortKarty(currentSortMethod);
-            
-            // Oznacz rzadko używane karty
             oznaczRzadkieKarty();
             aktualizujWidocznoscKart();
         }).catch(error => {
             console.error('Błąd inicjalizacji bazy danych:', error);
-            // W przypadku błędu, posortuj karty domyślnie
             sortKarty(currentSortMethod);
             oznaczRzadkieKarty();
             aktualizujWidocznoscKart();
@@ -1218,7 +1197,6 @@
             }
         });
         
-        // Obsługa przycisku sortowania
         sortujBtn.addEventListener('click', function(e) {
             e.stopPropagation();
             const rect = this.getBoundingClientRect();
@@ -1227,7 +1205,6 @@
             sortMenu.style.left = `${rect.left}px`;
         });
         
-        // Obsługa wyboru metody sortowania
         document.querySelectorAll('.sort-menu-item').forEach(item => {
             item.addEventListener('click', function() {
                 const method = this.getAttribute('data-sort');
@@ -1236,14 +1213,12 @@
             });
         });
         
-        // Zamknij menu sortowania po kliknięciu poza nim
         document.addEventListener('click', function(e) {
             if (!sortujBtn.contains(e.target) && !sortMenu.contains(e.target)) {
                 sortMenu.style.display = 'none';
             }
         });
 
-        // Skrypt dla hexagona na dole po lewej
         const ksztalt = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT');
         const trojkatKontener = document.querySelector('.KOZLOWSKISEBASTIAN_TROJKAT_KONTENER');
         const trojkaty = document.querySelectorAll('.KOZLOWSKISEBASTIAN_TROJKAT');
@@ -1363,7 +1338,6 @@
         window.addEventListener('load', initHexagonPosition);
         window.addEventListener('resize', initHexagonPosition);
 
-        // Sprawdź zapisany motyw przy ładowaniu strony
         if (localStorage.getItem('motyw') === 'jasny') {
             document.body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
         } else {
@@ -1388,7 +1362,6 @@
             link.addEventListener('click', async function(e) {
                 e.preventDefault();
                 
-                // Zaktualizuj licznik użycia karty
                 const cardId = this.parentElement.className.split(' ')[0];
                 const cardName = this.parentElement.getAttribute('data-name');
                 
@@ -1396,10 +1369,8 @@
                     const newUsage = await updateCardData(cardId, cardName, 1);
                     this.parentElement.setAttribute('data-usage', newUsage);
                     
-                    // Oznacz rzadko używane karty na nowo
                     oznaczRzadkieKarty();
                     
-                    // Jeśli sortujemy według użycia, przetasuj karty
                     if (currentSortMethod === 'usage-desc') {
                         sortKarty(currentSortMethod);
                     }
