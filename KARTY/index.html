@@ -259,10 +259,10 @@
         }
 
         .karty a img {
-            max-width: 100%;
-            max-height: 28px;
-            width: auto;
+            width: 100%;
             height: auto;
+            max-height: 28px;
+            object-fit: contain;
             filter: invert(1) brightness(0.69) contrast(0.95);
             transition: all 0.3s;
             margin-bottom: 4px;
@@ -312,19 +312,19 @@
         }
 
         .fullscreen-image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 1;
-            opacity: 0;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #B0B0B0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #B0B0B0;
         }
 
         .fullscreen-mode .fullscreen-image {
@@ -333,14 +333,18 @@
         }
 
         .fullscreen-image img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-            transition: transform 0.5s ease;
+    max-width: 50%;
+    max-height: 50%;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
         }
 
         .fullscreen-image img:hover {
-            transform: scale(1.05);
+    transform: translate(-50%, -50%) scale(1);
         }
 
         .buttons-container {
@@ -509,7 +513,10 @@
         }
 
         .fullscreen-image-content {
-            transition: transform 0.3s ease;
+    transition: transform 0.3s ease;
+    position: relative;
+    width: 100%;
+    height: 100%;
         }
 
         #installButton {
@@ -764,6 +771,7 @@
             <div class="karty-container">
                 <ul class="karty" id="lista-kart">
 
+
 <li data-name="KSGROUP-50STYLE" data-usage="0" class="000000013420"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/50STYLE.svg"><img src="https://kozlowskisebastian.pl/GRAFIKA/50STYLE.svg"><span class="nazwa"></span></a></li>
 <li data-name="KSGROUP-ACTION" data-usage="5" class="L2164848293272"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/ACTION.svg"><img src="https://kozlowskisebastian.pl/GRAFIKA/ACTION.svg"><span class="nazwa"></span></a></li>
 <li data-name="KSGROUP-AKPOLBABY" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/AKPOLBABY.svg"><img src="https://kozlowskisebastian.pl/GRAFIKA/AKPOLBABY.svg"><span class="nazwa"></span></a></li>
@@ -881,7 +889,8 @@
 <li data-name="KSGROUP-WESTFIELD" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/WESTFIELD.svg"><img src="https://kozlowskisebastian.pl/GRAFIKA/WESTFIELD.svg"><span class="nazwa"></span></a></li>
 <li data-name="KSGROUP-WROCLAVIA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/WROCLAVIA.svg"><img src="https://kozlowskisebastian.pl/GRAFIKA/WROCLAVIA.svg"><span class="nazwa"></span></a></li>
 <li data-name="KSGROUP-ZOOZAKUPY" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/ZOOZAKUPY.svg"><img src="https://kozlowskisebastian.pl/GRAFIKA/ZOOZAKUPY.svg"><span class="nazwa"></span></a></li>
-<li data-name="KSGROUP-ZABKA" data-usage="5" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/ZABKA.svg"><img src="https://kozlowskisebastian.pl/GRAFIKA/ZABKA.svg"><span class="nazwa"></span></a></li>
+<li data-name="KSGROUP-ZABKA" data-usage="0" class="7878877"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/ZABKA.svg"><img src="https://kozlowskisebastian.pl/GRAFIKA/ZABKA.svg"><span class="nazwa"></span></a></li>
+
 
                 </ul>
             </div>
