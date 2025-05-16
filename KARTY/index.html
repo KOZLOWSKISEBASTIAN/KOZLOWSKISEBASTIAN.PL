@@ -122,22 +122,6 @@
             color: #555555;
         }
 
-        .card-number-fullscreen {
-    position: fixed;
-    top: 50px;
-    left: 0;
-    right: 0;
-    margin: 0 auto;
-    color: #000;
-    font-size: 18px;
-    font-weight: bold;
-    text-align: center;
-    z-index: 11;
-    width: 100%;
-    display: block;
-    pointer-events: none;
-        }
-
         .KSGROUP-PASEK-LINKU-OBRAZU a:hover {
             background-color: #333;
             color: #FF00FF;
@@ -312,19 +296,19 @@
         }
 
         .fullscreen-image {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #B0B0B0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #B0B0B0;
         }
 
         .fullscreen-mode .fullscreen-image {
@@ -333,18 +317,12 @@
         }
 
         .fullscreen-image img {
-    max-width: 50%;
-    max-height: 50%;
-    object-fit: contain;
-    transition: transform 0.5s ease;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-        }
-
-        .fullscreen-image img:hover {
-    transform: translate(-50%, -50%) scale(1);
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            position: relative;
+            margin: 0 auto;
+            display: block;
         }
 
         .buttons-container {
@@ -512,11 +490,21 @@
             margin-top: 5px;
         }
 
-        .fullscreen-image-content {
-    transition: transform 0.3s ease;
-    position: relative;
-    width: 100%;
-    height: 100%;
+        .card-number-fullscreen {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #000;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            z-index: 11;
+            width: 100%;
+            display: block;
+            pointer-events: none;
+            padding: 0 20px;
+            box-sizing: border-box;
         }
 
         #installButton {
@@ -556,18 +544,23 @@
         }
 
         @media (max-width: 768px) and (orientation: portrait) {
-            .fullscreen-image-content {
-                max-width: 100vh;
-                max-height: 100vw;
-                transform: rotate(0);
+            .fullscreen-image img {
+                max-width: 100%;
+                max-height: 60%;
+                transform: none;
+                top: auto;
+                left: auto;
+                transform: none;
             }
             
             .card-number-fullscreen {
-        top: 50px;
-        left: 0;
-        right: 0;
-        margin: 0 auto;
-        transform: none !important; /* Usuwamy wszelkie transformacje */
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100%;
+                text-align: center;
+                padding: 0 20px;
+                box-sizing: border-box;
             }
 
             .karty li {
@@ -577,28 +570,24 @@
         }
 
         @media (max-width: 768px) and (orientation: landscape) {
-            .fullscreen-image-content {
-                max-width: 100vh;
-                max-height: 100vw;
-                transform: rotate(0);
+            .fullscreen-image img {
+                max-width: 60%;
+                max-height: 80%;
             }
             
             .card-number-fullscreen {
-        top: 50px;
-        left: 0;
-        right: 0;
-        margin: 0 auto;
-        transform: none !important;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
             }
         }
 
-@media (max-width: 480px) {
-    .card-number-fullscreen {
-        top: 40px;
-        font-size: 16px;
-        padding: 0 10px;
-    }
-}
+        @media (max-width: 480px) {
+            .card-number-fullscreen {
+                top: 15px;
+                font-size: 16px;
+            }
+        }
 
         @media (max-width: 768px) {
             .header, .container {
@@ -1148,24 +1137,43 @@
         function handleOrientationChange() {
             if (window.matchMedia("(max-width: 768px)").matches) {
                 if (window.orientation === 0 || window.orientation === 180) {
-                    fullscreenImg.style.transform = 'rotate(90deg)';
-                    fullscreenImg.style.maxWidth = '100vh';
-                    fullscreenImg.style.maxHeight = '100vw';
-                    fullscreenCardNumber.style.top = '60px';
-                    fullscreenCardNumber.style.left = '50%';
-                    fullscreenCardNumber.style.transform = 'translateY(-50%)';
-                    fullscreenCardNumber.style.transformOrigin = 'left top';
-                    fullscreenCardNumber.style.whiteSpace = 'nowrap';
-                } else {
-                    fullscreenImg.style.transform = 'rotate(0)';
+                    // Portrait mode
                     fullscreenImg.style.maxWidth = '100%';
-                    fullscreenImg.style.maxHeight = '100%';
-                    fullscreenCardNumber.style.top = '60px';
-                    fullscreenCardNumber.style.left = '60%';
+                    fullscreenImg.style.maxHeight = '60%';
+                    fullscreenImg.style.transform = 'none';
+                    fullscreenImg.style.position = 'relative';
+                    fullscreenImg.style.margin = '0 auto';
+                    
+                    fullscreenCardNumber.style.top = '20px';
+                    fullscreenCardNumber.style.left = '50%';
                     fullscreenCardNumber.style.transform = 'translateX(-50%)';
-                    fullscreenCardNumber.style.transformOrigin = '';
-                    fullscreenCardNumber.style.whiteSpace = '';
+                    fullscreenCardNumber.style.width = '100%';
+                    fullscreenCardNumber.style.textAlign = 'center';
+                } else {
+                    // Landscape mode
+                    fullscreenImg.style.maxWidth = '60%';
+                    fullscreenImg.style.maxHeight = '80%';
+                    fullscreenImg.style.transform = 'none';
+                    
+                    fullscreenCardNumber.style.top = '20px';
+                    fullscreenCardNumber.style.left = '50%';
+                    fullscreenCardNumber.style.transform = 'translateX(-50%)';
                 }
+            } else {
+                // Desktop
+                fullscreenImg.style.maxWidth = '50%';
+                fullscreenImg.style.maxHeight = '50%';
+                fullscreenImg.style.position = 'absolute';
+                fullscreenImg.style.top = '50%';
+                fullscreenImg.style.left = '50%';
+                fullscreenImg.style.transform = 'translate(-50%, -50%)';
+                
+                fullscreenCardNumber.style.top = '50px';
+                fullscreenCardNumber.style.left = '0';
+                fullscreenCardNumber.style.right = '0';
+                fullscreenCardNumber.style.margin = '0 auto';
+                fullscreenCardNumber.style.transform = 'none';
+                fullscreenCardNumber.style.width = 'auto';
             }
         }
         
