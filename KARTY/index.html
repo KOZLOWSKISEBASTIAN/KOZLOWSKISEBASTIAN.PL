@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KARTY</title>
+    <title>KARTY1</title>
     <meta name="theme-color" content="#000000">
     <meta name="description" content="Aplikacja do zarządzania kartami">
     <link rel="manifest" href="/manifest.json">
@@ -535,15 +535,16 @@
 
         @media (max-width: 768px) and (orientation: portrait) {
             .fullscreen-image img {
-                max-width: 25%;
-                max-height: 25%;
+                max-width: 35%;
+                max-height: 65%;
                 transform: translate(-50%, -50%) rotate(90deg);
             }
             
             .card-number-fullscreen {
-                top: 120px;
-                left: 50%;
-                transform: translateX(-50%);
+       top: 160px; /* Zwiększone z 120px */
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 22px; /* Zwiększone z domyślnego */
             }
 
             .karty li {
