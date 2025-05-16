@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KARTY</title>
+    <title>KARTY2</title>
     <meta name="theme-color" content="#000000">
     <meta name="description" content="Aplikacja do zarządzania kartami">
     <link rel="manifest" href="/manifest.json">
@@ -1132,8 +1132,8 @@
     if (window.matchMedia("(max-width: 768px)").matches) {
         if (window.orientation === 0 || window.orientation === 180) {
             // Portrait mode on mobile
-            fullscreenImg.style.maxWidth = 'calc(25% + 25px)';
-            fullscreenImg.style.maxHeight = 'calc(25% + 25px)';
+            fullscreenImg.style.maxWidth = '50%';
+            fullscreenImg.style.maxHeight = '50%';
             fullscreenImg.style.transform = 'translate(-50%, -50%) rotate(90deg)';
             
             fullscreenCardNumber.style.top = '60px';
@@ -1142,10 +1142,10 @@
             fullscreenCardNumber.style.margin = '0 auto';
             fullscreenCardNumber.style.transform = 'none';
         } else {
-            // Landscape mode on mobile - remains unchanged
+            // Landscape mode on mobile
             fullscreenImg.style.maxWidth = '50%';
             fullscreenImg.style.maxHeight = '50%';
-            fullscreenImg.style.transform = 'translate(-50%, -50%)';
+            fullscreenImg.style.transform = 'translate(-50%, -50%) rotate(0deg)';
             
             fullscreenCardNumber.style.top = '50px';
             fullscreenCardNumber.style.left = '0';
@@ -1154,17 +1154,10 @@
             fullscreenCardNumber.style.transform = 'none';
         }
     } else {
-        // Desktop - remains unchanged
+        // Desktop
         fullscreenImg.style.maxWidth = '50%';
         fullscreenImg.style.maxHeight = '50%';
-        fullscreenImg.style.transform = 'translate(-50%, -50%)';
-        
-        fullscreenCardNumber.style.top = '50px';
-        fullscreenCardNumber.style.left = '0';
-        fullscreenCardNumber.style.right = '0';
-        fullscreenCardNumber.style.margin = '0 auto';
-        fullscreenCardNumber.style.transform = 'none';
-    }
+        }
 }
         
         initDB().then(() => {
