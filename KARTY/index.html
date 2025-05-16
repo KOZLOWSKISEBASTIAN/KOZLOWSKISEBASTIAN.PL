@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KARTY1</title>
+    <title>KARTY</title>
     <meta name="theme-color" content="#000000">
     <meta name="description" content="Aplikacja do zarządzania kartami">
     <link rel="manifest" href="/manifest.json">
@@ -533,42 +533,43 @@
             transform: scale(0.98);
         }
 
-        @media (max-width: 768px) and (orientation: portrait) {
-            .fullscreen-image img {
-                max-width: 55%;
-                max-height: 55%;
-                transform: rotate(90deg);
-            }
-            
-            .card-number-fullscreen {
-                top: 80px;
-                left: 0;
-                right: 0;
-                margin: 0 auto;
-                font-size: 18px;
-            }
-
-            .karty li {
+    @media (max-width: 768px) and (orientation: portrait) {
+        .fullscreen-image img {
+            max-width: calc(25% + 25px); /* Increased by 25px */
+            max-height: calc(25% + 25px); /* Increased by 25px */
+            transform: translate(-50%, -50%) rotate(90deg);
+        }
+        
+        .card-number-fullscreen {
+            top: 60px; /* Moved higher, just below the "ZAPISZ" button */
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            transform: none;
+            font-size: 18px;
+        }
+		            .karty li {
                 flex: 1 1 calc(50% - 8px);
                 max-width: calc(50% - 8px);
             }
-        }
+    }
 
-        @media (max-width: 768px) and (orientation: landscape) {
-            .fullscreen-image-content {
-                max-width: 100vh;
-                max-height: 100vw;
-                transform: rotate(0);
-            }
-            
-            .card-number-fullscreen {
-                top: 50px;
-                left: 0;
-                right: 0;
-                margin: 0 auto;
-                transform: none !important;
-            }
+    @media (max-width: 768px) and (orientation: landscape) {
+        /* This remains exactly the same as before */
+        .fullscreen-image-content {
+            max-width: 100vh;
+            max-height: 100vw;
+            transform: rotate(0);
         }
+        
+        .card-number-fullscreen {
+            top: 50px;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            transform: none !important;
+        }
+    }
 
         @media (max-width: 480px) {
             .card-number-fullscreen {
@@ -1127,42 +1128,44 @@
             }
         }
         
-        function handleOrientationChange() {
-            if (window.matchMedia("(max-width: 768px)").matches) {
-                if (window.orientation === 0 || window.orientation === 180) {
-                    // Tryb portret na komórce
-                    fullscreenImg.style.maxWidth = '25%';
-                    fullscreenImg.style.maxHeight = '25%';
-                    fullscreenImg.style.transform = 'translate(-50%, -50%) rotate(90deg)';
-                    
-                    fullscreenCardNumber.style.top = '120px';
-                    fullscreenCardNumber.style.left = '50%';
-                    fullscreenCardNumber.style.transform = 'translateX(-50%)';
-                } else {
-                    // Tryb landscape na komórce
-                    fullscreenImg.style.maxWidth = '50%';
-                    fullscreenImg.style.maxHeight = '50%';
-                    fullscreenImg.style.transform = 'translate(-50%, -50%)';
-                    
-                    fullscreenCardNumber.style.top = '50px';
-                    fullscreenCardNumber.style.left = '0';
-                    fullscreenCardNumber.style.right = '0';
-                    fullscreenCardNumber.style.margin = '0 auto';
-                    fullscreenCardNumber.style.transform = 'none';
-                }
-            } else {
-                // Desktop - pozostawiamy bez zmian
-                fullscreenImg.style.maxWidth = '50%';
-                fullscreenImg.style.maxHeight = '50%';
-                fullscreenImg.style.transform = 'translate(-50%, -50%)';
-                
-                fullscreenCardNumber.style.top = '50px';
-                fullscreenCardNumber.style.left = '0';
-                fullscreenCardNumber.style.right = '0';
-                fullscreenCardNumber.style.margin = '0 auto';
-                fullscreenCardNumber.style.transform = 'none';
-            }
+   function handleOrientationChange() {
+    if (window.matchMedia("(max-width: 768px)").matches) {
+        if (window.orientation === 0 || window.orientation === 180) {
+            // Portrait mode on mobile
+            fullscreenImg.style.maxWidth = 'calc(25% + 25px)';
+            fullscreenImg.style.maxHeight = 'calc(25% + 25px)';
+            fullscreenImg.style.transform = 'translate(-50%, -50%) rotate(90deg)';
+            
+            fullscreenCardNumber.style.top = '60px';
+            fullscreenCardNumber.style.left = '0';
+            fullscreenCardNumber.style.right = '0';
+            fullscreenCardNumber.style.margin = '0 auto';
+            fullscreenCardNumber.style.transform = 'none';
+        } else {
+            // Landscape mode on mobile - remains unchanged
+            fullscreenImg.style.maxWidth = '50%';
+            fullscreenImg.style.maxHeight = '50%';
+            fullscreenImg.style.transform = 'translate(-50%, -50%)';
+            
+            fullscreenCardNumber.style.top = '50px';
+            fullscreenCardNumber.style.left = '0';
+            fullscreenCardNumber.style.right = '0';
+            fullscreenCardNumber.style.margin = '0 auto';
+            fullscreenCardNumber.style.transform = 'none';
         }
+    } else {
+        // Desktop - remains unchanged
+        fullscreenImg.style.maxWidth = '50%';
+        fullscreenImg.style.maxHeight = '50%';
+        fullscreenImg.style.transform = 'translate(-50%, -50%)';
+        
+        fullscreenCardNumber.style.top = '50px';
+        fullscreenCardNumber.style.left = '0';
+        fullscreenCardNumber.style.right = '0';
+        fullscreenCardNumber.style.margin = '0 auto';
+        fullscreenCardNumber.style.transform = 'none';
+    }
+}
         
         initDB().then(() => {
             const savedSortMethod = localStorage.getItem('sortMethod');
