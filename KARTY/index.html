@@ -123,22 +123,19 @@
         }
 
         .card-number-fullscreen {
-            position: fixed;
-            top: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            color: #000;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            padding: 0px 0px;
-            border-radius: 5px;
-            z-index: 11;
-            box-sizing: border-box;
-    max-width: 50%;
-    max-height: 50%;
-
-    
+    position: fixed;
+    top: 50px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    z-index: 11;
+    width: 100%;
+    display: block;
+    pointer-events: none;
         }
 
         .KSGROUP-PASEK-LINKU-OBRAZU a:hover {
@@ -566,9 +563,11 @@
             }
             
             .card-number-fullscreen {
-                top: 50px;
-                left: 30%;
-                transform: translateX(-50%);
+        top: 50px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        transform: none !important; /* Usuwamy wszelkie transformacje */
             }
 
             .karty li {
@@ -585,18 +584,21 @@
             }
             
             .card-number-fullscreen {
-                top: 50px;
-                left: 30%;
-                transform: translateX(-50%);
+        top: 50px;
+        left: 0;
+        right: 0;
+        margin: 0 auto;
+        transform: none !important;
             }
         }
 
-        @media (max-width: 480px) {
-            .karty li {
-                flex: 1 1 100%;
-                max-width: 100%;
-            }
-        }
+@media (max-width: 480px) {
+    .card-number-fullscreen {
+        top: 40px;
+        font-size: 16px;
+        padding: 0 10px;
+    }
+}
 
         @media (max-width: 768px) {
             .header, .container {
