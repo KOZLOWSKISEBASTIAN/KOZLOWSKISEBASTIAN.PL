@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>KARTY1</title>
+    <title>KARTY</title>
     <meta name="theme-color" content="#000000">
     <meta name="description" content="Aplikacja do zarządzania kartami">
     <link rel="manifest" href="/manifest.json">
@@ -579,26 +579,26 @@
             }
         }
 
-        @media (max-width: 768px) {
-            .header, .container {
-                width: calc(100% - 24px);
-                padding: 8px;
-            }
-            
-            .karty-container {
-                padding: 6px;
-            }
-            
-            .karty {
-                gap: 5px;
-            }
-            
-            .karty a {
-                height: 65px;
-                padding: 4px 4px;
-            }
-        }
-
+ @media (max-width: 768px) {
+    .karty li {
+        flex: 1 1 calc(50% - 5px); /* Zmienione z 8px na 5px dla lepszego dopasowania */
+        max-width: calc(50% - 5px); /* Zmienione z 8px na 5px */
+        min-width: 0; /* Usunięto minimalną szerokość 100px */
+    }
+    
+    .karty a {
+        padding: 6px 4px; /* Nieco większe paddingi */
+        height: 75px; /* Nieco większa wysokość */
+    }
+    
+    .karty {
+        gap: 8px; /* Mniejszy gap między kartami */
+    }
+    
+    .sortuj-btn, .przelacz-rzadkie {
+        padding: 10px 8px; /* Większe paddingi przycisków sortowania */
+    }
+}
         @supports (-webkit-touch-callout: none) {
             body {
                 height: 100%;
