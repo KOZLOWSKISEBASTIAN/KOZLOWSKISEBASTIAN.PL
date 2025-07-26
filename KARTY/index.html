@@ -856,7 +856,7 @@ margin-bottom: 1px;
 <li data-name="KSGROUP-KAMELEON" data-usage="0" class="LPC236806780645350"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/KAMELEON.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/KAMELEON.svg"><span class="nazwa"></span></a></li>
 <li data-name="KSGROUP-KAUFLAND-MACIEJ" data-usage="0" class="6004810101827811"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/KAUFLAND-MACIEJ.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/KAUFLAND.svg"><span class="nazwa">MACIEJ</span></a></li>
 <li data-name="KSGROUP-KAUFLAND-SEBASTIAN" data-usage="5" class="6004810437726783"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/KAUFLAND-SEBASTIAN.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/KAUFLAND.svg"><span class="nazwa">SEBASTIAN</span></a></li>
-<li data-name="KSGROUP-KARTADUZEJRODZINY" data-usage="0" class="000"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/KARTADUZEJRODZINY.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/KARTADUZEJRODZINY.svg"><span class="nazwa">KDR</span></a></li>
+<li data-name="KSGROUP-KDR" data-usage="0" class="30210830021002001"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/KDR.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/KDR.svg"><span class="nazwa">KDR</span></a></li>
 <li data-name="KSGROUP-KIKIMIKADO" data-usage="0" class="1726200123637"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/KIKIMIKADO.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/KIKIMIKADO.svg"><span class="nazwa"></span></a></li>
 <li data-name="KSGROUP-KOMPUTRONIK" data-usage="0" class="3048263599"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/KOMPUTRONIK.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/KOMPUTRONIK.svg"><span class="nazwa"></span></a></li>
 <li data-name="KSGROUP-LEOPARDUS" data-usage="0" class="9900393735675"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/LEOPARDUS.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/LEOPARDUS.svg"><span class="nazwa"></span></a></li>
@@ -879,7 +879,7 @@ margin-bottom: 1px;
 <li data-name="KSGROUP-OBI" data-usage="0" class="302020015776897944"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/OBI.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/OBI.svg"><span class="nazwa"></span></a></li>
 <li data-name="KSGROUP-OLIMP" data-usage="0" class="12099677"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/OLIMP.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/OLIMP.svg"><span class="nazwa"></span></a></li>
 <li data-name="KSGROUP-ORLENBIZNESTANK" data-usage="0" class="78971531038255514"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/ORLENBIZNESTANK.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/ORLEN.svg"><span class="nazwa">BIZNES TANK</span></a></li>
-<li data-name="KSGROUP-ORLENKDR" data-usage="0" class="000"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/ORLENKDR.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/ORLEN.svg"><span class="nazwa">KDR</span></a></li>
+<li data-name="KSGROUP-ORLENKDR" data-usage="0" class="30210830021002001"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/ORLENKDR.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/ORLEN.svg"><span class="nazwa">KDR</span></a></li>
 <li data-name="KSGROUP-ORLEN" data-usage="5" class="7897155052172957"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/ORLEN.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/ORLEN.svg"><span class="nazwa"></span></a></li>
 <li data-name="KSGROUP-PAYBACK" data-usage="0" class="000"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/PAYBACK.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/PAYBACK.svg"><span class="nazwa"></span></a></li>
 <li data-name="KSGROUP-PEPLOYALTYCLUB" data-usage="0" class="9901534253188"><a class="link-btn" data-image="https://kozlowskisebastian.pl/GRAFIKA/KARTY/PEPLOYALTYCLUB.png"><img src="https://kozlowskisebastian.pl/GRAFIKA/PEPLOYALTYCLUB.svg"><span class="nazwa"></span></a></li>
@@ -1325,10 +1325,16 @@ function handleOrientationChange() {
                 
                 if (this.classList.contains('KOZLOWSKISEBASTIAN_TROJKAT_JEDEN')) {
                     body.classList.remove('KOZLOWSKISEBASTIAN_JASNY');
-                    localStorage.setItem('motyw', 'ciemny');
+                    // Zapisujemy wybór motywu w localStorage
+                    localStorage.setItem('theme', 'dark');
+                    // Dodatkowo zapisujemy w cookies dla kompatybilności
+                    document.cookie = "theme=dark; path=/; max-age=31536000"; // 1 rok
                 } else if (this.classList.contains('KOZLOWSKISEBASTIAN_TROJKAT_DWA')) {
                     body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
-                    localStorage.setItem('motyw', 'jasny');
+                    // Zapisujemy wybór motywu w localStorage
+                    localStorage.setItem('theme', 'light');
+                    // Dodatkowo zapisujemy w cookies dla kompatybilności
+                    document.cookie = "theme=light; path=/; max-age=31536000"; // 1 rok
                 }
 
                 e.stopPropagation();
@@ -1350,19 +1356,47 @@ function handleOrientationChange() {
             }
         }
 
-        window.addEventListener('load', initHexagonPosition);
+        // Funkcja do sprawdzania preferencji motywu użytkownika
+        function checkThemePreference() {
+            // Najpierw sprawdzamy localStorage
+            const savedTheme = localStorage.getItem('theme');
+            
+            // Jeśli nie ma w localStorage, sprawdzamy cookies
+            if (!savedTheme) {
+                const cookies = document.cookie.split(';');
+                for (let cookie of cookies) {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name === 'theme') {
+                        if (value === 'light') {
+                            document.body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
+                        }
+                        return;
+                    }
+                }
+            }
+            
+            // Jeśli jest w localStorage, ustawiamy odpowiedni motyw
+            if (savedTheme === 'light') {
+                document.body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
+            }
+            
+            // Jeśli nie ma zapisanego motywu, sprawdzamy preferencje systemowe
+            if (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+                document.body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        window.addEventListener('load', function() {
+            initHexagonPosition();
+            checkThemePreference();
+        });
+        
         window.addEventListener('resize', initHexagonPosition);
 
         handleOrientationChange();
         window.addEventListener('resize', handleOrientationChange);
         window.addEventListener('orientationchange', handleOrientationChange);
-
-        if (localStorage.getItem('motyw') === 'jasny') {
-            document.body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
-        } else {
-            document.body.classList.remove('KOZLOWSKISEBASTIAN_JASNY');
-            localStorage.setItem('motyw', 'ciemny');
-        }
 
         wyszukajInput.addEventListener('input', function() {
             if (this.value.trim() !== '') {
