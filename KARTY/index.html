@@ -1325,16 +1325,10 @@ function handleOrientationChange() {
                 
                 if (this.classList.contains('KOZLOWSKISEBASTIAN_TROJKAT_JEDEN')) {
                     body.classList.remove('KOZLOWSKISEBASTIAN_JASNY');
-                    // Zapisujemy wybór motywu w localStorage
-                    localStorage.setItem('theme', 'dark');
-                    // Dodatkowo zapisujemy w cookies dla kompatybilności
-                    document.cookie = "theme=dark; path=/; max-age=31536000"; // 1 rok
+                    localStorage.setItem('motyw', 'ciemny');
                 } else if (this.classList.contains('KOZLOWSKISEBASTIAN_TROJKAT_DWA')) {
                     body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
-                    // Zapisujemy wybór motywu w localStorage
-                    localStorage.setItem('theme', 'light');
-                    // Dodatkowo zapisujemy w cookies dla kompatybilności
-                    document.cookie = "theme=light; path=/; max-age=31536000"; // 1 rok
+                    localStorage.setItem('motyw', 'jasny');
                 }
 
                 e.stopPropagation();
@@ -1356,47 +1350,19 @@ function handleOrientationChange() {
             }
         }
 
-        // Funkcja do sprawdzania preferencji motywu użytkownika
-        function checkThemePreference() {
-            // Najpierw sprawdzamy localStorage
-            const savedTheme = localStorage.getItem('theme');
-            
-            // Jeśli nie ma w localStorage, sprawdzamy cookies
-            if (!savedTheme) {
-                const cookies = document.cookie.split(';');
-                for (let cookie of cookies) {
-                    const [name, value] = cookie.trim().split('=');
-                    if (name === 'theme') {
-                        if (value === 'light') {
-                            document.body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
-                        }
-                        return;
-                    }
-                }
-            }
-            
-            // Jeśli jest w localStorage, ustawiamy odpowiedni motyw
-            if (savedTheme === 'light') {
-                document.body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
-            }
-            
-            // Jeśli nie ma zapisanego motywu, sprawdzamy preferencje systemowe
-            if (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-                document.body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
-                localStorage.setItem('theme', 'light');
-            }
-        }
-
-        window.addEventListener('load', function() {
-            initHexagonPosition();
-            checkThemePreference();
-        });
-        
+        window.addEventListener('load', initHexagonPosition);
         window.addEventListener('resize', initHexagonPosition);
 
         handleOrientationChange();
         window.addEventListener('resize', handleOrientationChange);
         window.addEventListener('orientationchange', handleOrientationChange);
+
+        if (localStorage.getItem('motyw') === 'jasny') {
+            document.body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
+        } else {
+            document.body.classList.remove('KOZLOWSKISEBASTIAN_JASNY');
+            localStorage.setItem('motyw', 'ciemny');
+        }
 
         wyszukajInput.addEventListener('input', function() {
             if (this.value.trim() !== '') {
