@@ -111,32 +111,31 @@
         }
 
         .KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
-            max-width: 800px;
+            max-width: 520px;
             width: 100%;
             background: #333333;
-            padding: 16px;
-            border-radius: 12px;
+            padding: 8px;
+            border-radius: 8px;
             margin: 0 auto;
             box-shadow: 0 0 0px rgba(0,0,0,0.5);
         }
 
         .KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ {
             display: flex;
-            gap: 16px;
-            margin-top: 8px;
-            margin-bottom: 8px;
+            gap: 10px;
+            margin-top: 4px;
+            margin-bottom: 4px;
         }
 
         .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
             background: #222222;
             color: #B0B0B0;
             border: none;
-            padding: 16px;
+            padding: 8px;
             flex: 1;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
             transition: all 0.15s;
-            font-size: 18px;
             -webkit-tap-highlight-color: transparent;
         }
 
@@ -172,20 +171,20 @@
     <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK">
         <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER">
             <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">KARTY</button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">NOTATNIK -BETA</button>
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" disabled>KARTY</button>
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">NOTATNIK</button>
             </div>
             <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
                 <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">KALKULATOR</button>
                 <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">LICZYDŁO</button>
             </div>
             <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" disabled>LATARKA WYŁĄCZONE</button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" disabled>POGODA WYŁĄCZONE</button>
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" disabled>MIARA</button>
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" disabled></button>
             </div>
             <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">GENERATOR</button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" disabled></button>
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" disabled>LATARKA</button>
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" disabled>POGODA</button>
             </div>
         </div>
     </div>
@@ -205,22 +204,20 @@
         const trojkaty = document.querySelectorAll('.KOZLOWSKISEBASTIAN_TROJKAT');
         const body = document.body;
 
-        // Funkcja zapisująca motyw w localStorage
-        function zapiszMotyw(motyw) {
-            localStorage.setItem('wybranyMotyw', motyw);
-        }
-
-        // Funkcja wczytująca zapisany motyw
-        function wczytajMotyw() {
-            const zapisanyMotyw = localStorage.getItem('wybranyMotyw');
-            if (zapisanyMotyw) {
-                body.classList.remove('KOZLOWSKISEBASTIAN_CIEMNY', 'KOZLOWSKISEBASTIAN_JASNY');
-                body.classList.add(zapisanyMotyw);
+        // Funkcja ustawiająca motyw na podstawie godziny
+        function ustawMotywNaPodstawieGodziny() {
+            const godzina = new Date().getHours();
+            body.classList.remove('KOZLOWSKISEBASTIAN_CIEMNY', 'KOZLOWSKISEBASTIAN_JASNY');
+            
+            if (godzina >= 6 && godzina < 21) {
+                body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
+            } else {
+                body.classList.add('KOZLOWSKISEBASTIAN_CIEMNY');
             }
         }
 
-        // Inicjalizacja motywu przy ładowaniu strony
-        wczytajMotyw();
+        // Ustaw motyw przy ładowaniu strony
+        ustawMotywNaPodstawieGodziny();
 
         // Zmienne do przeciągania
         let isDragging = false;
@@ -316,10 +313,8 @@
 
                 if (this.classList.contains('KOZLOWSKISEBASTIAN_TROJKAT_JEDEN')) {
                     body.classList.add('KOZLOWSKISEBASTIAN_CIEMNY');
-                    zapiszMotyw('KOZLOWSKISEBASTIAN_CIEMNY');
                 } else if (this.classList.contains('KOZLOWSKISEBASTIAN_TROJKAT_DWA')) {
                     body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
-                    zapiszMotyw('KOZLOWSKISEBASTIAN_JASNY');
                 }
 
                 e.stopPropagation();
