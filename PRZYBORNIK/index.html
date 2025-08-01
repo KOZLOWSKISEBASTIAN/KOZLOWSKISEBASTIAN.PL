@@ -4,16 +4,171 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PRZYBORNIK</title>
-    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
+    <style>
+        /* GŁÓWNE STYLE */
+        .KOZLOWSKISEBASTIAN {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: #000000;
+            transition: background-color 0.3s;
+        }
+
+        .KOZLOWSKISEBASTIAN_CIEMNY {
+            background: #000000;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY {
+            background: #FFFFFF;
+        }
+
+        /* STYLE HEXAGONU */
+        .KOZLOWSKISEBASTIAN_HEXAGON_KONTENER {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            cursor: default;
+            z-index: 1000;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #F5F5F5;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            transition: all 0.3s ease;
+            transform-origin: center;
+            cursor: pointer;
+        }
+
+        .KOZLOWSKISEBASTIAN_CIEMNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
+            background-color: #F5F5F5;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT {
+            background-color: #333333;
+        }
+
+        /* ANIMACJA OBROTU */
+        .OBRACAJ {
+            animation: obrot 0.2s ease-out;
+        }
+
+        @keyframes obrot {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* STYLE PRZEŁĄCZNIKA */
+        .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .ROZSZERZONY + .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .KOZLOWSKISEBASTIAN_TROJKAT {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .KOZLOWSKISEBASTIAN_TROJKAT_JEDEN {
+            clip-path: polygon(100% 0, 100% 100%, 0 100%);
+            background-color: #333333;
+        }
+
+        .KOZLOWSKISEBASTIAN_TROJKAT_DWA {
+            clip-path: polygon(0 0, 100% 0, 0 100%);
+            background-color: #f5f5f5;
+        }
+
+        /* STYLE PRZYBORNIKA */
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK {
+            font-family: sans-serif;
+            background: inherit;
+            color: #FF00FF;
+            margin: 0;
+            padding: 8px;
+            display: flex;
+            justify-content: center;
+            box-sizing: border-box;
+        }
+
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
+            max-width: 800px;
+            width: 100%;
+            background: #333333;
+            padding: 16px;
+            border-radius: 12px;
+            margin: 0 auto;
+            box-shadow: 0 0 0px rgba(0,0,0,0.5);
+        }
+
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+            margin-bottom: 8px;
+        }
+
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
+            background: #222222;
+            color: #B0B0B0;
+            border: none;
+            padding: 16px;
+            flex: 1;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.15s;
+            font-size: 18px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
+            color: #FF00FF;
+            background: #333333;
+            transform: translateY(-2px);
+        }
+
+        /* STYLE JASNEGO MOTYWU */
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK {
+            color: #333333;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
+            background: #F5F5F5 !important;
+            box-shadow: 0 0px 0px rgba(0,0,0,0.1);
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
+            background: #EEEEEE;
+            color: #555555;
+        }
+
+        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
+            color: #333333;
+            background: #E0E0E0;
+            transform: translateY(-2px);
+        }
+    </style>
 </head>
 <body class="KOZLOWSKISEBASTIAN">
-    <div class="KOZLOWSKISEBASTIAN_HEXAGON_KONTENER">
-        <div class="KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT"></div>
-        <div class="KOZLOWSKISEBASTIAN_TROJKAT_KONTENER">
-            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_JEDEN"></div>
-            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_DWA"></div>
-        </div>
-    </div>
     <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK">
         <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER">
             <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
@@ -25,8 +180,8 @@
                 <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">LICZYDŁO</button>
             </div>
             <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">POGODA -BETA</button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">LATARKA -BETA</button>
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" disabled>LATARKA WYŁĄCZONE</button>
+                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" disabled>POGODA WYŁĄCZONE</button>
             </div>
             <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
                 <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">GENERATOR</button>
@@ -34,6 +189,173 @@
             </div>
         </div>
     </div>
-    <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
+
+    <div class="KOZLOWSKISEBASTIAN_HEXAGON_KONTENER">
+        <div class="KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT"></div>
+        <div class="KOZLOWSKISEBASTIAN_TROJKAT_KONTENER">
+            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_JEDEN"></div>
+            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_DWA"></div>
+        </div>
+    </div>
+
+    <script>
+        const kontener = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KONTENER');
+        const ksztalt = document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT');
+        const trojkatKontener = document.querySelector('.KOZLOWSKISEBASTIAN_TROJKAT_KONTENER');
+        const trojkaty = document.querySelectorAll('.KOZLOWSKISEBASTIAN_TROJKAT');
+        const body = document.body;
+
+        // Funkcja zapisująca motyw w localStorage
+        function zapiszMotyw(motyw) {
+            localStorage.setItem('wybranyMotyw', motyw);
+        }
+
+        // Funkcja wczytująca zapisany motyw
+        function wczytajMotyw() {
+            const zapisanyMotyw = localStorage.getItem('wybranyMotyw');
+            if (zapisanyMotyw) {
+                body.classList.remove('KOZLOWSKISEBASTIAN_CIEMNY', 'KOZLOWSKISEBASTIAN_JASNY');
+                body.classList.add(zapisanyMotyw);
+            }
+        }
+
+        // Inicjalizacja motywu przy ładowaniu strony
+        wczytajMotyw();
+
+        // Zmienne do przeciągania
+        let isDragging = false;
+        let startX, startY, initialLeft, initialTop;
+        let clickStartTime = 0;
+        const CLICK_MAX_DURATION = 150;
+        const CLICK_MAX_DISTANCE = 8;
+
+        // Rozpoczęcie interakcji
+        ksztalt.addEventListener('mousedown', startInteraction);
+        ksztalt.addEventListener('touchstart', startInteraction);
+
+        function startInteraction(e) {
+            clickStartTime = Date.now();
+            isDragging = false;
+            
+            const clientX = e.type === 'mousedown' ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type === 'mousedown' ? e.clientY : e.touches[0].clientY;
+            
+            startX = clientX;
+            startY = clientY;
+            
+            const rect = kontener.getBoundingClientRect();
+            initialLeft = rect.left;
+            initialTop = rect.top;
+            
+            document.addEventListener('mousemove', handleMove);
+            document.addEventListener('touchmove', handleMove);
+            document.addEventListener('mouseup', endInteraction);
+            document.addEventListener('touchend', endInteraction);
+        }
+
+        // Obsługa ruchu
+        function handleMove(e) {
+            const clientX = e.type === 'mousemove' ? e.clientX : e.touches[0].clientX;
+            const clientY = e.type === 'mousemove' ? e.clientY : e.touches[0].clientY;
+            
+            const dx = clientX - startX;
+            const dy = clientY - startY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+            
+            if (!isDragging && distance > CLICK_MAX_DISTANCE) {
+                isDragging = true;
+            }
+            
+            if (isDragging) {
+                const newX = initialLeft + dx;
+                const newY = initialTop + dy;
+                
+                const maxX = window.innerWidth - kontener.offsetWidth;
+                const maxY = window.innerHeight - kontener.offsetHeight;
+                
+                kontener.style.left = `${Math.min(Math.max(0, newX), maxX)}px`;
+                kontener.style.top = `${Math.min(Math.max(0, newY), maxY)}px`;
+            }
+        }
+
+        // Zakończenie interakcji
+        function endInteraction(e) {
+            const clickDuration = Date.now() - clickStartTime;
+            const isClick = !isDragging && clickDuration < CLICK_MAX_DURATION;
+            
+            document.removeEventListener('mousemove', handleMove);
+            document.removeEventListener('touchmove', handleMove);
+            document.removeEventListener('mouseup', endInteraction);
+            document.removeEventListener('touchend', endInteraction);
+            
+            if (isClick) {
+                handleClick();
+            }
+            
+            isDragging = false;
+        }
+
+        // Obsługa kliknięcia
+        function handleClick() {
+            if (!ksztalt.classList.contains('ROZSZERZONY')) {
+                ksztalt.classList.add('OBRACAJ');
+                
+                setTimeout(() => {
+                    ksztalt.classList.remove('OBRACAJ');
+                    ksztalt.classList.add('ROZSZERZONY');
+                }, 300);
+            }
+        }
+
+        // Obsługa wyboru motywu
+        trojkaty.forEach(trojkat => {
+            trojkat.addEventListener('click', function(e) {
+                ksztalt.classList.remove('ROZSZERZONY');
+                
+                body.classList.remove('KOZLOWSKISEBASTIAN_CIEMNY', 'KOZLOWSKISEBASTIAN_JASNY');
+
+                if (this.classList.contains('KOZLOWSKISEBASTIAN_TROJKAT_JEDEN')) {
+                    body.classList.add('KOZLOWSKISEBASTIAN_CIEMNY');
+                    zapiszMotyw('KOZLOWSKISEBASTIAN_CIEMNY');
+                } else if (this.classList.contains('KOZLOWSKISEBASTIAN_TROJKAT_DWA')) {
+                    body.classList.add('KOZLOWSKISEBASTIAN_JASNY');
+                    zapiszMotyw('KOZLOWSKISEBASTIAN_JASNY');
+                }
+
+                e.stopPropagation();
+            });
+        });
+
+        // Zamknięcie menu po kliknięciu gdzie indziej
+        document.addEventListener('click', function(e) {
+            if (ksztalt.classList.contains('ROZSZERZONY') && !kontener.contains(e.target)) {
+                ksztalt.classList.remove('ROZSZERZONY');
+            }
+        });
+
+        // Obsługa przycisków przybornika
+        document.querySelectorAll('.KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                const polish = {'Ą':'A','Ć':'C','Ę':'E','Ł':'L','Ń':'N','Ó':'O','Ś':'S','Ź':'Z','Ż':'Z','ą':'a','ć':'c','ę':'e','ł':'l','ń':'n','ó':'o','ś':'s','ź':'z','ż':'z'};
+                const path = btn.innerText.toUpperCase().replace(/[ĄĆĘŁŃÓŚŹŻąćęłńóśźż]/g, m => polish[m]).replace(/ /g, '-');
+                if (btn.innerText.trim() !== '') {
+                    location.href = `https://kozlowskisebastian.pl/${path}/`;
+                }
+            });
+        });
+
+        // Inicjalizacja pozycji hexagonu na mobilnych
+        function initHexagonPosition() {
+            if (window.innerWidth <= 768) {
+                kontener.style.left = '20px';
+                kontener.style.top = 'auto';
+                kontener.style.bottom = '20px';
+                kontener.style.right = 'auto';
+            }
+        }
+
+        window.addEventListener('load', initHexagonPosition);
+        window.addEventListener('resize', initHexagonPosition);
+    </script>
 </body>
 </html>
