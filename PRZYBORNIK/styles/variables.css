@@ -1,0 +1,14 @@
+:root {
+    --bg-dark: #000000;
+    --bg-light: #FFFFFF;
+    --hexagon-bg-dark: #F5F5F5;
+    --hexagon-bg-light: #333333;
+    --toolbox-bg-dark: #333333;
+    --toolbox-bg-light: #F5F5F5;
+    --button-bg-dark: #222222;
+    --button-bg-light: #EEEEEE;
+    --text-dark: #FF00FF;
+    --text-light: #333333;
+    --button-text-dark: #B0B0B0;
+    --button-text-light: #000000;
+}

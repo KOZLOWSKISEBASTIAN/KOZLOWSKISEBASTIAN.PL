@@ -1,0 +1,67 @@
+.KOZLOWSKISEBASTIAN_PRZYBORNIK {
+    font-family: sans-serif;
+    background: inherit;
+    color: var(--text-dark);
+    margin: 0;
+    padding: 8px;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
+    max-width: 520px;
+    width: 100%;
+    background: var(--toolbox-bg-dark);
+    padding: 8px;
+    border-radius: 8px;
+    margin: 0 auto;
+    box-shadow: 0 0 0px rgba(0,0,0,0.5);
+}
+
+.KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ {
+    display: flex;
+    gap: 10px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
+
+.KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
+    background: var(--button-bg-dark);
+    color: var(--button-text-dark);
+    border: none;
+    padding: 8px;
+    flex: 1;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
+    color: var(--text-dark);
+    background: var(--toolbox-bg-dark);
+    transform: translateY(-2px);
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK {
+    color: var(--text-light);
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER {
+    background: var(--toolbox-bg-light) !important;
+    box-shadow: 0 0px 0px rgba(0,0,0,0.1);
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK {
+    background: var(--button-bg-light);
+    color: var(--button-text-light);
+    -webkit-text-stroke: 0.2px;
+    text-stroke: 0.2px;
+}
+
+.KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
+    color: var(--text-light);
+    background: #E0E0E0;
+    transform: translateY(-2px);
+}
