@@ -1,6 +1,6 @@
-import { ustawMotywNaPodstawieGodziny, initThemeSwitcher } from 'https://kozlowskisebastian.pl/JS/KOLORYSTYKA.js';
+import { ustawMotywNaPodstawieGodziny, initThemeSwitcher } from 'https://kozlowskisebastian.pl/JS/MOTYW.js';
 import initHexagon from 'https://kozlowskisebastian.pl/JS/HEXAGON.js';
-import initButtons from 'https://kozlowskisebastian.pl/JS/PRZYCISKI.js';
+import initButtons from 'https://kozlowskisebastian.pl/JS/PRZYCISK.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     ustawMotywNaPodstawieGodziny();
@@ -9,3 +9,4 @@ document.addEventListener('DOMContentLoaded', () => {
     initButtons();
 
 });
+
