@@ -47,9 +47,9 @@ body {
   color: var(--TEKST-PRZYCISK);
   text-decoration: none;
 
-  font-family: 'Impact', 'Arial Black', sans-serif;
-  font-weight: 900;
-  font-size: clamp(20px, 3vw, 32px);
+  font-family: 'Poppins', 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: clamp(28px, 4vw, 48px);
   letter-spacing: 1px;
 
   -webkit-tap-highlight-color: transparent;
