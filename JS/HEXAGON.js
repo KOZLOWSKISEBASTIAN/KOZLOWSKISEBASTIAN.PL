@@ -9,8 +9,10 @@
   if (ZAPISANY === 'JASNY') ROOT.setAttribute('data-WYBOR_MOTYW','JASNY');
   if (ZAPISANY === 'CIEMNY') ROOT.setAttribute('data-WYBOR_MOTYW','CIEMNY');
 
-  const PIXEL_PROG = 6;
-  let dragging = false, moved = false;
+  const PIXEL_PROG_MOUSE = 6;
+  const PIXEL_PROG_TOUCH = 16;
+
+  let dragging = false, moved = false, touchDrag = false;
   let offsetX = 0, offsetY = 0, w = 0, h = 0;
 
   function clampHex(x, y){
@@ -19,7 +21,8 @@
     HEX.style.left = Math.min(Math.max(0, x), maxX) + 'px';
     HEX.style.top  = Math.min(Math.max(0, y), maxY) + 'px';
   }
-  function startDrag(clientX, clientY){
+
+  function startDrag(clientX, clientY, isTouch){
     const rect = HEX.getBoundingClientRect();
     w = rect.width; h = rect.height;
     HEX.style.right = 'auto'; HEX.style.bottom = 'auto';
@@ -28,47 +31,29 @@
     const curL = parseFloat(HEX.style.left) || rect.left;
     const curT = parseFloat(HEX.style.top)  || rect.top;
     offsetX = clientX - curL; offsetY = clientY - curT;
-    dragging = true; moved = false;
+    dragging = true; moved = false; touchDrag = !!isTouch;
     HEX.classList.add('KOZLOWSKISEBASTIAN_PRZECIAGANIE');
   }
+
   function moveDrag(clientX, clientY){
     if (!dragging) return;
     const targetLeft = clientX - offsetX;
     const targetTop  = clientY - offsetY;
     const curLeft = parseFloat(HEX.style.left) || 0;
     const curTop  = parseFloat(HEX.style.top)  || 0;
-    if (!moved && (Math.abs(targetLeft-curLeft) > PIXEL_PROG || Math.abs(targetTop-curTop) > PIXEL_PROG)) moved = true;
+
+    const prog = touchDrag ? PIXEL_PROG_TOUCH : PIXEL_PROG_MOUSE;
+    if (!moved && (Math.abs(targetLeft-curLeft) > prog || Math.abs(targetTop-curTop) > prog)) moved = true;
+
     clampHex(targetLeft, targetTop);
   }
+
   function endDrag(){
     if (!dragging) return;
     dragging = false;
     HEX.classList.remove('KOZLOWSKISEBASTIAN_PRZECIAGANIE');
     if (!moved) toggleOverlay();
   }
-
-  HEX.addEventListener('mousedown', (e) => {
-    if (e.button !== 0) return;
-    e.preventDefault();
-    startDrag(e.clientX, e.clientY);
-    const onMove = (ev) => { ev.preventDefault(); moveDrag(ev.clientX, ev.clientY); };
-    const onUp = (ev) => { ev.preventDefault(); endDrag(); cleanup(); };
-    function cleanup(){ window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); }
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
-  });
-  HEX.addEventListener('touchstart', (e) => {
-    if (!e.touches || e.touches.length === 0) return;
-    const t = e.touches[0];
-    startDrag(t.clientX, t.clientY);
-  }, { passive: true });
-  HEX.addEventListener('touchmove', (e) => {
-    if (!e.touches || e.touches.length === 0) return;
-    const t = e.touches[0];
-    if (dragging) e.preventDefault();
-    moveDrag(t.clientX, t.clientY);
-  }, { passive: false });
-  HEX.addEventListener('touchend', () => { endDrag(); });
 
   function toggleOverlay(){
     const KSZTALT = HEX.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON');
@@ -78,6 +63,32 @@
     }
     WYLACZNIK.classList.toggle('KOZLOWSKISEBASTIAN_AKTYWNY');
   }
+
+  HEX.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    startDrag(e.clientX, e.clientY, false);
+    const onMove = (ev) => { ev.preventDefault(); moveDrag(ev.clientX, ev.clientY); };
+    const onUp = (ev) => { ev.preventDefault(); endDrag(); cleanup(); };
+    function cleanup(){ window.removeEventListener('mousemove', onMove); window.removeEventListener('mouseup', onUp); }
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  });
+
+  HEX.addEventListener('touchstart', (e) => {
+    if (!e.touches || e.touches.length === 0) return;
+    const t = e.touches[0];
+    startDrag(t.clientX, t.clientY, true);
+  }, { passive: true });
+
+  HEX.addEventListener('touchmove', (e) => {
+    if (!e.touches || e.touches.length === 0) return;
+    const t = e.touches[0];
+    if (dragging) e.preventDefault();
+    moveDrag(t.clientX, t.clientY);
+  }, { passive: false });
+
+  HEX.addEventListener('touchend', () => { endDrag(); }, { passive: true });
 
   TROJKATY.addEventListener('click', (e) => {
     const target = e.target && e.target.closest
