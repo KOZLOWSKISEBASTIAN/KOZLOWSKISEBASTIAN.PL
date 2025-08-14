@@ -5,7 +5,7 @@
     ["KARTY", "KARTY"],
     ["NOTATNIK", "NOTATNIK"],
     ["KALKULATOR", "KALKULATOR"],
-    ["LICZYDŁO", "LICZYDŁO"],
+    ["LICZYDŁO", "LICZYDLO"],
     ["LATARKA WYŁĄCZONE", null],
     ["POGODA WYŁĄCZONE", null],
     ["GENERATOR", "GENERATOR"],
