@@ -39,19 +39,23 @@ body {
   text-align: center;
   width: 100%;
   min-height: 64px;
-  padding: 18px 20px;
-  line-height: 1.2;
+  padding: 0;
+  line-height: 1;
   border-radius: 10px;
   border: 1px solid var(--TLO-PANEL);
   background: var(--TLO-PRZYCISK);
   color: var(--TEKST-PRZYCISK);
   text-decoration: none;
-  font-weight: 400;
-  font-size: clamp(18px, 2.2vw, 22px);
-  letter-spacing: .3px;
+
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-weight: 900;
+  font-size: clamp(20px, 3vw, 32px);
+  letter-spacing: 1px;
+
   -webkit-tap-highlight-color: transparent;
   transition: color .12s ease, transform .06s ease, background-color .12s ease;
 }
+
 .KOZLOWSKISEBASTIAN_PRZYCISK:hover {
   color: var(--AKCENT-TEKST);
   background: var(--TLO-PANEL);
