@@ -35,16 +35,13 @@
   }
 
   function bindMobile() {
-    // Zapamiętaj dotknięcie, aby pominąć klik wytworzony przez przeglądarkę
     let lastTouchAt = 0;
 
-    // Najpewniejsze: touchstart na dokumencie (iOS, Android)
     document.addEventListener('touchstart', function () {
       lastTouchAt = Date.now();
       toggleEffect();
     }, { passive: true });
 
-    // Pointer Events jeżeli są – też działają (Android/nowe iOS)
     document.addEventListener('pointerdown', function (e) {
       if (e.pointerType === 'touch' || e.pointerType === 'pen') {
         lastTouchAt = Date.now();
@@ -52,7 +49,6 @@
       }
     }, { passive: true });
 
-    // Klik ignorujemy, jeżeli był dotyk przed chwilą (ghost click)
     document.addEventListener('click', function () {
       if (Date.now() - lastTouchAt > 500) {
         toggleEffect();
@@ -69,7 +65,6 @@
       bindMobile();
     }
 
-    // Drobne UX
     try {
       document.body.style.webkitTapHighlightColor = 'transparent';
       if (typeof document.body.style.touchAction !== 'undefined') {
