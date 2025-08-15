@@ -46,12 +46,10 @@ body {
   background: var(--TLO-PRZYCISK);
   color: var(--TEKST-PRZYCISK);
   text-decoration: none;
-
   font-family: 'Poppins', 'Montserrat', sans-serif;
   font-weight: 400;
   font-size: calc(clamp(28px, 4vw, 48px) * 1.25);
   letter-spacing: 1px;
-
   -webkit-tap-highlight-color: transparent;
   transition: color .12s ease, transform .06s ease, background-color .12s ease;
 }
@@ -193,7 +191,6 @@ body {
 .MODAL_NAGLOWEK { font: 600 18px/1.2 'Poppins','Montserrat',system-ui,sans-serif; margin-bottom: 10px; }
 .MODAL_AKCJE { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
 
-/* Montserrat font + reset spacing for buttons */
 .PRZYCISK,
 .PRZYCISK_PRZYBORNIK_POWROT,
 .PRZYCISK_KLAWISZ,
@@ -207,16 +204,13 @@ body {
     letter-spacing: 0 !important;
     overflow: hidden !important;
     font-size: calc(100% * 1.25) !important;
-
 }
 
-/* === Montserrat + zero spacing + height-tied font (PRZYBORNIK) === */
 .PRZYCISK,
 .PRZYCISK_PRZYBORNIK_POWROT,
 .PRZYCISK_KLAWISZ,
 .PRZYCISK--KLAWISZ {
   font-family: 'Montserrat', sans-serif !important;
-  /* zero wszelkich przeszkód */
   margin: 0 !important;
   padding: 0 !important;
   gap: 0 !important;
@@ -226,18 +220,14 @@ body {
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: clip !important;
-  /* pozwól używać cqb/cqi względem własnego boxa */
   container-type: size;
-  /* wielkość czcionki = 95% wysokości przycisku */
   font-size: 16cqb !important;
 }
 
-/* Split button styling */
 .PRZYBORNIK_PRZYCISK_POLOWA{display:grid;width:100%;grid-template-columns:1fr 1fr;gap:7px;}
 .PRZYBORNIK_PRZYCISK_POLOWA .half{display:flex;align-items:center;justify-content:center;margin:0;padding:0;}
 .PRZYBORNIK_PRZYCISK_POLOWA .half:last-child{}
 
-/* Wyśrodkowanie tekstu i brak zbędnych odstępów */
 button, .PRZYCISK, .PRZYCISK_PRZYBORNIK_POWROT, .PRZYCISK_KLAWISZ, .PRZYCISK--KLAWISZ {
   display: flex !important;
   align-items: center !important;
@@ -248,10 +238,8 @@ button, .PRZYCISK, .PRZYCISK_PRZYBORNIK_POWROT, .PRZYCISK_KLAWISZ, .PRZYCISK--KL
   line-height: 1 !important;
 }
 
-/* ====== AUTOFIT TEKSTU W PRZYCISKACH ====== */
 .PRZYCISK{ position: relative; overflow: hidden; }
 
-/* Element skalowany (tworzony przez JS jeśli nie istnieje) */
 .PRZYCISK .LABEL_SKALUJ{
   display: inline-block;
   white-space: nowrap;
@@ -259,12 +247,8 @@ button, .PRZYCISK, .PRZYCISK_PRZYBORNIK_POWROT, .PRZYCISK_KLAWISZ, .PRZYCISK--KL
   will-change: transform;
 }
 
-/* Opcjonalne zwężenie poziome dla długich napisów */
 .PRZYCISK .WASKI_TEKST{
   display: inline-block;
   transform: scaleX(0.86);
   transform-origin: center center;
 }
-
-.LABEL_SKALUJ{ display:inline-block; white-space:nowrap; transform-origin:center; will-change:transform; }
-.WASKI_TEKST{ display:inline-block; transform:scaleX(0.86); transform-origin:center; }
