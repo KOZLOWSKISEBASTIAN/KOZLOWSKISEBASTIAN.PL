@@ -45,12 +45,15 @@ body.hover-active {
 #KSGROUP-LOGO-SVG {
   max-width: 90%;
   max-height: 90%;
-  height: auto;
-  width: auto;
   filter: var(--logo-filter);
   transition: filter 0.3s ease;
   touch-action: manipulation;
   cursor: pointer;
+  display: block;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  margin: 0 auto;
 }
 
 body.hover-active #KSGROUP-LOGO-SVG {
@@ -69,16 +72,3 @@ body.hover-active #KSGROUP-LOGO-SVG {
     max-height: 100%;
   }
 }
-
-
-/* === IMG FIT PATCH (non-destructive) r5 === */
-#KSGROUP-LOGO-SVG {
-  display: block;
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 100vh;
-  object-fit: contain;
-  margin: 0 auto;
-}
-/* === END IMG FIT PATCH r5 === */
