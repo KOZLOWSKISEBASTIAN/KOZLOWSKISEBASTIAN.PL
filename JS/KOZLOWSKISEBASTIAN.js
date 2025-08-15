@@ -178,3 +178,49 @@
   } catch (e) {}
 })();
 // === END PATCH r5 ===
+
+
+/* === TOUCH-ONLY PATCH r6 (minimal, non-destructive) ===
+   NIC nie zmienia poza obsługą tap na mobile.
+   - Bez preventDefault, nie psuje scrolla.
+   - Tylko dodaje nasłuchy i przełącza efekt jak hover.
+   - Dodatkowo wysyła syntetyczne mouseover/mouseout dla istniejących handlerów.
+*/
+(function(){
+  'use strict';
+  try {
+    if (window.__KSG_TOUCH_PATCH_R6__) return;
+    window.__KSG_TOUCH_PATCH_R6__ = true;
+
+    var body = document.body;
+    var lastTs = 0;
+    var active = false;
+
+    function apply(state){
+      active = state;
+      try { body.classList.toggle('hover-active', active); } catch(_){}
+      var type = active ? 'mouseover' : 'mouseout';
+      try {
+        var ev = new Event(type, { bubbles: true });
+        body.dispatchEvent(ev);
+      } catch(_) {
+        var ev2 = document.createEvent('Event');
+        ev2.initEvent(type, true, false);
+        body.dispatchEvent(ev2);
+      }
+    }
+    function toggle(){ apply(!active); }
+    function onTouchLike(){ lastTs = Date.now(); toggle(); }
+
+    document.addEventListener('pointerdown', function(e){
+      if (e.pointerType === 'touch' || e.pointerType === 'pen') onTouchLike();
+    }, { passive: true });
+
+    document.addEventListener('touchstart', onTouchLike, { passive: true });
+
+    document.addEventListener('click', function(){
+      if (Date.now() - lastTs > 600) toggle();
+    }, { passive: true });
+  } catch(_){}
+})();
+// === END TOUCH-ONLY PATCH r6 ===
