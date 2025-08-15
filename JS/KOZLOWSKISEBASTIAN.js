@@ -1,15 +1,13 @@
 (function () {
   const body = document.body;
   const image = document.getElementById('KSGROUP-LOGO-SVG');
-
-  function isMobileDevice() {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-    return /android|ipad|iphone|ipod|blackberry|bb10|windows phone|mobile/i.test(userAgent);
-  }
+  const canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
   function setImage() {
     const imageUrl = "https://kozlowskisebastian.pl/GRAFIKA/KSGROUP-SVG.svg";
-    if (image) image.setAttribute("src", imageUrl);
+    if (image && image.getAttribute('src') !== imageUrl) {
+      image.setAttribute("src", imageUrl);
+    }
   }
 
   function ensureTheme() {
@@ -32,17 +30,23 @@
     body.classList.add('hover-active');
   }
 
+  function toggleEffect() {
+    if (body.classList.contains('hover-active')) resetEffect();
+    else activateEffect();
+  }
+
   function bindEvents() {
     if (!image) return;
-    image.addEventListener('touchstart', function () {
-      if (body.classList.contains('hover-active')) {
-        resetEffect();
-      } else {
-        activateEffect();
-      }
-    });
-    body.addEventListener('mouseover', activateEffect);
-    body.addEventListener('mouseout', resetEffect);
+
+    image.addEventListener('touchstart', function (e) {
+      e.preventDefault();
+      toggleEffect();
+    }, { passive: false });
+
+    if (canHover) {
+      body.addEventListener('mouseover', activateEffect);
+      body.addEventListener('mouseout', resetEffect);
+    }
   }
 
   ensureTheme();
