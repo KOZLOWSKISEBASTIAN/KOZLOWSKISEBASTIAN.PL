@@ -1,113 +1,92 @@
 (function () {
+  'use strict';
+
   const body = document.body;
-  const image = document.getElementById('KSGROUP-LOGO-SVG');
-  const canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const root = document.documentElement;
+  const logo = document.getElementById('KSGROUP-LOGO-SVG');
+
+  const canHover = !!(window.matchMedia &&
+    window.matchMedia('(hover: hover) and (pointer: fine)').matches);
+
+  const isTouch = !!((window.matchMedia &&
+    window.matchMedia('(hover: none), (pointer: coarse)').matches) ||
+    ('ontouchstart' in window));
 
   function setImage() {
-    const imageUrl = "https://kozlowskisebastian.pl/GRAFIKA/KSGROUP-SVG.svg";
-    if (image && image.getAttribute('src') !== imageUrl) {
-      image.setAttribute("src", imageUrl);
+    const imageUrl = 'https://kozlowskisebastian.pl/GRAFIKA/KSGROUP-SVG.svg';
+    if (logo && logo.getAttribute('src') !== imageUrl) {
+      logo.setAttribute('src', imageUrl);
     }
   }
 
   function ensureTheme() {
-    const root = document.documentElement;
     const explicit = root.getAttribute('data-theme') || body.getAttribute('data-theme');
     if (explicit) {
       root.setAttribute('data-theme', explicit);
       return;
     }
-    const host = (location.hostname || "").toLowerCase();
-    const theme = host.includes("kozlowskisebastian") ? "neon" : "white";
+    const host = (location.hostname || '').toLowerCase();
+    const theme = host.includes('kozlowskisebastian') ? 'neon' : 'white';
     root.setAttribute('data-theme', theme);
   }
 
-  function resetEffect() {
-    body.classList.remove('hover-active');
+  function activateEffect() { body.classList.add('hover-active'); }
+  function resetEffect() { body.classList.remove('hover-active'); }
+  function toggleEffect() { body.classList.toggle('hover-active'); }
+
+  function bindDesktop() {
+    body.addEventListener('mouseover', activateEffect);
+    body.addEventListener('mouseout', resetEffect);
   }
 
-  function activateEffect() {
-    body.classList.add('hover-active');
-  }
+  function bindMobile() {
+    let lastTouchTime = 0;
 
-  function toggleEffect() {
-    if (body.classList.contains('hover-active')) resetEffect();
-    else activateEffect();
-  }
+    body.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'touch' || e.pointerType === 'pen') {
+        lastTouchTime = Date.now();
+        e.preventDefault();
+        toggleEffect();
+      }
+    }, { passive: false });
 
-  function bindEvents() {
-    if (!image) return;
-
-    image.addEventListener('touchstart', function (e) {
+    body.addEventListener('touchstart', function (e) {
+      lastTouchTime = Date.now();
       e.preventDefault();
       toggleEffect();
     }, { passive: false });
 
+    body.addEventListener('click', function () {
+      if (Date.now() - lastTouchTime > 500) {
+        toggleEffect();
+      }
+    });
+  }
+
+  function init() {
+    ensureTheme();
+    setImage();
+
     if (canHover) {
-      body.addEventListener('mouseover', activateEffect);
-      body.addEventListener('mouseout', resetEffect);
+      bindDesktop();
+    } else if (isTouch) {
+      bindMobile();
+    } else {
+      bindDesktop();
     }
+
+    try {
+      root.style.setProperty('--tap-hl', 'transparent');
+      document.body.style.webkitTapHighlightColor = 'transparent';
+      if (typeof document.body.style.touchAction !== 'undefined') {
+        document.body.style.touchAction = 'manipulation';
+      }
+    } catch (_) {}
   }
 
-  ensureTheme();
-  setImage();
-  bindEvents();
-})();
-(function () {
-  const body = document.body;
-  const image = document.getElementById('KSGROUP-LOGO-SVG');
-  const canHover = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-
-  function setImage() {
-    const imageUrl = "https://kozlowskisebastian.pl/GRAFIKA/KSGROUP-SVG.svg";
-    if (image && image.getAttribute('src') !== imageUrl) {
-      image.setAttribute("src", imageUrl);
-    }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
   }
-
-  function ensureTheme() {
-    const root = document.documentElement;
-    const explicit = root.getAttribute('data-theme') || body.getAttribute('data-theme');
-    if (explicit) {
-      root.setAttribute('data-theme', explicit);
-      return;
-    }
-    const host = (location.hostname || "").toLowerCase();
-    const theme = host.includes("kozlowskisebastian") ? "neon" : "white";
-    root.setAttribute('data-theme', theme);
-  }
-
-  function resetEffect() {
-    body.classList.remove('hover-active');
-  }
-
-  function activateEffect() {
-    body.classList.add('hover-active');
-  }
-
-  function toggleEffect() {
-    if (body.classList.contains('hover-active')) resetEffect();
-    else activateEffect();
-  }
-
-  function bindEvents() {
-    if (!image) return;
-
-    // Mobile / touch: sterujemy tylko dotykiem, bez zdarzeń myszy
-    image.addEventListener('touchstart', function (e) {
-      e.preventDefault(); // zapobiega syntetycznym kliknięciom/mouseover
-      toggleEffect();
-    }, { passive: false });
-
-    // Desktop: klasyczny hover
-    if (canHover) {
-      body.addEventListener('mouseover', activateEffect);
-      body.addEventListener('mouseout', resetEffect);
-    }
-  }
-
-  // Init
-  ensureTheme();
-  setImage();
-  bindEvents();
 })();
