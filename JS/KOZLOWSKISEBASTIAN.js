@@ -1,15 +1,11 @@
-/**
- * KOZLOWSKISEBASTIAN.js
- * Wersja: 2025-08-15 r3
- * Cel: Na urządzeniach mobilnych tap = efekt jak hover na desktopie.
- *      Desktop bez zmian. Zero blokowania scrolla. Eliminacja duplikatów.
- */
+
 (function () {
   'use strict';
 
   var body = document.body;
   var root = document.documentElement;
   var logo = document.getElementById('KSGROUP-LOGO-SVG');
+  var container = document.getElementById('KSGROUP-STRONA') || document;
 
   // Wykrywanie środowiska
   var canHover = false;
@@ -18,60 +14,77 @@
   } catch (_) {}
 
   var isTouch = ('ontouchstart' in window) ||
-    (window.matchMedia && window.matchMedia('(hover: none), (pointer: coarse)').matches);
+    (window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
 
   // Pomocnicze
   function setImage() {
+    // Jeżeli logo istnieje i nie ma src, ustaw domyślne (nie zmieniaj jeśli już jest)
     var imageUrl = 'https://kozlowskisebastian.pl/GRAFIKA/KSGROUP-SVG.svg';
-    if (logo && logo.getAttribute('src') !== imageUrl) {
+    if (logo && !logo.getAttribute('src')) {
       logo.setAttribute('src', imageUrl);
     }
   }
-  function ensureTheme() {
-    var explicit = root.getAttribute('data-theme') || body.getAttribute('data-theme');
-    if (explicit) { root.setAttribute('data-theme', explicit); return; }
-    var host = (location.hostname || '').toLowerCase();
-    root.setAttribute('data-theme', host.includes('kozlowskisebastian') ? 'neon' : 'white');
-  }
+
   function activateEffect(){ body.classList.add('hover-active'); }
   function resetEffect()   { body.classList.remove('hover-active'); }
   function toggleEffect()  { body.classList.toggle('hover-active'); }
 
-  // Zachowanie desktop (bez zmian)
+  // Desktop
   function bindDesktop() {
+    body.addEventListener('mouseenter', activateEffect);
+    body.addEventListener('mouseleave', resetEffect);
+    // dla pewności klasyczny hover
     body.addEventListener('mouseover', activateEffect);
-    body.addEventListener('mouseout', resetEffect);
+    body.addEventListener('mouseout', function (e) {
+      if (!body.contains(e.relatedTarget)) resetEffect();
+    });
   }
 
-  // Zachowanie mobile (tap = toggle)
+  // Mobile
   function bindMobile() {
     var lastTouchTs = 0;
-    var touchedRecently = function(){ return (Date.now() - lastTouchTs) < 600; };
+    var recent = function(){ return (Date.now() - lastTouchTs) < 600; };
 
-    // touchstart – iOS/Android
-    document.addEventListener('touchstart', function () {
+    function onTouchLike() {
       lastTouchTs = Date.now();
       toggleEffect();
-    }, { passive: true });
+    }
 
-    // pointerdown – nowe przeglądarki
+    // Global
+    document.addEventListener('touchstart', onTouchLike, { passive: true });
     document.addEventListener('pointerdown', function (e) {
       if (e.pointerType === 'touch' || e.pointerType === 'pen') {
-        if (!touchedRecently()) {
-          lastTouchTs = Date.now();
-          toggleEffect();
-        }
+        onTouchLike();
       }
     }, { passive: true });
 
-    // Fallback click (stare WebView) – tylko gdy nie było dotyku
+    // Lokalne (logo / kontener), na wypadek dziwnych WebView
+    if (logo) {
+      logo.addEventListener('touchstart', onTouchLike, { passive: true });
+      logo.addEventListener('pointerdown', function (e) {
+        if (e.pointerType === 'touch' || e.pointerType === 'pen') onTouchLike();
+      }, { passive: true });
+      logo.addEventListener('click', function () {
+        if (!recent()) toggleEffect();
+      }, { passive: true });
+    }
+    if (container && container !== document) {
+      container.addEventListener('touchstart', onTouchLike, { passive: true });
+      container.addEventListener('pointerdown', function (e) {
+        if (e.pointerType === 'touch' || e.pointerType === 'pen') onTouchLike();
+      }, { passive: true });
+      container.addEventListener('click', function () {
+        if (!recent()) toggleEffect();
+      }, { passive: true });
+    }
+
+    // Fallback click globalnie
     document.addEventListener('click', function () {
-      if (!touchedRecently()) toggleEffect();
+      if (!recent()) toggleEffect();
     }, { passive: true });
   }
 
   function init() {
-    ensureTheme();
     setImage();
 
     if (canHover && !isTouch) {
@@ -80,12 +93,9 @@
       bindMobile();
     }
 
-    // UX: brak podświetlenia tapu, bez wymuszania preventDefault
+    // UX: nie ingerujemy w theme; tylko kosmetyka tap-highlight
     try {
       body.style.webkitTapHighlightColor = 'transparent';
-      if (typeof body.style.touchAction !== 'undefined') {
-        body.style.touchAction = 'manipulation';
-      }
     } catch (_) {}
   }
 
