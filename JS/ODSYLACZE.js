@@ -6,8 +6,8 @@
     ["NOTATNIK", "NOTATNIK"],
     ["KALKULATOR", "KALKULATOR"],
     ["LICZYDŁO", "LICZYDLO"],
-    ["LATARKA", null],
-    ["POGODA", null],
+    ["LATARKA WYŁĄCZONE", null],
+    ["POGODA WYŁĄCZONE", null],
     ["GENERATOR", "GENERATOR"],
     ["PRZYBORNIK", "PRZYBORNIK"],
   ]);
@@ -145,7 +145,6 @@
   NS.hideModal = hideModal;
 })();
 
-/* === AUTOFIT === */
 (function(){
   const SELECTOR = '.PRZYCISK';
 
@@ -163,7 +162,6 @@
       label.style.lineHeight = '1';
       label.textContent = txt;
       if (!btn.style.overflow) btn.style.overflow = 'hidden';
-      // dopilnuj centrowania po stronie kontenera (gdy nie ma flex)
       if (!btn.style.textAlign) btn.style.textAlign = 'center';
       btn.appendChild(label);
     }
@@ -174,14 +172,12 @@
   const label = ensureLabel(btn);
   if (!label) return;
 
-  // Ustawienia do centrowania „od środka” niezależnie od skali
   if (!btn.style.position || btn.style.position === '') btn.style.position = 'relative';
   label.style.position = 'absolute';
   label.style.left = '50%';
   label.style.top = '50%';
   label.style.transformOrigin = 'center center';
 
-  // Reset transform do pomiaru
   label.style.transform = 'translate(-50%, -50%) scale(1,1)';
 
   const availW = Math.max(1, btn.clientWidth);
@@ -189,15 +185,14 @@
 
   let scaleX = availW / needW;
 
-  // Skala tylko w osi X, przesunięcie -50% gwarantuje idealne wyśrodkowanie
-  label.style.transform = 'translate(-50%, -50%) scale(' + scaleX.toFixed(3) + ',1)';
+  var bumpPx = (label.textContent.trim() === 'KARTY') ? 1 : 0;
+label.style.transform = 'translate(calc(-50% - ' + bumpPx + 'px), -50%) scale(' + scaleX.toFixed(3) + ',1)';
 }
 
   function fitAll(){
     document.querySelectorAll(SELECTOR).forEach(fitOne);
   }
 
-  // Debounce + dogrywki
   let t1 = null;
   function scheduleFit(ms = 0){
     if (t1) clearTimeout(t1);
@@ -257,4 +252,3 @@
   });
   mo.observe(document.body, { childList:true, subtree:true });
 })();
-/* === KONIEC AUTOFIT === */
