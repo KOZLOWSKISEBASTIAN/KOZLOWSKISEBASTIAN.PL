@@ -69,3 +69,19 @@ body.hover-active #KSGROUP-LOGO-SVG {
     max-height: 100%;
   }
 }
+
+/* Responsive logo sizing */
+#KSGROUP-LOGO-SVG {
+  max-width: 100vw;   /* never wider than viewport */
+  max-height: 100vh;  /* never taller than viewport */
+  width: auto;        /* keep aspect ratio */
+  height: auto;       /* keep aspect ratio */
+  display: block;     /* remove inline spacing */
+  margin: auto;       /* center both axes */
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden; /* prevent scrollbars */
+}
