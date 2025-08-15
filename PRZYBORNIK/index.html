@@ -6,41 +6,44 @@
   <title>PRZYBORNIK</title>
   <meta name="color-scheme" content="dark light" />
 
-  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KOLORY.css">
-  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/HEXAGON.css">
-  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
+  <link rel="stylesheet" href="CSS/KOLORY.css">
+  <link rel="stylesheet" href="CSS/HEXAGON.css">
+  <link rel="stylesheet" href="CSS/PRZYBORNIK.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&family=Poppins:wght@400&display=swap" rel="stylesheet">
 
 </head>
 <body>
-  <div class="KOZLOWSKISEBASTIAN_OPAKOWANIE">
-    <main class="KOZLOWSKISEBASTIAN_KONTENER">
-      <div class="KOZLOWSKISEBASTIAN_PANEL">
-        <section class="KOZLOWSKISEBASTIAN_SIATKA">
-          <a class="KOZLOWSKISEBASTIAN_PRZYCISK" data-klucz="KARTY">KARTY</a>
-          <a class="KOZLOWSKISEBASTIAN_PRZYCISK" data-klucz="NOTATNIK">NOTATNIK</a>
-          <a class="KOZLOWSKISEBASTIAN_PRZYCISK" data-klucz="KALKULATOR">KALKULATOR</a>
-          <a class="KOZLOWSKISEBASTIAN_PRZYCISK" data-klucz="LICZYDŁO">LICZYDŁO</a>
-          <a class="KOZLOWSKISEBASTIAN_PRZYCISK" data-klucz="LATARKA WYŁĄCZONE" aria-disabled="true">LATARKA WYŁĄCZONE</a>
-          <a class="KOZLOWSKISEBASTIAN_PRZYCISK" data-klucz="POGODA WYŁĄCZONE" aria-disabled="true">POGODA WYŁĄCZONE</a>
-          <a class="KOZLOWSKISEBASTIAN_PRZYCISK" data-klucz="GENERATOR">GENERATOR</a>
+  <div class="RAMKA">
+    <main class="KONTENER">
+      <div class="PANEL">
+        <section class="SIATKA">
+          <a class="PRZYCISK" data-klucz="KARTY">KARTY</a>
+          <a class="PRZYCISK" data-klucz="NOTATNIK">NOTATNIK</a>
+          <a class="PRZYCISK" data-klucz="KALKULATOR">KALKULATOR</a>
+          <a class="PRZYCISK" data-klucz="LICZYDŁO">LICZYDŁO</a>
+          <a class="PRZYCISK" data-klucz="LATARKA" aria-disabled="true">LATARKA</a>
+          <a class="PRZYCISK" data-klucz="POGODA" aria-disabled="true">POGODA</a>
+          <a class="PRZYCISK" data-klucz="GENERATOR">GENERATOR</a>
+		<div class="PRZYBORNIK_PRZYCISK_POLOWA">
+          <a href="https://ksgroup.pl/" target="_blank" class="PRZYCISK POLOWA">KSG</a>
+          <a href="https://kozlowskisebastian.pl/" target="_blank" class="PRZYCISK POLOWA">KS.PL</a>
+		</div>
         </section>
       </div>
-    </main>
+</main>
   </div>
 
-  <div class="KOZLOWSKISEBASTIAN_HEXAGON_KONTENER" id="KOZLOWSKISEBASTIAN_HEXAGON">
-    <div class="KOZLOWSKISEBASTIAN_HEXAGON" title="MOTYW"></div>
+  <div class="HEXAGON_KONTENER" id="HEXAGON">
+    <div class="HEXAGON" title="MOTYW"></div>
   </div>
-  <span class="KOZLOWSKISEBASTIAN_WYLACZNIK" id="KOZLOWSKISEBASTIAN_WYLACZNIK"></span>
-  <div class="KOZLOWSKISEBASTIAN_TROJKAT_KONTENER" id="KOZLOWSKISEBASTIAN_TROJKATY">
-    <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_JASNY" title="JASNY MOTYW"></div>
-    <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_CIEMNY" title="CIEMNY MOTYW"></div>
+  <span class="WYLACZNIK" id="WYLACZNIK"></span>
+  <div class="TROJKAT_KONTENER" id="TROJKATY">
+    <div class="TROJKAT TROJKAT_JASNY" title="JASNY MOTYW"></div>
+    <div class="TROJKAT TROJKAT_CIEMNY" title="CIEMNY MOTYW"></div>
   </div>
 
-  <script src="https://kozlowskisebastian.pl/JS/HEXAGON.js"></script>
-  <script src="https://kozlowskisebastian.pl/JS/MOTYWAUTO.js"></script>
-  <script src="https://kozlowskisebastian.pl/JS/ODSYLACZE.js"></script>
-
+  <script src="JS/HEXAGON.js"></script>
+  <script src="JS/MOTYWAUTO.js"></script>
+  <script src="JS/ODSYLACZE.js"></script>
 </body>
 </html>
