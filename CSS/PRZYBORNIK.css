@@ -10,29 +10,29 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-.KOZLOWSKISEBASTIAN_OPAKOWANIE { width: 100%; padding: 20px; }
-.KOZLOWSKISEBASTIAN_KONTENER { width: 100%; margin: 0 auto; }
+.RAMKA { width: 100%; padding: 20px; }
+.KONTENER { width: 100%; margin: 0 auto; }
 @media (min-width: 900px) {
-  .KOZLOWSKISEBASTIAN_KONTENER { max-width: 66.666vw; }
+  .KONTENER { max-width: 66.666vw; }
 }
 
-.KOZLOWSKISEBASTIAN_SIATKA {
+.SIATKA {
   display: grid;
   grid-template-columns: 1fr;
   gap: 7px;
 }
 @media (min-width: 900px) {
-  .KOZLOWSKISEBASTIAN_SIATKA { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .SIATKA { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-.KOZLOWSKISEBASTIAN_PANEL {
+.PANEL {
   background: var(--TLO-PANEL);
   border-radius: 8px;
   padding: 4px;
   margin: 0 auto;
 }
 
-.KOZLOWSKISEBASTIAN_PRZYCISK {
+.PRZYCISK {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,20 +49,222 @@ body {
 
   font-family: 'Poppins', 'Montserrat', sans-serif;
   font-weight: 400;
-  font-size: clamp(28px, 4vw, 48px);
+  font-size: calc(clamp(28px, 4vw, 48px) * 1.25);
   letter-spacing: 1px;
 
   -webkit-tap-highlight-color: transparent;
   transition: color .12s ease, transform .06s ease, background-color .12s ease;
 }
 
-.KOZLOWSKISEBASTIAN_PRZYCISK:hover {
+.PRZYCISK:hover {
   color: var(--AKCENT-TEKST);
   background: var(--TLO-PANEL);
   transform: translateY(-1px);
 }
-.KOZLOWSKISEBASTIAN_PRZYCISK[aria-disabled="true"] {
+.PRZYCISK[aria-disabled="true"] {
   pointer-events: none;
   color: #777;
   opacity: .7;
 }
+
+.PRZYCISK_PRZYBORNIK_POWROT {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--TLO-PANEL);
+  background: var(--TLO-PRZYCISK);
+  color: var(--TEKST-PRZYCISK);
+  font-family: 'Poppins', 'Montserrat', sans-serif;
+  font-weight: 400;
+  font-size: calc(clamp(28px, 4vw, 48px) * 1.25);
+  letter-spacing: 1px;
+  cursor: pointer;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: color .12s ease, background-color .12s ease, transform .06s ease;
+}
+.PRZYCISK_PRZYBORNIK_POWROT:hover {
+  color: var(--AKCENT-TEKST);
+  background: var(--TLO-PANEL);
+  transform: translateY(-1px);
+}
+.PRZYCISK_PRZYBORNIK_POWROT:active {
+  transform: translateY(0);
+}
+
+:root[WYBOR_MOTYW="JASNY"] .PRZYCISK:hover { color: #9E9E9E !important; }
+:root[WYBOR_MOTYW="JASNY"] .PRZYCISK_PRZYBORNIK_POWROT:hover { color: #9E9E9E !important; }
+
+.PRZYCISK_KLAWISZ, .PRZYCISK--KLAWISZ {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: clamp(30px, 6vh, 48px);
+  min-width: 44px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--TLO-PANEL);
+  background: var(--TLO-PRZYCISK);
+  color: var(--TEKST-PRZYCISK);
+  text-decoration: none;
+  font: 400 clamp(14px, 3.2vw, 18px) 'Poppins','Montserrat',system-ui,sans-serif;
+  letter-spacing: .2px;
+  -webkit-tap-highlight-color: transparent;
+  transition: color .12s ease, transform .06s ease, background-color .12s ease, outline-color .12s ease;
+}
+.PRZYCISK_KLAWISZ, .PRZYCISK--KLAWISZ:hover { background: var(--TLO-PANEL); transform: translateY(-1px); }
+.PRZYCISK_KLAWISZ, .PRZYCISK--KLAWISZ:active { transform: translateY(0); }
+.PRZYCISK_KLAWISZ, .PRZYCISK--KLAWISZ:focus-visible { outline: 2px solid var(--AKCENT-TEKST); outline-offset: 2px; }
+
+:root[WYBOR_MOTYW="JASNY"] .PRZYCISK_KLAWISZ, .PRZYCISK--KLAWISZ:hover { color: #9E9E9E !important; }
+
+.ETYKIETA {
+  display: inline-block;
+  margin-bottom: 6px;
+  font: 500 14px/1.2 'Poppins','Montserrat',system-ui,sans-serif;
+  color: var(--TEKST-PRZYCISK);
+}
+.POLE {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--TLO-PANEL);
+  background: var(--TLO-PRZYCISK);
+  color: var(--TEKST-PRZYCISK);
+  font: 400 15px/1.35 'Poppins','Montserrat',system-ui,sans-serif;
+  transition: border-color .12s ease, outline-color .12s ease, background-color .12s ease;
+}
+.POLE::placeholder { color: rgba(127,127,127,.75); }
+.POLE:focus { outline: 2px solid var(--AKCENT-TEKST); outline-offset: 2px; }
+.PODPOWIEDZ { margin-top: 6px; font-size: 12px; opacity: .85; color: var(--TEKST-PRZYCISK); }
+
+.TOAST_STOS {
+  position: fixed;
+  inset: auto 50px 28px 50px;
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  z-index: 9999;
+  pointer-events: none;
+}
+.TOAST {
+  pointer-events: auto;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--TLO-PANEL);
+  background: var(--TLO-PRZYCISK);
+  color: var(--TEKST-PRZYCISK);
+  font: 500 14px/1.25 'Poppins','Montserrat',system-ui,sans-serif;
+  box-shadow: 0 6px 18px rgba(0,0,0,.18);
+  transition: transform .15s ease, opacity .2s ease;
+}
+.TOAST[data-state="enter"] { transform: translateY(6px); opacity: 0; }
+.TOAST[data-state="show"]  { transform: translateY(0);   opacity: 1; }
+.TOAST[data-state="exit"]  { transform: translateY(6px); opacity: 0; }
+
+.MODAL_NAKLADKA {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.42);
+  backdrop-filter: blur(2px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9998;
+}
+.MODAL_NAKLADKA[data-open="true"] { display: flex; }
+.MODAL {
+  max-width: min(92vw, 640px);
+  width: 100%;
+  margin: 0 16px;
+  border-radius: 14px;
+  border: 1px solid var(--TLO-PANEL);
+  background: var(--TLO-PRZYCISK);
+  color: var(--TEKST-PRZYCISK);
+  padding: 16px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.28);
+}
+.MODAL_NAGLOWEK { font: 600 18px/1.2 'Poppins','Montserrat',system-ui,sans-serif; margin-bottom: 10px; }
+.MODAL_AKCJE { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
+
+/* Montserrat font + reset spacing for buttons */
+.PRZYCISK,
+.PRZYCISK_PRZYBORNIK_POWROT,
+.PRZYCISK_KLAWISZ,
+.PRZYCISK--KLAWISZ {
+    font-family: 'Montserrat', sans-serif !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 0 !important;
+    border: 0 !important;
+    line-height: 1 !important;
+    letter-spacing: 0 !important;
+    overflow: hidden !important;
+    font-size: calc(100% * 1.25) !important;
+
+}
+
+/* === Montserrat + zero spacing + height-tied font (PRZYBORNIK) === */
+.PRZYCISK,
+.PRZYCISK_PRZYBORNIK_POWROT,
+.PRZYCISK_KLAWISZ,
+.PRZYCISK--KLAWISZ {
+  font-family: 'Montserrat', sans-serif !important;
+  /* zero wszelkich przeszkód */
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  border: 0 !important;
+  letter-spacing: 0 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  /* pozwól używać cqb/cqi względem własnego boxa */
+  container-type: size;
+  /* wielkość czcionki = 95% wysokości przycisku */
+  font-size: 16cqb !important;
+}
+
+/* Split button styling */
+.PRZYBORNIK_PRZYCISK_POLOWA{display:grid;width:100%;grid-template-columns:1fr 1fr;gap:7px;}
+.PRZYBORNIK_PRZYCISK_POLOWA .half{display:flex;align-items:center;justify-content:center;margin:0;padding:0;}
+.PRZYBORNIK_PRZYCISK_POLOWA .half:last-child{}
+
+/* Wyśrodkowanie tekstu i brak zbędnych odstępów */
+button, .PRZYCISK, .PRZYCISK_PRZYBORNIK_POWROT, .PRZYCISK_KLAWISZ, .PRZYCISK--KLAWISZ {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  gap: 0 !important;
+  line-height: 1 !important;
+}
+
+/* ====== AUTOFIT TEKSTU W PRZYCISKACH ====== */
+.PRZYCISK{ position: relative; overflow: hidden; }
+
+/* Element skalowany (tworzony przez JS jeśli nie istnieje) */
+.PRZYCISK .LABEL_SKALUJ{
+  display: inline-block;
+  white-space: nowrap;
+  transform-origin: center center;
+  will-change: transform;
+}
+
+/* Opcjonalne zwężenie poziome dla długich napisów */
+.PRZYCISK .WASKI_TEKST{
+  display: inline-block;
+  transform: scaleX(0.86);
+  transform-origin: center center;
+}
+
+.LABEL_SKALUJ{ display:inline-block; white-space:nowrap; transform-origin:center; will-change:transform; }
+.WASKI_TEKST{ display:inline-block; transform:scaleX(0.86); transform-origin:center; }

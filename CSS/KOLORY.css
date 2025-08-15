@@ -21,7 +21,7 @@
   --TROJKAT-CIEMNY-COLOR: #333333;
 }
 
-:root[data-WYBOR_MOTYW="JASNY"] {
+:root[WYBOR_MOTYW="JASNY"] {
   --TLO: var(--TLO-JASNY);
   --TLO-PANEL: var(--TLO-PANEL-JASNY);
   --TLO-PRZYCISK: var(--TLO-PRZYCISK-JASNY);

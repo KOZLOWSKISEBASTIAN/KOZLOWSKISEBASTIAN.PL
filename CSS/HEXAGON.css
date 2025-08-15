@@ -1,4 +1,4 @@
-.KOZLOWSKISEBASTIAN_HEXAGON_KONTENER {
+.HEXAGON_KONTENER {
   -webkit-touch-callout: none;
   position: fixed;
   bottom: 20px;
@@ -10,7 +10,7 @@
   -webkit-user-select: none;
   touch-action: none;
 }
-.KOZLOWSKISEBASTIAN_HEXAGON {
+.HEXAGON {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -20,12 +20,12 @@
   transform-origin: center;
   cursor: grab;
 }
-.KOZLOWSKISEBASTIAN_HEXAGON_KONTENER.KOZLOWSKISEBASTIAN_PRZECIAGANIE .KOZLOWSKISEBASTIAN_HEXAGON { cursor: grabbing; }
-.KOZLOWSKISEBASTIAN_OBRACAJ { animation: KOZLOWSKISEBASTIAN_OBROT .2s ease-out; }
-@keyframes KOZLOWSKISEBASTIAN_OBROT { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
+.HEXAGON_KONTENER.PRZECIAGANIE .HEXAGON { cursor: grabbing; }
+.OBRACAJ { animation: OBROT .2s ease-out; }
+@keyframes OBROT { 0%{transform:rotate(0)} 100%{transform:rotate(360deg)} }
 
-.KOZLOWSKISEBASTIAN_WYLACZNIK { position: fixed; width: 0; height: 0; }
-.KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
+.WYLACZNIK { position: fixed; width: 0; height: 0; }
+.TROJKAT_KONTENER {
   position: fixed;
   top: 0; left: 0;
   width: 100vw; height: 100vh;
@@ -34,21 +34,21 @@
   transition: opacity .2s;
   z-index: 999;
 }
-.KOZLOWSKISEBASTIAN_WYLACZNIK.KOZLOWSKISEBASTIAN_AKTYWNY + .KOZLOWSKISEBASTIAN_TROJKAT_KONTENER {
+.WYLACZNIK.AKTYWNY + .TROJKAT_KONTENER {
   opacity: 1;
   pointer-events: auto;
 }
-.KOZLOWSKISEBASTIAN_TROJKAT {
+.TROJKAT {
   position: absolute;
   width: 100%;
   height: 100%;
   cursor: pointer;
 }
-.KOZLOWSKISEBASTIAN_TROJKAT_JASNY {
+.TROJKAT_JASNY {
   clip-path: polygon(0 0, 100% 0, 0 100%);
   background-color: var(--TROJKAT-JASNY-COLOR);
 }
-.KOZLOWSKISEBASTIAN_TROJKAT_CIEMNY {
+.TROJKAT_CIEMNY {
   clip-path: polygon(100% 0, 100% 100%, 0 100%);
   background-color: var(--TROJKAT-CIEMNY-COLOR);
 }
