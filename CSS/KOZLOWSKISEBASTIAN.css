@@ -24,7 +24,6 @@ html, body {
   transition: background-color 0.3s ease;
   overflow: hidden;
   -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
 }
 
 body.hover-active {
