@@ -6,8 +6,8 @@
     ["NOTATNIK", "NOTATNIK"],
     ["KALKULATOR", "KALKULATOR"],
     ["LICZYDŁO", "LICZYDLO"],
-    ["LATARKA WYŁĄCZONE", null],
-    ["POGODA WYŁĄCZONE", null],
+    ["LATARKA", null],
+    ["POGODA", null],
     ["GENERATOR", "GENERATOR"],
     ["PRZYBORNIK", "PRZYBORNIK"],
   ]);
@@ -145,87 +145,116 @@
   NS.hideModal = hideModal;
 })();
 
-/* === AUTOFIT TEKSTU: PRZYBORNIK + KALKULATOR === */
+/* === AUTOFIT === */
 (function(){
-  if (window.__PRZYBORNIK_KALK_AUTOFIT_INSTALLED__) return;
-  window.__PRZYBORNIK_KALK_AUTOFIT_INSTALLED__ = true;
+  const SELECTOR = '.PRZYCISK';
 
-  // Skaluj: przyciski PRZYBORNIK, klawisze kalkulatora, nagłówek powrotu
-  const SELECTORS = ['.PRZYCISK', '.KALKULATOR_KLAWIATURA button', '.PRZYCISK_PRZYBORNIK_POWROT'];
-  const NARROW_KEYS = new Set(['KALKULATOR','GENERATOR']); // węższe napisy dla tych kluczy
-
-  function allTargets(){
-    const set = new Set();
-    SELECTORS.forEach(sel => document.querySelectorAll(sel).forEach(el => set.add(el)));
-    return Array.from(set);
-  }
-
-  function ensureWrappers(el){
-    // tylko jeśli element ma "nagą" treść tekstową — pomijamy już przerobione
-    let label = el.querySelector('.LABEL_SKALUJ');
+  function ensureLabel(btn){
+    let label = btn.querySelector('.LABEL_SKALUJ');
     if (!label){
-      const text = el.textContent.trim();
-      if (!text) return null;
-      el.textContent = '';
+      const txt = btn.textContent.trim();
+      if (!txt) return null;
+      btn.textContent = '';
       label = document.createElement('span');
       label.className = 'LABEL_SKALUJ';
-      // style obronne inline (gdyby CSS nie był doładowany)
       label.style.display = 'inline-block';
       label.style.whiteSpace = 'nowrap';
       label.style.transformOrigin = 'center center';
-      label.style.willChange = 'transform';
-
-      // jeśli to element z data-klucz wymagający zwężenia – dodaj wewnętrzny span
-      const key = el.dataset ? el.dataset.klucz : undefined;
-      if (key && NARROW_KEYS.has(key)){
-        const inner = document.createElement('span');
-        inner.className = 'WASKI_TEKST';
-        inner.textContent = text;
-        inner.style.display = 'inline-block';
-        inner.style.transform = 'scaleX(0.86)';
-        inner.style.transformOrigin = 'center center';
-        label.appendChild(inner);
-      }else{
-        label.textContent = text;
-      }
-      // overflow: hidden dla bezpieczeństwa, jeśli brak
-      if (!el.style.overflow) el.style.overflow = 'hidden';
-      el.appendChild(label);
+      label.style.lineHeight = '1';
+      label.textContent = txt;
+      if (!btn.style.overflow) btn.style.overflow = 'hidden';
+      // dopilnuj centrowania po stronie kontenera (gdy nie ma flex)
+      if (!btn.style.textAlign) btn.style.textAlign = 'center';
+      btn.appendChild(label);
     }
     return label;
   }
 
-  function fitOne(el){
-    const label = ensureWrappers(el);
-    if (!label) return;
-    label.style.transform = 'scale(1)';
-    // dostępne miejsce: szerokość elementu docelowego
-    const avail = el.clientWidth;
-    const need  = label.scrollWidth;
-    const scale = Math.min(1, Math.max(0.5, (avail - 2) / Math.max(1, need)));
-    label.style.transform = 'scale(' + scale.toFixed(3) + ')';
-  }
+  function fitOne(btn){
+  const label = ensureLabel(btn);
+  if (!label) return;
+
+  // Ustawienia do centrowania „od środka” niezależnie od skali
+  if (!btn.style.position || btn.style.position === '') btn.style.position = 'relative';
+  label.style.position = 'absolute';
+  label.style.left = '50%';
+  label.style.top = '50%';
+  label.style.transformOrigin = 'center center';
+
+  // Reset transform do pomiaru
+  label.style.transform = 'translate(-50%, -50%) scale(1,1)';
+
+  const availW = Math.max(1, btn.clientWidth);
+  const needW  = Math.max(1, label.scrollWidth);
+
+  let scaleX = availW / needW;
+
+  // Skala tylko w osi X, przesunięcie -50% gwarantuje idealne wyśrodkowanie
+  label.style.transform = 'translate(-50%, -50%) scale(' + scaleX.toFixed(3) + ',1)';
+}
 
   function fitAll(){
-    allTargets().forEach(fitOne);
+    document.querySelectorAll(SELECTOR).forEach(fitOne);
   }
 
-  function ready(fn){
-    if (document.readyState === 'loading'){
-      document.addEventListener('DOMContentLoaded', fn, { once: true });
-    }else{
-      fn();
+  // Debounce + dogrywki
+  let t1 = null;
+  function scheduleFit(ms = 0){
+    if (t1) clearTimeout(t1);
+    t1 = setTimeout(() => {
+      requestAnimationFrame(() => {
+        fitAll();
+        setTimeout(fitAll, 60);
+        setTimeout(fitAll, 160);
+      });
+    }, ms);
+  }
+
+  function initial(){
+    fitAll();
+    requestAnimationFrame(() => scheduleFit(0));
+  }
+
+  if (document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initial, { once:true });
+  } else {
+    initial();
+  }
+
+  window.addEventListener('load', () => {
+    scheduleFit(0);
+    scheduleFit(200);
+  }, { passive:true });
+
+  if (document.fonts && document.fonts.ready){
+    document.fonts.ready.then(() => scheduleFit(0));
+    if (document.fonts.addEventListener){
+      document.fonts.addEventListener('loadingdone', () => scheduleFit(0));
     }
   }
 
-  ready(fitAll);
-  window.addEventListener('resize', fitAll);
+  window.addEventListener('resize', () => scheduleFit(0), { passive:true });
+  window.addEventListener('orientationchange', () => {
+    scheduleFit(0);
+    scheduleFit(120);
+  }, { passive:true });
 
-  const ro = new ResizeObserver(() => fitAll());
-  ready(() => allTargets().forEach(el => ro.observe(el)));
+  if (window.visualViewport){
+    const vv = window.visualViewport;
+    vv.addEventListener('resize', () => scheduleFit(0), { passive:true });
+    vv.addEventListener('scroll', () => scheduleFit(0), { passive:true });
+  }
 
-  // Obserwuj dynamiczne zmiany DOM (np. przełączanie widoków)
-  const mo = new MutationObserver(() => fitAll());
-  ready(() => mo.observe(document.body, { childList: true, subtree: true }));
+  const ro = new ResizeObserver(() => scheduleFit(0));
+  function observeButtons(){
+    document.querySelectorAll(SELECTOR).forEach(el => ro.observe(el));
+  }
+  observeButtons();
+
+  const mo = new MutationObserver(() => {
+    observeButtons();
+    scheduleFit(0);
+  });
+  mo.observe(document.body, { childList:true, subtree:true });
 })();
 /* === KONIEC AUTOFIT === */
