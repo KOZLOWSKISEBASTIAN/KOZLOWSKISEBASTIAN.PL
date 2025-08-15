@@ -1,13 +1,13 @@
 (function () {
   const ROOT = document.documentElement;
-  const KLUCZ_MOTYW = 'KOZLOWSKISEBASTIAN_MOTYW';
-  const HEX = document.getElementById('KOZLOWSKISEBASTIAN_HEXAGON');
-  const WYLACZNIK = document.getElementById('KOZLOWSKISEBASTIAN_WYLACZNIK');
-  const TROJKATY = document.getElementById('KOZLOWSKISEBASTIAN_TROJKATY');
+  const KLUCZ_MOTYW = 'MOTYW';
+  const HEX = document.getElementById('HEXAGON');
+  const WYLACZNIK = document.getElementById('WYLACZNIK');
+  const TROJKATY = document.getElementById('TROJKATY');
 
   const ZAPISANY = localStorage.getItem(KLUCZ_MOTYW);
-  if (ZAPISANY === 'JASNY') ROOT.setAttribute('data-WYBOR_MOTYW', 'JASNY');
-  if (ZAPISANY === 'CIEMNY') ROOT.setAttribute('data-WYBOR_MOTYW', 'CIEMNY');
+  if (ZAPISANY === 'JASNY') ROOT.setAttribute('WYBOR_MOTYW', 'JASNY');
+  if (ZAPISANY === 'CIEMNY') ROOT.setAttribute('WYBOR_MOTYW', 'CIEMNY');
 
   const PROG_MOUSE = 6;
   const PROG_TOUCH = 18;
@@ -35,7 +35,7 @@
 
     offsetX = px - curL; offsetY = py - curT;
     dragging = true; moved = false; isTouch = (pointerType !== 'mouse');
-    HEX.classList.add('KOZLOWSKISEBASTIAN_PRZECIAGANIE');
+    HEX.classList.add('PRZECIAGANIE');
   }
 
   function moveDrag(px, py) {
@@ -56,17 +56,17 @@
   function endDrag() {
     if (!dragging) return;
     dragging = false;
-    HEX.classList.remove('KOZLOWSKISEBASTIAN_PRZECIAGANIE');
+    HEX.classList.remove('PRZECIAGANIE');
     if (!moved) toggleOverlay();
   }
 
   function toggleOverlay() {
-    const KSZTALT = HEX.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON');
+    const KSZTALT = HEX.querySelector('.HEXAGON');
     if (KSZTALT) {
-      KSZTALT.classList.add('KOZLOWSKISEBASTIAN_OBRACAJ');
-      setTimeout(() => KSZTALT.classList.remove('KOZLOWSKISEBASTIAN_OBRACAJ'), 220);
+      KSZTALT.classList.add('OBRACAJ');
+      setTimeout(() => KSZTALT.classList.remove('OBRACAJ'), 220);
     }
-    WYLACZNIK.classList.toggle('KOZLOWSKISEBASTIAN_AKTYWNY');
+    WYLACZNIK.classList.toggle('AKTYWNY');
   }
 
   HEX.addEventListener('pointerdown', (e) => {
@@ -86,19 +86,19 @@
   HEX.addEventListener('pointercancel', () => { dragging = false; });
 
   TROJKATY.addEventListener('click', (e) => {
-    const btn = e.target?.closest('.KOZLOWSKISEBASTIAN_TROJKAT_JASNY, .KOZLOWSKISEBASTIAN_TROJKAT_CIEMNY');
+    const btn = e.target?.closest('.TROJKAT_JASNY, .TROJKAT_CIEMNY');
     if (!btn) return;
-    if (btn.classList.contains('KOZLOWSKISEBASTIAN_TROJKAT_JASNY')) {
-      ROOT.setAttribute('data-WYBOR_MOTYW', 'JASNY');
+    if (btn.classList.contains('TROJKAT_JASNY')) {
+      ROOT.setAttribute('WYBOR_MOTYW', 'JASNY');
       localStorage.setItem(KLUCZ_MOTYW, 'JASNY');
     } else {
-      ROOT.setAttribute('data-WYBOR_MOTYW', 'CIEMNY');
+      ROOT.setAttribute('WYBOR_MOTYW', 'CIEMNY');
       localStorage.setItem(KLUCZ_MOTYW, 'CIEMNY');
     }
-    WYLACZNIK.classList.remove('KOZLOWSKISEBASTIAN_AKTYWNY');
+    WYLACZNIK.classList.remove('AKTYWNY');
   });
 
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') WYLACZNIK.classList.remove('KOZLOWSKISEBASTIAN_AKTYWNY');
+    if (e.key === 'Escape') WYLACZNIK.classList.remove('AKTYWNY');
   });
 })();

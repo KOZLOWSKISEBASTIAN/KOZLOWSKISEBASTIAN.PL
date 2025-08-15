@@ -1,6 +1,6 @@
 (function(){
   const ROOT = document.documentElement;
-  const KLUCZ_MOTYW = 'KOZLOWSKISEBASTIAN_MOTYW';
+  const KLUCZ_MOTYW = 'MOTYW';
 
   function isMobile(){
     const uaMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
@@ -10,7 +10,7 @@
   }
 
   function setMotywTryb(tryb){
-    ROOT.setAttribute('data-WYBOR_MOTYW', tryb);
+    ROOT.setAttribute('WYBOR_MOTYW', tryb);
     localStorage.setItem(KLUCZ_MOTYW, tryb);
   }
 
