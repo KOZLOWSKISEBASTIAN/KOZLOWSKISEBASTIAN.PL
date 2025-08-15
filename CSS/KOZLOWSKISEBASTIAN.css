@@ -23,6 +23,7 @@ html, body {
   background-color: var(--bg);
   transition: background-color 0.3s ease;
   overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body.hover-active {
@@ -48,11 +49,18 @@ body.hover-active {
   width: auto;
   filter: var(--logo-filter);
   transition: filter 0.3s ease;
+  touch-action: manipulation;
+  cursor: pointer;
 }
 
-body.hover-active #KSGROUP-LOGO-SVG,
-#KSGROUP-LOGO-SVG:hover {
+body.hover-active #KSGROUP-LOGO-SVG {
   filter: var(--logo-filter-hover);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  #KSGROUP-LOGO-SVG:hover {
+    filter: var(--logo-filter-hover);
+  }
 }
 
 @media (max-width: 768px) {
