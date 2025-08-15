@@ -1,74 +1,35 @@
-:root {
-  --bg: #FFFFFF;
-  --hover-bg: #000000;
-  --logo-filter: brightness(0);
-  --logo-filter-hover: brightness(1) invert(1);
-}
+html, body { margin: 0; height: 100%; }
 
-[data-theme="neon"] {
-  --bg: #FF00FF;
-  --hover-bg: #000000;
-  --logo-filter: brightness(0);
-  --logo-filter-hover: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: var(--bg);
-  transition: background-color 0.3s ease;
-  overflow: hidden;
-  -webkit-tap-highlight-color: transparent;
-}
-
-body.hover-active {
-  background-color: var(--hover-bg);
-}
+:root { --app-vh: 100vh; }
+@supports (height: 100svh) { :root { --app-vh: 100svh; } }
+@supports (height: 100dvh) { :root { --app-vh: 100dvh; } }
 
 #KSGROUP-STRONA {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
-  width: 100vw;
-  position: absolute;
-  top: 0;
-  left: 0;
+  justify-content: center;
+  height: 100%;
 }
 
 #KSGROUP-LOGO-SVG {
-  max-width: 90%;
-  max-height: 90%;
-  filter: var(--logo-filter);
-  transition: filter 0.3s ease;
-  touch-action: manipulation;
-  cursor: pointer;
   display: block;
+  margin: auto;
   width: auto;
   height: auto;
+  max-width: calc(100vw - 4vmin);
+  max-height: calc(var(--app-vh) - 4vmin);
   object-fit: contain;
-  margin: 0 auto;
 }
 
-body.hover-active #KSGROUP-LOGO-SVG {
-  filter: var(--logo-filter-hover);
+html[data-theme="neon"] body { background: #FF00FF; }
+html[data-theme="neon"] #KSGROUP-LOGO-SVG { filter: none; }
+html[data-theme="neon"] body.hover-active { background: #000000; }
+html[data-theme="neon"] body.hover-active #KSGROUP-LOGO-SVG {
+
+  filter: brightness(0) saturate(100%) invert(36%) sepia(99%) saturate(7472%) hue-rotate(300deg) brightness(102%) contrast(102%);
 }
 
-@media (hover: hover) and (pointer: fine) {
-  #KSGROUP-LOGO-SVG:hover {
-    filter: var(--logo-filter-hover);
-  }
-}
-
-@media (max-width: 768px) {
-  #KSGROUP-LOGO-SVG {
-    max-width: 100%;
-    max-height: 100%;
-  }
-}
+html[data-theme="white"] body { background: #FFFFFF; }
+html[data-theme="white"] #KSGROUP-LOGO-SVG { filter: none; }
+html[data-theme="white"] body.hover-active { background: #000000; }
+html[data-theme="white"] body.hover-active #KSGROUP-LOGO-SVG { filter: invert(1); }
