@@ -6,8 +6,8 @@
     ["NOTATNIK", "NOTATNIK"],
     ["KALKULATOR", "KALKULATOR"],
     ["LICZYDŁO", "LICZYDLO"],
-    ["LATARKA WYŁĄCZONE", null],
-    ["POGODA WYŁĄCZONE", null],
+    ["LATARKA", null],
+    ["POGODA", null],
     ["GENERATOR", "GENERATOR"],
     ["PRZYBORNIK", "PRZYBORNIK"],
   ]);
@@ -24,127 +24,8 @@
   });
 })();
 
-(function(){
-  'use strict';
-  const NS = window.PRZYBORNIK || (window.PRZYBORNIK = {});
 
-  const $ = (sel, root=document) => root.querySelector(sel);
-  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
-
-  function ensureToastStack(){
-    let stos = $('.TOAST_STOS');
-    if (!stos){
-      stos = document.createElement('div');
-      stos.className = 'TOAST_STOS';
-      document.body.appendChild(stos);
-    }
-    return stos;
-  }
-  function toast(msg, {timeout=2200, type='info'} = {}){
-    const stos = ensureToastStack();
-    const el = document.createElement('div');
-    el.className = 'TOAST';
-    el.setAttribute('role','status');
-    el.textContent = msg;
-    stos.appendChild(el);
-    el.dataset.state = 'enter';
-    requestAnimationFrame(()=>{ el.dataset.state = 'show'; });
-    const hide = () => {
-      el.dataset.state = 'exit';
-      setTimeout(()=> el.remove(), 220);
-    };
-    const t = setTimeout(hide, timeout);
-    el.addEventListener('click', ()=>{ clearTimeout(t); hide(); }, { once:true });
-    return el;
-  }
-
-  function on(root, event, selector, handler){
-    if (typeof root === 'string') root = $(root);
-    (root || document).addEventListener(event, (e) => {
-      const cand = e.target.closest(selector);
-      if (cand && (root ? root.contains(cand) : true)){
-        handler.call(cand, e);
-      }
-    });
-  }
-
-  async function copyToClipboard(text){
-    try {
-      if (navigator.clipboard && navigator.clipboard.writeText){
-        await navigator.clipboard.writeText(text);
-      } else {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.left = '-9999px';
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        ta.remove();
-      }
-      toast('Skopiowano do schowka');
-      return true;
-    } catch (e){
-      toast('Nie udało się skopiować');
-      return false;
-    }
-  }
-
-  function downloadBlob(blob, filename='plik.bin'){
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    setTimeout(()=> URL.revokeObjectURL(url), 0);
-  }
-
-  let lastActive = null;
-  function showModal(modal){
-    const overlay = $('.MODAL_NAKLADKA') || $('.MODAL_OVERLAY') || (() => { const o = document.createElement('div'); o.className = 'MODAL_NAKLADKA'; document.body.appendChild(o); return o; })();
-
-    if (typeof modal === 'string') modal = $(modal);
-    if (!modal) return;
-
-    overlay.innerHTML = '';
-    overlay.appendChild(modal);
-    overlay.dataset.open = 'true';
-    lastActive = document.activeElement;
-
-    const focusables = $$('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])', modal);
-    (focusables[0] || modal).focus({ preventScroll:true });
-
-    function onKey(e){
-      if (e.key === 'Escape'){ hideModal(); }
-      if (e.key === 'Tab' && focusables.length){
-        const idx = focusables.indexOf(document.activeElement);
-        if (e.shiftKey && (idx <= 0)){ e.preventDefault(); focusables[focusables.length-1].focus(); }
-        else if (!e.shiftKey && (idx === focusables.length-1)){ e.preventDefault(); focusables[0].focus(); }
-      }
-    }
-    overlay.addEventListener('keydown', onKey);
-    overlay.addEventListener('click', (e)=>{ if (e.target === overlay) hideModal(); });
-    modal.addEventListener('close-modal', hideModal, { once:true });
-  }
-
-  function hideModal(){
-    const overlay = $('.MODAL_NAKLADKA') || $('.MODAL_OVERLAY');
-    if (!overlay) return;
-    overlay.dataset.open = 'false';
-    overlay.innerHTML = '';
-    if (lastActive) { try { lastActive.focus({ preventScroll:true }); } catch(_){} }
-  }
-
-  NS.toast = toast;
-  NS.on = on;
-  NS.copyToClipboard = copyToClipboard;
-  NS.downloadBlob = downloadBlob;
-  NS.showModal = showModal;
-  NS.hideModal = hideModal;
-})();
-
+/* === AUTOFIT === */
 (function(){
   const SELECTOR = '.PRZYCISK';
 
@@ -162,6 +43,7 @@
       label.style.lineHeight = '1';
       label.textContent = txt;
       if (!btn.style.overflow) btn.style.overflow = 'hidden';
+      // dopilnuj centrowania po stronie kontenera (gdy nie ma flex)
       if (!btn.style.textAlign) btn.style.textAlign = 'center';
       btn.appendChild(label);
     }
@@ -172,12 +54,14 @@
   const label = ensureLabel(btn);
   if (!label) return;
 
+  // Ustawienia do centrowania „od środka” niezależnie od skali
   if (!btn.style.position || btn.style.position === '') btn.style.position = 'relative';
   label.style.position = 'absolute';
   label.style.left = '50%';
   label.style.top = '50%';
   label.style.transformOrigin = 'center center';
 
+  // Reset transform do pomiaru
   label.style.transform = 'translate(-50%, -50%) scale(1,1)';
 
   const availW = Math.max(1, btn.clientWidth);
@@ -185,6 +69,7 @@
 
   let scaleX = availW / needW;
 
+  // Skala tylko w osi X, przesunięcie -50% gwarantuje idealne wyśrodkowanie
   var bumpPx = (label.textContent.trim() === 'KARTY') ? 1 : 0;
 label.style.transform = 'translate(calc(-50% - ' + bumpPx + 'px), -50%) scale(' + scaleX.toFixed(3) + ',1)';
 }
@@ -193,6 +78,7 @@ label.style.transform = 'translate(calc(-50% - ' + bumpPx + 'px), -50%) scale(' 
     document.querySelectorAll(SELECTOR).forEach(fitOne);
   }
 
+  // Debounce + dogrywki
   let t1 = null;
   function scheduleFit(ms = 0){
     if (t1) clearTimeout(t1);
@@ -216,39 +102,132 @@ label.style.transform = 'translate(calc(-50% - ' + bumpPx + 'px), -50%) scale(' 
     initial();
   }
 
-  window.addEventListener('load', () => {
-    scheduleFit(0);
-    scheduleFit(200);
-  }, { passive:true });
+})();
+/* === KONIEC AUTOFIT === */
 
-  if (document.fonts && document.fonts.ready){
-    document.fonts.ready.then(() => scheduleFit(0));
-    if (document.fonts.addEventListener){
-      document.fonts.addEventListener('loadingdone', () => scheduleFit(0));
+// --- ROZCIĄGANIE NAPISÓW OD LEWEJ DO PRAWEJ KRAWĘDZI — v2 (flex:1 + observer + fonts.ready) ---
+(function () {
+  const BTN_SEL = [
+    'a.PRZYCISK',
+    'button.PRZYCISK',
+    '.PRZYCISK_PRZYBORNIK_POWROT',
+    '.PRZYCISK_KLAWISZ',
+    '.PRZYCISK--KLAWISZ',
+    '.PRZYBORNIK_PRZYCISK_POLOWA .half'
+  ].join(',');
+
+  function pickLabel(btn) {
+    // preferowane istniejące etykiety
+    let label = btn.querySelector('.LABEL_SKALUJ, .WASKI_TEKST, span');
+    if (label) return label;
+    // fallback: owiń goły tekst w span
+    const textNodes = Array.from(btn.childNodes).filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim());
+    if (textNodes.length) {
+      const span = document.createElement('span');
+      btn.insertBefore(span, btn.firstChild);
+      textNodes.forEach(n => span.appendChild(n));
+      return span;
+    }
+    return null;
+  }
+
+  function measureRaw(el) {
+    // na czas pomiaru wyłącz dodatkowe spacingi
+    const prevLetter = el.style.letterSpacing;
+    const prevWord = el.style.wordSpacing;
+    el.style.letterSpacing = 'normal';
+    el.style.wordSpacing = 'normal';
+    // sklonuj jako offscreen do precyzyjnego pomiaru bez szerokości 100%
+    const clone = el.cloneNode(true);
+    clone.style.position = 'absolute';
+    clone.style.visibility = 'hidden';
+    clone.style.width = 'auto';
+    clone.style.whiteSpace = 'pre';
+    clone.style.display = 'inline-block';
+    el.parentNode.appendChild(clone);
+    const w = clone.getBoundingClientRect().width;
+    clone.remove();
+    // przywróć
+    el.style.letterSpacing = prevLetter;
+    el.style.wordSpacing = prevWord;
+    return w;
+  }
+
+  function countWordGaps(str) { return (str.trim().match(/\s+/g) || []).length; }
+  function countLetterGaps(str) {
+    const s = str.replace(/\s+/g, '');
+    return Math.max(s.length - 1, 0);
+  }
+
+  function justifyButton(btn) {
+    const label = pickLabel(btn);
+    if (!label) return;
+
+    // Etykieta musi wypełnić dostępną szerokość w layoucie flex
+    label.style.display = 'block';
+    label.style.flex = '1 1 auto';
+    label.style.width = '100%';
+    label.style.transform = 'none';
+    label.style.textAlign = 'left';
+    label.style.whiteSpace = 'normal';
+
+    // Zresetuj spacingi przed pomiarem
+    label.style.wordSpacing = 'normal';
+    label.style.letterSpacing = 'normal';
+
+    // Wymuś reflow po zmianach stylu
+    void label.offsetWidth;
+
+    const available = label.clientWidth;
+    const text = (label.textContent || '').trim();
+    if (!available || !text) return;
+
+    const raw = measureRaw(label);
+    const delta = available - raw;
+
+    if (delta <= 0.5) {
+      label.style.wordSpacing = 'normal';
+      label.style.letterSpacing = 'normal';
+      return;
+    }
+
+    const words = countWordGaps(text);
+    if (words > 0) {
+      label.style.wordSpacing = (delta / words) + 'px';
+      label.style.letterSpacing = 'normal';
+    } else {
+      const gaps = countLetterGaps(text);
+      if (gaps > 0) {
+        label.style.letterSpacing = (delta / gaps) + 'px';
+        label.style.wordSpacing = 'normal';
+      } else {
+        label.style.wordSpacing = 'normal';
+        label.style.letterSpacing = 'normal';
+      }
     }
   }
 
-  window.addEventListener('resize', () => scheduleFit(0), { passive:true });
-  window.addEventListener('orientationchange', () => {
-    scheduleFit(0);
-    scheduleFit(120);
-  }, { passive:true });
+  function runAll() { document.querySelectorAll(BTN_SEL).forEach(justifyButton); }
 
-  if (window.visualViewport){
-    const vv = window.visualViewport;
-    vv.addEventListener('resize', () => scheduleFit(0), { passive:true });
-    vv.addEventListener('scroll', () => scheduleFit(0), { passive:true });
+  function scheduleRun() { requestAnimationFrame(() => requestAnimationFrame(runAll)); }
+
+  // Inicjalizacja po gotowości dokumentu i fontów
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', scheduleRun);
+  } else {
+    scheduleRun();
   }
 
-  const ro = new ResizeObserver(() => scheduleFit(0));
-  function observeButtons(){
-    document.querySelectorAll(SELECTOR).forEach(el => ro.observe(el));
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(scheduleRun).catch(()=>{});
   }
-  observeButtons();
 
-  const mo = new MutationObserver(() => {
-    observeButtons();
-    scheduleFit(0);
-  });
-  mo.observe(document.body, { childList:true, subtree:true });
+  // Reakcja na zmiany DOM (przyciski dodawane dynamicznie)
+  const mo = new MutationObserver(scheduleRun);
+  mo.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+
+  // Reflow na resize/orientation
+  window.addEventListener('resize', scheduleRun);
+  window.addEventListener('orientationchange', scheduleRun);
+  window.addEventListener('PRZYBORNIK:REFLOW', scheduleRun);
 })();
