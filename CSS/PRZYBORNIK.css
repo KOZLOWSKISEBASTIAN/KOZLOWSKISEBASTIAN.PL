@@ -1,3 +1,5 @@
+/* PRZYBORNIK.css — Wersja 4: tekst przy samej lewej krawędzi, twarde resetowanie absolutnego centrowania */
+/* Reset i podstawy */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body {
@@ -5,250 +7,161 @@ body {
   min-height: 100svh;
   background: var(--TLO);
   color: var(--TEKST-PRZYCISK);
-  font: 16px/1.45 sans-serif;
+  font-family: 'Montserrat', 'Poppins', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
+/* Layout */
 .RAMKA { width: 100%; padding: 20px; }
 .KONTENER { width: 100%; margin: 0 auto; }
-@media (min-width: 900px) {
-  .KONTENER { max-width: 66.666vw; }
-}
+@media (min-width: 900px) { .KONTENER { max-width: 66.666vw; } }
+.SIATKA { display: grid; grid-template-columns: 1fr; gap: 7px; }
+@media (min-width: 900px) { .SIATKA { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.PANEL { background: var(--TLO-PANEL); border-radius: 8px; padding: 4px; margin: 0 auto; }
 
-.SIATKA {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 7px;
-}
-@media (min-width: 900px) {
-  .SIATKA { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
+/* ===== PRZYCISKI ===== */
+:root { --padL: 0px; }
 
-.PANEL {
-  background: var(--TLO-PANEL);
-  border-radius: 8px;
-  padding: 4px;
-  margin: 0 auto;
-}
-
-.PRZYCISK {
+.PRZYCISK,
+.PRZYCISK_PRZYBORNIK_POWROT,
+.PRZYCISK_KLAWISZ,
+.PRZYCISK--KLAWISZ,
+.PRZYCISK.POLOWA {
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
+  justify-content: flex-start;
   width: 100%;
-  min-height: 64px;
-  padding: 0;
-  line-height: 1;
-  border-radius: 10px;
-  border: 1px solid var(--TLO-PANEL);
+  text-align: left;
+  min-height: 60px;
+  padding: 0 0 0 var(--padL) !important; /* zero z lewej */
+  margin: 0;
+  gap: 0;
+  line-height: 1.05;
+  border-radius: 8px;
+  border: 0px solid var(--TLO-PANEL);
   background: var(--TLO-PRZYCISK);
   color: var(--TEKST-PRZYCISK);
   text-decoration: none;
-  font-family: 'Poppins', 'Montserrat', sans-serif;
-  font-weight: 400;
-  font-size: calc(clamp(28px, 4vw, 48px) * 1.25);
-  letter-spacing: 1px;
+  font-weight: 500;
+  font-size: clamp(17px, 4.6vw, 20px);
+  letter-spacing: 0;
   -webkit-tap-highlight-color: transparent;
   transition: color .12s ease, transform .06s ease, background-color .12s ease;
 }
 
-.PRZYCISK:hover {
-  color: var(--AKCENT-TEKST);
-  background: var(--TLO-PANEL);
-  transform: translateY(-1px);
-}
-.PRZYCISK[aria-disabled="true"] {
-  pointer-events: none;
-  color: #777;
-  opacity: .7;
-}
-
-.PRZYCISK_PRZYBORNIK_POWROT {
-  display: inline-flex;
-  width: 100%;
-  align-items: center;
-  justify-content: center;
-  padding: 4px;
-  border-radius: 10px;
-  border: 1px solid var(--TLO-PANEL);
-  background: var(--TLO-PRZYCISK);
-  color: var(--TEKST-PRZYCISK);
-  font-family: 'Poppins', 'Montserrat', sans-serif;
-  font-weight: 400;
-  font-size: calc(clamp(28px, 4vw, 48px) * 1.25);
-  letter-spacing: 1px;
-  cursor: pointer;
-  text-decoration: none;
-  -webkit-tap-highlight-color: transparent;
-  transition: color .12s ease, background-color .12s ease, transform .06s ease;
-}
-.PRZYCISK_PRZYBORNIK_POWROT:hover {
-  color: var(--AKCENT-TEKST);
-  background: var(--TLO-PANEL);
-  transform: translateY(-1px);
-}
-.PRZYCISK_PRZYBORNIK_POWROT:active {
-  transform: translateY(0);
+/* TWARDY RESET WSZYSTKIEGO, CO MOŻE CENTROWAĆ ZAWARTOŚĆ PRZYCISKU */
+.PRZYCISK > *, .PRZYCISK_PRZYBORNIK_POWROT > *,
+.PRZYCISK_KLAWISZ > *, .PRZYCISK--KLAWISZ > *,
+.PRZYBORNIK_PRZYCISK_POLOWA .half > * {
+  position: static !important;
+  left: auto !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  transform: none !important;  /* usuwa translate(-50%,-50%) i scale */
+  translate: none !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  text-indent: 0 !important;
+  text-align: left !important;
+    font-size: clamp(60px, 4.6vw, 60px);
+  display: inline-block; /* tekst układa się od lewej w naturalnym flow */
+  white-space: normal;
 }
 
-:root[WYBOR_MOTYW="JASNY"] .PRZYCISK:hover { color: #9E9E9E !important; }
-:root[WYBOR_MOTYW="JASNY"] .PRZYCISK_PRZYBORNIK_POWROT:hover { color: #9E9E9E !important; }
-
-.PRZYCISK_KLAWISZ, .PRZYCISK--KLAWISZ {
-  box-sizing: border-box;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: clamp(30px, 6vh, 48px);
-  min-width: 44px;
-  padding: 6px 12px;
-  border-radius: 10px;
-  border: 1px solid var(--TLO-PANEL);
-  background: var(--TLO-PRZYCISK);
-  color: var(--TEKST-PRZYCISK);
-  text-decoration: none;
-  font: 400 clamp(14px, 3.2vw, 18px) 'Poppins','Montserrat',system-ui,sans-serif;
-  letter-spacing: .2px;
-  -webkit-tap-highlight-color: transparent;
-  transition: color .12s ease, transform .06s ease, background-color .12s ease, outline-color .12s ease;
+/* Ikony/obrazy — bez wcięć i nie centrowane osobno */
+.PRZYCISK svg, .PRZYCISK img,
+.PRZYCISK_PRZYBORNIK_POWROT svg, .PRZYCISK_PRZYBORNIK_POWROT img,
+.PRZYCISK_KLAWISZ svg, .PRZYCISK_KLAWISZ img,
+.PRZYCISK--KLAWISZ svg, .PRZYCISK--KLAWISZ img {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
 }
-.PRZYCISK_KLAWISZ, .PRZYCISK--KLAWISZ:hover { background: var(--TLO-PANEL); transform: translateY(-1px); }
-.PRZYCISK_KLAWISZ, .PRZYCISK--KLAWISZ:active { transform: translateY(0); }
-.PRZYCISK_KLAWISZ, .PRZYCISK--KLAWISZ:focus-visible { outline: 2px solid var(--AKCENT-TEKST); outline-offset: 2px; }
 
-:root[WYBOR_MOTYW="JASNY"] .PRZYCISK_KLAWISZ, .PRZYCISK--KLAWISZ:hover { color: #9E9E9E !important; }
+/* Hover/disabled */
+.PRZYCISK:hover,
+.PRZYCISK_PRZYBORNIK_POWROT:hover,
+.PRZYCISK_KLAWISZ:hover,
+.PRZYCISK--KLAWISZ:hover { color: var(--AKCENT-TEKST); background: var(--TLO-PANEL); transform: translateY(-1px); }
+.PRZYCISK[aria-disabled="true"] { pointer-events: none; color: #777; opacity: .7; }
 
-.ETYKIETA {
-  display: inline-block;
-  margin-bottom: 6px;
-  font: 500 14px/1.2 'Poppins','Montserrat',system-ui,sans-serif;
-  color: var(--TEKST-PRZYCISK);
+/* Wersje połówkowe */
+.PRZYBORNIK_PRZYCISK_POLOWA{display:grid;width:100%;grid-template-columns:1fr 1fr;gap:7px;}
+.PRZYBORNIK_PRZYCISK_POLOWA .half{
+  display:flex;align-items:center;justify-content:flex-start;text-align:left;
+  padding-left: var(--padL) !important; gap:0;
 }
+
+/* Formularze i teksty pomocnicze */
+.ETYKIETA { display:inline-block; margin-bottom:0; font-weight:600; font-size:14px; line-height:1.2; color:var(--TEKST-PRZYCISK); }
 .POLE {
   box-sizing: border-box;
   width: 100%;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid var(--TLO-PANEL);
+  padding: 0 0 0 var(--padL) !important;
+  border-radius: 8px;
+  border: 0px solid var(--TLO-PANEL);
   background: var(--TLO-PRZYCISK);
   color: var(--TEKST-PRZYCISK);
-  font: 400 15px/1.35 'Poppins','Montserrat',system-ui,sans-serif;
+  font-size: 15px;
+  line-height: 1.35;
   transition: border-color .12s ease, outline-color .12s ease, background-color .12s ease;
 }
 .POLE::placeholder { color: rgba(127,127,127,.75); }
 .POLE:focus { outline: 2px solid var(--AKCENT-TEKST); outline-offset: 2px; }
 .PODPOWIEDZ { margin-top: 6px; font-size: 12px; opacity: .85; color: var(--TEKST-PRZYCISK); }
 
-.TOAST_STOS {
-  position: fixed;
-  inset: auto 50px 28px 50px;
-  display: grid;
-  gap: 10px;
-  justify-items: center;
-  z-index: 9999;
-  pointer-events: none;
-}
+/* Toasty i modal */
+.TOAST_STOS { position: fixed; inset: auto 50px 28px 50px; display: grid; gap: 10px; justify-items: center; z-index: 9999; pointer-events: none; }
 .TOAST {
   pointer-events: auto;
-  padding: 10px 14px;
-  border-radius: 12px;
-  border: 1px solid var(--TLO-PANEL);
+  padding: 0 0 0 var(--padL) !important;
+  border-radius: 8px;
+  border: 0px solid var(--TLO-PANEL);
   background: var(--TLO-PRZYCISK);
   color: var(--TEKST-PRZYCISK);
-  font: 500 14px/1.25 'Poppins','Montserrat',system-ui,sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.25;
   box-shadow: 0 6px 18px rgba(0,0,0,.18);
   transition: transform .15s ease, opacity .2s ease;
+  text-align: left;
 }
 .TOAST[data-state="enter"] { transform: translateY(6px); opacity: 0; }
 .TOAST[data-state="show"]  { transform: translateY(0);   opacity: 1; }
 .TOAST[data-state="exit"]  { transform: translateY(6px); opacity: 0; }
 
-.MODAL_NAKLADKA {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,.42);
-  backdrop-filter: blur(2px);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9998;
-}
+.MODAL_NAKLADKA { position: fixed; inset: 0; background: rgba(0,0,0,.42); backdrop-filter: blur(2px); display: none; align-items: center; justify-content: center; z-index: 9998; }
 .MODAL_NAKLADKA[data-open="true"] { display: flex; }
 .MODAL {
   max-width: min(92vw, 640px);
   width: 100%;
   margin: 0 16px;
-  border-radius: 14px;
-  border: 1px solid var(--TLO-PANEL);
+  border-radius: 8px;
+  border: 0px solid var(--TLO-PANEL);
   background: var(--TLO-PRZYCISK);
   color: var(--TEKST-PRZYCISK);
-  padding: 16px;
+  padding: 0 0 0 var(--padL) !important;
   box-shadow: 0 10px 28px rgba(0,0,0,.28);
+  text-align: left;
 }
-.MODAL_NAGLOWEK { font: 600 18px/1.2 'Poppins','Montserrat',system-ui,sans-serif; margin-bottom: 10px; }
-.MODAL_AKCJE { display: flex; gap: 10px; justify-content: flex-end; margin-top: 14px; }
+.MODAL_NAGLOWEK { font-weight:700; font-size:18px; line-height:1.2; margin-bottom:10px; }
+.MODAL_AKCJE { display:flex; gap:10px; justify-content:flex-end; margin-top:14px; }
 
-.PRZYCISK,
-.PRZYCISK_PRZYBORNIK_POWROT,
-.PRZYCISK_KLAWISZ,
-.PRZYCISK--KLAWISZ {
-    font-family: 'Montserrat', sans-serif !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    gap: 0 !important;
-    border: 0 !important;
-    line-height: 1 !important;
-    letter-spacing: 0 !important;
-    overflow: hidden !important;
-    font-size: calc(100% * 1.25) !important;
+/* Desktop: delikatnie mniejszy tekst */
+@media (min-width: 1024px) {
+  .PRZYCISK,
+  .PRZYCISK_PRZYBORNIK_POWROT { 
+    font-size: clamp(15px, 1.4vw, 18px);
+    min-height: 56px;
+  }
+  .PRZYCISK_KLAWISZ, .PRZYCISK--KLAWISZ { font-size: clamp(12px, 1.1vw, 14px); }
 }
 
-.PRZYCISK,
-.PRZYCISK_PRZYBORNIK_POWROT,
-.PRZYCISK_KLAWISZ,
-.PRZYCISK--KLAWISZ {
-  font-family: 'Montserrat', sans-serif !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  gap: 0 !important;
-  border: 0 !important;
-  letter-spacing: 0 !important;
-  line-height: 1 !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: clip !important;
-  container-type: size;
-  font-size: 16cqb !important;
-}
-
-.PRZYBORNIK_PRZYCISK_POLOWA{display:grid;width:100%;grid-template-columns:1fr 1fr;gap:7px;}
-.PRZYBORNIK_PRZYCISK_POLOWA .half{display:flex;align-items:center;justify-content:center;margin:0;padding:0;}
-.PRZYBORNIK_PRZYCISK_POLOWA .half:last-child{}
-
-button, .PRZYCISK, .PRZYCISK_PRZYBORNIK_POWROT, .PRZYCISK_KLAWISZ, .PRZYCISK--KLAWISZ {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  gap: 0 !important;
-  line-height: 1 !important;
-}
-
-.PRZYCISK{ position: relative; overflow: hidden; }
-
-.PRZYCISK .LABEL_SKALUJ{
-  display: inline-block;
-  white-space: nowrap;
-  transform-origin: center center;
-  will-change: transform;
-}
-
-.PRZYCISK .WASKI_TEKST{
-  display: inline-block;
-  transform: scaleX(0.86);
-  transform-origin: center center;
+/* Bardzo duże ekrany */
+@media (min-width: 1600px) {
+  .PRZYCISK,
+  .PRZYCISK_PRZYBORNIK_POWROT { font-size: clamp(14px, 1vw, 16px); }
 }
