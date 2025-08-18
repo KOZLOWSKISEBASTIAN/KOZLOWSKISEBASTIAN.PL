@@ -1,3 +1,5 @@
+/* KALKULATOR.css — napisy od lewej krawędzi (wersja dostosowana) */
+
 .KALKULATOR {
   display: grid;
   gap: 7px;
@@ -18,6 +20,7 @@
   overflow: hidden;
 }
 
+/* Historia */
 .KALKULATOR_LOG {
   display: grid;
   gap: 1px;
@@ -26,7 +29,7 @@
   text-align: right;
 }
 .KALKULATOR_LOG_LINIA{
-  font-size: calc(clamp(11px, 1.6vw, 18px) * 1.25);
+  font-size: clamp(12px, 3.6vw, 15px);
   line-height: 1.25;
   letter-spacing: .2px;
   color: var(--AKCENT-TEKST);
@@ -34,6 +37,7 @@
   word-break: break-all;
 }
 
+/* Ekran */
 .KALKULATOR_EKRAN {
   display: block;
   width: 100%;
@@ -42,15 +46,16 @@
   border: none;
   background: transparent;
   color: var(--AKCENT-TEKST);
-  font-family: 'Poppins', 'Montserrat', sans-serif;
-  font-weight: 400;
-  font-size: calc(clamp(26px, 4.4vw, 48px) * 1.25);
+  font-family: 'Montserrat', 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: clamp(24px, 7vw, 36px);
   line-height: 1.1;
   text-align: right;
   overflow: visible;
   word-break: break-all;
 }
 
+/* Klawiatura */
 .KALKULATOR_KLAWIATURA {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -62,30 +67,35 @@
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: clamp(30px, 6vh, 48px);
+  justify-content: flex-start !important; /* wymuszenie startu od lewej */
+  text-align: left !important;
+  min-height: clamp(40px, 7vh, 56px);
   border-radius: 10px;
   border: 1px solid var(--TLO-PANEL);
   background: var(--TLO-PRZYCISK);
-  color: var(--AKCENT-TEKST);
+  color: var(--TEKST-PRZYCISK);
   text-decoration: none;
-  font-family: 'Poppins', 'Montserrat', sans-serif;
-  font-weight: 400;
-  font-size: calc(clamp(14px, 3.2vw, 28px) * 1.25);
-  letter-spacing: 0.6px;
+  font-family: 'Montserrat', 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: clamp(16px, 5.2vw, 20px);
+  letter-spacing: 0.4px;
   -webkit-tap-highlight-color: transparent;
   transition: color .12s ease, transform .06s ease, background-color .12s ease;
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+.KALKULATOR_KLAWIATURA button > * {
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+  text-indent: 0 !important;
+  transform: none !important;
 }
 .KALKULATOR_KLAWIATURA button:hover { background: var(--TLO-PANEL); transform: translateY(-1px); }
 .KALKULATOR_KLAWIATURA button:active { transform: translateY(0); }
 
 .KALKULATOR_KLAWIATURA button[data-cyfra]       { color: var(--TEKST-PRZYCISK) !important; }
 .KALKULATOR_KLAWIATURA button[data-cyfra]:hover { color: var(--AKCENT-TEKST) !important; }
-
 .KALKULATOR_KLAWIATURA button:not([data-cyfra]):hover { color: #9E9E9E !important; }
-
-:root[WYBOR_MOTYW="JASNY"] .KALKULATOR_WIDOK { background: var(--TLO-PRZYCISK); }
-
 
 :root[WYBOR_MOTYW="JASNY"] .KALKULATOR_WIDOK {
   background: var(--TLO-PRZYCISK) !important;
@@ -105,84 +115,15 @@
   color: #9E9E9E !important;
 }
 
-:root[WYBOR_MOTYW="JASNY"] .KALKULATOR_KLAWIATURA button[data-cyfra]:hover {
-  color: #9E9E9E !important;
+/* Desktop: delikatnie mniejszy tekst */
+@media (min-width: 1024px) {
+  .KALKULATOR_EKRAN { font-size: clamp(22px, 3.2vw, 30px); }
+  .KALKULATOR_LOG_LINIA { font-size: clamp(11px, 1.1vw, 13px); }
+  .KALKULATOR_KLAWIATURA button { font-size: clamp(14px, 1.3vw, 17px); min-height: 48px; }
 }
 
-:root[WYBOR_MOTYW="JASNY"] .KALKULATOR_KLAWIATURA button:not([data-cyfra]):hover {
-  color: #9E9E9E !important;
+/* Bardzo duże ekrany */
+@media (min-width: 1600px) {
+  .KALKULATOR_EKRAN { font-size: clamp(20px, 2.4vw, 28px); }
+  .KALKULATOR_KLAWIATURA button { font-size: clamp(13px, 1.1vw, 16px); }
 }
-
-/* Montserrat font + reset spacing for buttons */
-.KALKULATOR_KLAWIATURA button {
-    font-family: 'Montserrat', sans-serif !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    gap: 0 !important;
-    border: 0 !important;
-    line-height: 1 !important;
-    letter-spacing: 0 !important;
-    overflow: hidden !important;
-    font-size: calc(100% * 1.25) !important;
-
-}
-
-/* === Montserrat + zero spacing + height-tied font (KALKULATOR) === */
-.KALKULATOR_KLAWIATURA button {
-  font-family: 'Montserrat', sans-serif !important;
-  /* zero wszelkich przeszkód */
-  margin: 0 !important;
-  padding: 0 !important;
-  gap: 0 !important;
-  border: 0 !important;
-  letter-spacing: 0 !important;
-  line-height: 1 !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  text-overflow: clip !important;
-  /* pozwól używać cqb/cqi względem własnego boxa */
-  container-type: size;
-  /* wielkość czcionki = 95% wysokości przycisku */
-  font-size: 16cqb !important;
-}
-
-/* Ensure header back button is visible and readable */
-
-/* Unified PRZYBORNIK button in calculator header */
-.KALKULATOR_NAGLOWEK .PRZYCISK_PRZYBORNIK_POWROT {
-  font-family: 'Montserrat', sans-serif !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  min-height: 64px !important; /* match PRZYBORNIK grid button height */
-  border: 1px solid var(--TLO-PANEL);
-  background: var(--TLO-PRZYCISK);
-  color: var(--TEKST-PRZYCISK);
-  letter-spacing: 0 !important;
-  line-height: 1 !important;
-  white-space: nowrap !important;
-  overflow: hidden !important;
-  font-size: 16cqb !important;
-  container-type: size;
-}
-
-/* Wyśrodkowanie tekstu i brak zbędnych odstępów */
-button, .PRZYCISK, .PRZYCISK_PRZYBORNIK_POWROT, .PRZYCISK_KLAWISZ, .PRZYCISK--KLAWISZ {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 0 !important;
-  margin: 0 !important;
-  gap: 0 !important;
-  line-height: 1 !important;
-}
-
-/* === FIX: identyczny hover jak w PRZYBORNIKU === */
-.PRZYCISK_PRZYBORNIK_POWROT:hover {
-  color: var(--AKCENT-TEKST);
-  background: var(--TLO-PANEL);
-  transform: translateY(-1px);
-}
-.PRZYCISK_PRZYBORNIK_POWROT:active { transform: translateY(0); }
-
-/* === SAFE: jeśli w DOM pojawiły się span.LABEL_SKALUJ — nie przechwytuj kliknięć === */
-.LABEL_SKALUJ{ pointer-events: none !important; }
