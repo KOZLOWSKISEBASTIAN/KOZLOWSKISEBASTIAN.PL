@@ -1,332 +1,76 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KALKULATOR</title>
-    <meta name="theme-color" content="#000000">
-    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
-<style>
-        .KOZLOWSKISEBASTIAN_KALKULATOR-WYSWIETLACZ {
-            background: #222222;
-            border-radius: 8px;
-            padding: 8px;
-            margin-bottom: 4px;
-            text-align: right;
-        }
-        
-        .KOZLOWSKISEBASTIAN_KALKULATOR-OPERACJE {
-            background: transparent;
-            border: none;
-            color: #B0B0B0;
-            font-size: 16px;
-            width: 100%;
-            text-align: right;
-            margin-bottom: 4px;
-            pointer-events: none;
-            font-family: sans-serif;
-        }
-        
-        .KOZLOWSKISEBASTIAN_KALKULATOR-WYNIK {
-            background: transparent;
-            border: none;
-            color: #B0B0B0;
-            font-size: 28px;
-            width: 100%;
-            text-align: right;
-            font-weight: bold;
-            pointer-events: none;
-            font-family: sans-serif;
-        }
-        
-        .KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISKI {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 4px;
-        }
-        
-        .KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY {
-            color: #FF00FF !important;
-        }
-        .KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY:hover {
-            background: #333333 !important;
-            color: #B0B0B0 !important;
-        }
-        .KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR {
-            color: #FF00FF !important;
-        }
-        .KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR:hover {
-            background: #333333 !important;
-            color: #B0B0B0 !important;
-        }
-        
-        .KOZLOWSKISEBASTIAN_KALKULATOR-ROWNASIE {
-            background: #222222 !important;
-            color: #FF00FF !important;
-        }
-        
-        .KOZLOWSKISEBASTIAN_KALKULATOR-ROWNASIE:hover {
-            background: #333333 !important;
-            color: #B0B0B0 !important;
-        }
-        
-        /* STYLE JASNEGO MOTYWU */
-        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KALKULATOR-WYSWIETLACZ {
-            background: #EEEEEE;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KALKULATOR-OPERACJE {
-            color: #555555;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KALKULATOR-WYNIK {
-            color: #333333;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>KALKULATOR</title>
+  <meta name="color-scheme" content="dark light" />
 
-        /* DODANE STYLE DLA CIEMNEGO MOTYWU */
-        .KOZLOWSKISEBASTIAN_CIEMNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
-            color: #FF00FF;
-        }
-        
-        .KOZLOWSKISEBASTIAN_CIEMNY .KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR:hover,
-        .KOZLOWSKISEBASTIAN_CIEMNY .KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY:hover {
-            color: #B0B0B0 !important;
-        }
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KOLORY.css">
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/HEXAGON.css">
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KALKULATOR.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&family=Poppins:wght@400&display=swap" rel="stylesheet">
 
-        /* DODANE STYLE :hover DLA JASNEGO MOTYWU */
-        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:hover {
-            color: #FF00FF;
-            background: #DDDDDD !important;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR:hover,
-        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY:hover {
-            color: #555555 !important;
-            background: #DDDDDD !important;
-        }
-        
-        /* SPECJALNE STYLE DLA PRZYCISKU RÓWNA SIĘ W JASNYM MOTYWIE */
-        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KALKULATOR-ROWNASIE {
-            background: #EEEEEE !important;
-            color: #FF00FF !important;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KALKULATOR-ROWNASIE:hover {
-            background: #DDDDDD !important;
-            color: #333333 !important;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_KALKULATOR-ROWNASIE:active {
-            background: #DDDDDD !important;
-            color: #333333 !important;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK:not(.KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR):not(.KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY):not(.KOZLOWSKISEBASTIAN_KALKULATOR-ROWNASIE):hover {
-            background: #DDDDDD !important;
-            color: #333333 !important;
-        }
-</style>
 </head>
-<body class="KOZLOWSKISEBASTIAN">
-    <div class="KOZLOWSKISEBASTIAN_HEXAGON_KONTENER">
-        <div class="KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT"></div>
-        <div class="KOZLOWSKISEBASTIAN_TROJKAT_KONTENER">
-            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_JEDEN"></div>
-            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_DWA"></div>
-        </div>
-    </div>
-    
-    <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK">
-        <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER">
-            <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
-            </div>
-            
-            <div class="KOZLOWSKISEBASTIAN_KALKULATOR-WYSWIETLACZ">
-                <input type="text" class="KOZLOWSKISEBASTIAN_KALKULATOR-OPERACJE" id="KOZLOWSKISEBASTIAN_KALKULATOR-OPERACJE" readonly>
-                <input type="text" class="KOZLOWSKISEBASTIAN_KALKULATOR-WYNIK" id="KOZLOWSKISEBASTIAN_KALKULATOR-WYNIK" readonly value="0">
-            </div>
-            
-            <div class="KOZLOWSKISEBASTIAN_KALKULATOR-PRZYCISKI">
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY" id="KOZLOWSKISEBASTIAN_KALKULATOR-WYCZYSC"><i class="fas fa-trash-alt"></i></button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY" id="KOZLOWSKISEBASTIAN_KALKULATOR-COFNIJ"><i class="fas fa-backspace"></i></button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-SPECJALNY" id="KOZLOWSKISEBASTIAN_KALKULATOR-ZNAK"><i class="fas fa-plus-minus"></i></button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR" id="KOZLOWSKISEBASTIAN_KALKULATOR-DZIELENIE"><i class="fas fa-divide"></i></button>
-                
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_KALKULATOR-7"><i class="fas fa-7"></i></button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_KALKULATOR-8"><i class="fas fa-8"></i></button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_KALKULATOR-9"><i class="fas fa-9"></i></button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR" id="KOZLOWSKISEBASTIAN_KALKULATOR-MNOZENIE"><i class="fas fa-times"></i></button>
-                
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_KALKULATOR-4"><i class="fas fa-4"></i></button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_KALKULATOR-5"><i class="fas fa-5"></i></button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_KALKULATOR-6"><i class="fas fa-6"></i></button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR" id="KOZLOWSKISEBASTIAN_KALKULATOR-ODEJMOWANIE"><i class="fas fa-minus"></i></button>
-                
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_KALKULATOR-1"><i class="fas fa-1"></i></button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_KALKULATOR-2"><i class="fas fa-2"></i></button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_KALKULATOR-3"><i class="fas fa-3"></i></button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-OPERATOR" id="KOZLOWSKISEBASTIAN_KALKULATOR-DODAWANIE"><i class="fas fa-plus"></i></button>
-                
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_KALKULATOR-0"><i class="fas fa-0"></i></button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK" id="KOZLOWSKISEBASTIAN_KALKULATOR-KROPKA"><i class="fas fa-circle" style="font-size: 5px;"></i></button>
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK KOZLOWSKISEBASTIAN_KALKULATOR-ROWNASIE" id="KOZLOWSKISEBASTIAN_KALKULATOR-ROWNASIE"><i class="fas fa-equals"></i></button>
-            </div>
-        </div>
-    </div>
+<body>
+  <div class="RAMKA">
+    <main class="KONTENER">
+      <div class="PANEL">
+        <section class="KALKULATOR" aria-label="KALKULATOR">
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <script>
-        // OBSŁUGA PRZYCISKU PRZYBORNIK
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-PRZYBORNIK-PRZYCISK').addEventListener('click', function() {
-            window.location.href = 'https://kozlowskisebastian.pl/PRZYBORNIK.html';
-        });
+          <div class="KALKULATOR_NAGLOWEK">
+            <a class="PRZYCISK_PRZYBORNIK_POWROT" data-klucz="PRZYBORNIK">PRZYBORNIK</a>
+          </div>
 
-        // LOGIKA KALKULATORA
-        let KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE = '0';
-        let KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE = '';
-        let KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA = null;
-        let KOZLOWSKISEBASTIAN_KALKULATOR_RESET = false;
+          <div class="KALKULATOR_WIDOK">
+            <div id="LOG" class="KALKULATOR_LOG"></div>
+            <output id="EKRAN" class="KALKULATOR_EKRAN" aria-live="polite" role="status">0</output>
+          </div>
+          <div class="KALKULATOR_KLAWIATURA" id="klawisze">
+            <button type="button" data-akcja="clear" class="K_B">⌦</button>
+            <button type="button" data-akcja="sign" class="K_B">±</button>
+            <button type="button" data-oper="%" class="K_O">%</button>
+            <button type="button" data-oper="/" class="K_O">÷</button>
 
-        const KOZLOWSKISEBASTIAN_KALKULATOR_WYNIK = document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-WYNIK');
-        const KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJE = document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-OPERACJE');
+            <button type="button" data-cyfra="7" class="K_C">7</button>
+            <button type="button" data-cyfra="8" class="K_C">8</button>
+            <button type="button" data-cyfra="9" class="K_C">9</button>
+            <button type="button" data-oper="*" class="K_O">×</button>
 
-        // FUNKCJE POMOCNICZE
-        function KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALIZUJ() {
-            KOZLOWSKISEBASTIAN_KALKULATOR_WYNIK.value = KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE;
-            KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJE.value = KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE + (KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA || '');
-        }
+            <button type="button" data-cyfra="4" class="K_C">4</button>
+            <button type="button" data-cyfra="5" class="K_C">5</button>
+            <button type="button" data-cyfra="6" class="K_C">6</button>
+            <button type="button" data-oper="-" class="K_O">−</button>            
 
-        function KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_LICZBE(liczba) {
-            if (KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE === '0' || KOZLOWSKISEBASTIAN_KALKULATOR_RESET) {
-                KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE = liczba;
-                KOZLOWSKISEBASTIAN_KALKULATOR_RESET = false;
-            } else {
-                KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE += liczba;
-            }
-            KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALIZUJ();
-        }
+            <button type="button" data-cyfra="1" class="K_C">1</button>
+            <button type="button" data-cyfra="2" class="K_C">2</button>
+            <button type="button" data-cyfra="3" class="K_C">3</button>
+            <button type="button" data-oper="+" class="K_O">+</button>
 
-        function KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_PRZECINEK() {
-            if (KOZLOWSKISEBASTIAN_KALKULATOR_RESET) {
-                KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE = '0.';
-                KOZLOWSKISEBASTIAN_KALKULATOR_RESET = false;
-                KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALIZUJ();
-                return;
-            }
-            if (!KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE.includes('.')) {
-                KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE += '.';
-            }
-            KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALIZUJ();
-        }
+            <button type="button" data-cyfra="0" class="K_C">0</button>
+            <button type="button" data-akcja="dot" class="K_C">,</button>
+            <button type="button" data-akcja="back" class="K_B">⌫</button>
+            <button type="button" data-akcja="eq" class="K_EQ">=</button>
+          </div>
 
-        function KOZLOWSKISEBASTIAN_KALKULATOR_WYBIERZ_OPERACJE(op) {
-            if (KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE === '') return;
-            if (KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE !== '') {
-                KOZLOWSKISEBASTIAN_KALKULATOR_OBLICZ();
-            }
-            KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA = op;
-            KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE = KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE;
-            KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE = '';
-            KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALIZUJ();
-        }
+        </section>
+      </div>
+    </main>
+  </div>
 
-        function KOZLOWSKISEBASTIAN_KALKULATOR_OBLICZ() {
-            let wynik;
-            const poprzednia = parseFloat(KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE);
-            const aktualna = parseFloat(KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE);
-            if (isNaN(poprzednia) || isNaN(aktualna)) return;
-            
-            switch (KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA) {
-                case '+':
-                    wynik = poprzednia + aktualna;
-                    break;
-                case '-':
-                    wynik = poprzednia - aktualna;
-                    break;
-                case '×':
-                    wynik = poprzednia * aktualna;
-                    break;
-                case '÷':
-                    wynik = poprzednia / aktualna;
-                    break;
-                default:
-                    return;
-            }
-            
-            KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE = wynik.toString();
-            KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA = null;
-            KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE = '';
-            KOZLOWSKISEBASTIAN_KALKULATOR_RESET = true;
-            KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALIZUJ();
-        }
+  <div class="HEXAGON_KONTENER" id="HEXAGON">
+    <div class="HEXAGON" title="MOTYW"></div>
+  </div>
+  <span class="WYLACZNIK" id="WYLACZNIK"></span>
+  <div class="TROJKAT_KONTENER" id="TROJKATY">
+    <div class="TROJKAT TROJKAT_JASNY" title="JASNY MOTYW"></div>
+    <div class="TROJKAT TROJKAT_CIEMNY" title="CIEMNY MOTYW"></div>
+  </div>
 
-        function KOZLOWSKISEBASTIAN_KALKULATOR_WYCZYSC() {
-            KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE = '0';
-            KOZLOWSKISEBASTIAN_KALKULATOR_POPRZEDNIE = '';
-            KOZLOWSKISEBASTIAN_KALKULATOR_OPERACJA = null;
-            KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALIZUJ();
-        }
-
-        function KOZLOWSKISEBASTIAN_KALKULATOR_USUN() {
-            if (KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE.length === 1 || (KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE.length === 2 && KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE.startsWith('-'))) {
-                KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE = '0';
-            } else {
-                KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE = KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE.slice(0, -1);
-            }
-            KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALIZUJ();
-        }
-
-        function KOZLOWSKISEBASTIAN_KALKULATOR_ZMIEN_ZNAK() {
-            KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE = KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE.startsWith('-') ? KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE.slice(1) : '-' + KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALNE;
-            KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALIZUJ();
-        }
-
-        // PRZYPISANIE ZDARZEŃ DO PRZYCISKÓW
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-0').addEventListener('click', () => KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_LICZBE('0'));
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-1').addEventListener('click', () => KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_LICZBE('1'));
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-2').addEventListener('click', () => KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_LICZBE('2'));
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-3').addEventListener('click', () => KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_LICZBE('3'));
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-4').addEventListener('click', () => KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_LICZBE('4'));
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-5').addEventListener('click', () => KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_LICZBE('5'));
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-6').addEventListener('click', () => KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_LICZBE('6'));
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-7').addEventListener('click', () => KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_LICZBE('7'));
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-8').addEventListener('click', () => KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_LICZBE('8'));
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-9').addEventListener('click', () => KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_LICZBE('9'));
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-KROPKA').addEventListener('click', KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_PRZECINEK);
-        
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-DODAWANIE').addEventListener('click', () => KOZLOWSKISEBASTIAN_KALKULATOR_WYBIERZ_OPERACJE('+'));
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-ODEJMOWANIE').addEventListener('click', () => KOZLOWSKISEBASTIAN_KALKULATOR_WYBIERZ_OPERACJE('-'));
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-MNOZENIE').addEventListener('click', () => KOZLOWSKISEBASTIAN_KALKULATOR_WYBIERZ_OPERACJE('×'));
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-DZIELENIE').addEventListener('click', () => KOZLOWSKISEBASTIAN_KALKULATOR_WYBIERZ_OPERACJE('÷'));
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-ROWNASIE').addEventListener('click', KOZLOWSKISEBASTIAN_KALKULATOR_OBLICZ);
-        
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-WYCZYSC').addEventListener('click', KOZLOWSKISEBASTIAN_KALKULATOR_WYCZYSC);
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-COFNIJ').addEventListener('click', KOZLOWSKISEBASTIAN_KALKULATOR_USUN);
-        document.getElementById('KOZLOWSKISEBASTIAN_KALKULATOR-ZNAK').addEventListener('click', KOZLOWSKISEBASTIAN_KALKULATOR_ZMIEN_ZNAK);
-
-        // OBSŁUGA KLAWIATURY
-        document.addEventListener('keydown', (e) => {
-            if (e.key >= '0' && e.key <= '9') KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_LICZBE(e.key);
-            else if (e.key === '.') KOZLOWSKISEBASTIAN_KALKULATOR_DODAJ_PRZECINEK();
-            else if (e.key === '+') KOZLOWSKISEBASTIAN_KALKULATOR_WYBIERZ_OPERACJE('+');
-            else if (e.key === '-') KOZLOWSKISEBASTIAN_KALKULATOR_WYBIERZ_OPERACJE('-');
-            else if (e.key === '*') KOZLOWSKISEBASTIAN_KALKULATOR_WYBIERZ_OPERACJE('×');
-            else if (e.key === '/') {
-                e.preventDefault();
-                KOZLOWSKISEBASTIAN_KALKULATOR_WYBIERZ_OPERACJE('÷');
-            }
-            else if (e.key === 'Enter' || e.key === '=') {
-                e.preventDefault();
-                KOZLOWSKISEBASTIAN_KALKULATOR_OBLICZ();
-            }
-            else if (e.key === 'Escape') KOZLOWSKISEBASTIAN_KALKULATOR_WYCZYSC();
-            else if (e.key === 'Backspace') KOZLOWSKISEBASTIAN_KALKULATOR_USUN();
-        });
-
-        // INICJALIZACJA WYŚWIETLACZA
-        KOZLOWSKISEBASTIAN_KALKULATOR_AKTUALIZUJ();
-    </script>
-    <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/HEXAGON.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/MOTYWAUTO.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/ODSYLACZE.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/KALKULATOR.js"></script>
 </body>
 </html>
