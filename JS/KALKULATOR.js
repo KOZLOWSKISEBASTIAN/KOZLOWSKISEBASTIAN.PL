@@ -1,66 +1,178 @@
-
-// KALKULATOR_AUTOFIT_SAFE.js — bezpieczne skalowanie etykiet (klik nadal trafia w <button>)
 (function(){
-  if (window.__KALK_AUTOFIT__ || window.__PRZYBORNIK_KALK_AUTOFIT_INSTALLED__) return;
-  window.__KALK_AUTOFIT__ = true;
-  window.__PRZYBORNIK_KALK_AUTOFIT_INSTALLED__ = true;
+  'use strict';
+  var EKRAN = document.getElementById('EKRAN');
+  var klawisze = document.getElementById('klawisze');
+  var LOGBox  = document.getElementById('LOG');
 
-  const SELECTORS = ['.KALKULATOR_KLAWIATURA button', '.PRZYCISK_PRZYBORNIK_POWROT'];
+  var first = null;
+  var operator = null;
+  var waitingSecond = false;
+  var value = '0';
+  var MAX_LEN = 18;
 
-  function targets(){
-    const set = new Set();
-    SELECTORS.forEach(sel => document.querySelectorAll(sel).forEach(el => set.add(el)));
-    return Array.from(set);
+  var lastEquation = null;
+  var showFinal = false;
+
+  var lastOps = [];
+
+  function pushOpLine(line){
+    lastOps.push(line);
+    while(lastOps.length > 2) lastOps.shift();
   }
 
-  function ensureWrapper(el){
-    let label = el.querySelector('.LABEL_SKALUJ');
-    if (!label){
-      const text = el.textContent;
-      el.textContent = '';
-      label = document.createElement('span');
-      label.className = 'LABEL_SKALUJ';
-      // Defensive inline styles
-      label.style.display = 'inline-block';
-      label.style.whiteSpace = 'nowrap';
-      label.style.transformOrigin = 'center center';
-      label.style.willChange = 'transform';
-      label.style.pointerEvents = 'none'; // <<< kliki nie zatrzymują się na etykiecie
-      label.textContent = text;
-      if (!el.style.overflow) el.style.overflow = 'hidden';
-      el.appendChild(label);
+  function commitIfNeeded(){
+    if (showFinal && lastEquation){
+      pushOpLine(lastEquation);
+      lastEquation = null;
+      showFinal = false;
     }
-    return label;
   }
 
-  function fitOne(el){
-    const label = ensureWrapper(el);
-    if (!label) return;
-    // reset scale -> pomiar
-    label.style.transform = 'scale(1)';
-    const avail = el.clientWidth;
-    const need  = label.scrollWidth;
-    const scale = Math.min(1, Math.max(0.5, (avail - 2) / Math.max(1, need)));
-    label.style.transform = 'scale(' + scale.toFixed(3) + ')';
+  function renderLOG(){
+    var lines = lastOps.slice(-2);
+    var html = '';
+    for (var i=0;i<lines.length;i++){
+      html += '<div class="KALKULATOR_LOG_LINIA">' + escapeHtml(lines[i]) + '</div>';
+    }
+    LOGBox.innerHTML = html;
   }
 
-  function fitAll(){ targets().forEach(fitOne); }
-
-  function ready(fn){
-    if (document.readyState === 'loading'){ document.addEventListener('DOMContentLoaded', fn, {once:true}); }
-    else fn();
+  function buildDisplayText(){
+    if (showFinal && lastEquation) return lastEquation;
+    if (operator){
+      if (waitingSecond){
+        return formatNumber(first) + ' ' + (sym[operator]||operator);
+      } else {
+        var cur = parseFloat(value);
+        return formatNumber(first) + ' ' + (sym[operator]||operator) + ' ' + formatNumber(cur);
+      }
+    }
+    return format(value);
   }
 
-  ready(fitAll);
-  window.addEventListener('resize', fitAll);
+  function aktualizuj(){ EKRAN.textContent = buildDisplayText(); renderLOG(); }
 
-  // Obserwuj tylko siatkę przycisków i nagłówek kalkulatora – nie całe <body>
-  const ro = new ResizeObserver(() => fitAll());
-  ready(() => targets().forEach(el => ro.observe(el)));
-
-  const grid = document.getElementById('klawisze');
-  if (grid){
-    const mo = new MutationObserver(() => fitAll());
-    mo.observe(grid, { childList:true, subtree:true });
+  function format(txt){
+    var s = String(txt).replace('.', ',');
+    return s.length > MAX_LEN ? s.slice(0, MAX_LEN) : s;
   }
+
+  function formatNumber(n){
+    if (!isFinite(n)) return 'NaN';
+    return String(n).replace('.', ',');
+  }
+
+  var sym = { '*':'×', '/':'÷', '+':'+', '-':'−', '%':'%' };
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, function(m){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[m];
+    });
+  }
+
+  function inputDigit(d){
+    if (showFinal){
+      commitIfNeeded();
+      first = null; operator = null; waitingSecond = false; value = d;
+    } else if (waitingSecond){
+      value = d; waitingSecond = false;
+    } else {
+      value = (value === '0') ? d : (value + d);
+    }
+  }
+  function inputDot(){
+    if (showFinal){
+      commitIfNeeded(); first = null; operator = null; waitingSecond = false; value = '0.'; return;
+    }
+    if (waitingSecond){ value = '0.'; waitingSecond = false; return; }
+    if (value.indexOf('.') === -1) value += '.';
+  }
+  function toggleSign(){
+    if (showFinal){ commitIfNeeded(); }
+    if (value === '0') return;
+    value = value.charAt(0) === '-' ? value.slice(1) : ('-' + value);
+  }
+  function clearAll(){
+    lastEquation = null; showFinal = false;
+    first = null; operator = null; waitingSecond = false; value = '0';
+    lastOps.length = 0;
+  }
+  function backspace(){
+    if (showFinal){ commitIfNeeded(); }
+    if (!waitingSecond) value = (value.length > 1 ? value.slice(0, -1) : '0');
+  }
+
+  function setOperator(op){
+    if (showFinal){
+      commitIfNeeded();
+      first = parseFloat(value);
+      operator = op;
+      waitingSecond = true;
+      aktualizuj();
+      return;
+    }
+
+    var cur = parseFloat(value);
+    if (operator && waitingSecond){ operator = op; return; }
+
+    if (first === null){
+      first = cur;
+    } else if (operator){
+      first = oblicz(first, cur, operator);
+      value = String(first);
+    }
+
+    operator = op; waitingSecond = true; aktualizuj();
+  }
+
+  function eq(){
+    if (operator === null) return;
+    var cur = parseFloat(value);
+    var wynik = oblicz(first, cur, operator);
+    value = String(wynik);
+    lastEquation = formatNumber(first) + ' ' + (sym[operator]||operator) + ' ' + formatNumber(cur) + ' = ' + formatNumber(wynik);
+    showFinal = true;
+    first = null; operator = null; waitingSecond = false;
+  }
+
+  function oblicz(a, b, op){
+    if (!isFinite(a) || !isFinite(b)) return NaN;
+    switch(op){
+      case '+': return a + b;
+      case '-': return a - b;
+      case '*': return a * b;
+      case '/': return b === 0 ? NaN : a / b;
+      case '%': return a % b;
+      default:  return b;
+    }
+  }
+
+  klawisze.addEventListener('click', function(e){
+    var btn = e.target.closest('button'); if (!btn) return;
+    if (btn.dataset.cyfra){ inputDigit(btn.dataset.cyfra); }
+    else if (btn.dataset.oper){ setOperator(btn.dataset.oper); }
+    else {
+      var akcja = btn.dataset.akcja;
+      if (akcja === 'dot') inputDot();
+      else if (akcja === 'clear') clearAll();
+      else if (akcja === 'back') backspace();
+      else if (akcja === 'sign') toggleSign();
+      else if (akcja === 'eq') eq();
+    }
+    aktualizuj();
+  });
+
+  document.addEventListener('keydown', function(e){
+    var k = e.key;
+    if (/^[0-9]$/.test(k)) { inputDigit(k); }
+    else if (k === ',' || k === '.') { inputDot(); }
+    else if (k === 'Backspace') { backspace(); }
+    else if (k === 'Escape') { clearAll(); }
+    else if (k === 'Enter' || k === '=') { eq(); }
+    else if (['+', '-', '*', '/','%'].indexOf(k) !== -1) { setOperator(k); }
+    else { return; }
+    e.preventDefault(); aktualizuj();
+  }, { passive:false });
+
+  aktualizuj();
 })();
