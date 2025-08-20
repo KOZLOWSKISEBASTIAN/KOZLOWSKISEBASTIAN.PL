@@ -1,3 +1,4 @@
+    // 22:09
 (function(){
   const BAZA = new URL('https://kozlowskisebastian.pl', document.baseURI);
 
@@ -24,81 +25,8 @@
   });
 })();
 
+/* === AUTOFIT v3 (grow + shrink + justify do prawej) === */
 (function(){
-  const SELECTOR = '.PRZYCISK';
-
-  function ensureLabel(btn){
-    let label = btn.querySelector('.LABEL_SKALUJ');
-    if (!label){
-      const txt = btn.textContent.trim();
-      if (!txt) return null;
-      btn.textContent = '';
-      label = document.createElement('span');
-      label.className = 'LABEL_SKALUJ';
-      label.style.display = 'inline-block';
-      label.style.whiteSpace = 'nowrap';
-      label.style.transformOrigin = 'center center';
-      label.style.lineHeight = '1';
-      label.textContent = txt;
-      if (!btn.style.overflow) btn.style.overflow = 'hidden';
-
-      if (!btn.style.textAlign) btn.style.textAlign = 'center';
-      btn.appendChild(label);
-    }
-    return label;
-  }
-
-  function fitOne(btn){
-  const label = ensureLabel(btn);
-  if (!label) return;
-
-  if (!btn.style.position || btn.style.position === '') btn.style.position = 'relative';
-  label.style.position = 'absolute';
-  label.style.left = '50%';
-  label.style.top = '50%';
-  label.style.transformOrigin = 'center center';
-
-  label.style.transform = 'translate(-50%, -50%) scale(1,1)';
-
-  const availW = Math.max(1, btn.clientWidth);
-  const needW  = Math.max(1, label.scrollWidth);
-
-  let scaleX = availW / needW;
-
-  var bumpPx = (label.textContent.trim() === 'KARTY') ? 1 : 0;
-label.style.transform = 'translate(calc(-50% - ' + bumpPx + 'px), -50%) scale(' + scaleX.toFixed(3) + ',1)';
-}
-
-  function fitAll(){
-    document.querySelectorAll(SELECTOR).forEach(fitOne);
-  }
-
-  let t1 = null;
-  function scheduleFit(ms = 0){
-    if (t1) clearTimeout(t1);
-    t1 = setTimeout(() => {
-      requestAnimationFrame(() => {
-        fitAll();
-        setTimeout(fitAll, 60);
-        setTimeout(fitAll, 160);
-      });
-    }, ms);
-  }
-
-  function initial(){
-    fitAll();
-    requestAnimationFrame(() => scheduleFit(0));
-  }
-
-  if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', initial, { once:true });
-  } else {
-    initial();
-  }
-
-})();
-
-(function () {
   const BTN_SEL = [
     'a.PRZYCISK',
     'button.PRZYCISK',
@@ -108,112 +36,166 @@ label.style.transform = 'translate(calc(-50% - ' + bumpPx + 'px), -50%) scale(' 
     '.PRZYBORNIK_PRZYCISK_POLOWA .half'
   ].join(',');
 
-  function pickLabel(btn) {
+  const MIN_PX   = 11; // dolna granica
+  const SAFE_PAD = 2;  // margines bezpieczeństwa przy krawędziach
+  const ASCENDER_COMP = 1.045; // kompensacja metryk fontu, by optycznie wypełnić wysokość
 
-    let label = btn.querySelector('.LABEL_SKALUJ, .WASKI_TEKST, span');
+  function ensureLabel(btn){
+    let label = btn.querySelector('.LABEL_AUTOSIZE');
     if (label) return label;
 
-    const textNodes = Array.from(btn.childNodes).filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim());
-    if (textNodes.length) {
-      const span = document.createElement('span');
-      btn.insertBefore(span, btn.firstChild);
-      textNodes.forEach(n => span.appendChild(n));
-      return span;
-    }
-    return null;
+    // zbierz czysty tekst
+    const rawText = Array.from(btn.childNodes)
+      .filter(n => n.nodeType === Node.TEXT_NODE)
+      .map(n => n.nodeValue)
+      .join(' ')
+      .replace(/\s+/g,' ')
+      .trim();
+
+    if (!rawText) return null;
+
+    // usuń dotychczasową treść i wstaw jedną etykietę
+    btn.textContent = '';
+    label = document.createElement('span');
+    label.className = 'LABEL_AUTOSIZE';
+    label.textContent = rawText;
+    btn.appendChild(label);
+    return label;
   }
 
-  function measureRaw(el) {
+  function getVarPx(str, fallbackPx){
+    if (!str) return fallbackPx;
+    const tmp = document.createElement('div');
+    tmp.style.position = 'absolute';
+    tmp.style.visibility = 'hidden';
+    tmp.style.fontSize = str;
+    document.body.appendChild(tmp);
+    const v = parseFloat(getComputedStyle(tmp).fontSize) || fallbackPx;
+    tmp.remove();
+    return v;
+  }
 
-    const prevLetter = el.style.letterSpacing;
-    const prevWord = el.style.wordSpacing;
-    el.style.letterSpacing = 'normal';
-    el.style.wordSpacing = 'normal';
+  function getBaseFont(btn){
+    const cs = getComputedStyle(btn);
+    const fsVar = cs.getPropertyValue('--fs-base').trim();
+    const fsCur = cs.fontSize;
+    return getVarPx(fsVar || fsCur, 16);
+  }
 
-    const clone = el.cloneNode(true);
-    clone.style.position = 'absolute';
+  function getMaxFont(btn){
+    const cs = getComputedStyle(btn);
+    const maxVar = cs.getPropertyValue('--fs-max').trim();
+    const byVar  = getVarPx(maxVar, 0);
+    const byH    = Math.max(0, (btn.clientHeight - SAFE_PAD)); // line-height:1 => ~px
+    const hard   = 320;  // twardy sufit bezpieczeństwa
+    return Math.max(12, Math.min(byVar || Infinity, byH || Infinity, hard));
+  }
+
+  function measure(label, px){
+    const clone = label.cloneNode(true);
     clone.style.visibility = 'hidden';
+    clone.style.position = 'absolute';
+    clone.style.whiteSpace = 'nowrap';
     clone.style.width = 'auto';
-    clone.style.whiteSpace = 'pre';
-    clone.style.display = 'inline-block';
-    el.parentNode.appendChild(clone);
-    const w = clone.getBoundingClientRect().width;
+    clone.style.fontSize = px + 'px';
+    clone.style.lineHeight = '1';
+    document.body.appendChild(clone);
+    const rect = clone.getBoundingClientRect();
     clone.remove();
-
-    el.style.letterSpacing = prevLetter;
-    el.style.wordSpacing = prevWord;
-    return w;
+    return { w: Math.ceil(rect.width), h: Math.ceil(rect.height) };
   }
 
-  function countWordGaps(str) { return (str.trim().match(/\s+/g) || []).length; }
-  function countLetterGaps(str) {
-    const s = str.replace(/\s+/g, '');
-    return Math.max(s.length - 1, 0);
+  function fits(label, px, availW, availH){
+    const m = measure(label, px);
+    return (m.w <= availW) && (m.h <= availH);
   }
 
-  function justifyButton(btn) {
-    const label = pickLabel(btn);
-    if (!label) return;
-
-    label.style.display = 'block';
-    label.style.flex = '0 0 auto';
-    label.style.width = '100%';
-    label.style.transform = 'none';
-    label.style.textAlign = 'left';
-    label.style.whiteSpace = 'normal';
-
+  // Po wybraniu rozmiaru – dobij do prawej krawędzi spacingiem
+  function justifyToWidth(label, availW){
+    // wyzeruj spacingi
     label.style.wordSpacing = 'normal';
     label.style.letterSpacing = 'normal';
 
-    void label.offsetWidth;
+    // zmierz aktualną szerokość
+    const m = label.getBoundingClientRect().width;
+    const delta = Math.floor(availW - m);
+    if (delta <= 0) return;
 
-    const available = label.clientWidth;
     const text = (label.textContent || '').trim();
-    if (!available || !text) return;
+    const wordGaps   = (text.match(/\s+/g) || []).length;
+    const letters    = text.replace(/\s+/g,'');
+    const letterGaps = Math.max(letters.length - 1, 0);
 
-    const raw = measureRaw(label);
-    const delta = available - raw;
-
-    if (delta <= 0.5) {
-      label.style.wordSpacing = 'normal';
+    if (wordGaps > 0) {
+      label.style.wordSpacing   = (delta / wordGaps) + 'px';
       label.style.letterSpacing = 'normal';
-      return;
+    } else if (letterGaps > 0) {
+      label.style.letterSpacing = (delta / letterGaps) + 'px';
+      label.style.wordSpacing   = 'normal';
     }
+  }
 
-    const words = countWordGaps(text);
-    if (words > 0) {
-      label.style.wordSpacing = (delta / words) + 'px';
-      label.style.letterSpacing = 'normal';
-    } else {
-      const gaps = countLetterGaps(text);
-      if (gaps > 0) {
-        label.style.letterSpacing = (delta / gaps) + 'px';
-        label.style.wordSpacing = 'normal';
+  function fitOne(btn){
+    const label = ensureLabel(btn);
+    if (!label) return;
+
+    // Reset
+    btn.style.removeProperty('--fs');
+    label.style.wordSpacing   = 'normal';
+    label.style.letterSpacing = 'normal';
+
+    const availW = Math.max(1, btn.clientWidth  - SAFE_PAD);
+    const availH = Math.max(1, btn.clientHeight - SAFE_PAD);
+
+    const base = getBaseFont(btn);
+    let lo = MIN_PX;
+    let hi = Math.max(lo, getMaxFont(btn));
+
+    // Binary search: największy px, który mieści się w obu wymiarach.
+    // Celujemy minimalnie powyżej czystej wysokości (kompensacja metryk).
+    let best = lo;
+    while (lo <= hi) {
+      const mid = Math.floor((lo + hi) / 2);
+      const midAdj = Math.floor(mid * ASCENDER_COMP); // optyczny „boost” wysokości
+      if (fits(label, midAdj, availW, availH)) {
+        best = midAdj;
+        lo = mid + 1;
       } else {
-        label.style.wordSpacing = 'normal';
-        label.style.letterSpacing = 'normal';
+        hi = mid - 1;
       }
     }
+
+    // Dodatkowe „podbicie” o 1–2 px, jeśli wciąż jest luz
+    for (let bump = 2; bump >= 1; bump--) {
+      if (fits(label, best + bump, availW, availH)) { best = best + bump; break; }
+    }
+
+    btn.style.setProperty('--fs', best + 'px');
+
+    // Po ustawieniu rozmiaru – dobij do prawej krawędzi spacingiem
+    // (nigdy nie przesuwamy od lewej; tylko rozciągamy)
+    requestAnimationFrame(() => {
+      justifyToWidth(label, availW);
+    });
   }
 
-  function runAll() { document.querySelectorAll(BTN_SEL).forEach(justifyButton); }
+  function fitAll(){ document.querySelectorAll(BTN_SEL).forEach(fitOne); }
 
-  function scheduleRun() { requestAnimationFrame(() => requestAnimationFrame(runAll)); }
+  function init(){
+    fitAll();
+    window.addEventListener('resize', fitAll);
+    window.addEventListener('orientationchange', fitAll);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll).catch(()=>{});
+    const ro = new ResizeObserver(() => requestAnimationFrame(fitAll));
+    document.querySelectorAll(BTN_SEL).forEach(el => ro.observe(el));
+    // dogrywki po ładowaniu (fonty/układ)
+    setTimeout(fitAll, 60);
+    setTimeout(fitAll, 180);
+  }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', scheduleRun);
+    document.addEventListener('DOMContentLoaded', init, { once:true });
   } else {
-    scheduleRun();
+    init();
   }
-
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(scheduleRun).catch(()=>{});
-  }
-
-  const mo = new MutationObserver(scheduleRun);
-  mo.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
-
-  window.addEventListener('resize', scheduleRun);
-  window.addEventListener('orientationchange', scheduleRun);
-  window.addEventListener('PRZYBORNIK:REFLOW', scheduleRun);
 })();
