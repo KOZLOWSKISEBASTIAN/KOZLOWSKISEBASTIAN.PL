@@ -1,5 +1,5 @@
-    // 22:09
 (function(){
+  // Stała baza dla ścieżek wewnętrznych
   const BAZA = new URL('https://kozlowskisebastian.pl', document.baseURI);
 
   const SCIEZKI = new Map([
@@ -8,16 +8,26 @@
     ["KALKULATOR", "KALKULATOR"],
     ["LICZYDŁO", "LICZYDLO"],
     ["LATARKA", null],
-    ["POGODA", null],
+    ["POGODA", "POGODA"],
     ["GENERATOR", "GENERATOR"],
     ["PRZYBORNIK", "PRZYBORNIK"],
+
+    // nowe adresy
+    ["ADRES_KSG", "https://ksgroup.pl/"],                 // zawsze na ksgroup.pl
+    ["ADRES_KSPL", "https://kozlowskisebastian.pl/"],     // zawsze na kozlowskisebastian.pl
   ]);
 
   document.querySelectorAll('[data-klucz]').forEach(EL => {
     const KLUCZ = EL.getAttribute('data-klucz');
     const SCIEZKA = SCIEZKI.get(KLUCZ);
     if (SCIEZKA) {
-      EL.href = new URL(SCIEZKA + '/', BAZA).href;
+      // jeśli pełny adres → bezpośrednio
+      if (/^https?:\/\//i.test(SCIEZKA)) {
+        EL.href = SCIEZKA;
+      } else {
+        // inaczej → ścieżka na bazowej domenie
+        EL.href = new URL(SCIEZKA + '/', BAZA).href;
+      }
     } else {
       EL.setAttribute('tabindex', '-1');
       EL.addEventListener('click', E => E.preventDefault());
@@ -36,15 +46,14 @@
     '.PRZYBORNIK_PRZYCISK_POLOWA .half'
   ].join(',');
 
-  const MIN_PX   = 11; // dolna granica
-  const SAFE_PAD = 2;  // margines bezpieczeństwa przy krawędziach
-  const ASCENDER_COMP = 1.045; // kompensacja metryk fontu, by optycznie wypełnić wysokość
+  const MIN_PX   = 11;
+  const SAFE_PAD = 2;
+  const ASCENDER_COMP = 1.045;
 
   function ensureLabel(btn){
     let label = btn.querySelector('.LABEL_AUTOSIZE');
     if (label) return label;
 
-    // zbierz czysty tekst
     const rawText = Array.from(btn.childNodes)
       .filter(n => n.nodeType === Node.TEXT_NODE)
       .map(n => n.nodeValue)
@@ -54,7 +63,6 @@
 
     if (!rawText) return null;
 
-    // usuń dotychczasową treść i wstaw jedną etykietę
     btn.textContent = '';
     label = document.createElement('span');
     label.className = 'LABEL_AUTOSIZE';
@@ -86,8 +94,8 @@
     const cs = getComputedStyle(btn);
     const maxVar = cs.getPropertyValue('--fs-max').trim();
     const byVar  = getVarPx(maxVar, 0);
-    const byH    = Math.max(0, (btn.clientHeight - SAFE_PAD)); // line-height:1 => ~px
-    const hard   = 320;  // twardy sufit bezpieczeństwa
+    const byH    = Math.max(0, (btn.clientHeight - SAFE_PAD));
+    const hard   = 320;
     return Math.max(12, Math.min(byVar || Infinity, byH || Infinity, hard));
   }
 
@@ -110,13 +118,10 @@
     return (m.w <= availW) && (m.h <= availH);
   }
 
-  // Po wybraniu rozmiaru – dobij do prawej krawędzi spacingiem
   function justifyToWidth(label, availW){
-    // wyzeruj spacingi
     label.style.wordSpacing = 'normal';
     label.style.letterSpacing = 'normal';
 
-    // zmierz aktualną szerokość
     const m = label.getBoundingClientRect().width;
     const delta = Math.floor(availW - m);
     if (delta <= 0) return;
@@ -139,7 +144,6 @@
     const label = ensureLabel(btn);
     if (!label) return;
 
-    // Reset
     btn.style.removeProperty('--fs');
     label.style.wordSpacing   = 'normal';
     label.style.letterSpacing = 'normal';
@@ -151,12 +155,10 @@
     let lo = MIN_PX;
     let hi = Math.max(lo, getMaxFont(btn));
 
-    // Binary search: największy px, który mieści się w obu wymiarach.
-    // Celujemy minimalnie powyżej czystej wysokości (kompensacja metryk).
     let best = lo;
     while (lo <= hi) {
       const mid = Math.floor((lo + hi) / 2);
-      const midAdj = Math.floor(mid * ASCENDER_COMP); // optyczny „boost” wysokości
+      const midAdj = Math.floor(mid * ASCENDER_COMP);
       if (fits(label, midAdj, availW, availH)) {
         best = midAdj;
         lo = mid + 1;
@@ -165,15 +167,11 @@
       }
     }
 
-    // Dodatkowe „podbicie” o 1–2 px, jeśli wciąż jest luz
     for (let bump = 2; bump >= 1; bump--) {
       if (fits(label, best + bump, availW, availH)) { best = best + bump; break; }
     }
 
     btn.style.setProperty('--fs', best + 'px');
-
-    // Po ustawieniu rozmiaru – dobij do prawej krawędzi spacingiem
-    // (nigdy nie przesuwamy od lewej; tylko rozciągamy)
     requestAnimationFrame(() => {
       justifyToWidth(label, availW);
     });
@@ -188,7 +186,6 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll).catch(()=>{});
     const ro = new ResizeObserver(() => requestAnimationFrame(fitAll));
     document.querySelectorAll(BTN_SEL).forEach(el => ro.observe(el));
-    // dogrywki po ładowaniu (fonty/układ)
     setTimeout(fitAll, 60);
     setTimeout(fitAll, 180);
   }
