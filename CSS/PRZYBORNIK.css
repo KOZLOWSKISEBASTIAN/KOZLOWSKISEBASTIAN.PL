@@ -21,7 +21,7 @@ body {
 @media (min-width: 900px) { .KONTENER { max-width: 66.666vw; } }
 .SIATKA { display: grid; grid-template-columns: 1fr; gap: 7px; }
 @media (min-width: 900px) { .SIATKA { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-.PANEL { background: var(--TLO-PANEL); border-radius: 8px; padding: 0; margin: 0 auto; }
+.PANEL { background: var(--TLO-PANEL); border-radius: 8px; padding: 4px !important; margin: 0 auto; }
 
 /* ===== PRZYCISKI ===== */
 :root {
