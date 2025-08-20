@@ -24,8 +24,6 @@
   });
 })();
 
-
-/* === AUTOFIT === */
 (function(){
   const SELECTOR = '.PRZYCISK';
 
@@ -43,7 +41,7 @@
       label.style.lineHeight = '1';
       label.textContent = txt;
       if (!btn.style.overflow) btn.style.overflow = 'hidden';
-      // dopilnuj centrowania po stronie kontenera (gdy nie ma flex)
+
       if (!btn.style.textAlign) btn.style.textAlign = 'center';
       btn.appendChild(label);
     }
@@ -54,14 +52,12 @@
   const label = ensureLabel(btn);
   if (!label) return;
 
-  // Ustawienia do centrowania „od środka” niezależnie od skali
   if (!btn.style.position || btn.style.position === '') btn.style.position = 'relative';
   label.style.position = 'absolute';
   label.style.left = '50%';
   label.style.top = '50%';
   label.style.transformOrigin = 'center center';
 
-  // Reset transform do pomiaru
   label.style.transform = 'translate(-50%, -50%) scale(1,1)';
 
   const availW = Math.max(1, btn.clientWidth);
@@ -69,7 +65,6 @@
 
   let scaleX = availW / needW;
 
-  // Skala tylko w osi X, przesunięcie -50% gwarantuje idealne wyśrodkowanie
   var bumpPx = (label.textContent.trim() === 'KARTY') ? 1 : 0;
 label.style.transform = 'translate(calc(-50% - ' + bumpPx + 'px), -50%) scale(' + scaleX.toFixed(3) + ',1)';
 }
@@ -78,7 +73,6 @@ label.style.transform = 'translate(calc(-50% - ' + bumpPx + 'px), -50%) scale(' 
     document.querySelectorAll(SELECTOR).forEach(fitOne);
   }
 
-  // Debounce + dogrywki
   let t1 = null;
   function scheduleFit(ms = 0){
     if (t1) clearTimeout(t1);
@@ -103,9 +97,7 @@ label.style.transform = 'translate(calc(-50% - ' + bumpPx + 'px), -50%) scale(' 
   }
 
 })();
-/* === KONIEC AUTOFIT === */
 
-// --- ROZCIĄGANIE NAPISÓW OD LEWEJ DO PRAWEJ KRAWĘDZI — v2 (flex:1 + observer + fonts.ready) ---
 (function () {
   const BTN_SEL = [
     'a.PRZYCISK',
@@ -117,10 +109,10 @@ label.style.transform = 'translate(calc(-50% - ' + bumpPx + 'px), -50%) scale(' 
   ].join(',');
 
   function pickLabel(btn) {
-    // preferowane istniejące etykiety
+
     let label = btn.querySelector('.LABEL_SKALUJ, .WASKI_TEKST, span');
     if (label) return label;
-    // fallback: owiń goły tekst w span
+
     const textNodes = Array.from(btn.childNodes).filter(n => n.nodeType === Node.TEXT_NODE && n.nodeValue.trim());
     if (textNodes.length) {
       const span = document.createElement('span');
@@ -132,12 +124,12 @@ label.style.transform = 'translate(calc(-50% - ' + bumpPx + 'px), -50%) scale(' 
   }
 
   function measureRaw(el) {
-    // na czas pomiaru wyłącz dodatkowe spacingi
+
     const prevLetter = el.style.letterSpacing;
     const prevWord = el.style.wordSpacing;
     el.style.letterSpacing = 'normal';
     el.style.wordSpacing = 'normal';
-    // sklonuj jako offscreen do precyzyjnego pomiaru bez szerokości 100%
+
     const clone = el.cloneNode(true);
     clone.style.position = 'absolute';
     clone.style.visibility = 'hidden';
@@ -147,7 +139,7 @@ label.style.transform = 'translate(calc(-50% - ' + bumpPx + 'px), -50%) scale(' 
     el.parentNode.appendChild(clone);
     const w = clone.getBoundingClientRect().width;
     clone.remove();
-    // przywróć
+
     el.style.letterSpacing = prevLetter;
     el.style.wordSpacing = prevWord;
     return w;
@@ -163,19 +155,16 @@ label.style.transform = 'translate(calc(-50% - ' + bumpPx + 'px), -50%) scale(' 
     const label = pickLabel(btn);
     if (!label) return;
 
-    // Etykieta musi wypełnić dostępną szerokość w layoucie flex
     label.style.display = 'block';
-    label.style.flex = '1 1 auto';
+    label.style.flex = '0 0 auto';
     label.style.width = '100%';
     label.style.transform = 'none';
     label.style.textAlign = 'left';
     label.style.whiteSpace = 'normal';
 
-    // Zresetuj spacingi przed pomiarem
     label.style.wordSpacing = 'normal';
     label.style.letterSpacing = 'normal';
 
-    // Wymuś reflow po zmianach stylu
     void label.offsetWidth;
 
     const available = label.clientWidth;
@@ -211,7 +200,6 @@ label.style.transform = 'translate(calc(-50% - ' + bumpPx + 'px), -50%) scale(' 
 
   function scheduleRun() { requestAnimationFrame(() => requestAnimationFrame(runAll)); }
 
-  // Inicjalizacja po gotowości dokumentu i fontów
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', scheduleRun);
   } else {
@@ -222,11 +210,9 @@ label.style.transform = 'translate(calc(-50% - ' + bumpPx + 'px), -50%) scale(' 
     document.fonts.ready.then(scheduleRun).catch(()=>{});
   }
 
-  // Reakcja na zmiany DOM (przyciski dodawane dynamicznie)
   const mo = new MutationObserver(scheduleRun);
   mo.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 
-  // Reflow na resize/orientation
   window.addEventListener('resize', scheduleRun);
   window.addEventListener('orientationchange', scheduleRun);
   window.addEventListener('PRZYBORNIK:REFLOW', scheduleRun);
