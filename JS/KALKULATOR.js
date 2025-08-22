@@ -17,7 +17,7 @@
 
   function pushOpLine(line){
     lastOps.push(line);
-    while(lastOps.length > 2) lastOps.shift();
+    while(lastOps.length > 3) lastOps.shift();
   }
 
   function commitIfNeeded(){
@@ -29,7 +29,7 @@
   }
 
   function renderLOG(){
-    var lines = lastOps.slice(-2);
+    var lines = lastOps.slice(-3);
     var html = '';
     for (var i=0;i<lines.length;i++){
       html += '<div class="KALKULATOR_LOG_LINIA">' + escapeHtml(lines[i]) + '</div>';
