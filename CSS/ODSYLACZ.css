@@ -1,13 +1,21 @@
-/* Całość wycentrowana */
+/* === Reset i stabilizacja viewportu === */
+html, body { height: 100%; margin: 0; padding: 0; }
+:root { scrollbar-gutter: stable both-edges; }
+
 body {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  margin: 0;
+
+  /* stabilne jednostki wysokości na mobile */
+  min-height: 100svh;
+  min-height: 100dvh;
+
+  background: var(--TLO);
+  overflow: hidden; /* blokada "pustego" przewijania */
 }
 
-/* Lista wierszy w kolumnie, z odstępem */
+/* === Układ listy i wierszy === */
 .LISTA-WIERSZY {
   display: flex;
   flex-direction: column;
@@ -16,7 +24,6 @@ body {
   justify-content: center; /* centrum w pionie */
 }
 
-/* Pojedynczy wiersz – ikony poziomo */
 .WIERSZ {
   display: flex;
   align-items: center;
@@ -25,7 +32,7 @@ body {
   gap: 7px;
 }
 
-/* Płytki ikon */
+/* === Ikonowe przyciski === */
 .PRZYCISK.IKONA {
   position: relative;
   width: var(--w, 44px);
@@ -34,13 +41,13 @@ body {
   border-radius: 8px;
   background-color: var(--TLO-PRZYCISK);
   overflow: hidden;
-  text-indent: -9999px;
+  text-indent: -9999px;   /* ukrycie ewentualnego tekstu */
   white-space: nowrap;
   -webkit-tap-highlight-color: transparent;
   transition: background-color .12s ease, transform .06s ease;
 }
 
-/* Ikona wewnątrz płytki jako maska */
+/* Ikona jako maska */
 .PRZYCISK.IKONA::before {
   content: "";
   position: absolute;
@@ -50,7 +57,7 @@ body {
   mask: var(--mask) center/contain no-repeat;
 }
 
-/* Hover: tło = ramka, ikona = róż (#FF00FF) */
+/* Hover: kafelek = kolor ramki, ikona = róż (#FF00FF) */
 .PRZYCISK.IKONA:hover {
   background-color: var(--TLO-PANEL);
   transform: translateY(-1px);
@@ -59,5 +66,10 @@ body {
   background-color: #FF00FF;
 }
 
-/* Ikona łapy (otwórz wszystkie) odrobinę mniejsza */
+/* Ikona łapy (otwórz wszystkie) – mniejszy margines wewnętrzny */
 .PRZYCISK.IKONA.OTWORZ::before { inset: 10px; }
+
+/* Na urządzeniach bez hover wyłącz efekt podskakiwania */
+@media (hover: none) {
+  .PRZYCISK.IKONA:hover { transform: none; }
+}
