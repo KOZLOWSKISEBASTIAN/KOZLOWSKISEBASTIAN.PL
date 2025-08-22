@@ -1,0 +1,63 @@
+/* Całość wycentrowana */
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/* Lista wierszy w kolumnie, z odstępem */
+.LISTA-WIERSZY {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;   /* centrum w poziomie */
+  justify-content: center; /* centrum w pionie */
+}
+
+/* Pojedynczy wiersz – ikony poziomo */
+.WIERSZ {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+
+/* Płytki ikon */
+.PRZYCISK.IKONA {
+  position: relative;
+  width: var(--w, 44px);
+  height: var(--h, 44px);
+  min-height: var(--h, 44px);
+  border-radius: 8px;
+  background-color: var(--TLO-PRZYCISK);
+  overflow: hidden;
+  text-indent: -9999px;
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .12s ease, transform .06s ease;
+}
+
+/* Ikona wewnątrz płytki jako maska */
+.PRZYCISK.IKONA::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  background-color: var(--IKONA-KOLOR, var(--TEKST-PRZYCISK));
+  -webkit-mask: var(--mask) center/contain no-repeat;
+  mask: var(--mask) center/contain no-repeat;
+}
+
+/* Hover: tło = ramka, ikona = róż (#FF00FF) */
+.PRZYCISK.IKONA:hover {
+  background-color: var(--TLO-PANEL);
+  transform: translateY(-1px);
+}
+.PRZYCISK.IKONA:hover::before {
+  background-color: #FF00FF;
+}
+
+/* Ikona łapy (otwórz wszystkie) odrobinę mniejsza */
+.PRZYCISK.IKONA.OTWORZ::before { inset: 10px; }
