@@ -1,54 +1,64 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ODSYŁACZ</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/ODSYLACZ.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ODSYŁACZ</title>
+  <meta name="color-scheme" content="dark light" />
+
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KOLORY.css">
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/HEXAGON.css">
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/ODSYLACZ.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&family=Poppins:wght@400&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="password-manager-instruction" id="password-instruction">
-        <button class="close-btn" id="close-instruction">
-            <img src="https://kozlowskisebastian.pl/GRAFIKA/ZAMKNIJ.svg">
-        </button>
-        <p>chrome://password-manager/passwords</p>
-        <p>został skopiowany do schowka</p>
-        <p>Kliknij przycisk poniżej, aby otworzyć nową kartę</p>
-        <p>Wklej link do paska adresu (CTRL+V lub CMD+V)</p>
-        <p>Naciśnij Enter</p>
-        <a href="#" class="open-all" id="open-new-tab">
-            <img src="https://kozlowskisebastian.pl/GRAFIKA/LAPA.svg">
-        </a>
-    </div>
-    <div class="container">
-        <div class="row">
-            <ul class="links">
-                <li><a href="https://www.beta.messenger.com/"><img src="https://kozlowskisebastian.pl/GRAFIKA/MESSENGER-N.svg"></a></li>
-                <li><a href="https://x.com/"><img src="https://kozlowskisebastian.pl/GRAFIKA/X.svg"></a></li>
-                <li><a href="https://www.beta.facebook.com/"><img src="https://kozlowskisebastian.pl/GRAFIKA/FACEBOOK-N.svg"></a></li>
-                <li><a href="https://miuipolska.pl/forum/"><img src="https://kozlowskisebastian.pl/GRAFIKA/MIUIPOLSKA.svg"></a></li>
-                <li><a href="https://youtube.com"><img src="https://kozlowskisebastian.pl/GRAFIKA/YOUTUBE.svg"></a></li>
-                <li><a href="https://music.youtube.com"><img src="https://kozlowskisebastian.pl/GRAFIKA/YOUTUBEMUSIC.svg"></a></li>
-                <li><a href="chrome://password-manager/passwords" class="chrome-link"><img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg"></a></li>
-            </ul>
-            <a href="#" class="open-all"><img src="https://kozlowskisebastian.pl/GRAFIKA/LAPA.svg"></a>
-        </div>
-        <div class="row">
-            <ul class="links">
-                <li><a href="http://borg.org.pl/board/"><img src="https://kozlowskisebastian.pl/GRAFIKA/BORG.svg"></a></li>
-                <li><a href="https://github.com/"><img src="https://kozlowskisebastian.pl/GRAFIKA/GITHUB.svg"></a></li>
-                <li><a href="https://rumble.com/"><img src="https://kozlowskisebastian.pl/GRAFIKA/RUMBLE.svg"></a></li>
-            </ul>
-            <a href="#" class="open-all"><img src="https://kozlowskisebastian.pl/GRAFIKA/LAPA.svg"></a>
-        </div>
-        <div class="row">
-            <ul class="links">
-                <li><a href="https://passwords.google.com/"><img src="https://kozlowskisebastian.pl/GRAFIKA/HASLA.svg"></a></li>
-            </ul>
-            <a href="#" class="open-all"><img src="https://kozlowskisebastian.pl/GRAFIKA/LAPA.svg"></a>
-        </div>
-    </div>
-    <script src="https://kozlowskisebastian.pl/JS/ODSYLACZ.js"></script>
+  <div class="RAMKA">
+    <main class="KONTENER">
+      <div class="PANEL">
+        <section class="LISTA-WIERSZY">
+
+          <div class="WIERSZ" data-wiersz>
+            <a class="PRZYCISK IKONA" href="https://www.beta.messenger.com/" aria-label="Messenger" data-ikon="MESSENGER-N"></a>
+            <a class="PRZYCISK IKONA" href="https://x.com/" aria-label="Twitter X" data-ikon="X"></a>
+            <a class="PRZYCISK IKONA" href="https://www.beta.facebook.com/" aria-label="Facebook" data-ikon="FACEBOOK-N"></a>
+            <a class="PRZYCISK IKONA" href="https://miuipolska.pl/forum/" aria-label="MIUIPolska" data-ikon="MIUIPOLSKA-L"></a>
+            <a class="PRZYCISK IKONA" href="https://youtube.com/" aria-label="YouTube" data-ikon="YOUTUBE"></a>
+            <a class="PRZYCISK IKONA" href="https://music.youtube.com/" aria-label="YouTube Music" data-ikon="YOUTUBEMUSIC"></a>
+            <a class="PRZYCISK IKONA" href="chrome://password-manager/passwords" aria-label="Hasła Chrome" data-ikon="HASLA"></a>
+            <button class="PRZYCISK IKONA OTWORZ" data-open-all aria-label="Otwórz wszystkie wiersz 1" data-ikon="LAPA"></button>
+          </div>
+
+          <div class="WIERSZ" data-wiersz>
+            <a class="PRZYCISK IKONA" href="http://borg.org.pl/board/" aria-label="BORG" data-ikon="BORG"></a>
+            <a class="PRZYCISK IKONA" href="https://github.com/" aria-label="GitHub" data-ikon="GITHUB"></a>
+            <a class="PRZYCISK IKONA" href="https://rumble.com/" aria-label="Rumble" data-ikon="RUMBLE"></a>
+            <button class="PRZYCISK IKONA OTWORZ" data-open-all aria-label="Otwórz wszystkie wiersz 2" data-ikon="LAPA"></button>
+          </div>
+
+          <div class="WIERSZ" data-wiersz>
+            <a class="PRZYCISK IKONA" href="https://passwords.google.com/" aria-label="Hasła Google" data-ikon="HASLA"></a>
+            <button class="PRZYCISK IKONA OTWORZ" data-open-all aria-label="Otwórz wszystkie wiersz 3" data-ikon="LAPA"></button>
+          </div>
+
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <div class="HEXAGON_KONTENER" id="HEXAGON">
+    <div class="HEXAGON" title="MOTYW"></div>
+  </div>
+  <span class="WYLACZNIK" id="WYLACZNIK"></span>
+  <div class="TROJKAT_KONTENER" id="TROJKATY">
+    <div class="TROJKAT TROJKAT_JASNY" title="JASNY MOTYW"></div>
+    <div class="TROJKAT TROJKAT_CIEMNY" title="CIEMNY MOTYW"></div>
+  </div>
+
+  <script src="https://kozlowskisebastian.pl/JS/HEXAGON.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/MOTYWAUTO.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/ODSYLACZE.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/ODSYLACZ.js"></script>
 </body>
 </html>
