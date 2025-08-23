@@ -2,6 +2,7 @@
   const BASE    = "https://kozlowskisebastian.pl/GRAFIKA/";
   const ICON_H  = 44;
   const MIN_W   = 28;
+  const IS_MOBILE = () => window.matchMedia('(max-width: 899px)').matches;
 
   function applyIcon(btn){
     let file = (btn.dataset.ikon || "").trim();
@@ -41,6 +42,10 @@
   function adjustGhost(row){
     const ghost = row.querySelector('.PRZYCISK.PUSTY');
     if (!ghost) return;
+    if (IS_MOBILE()) {
+      ghost.style.width = '0px';
+      return;
+    }
 
     const others = Array.from(row.children).filter(el => !el.classList.contains('PUSTY'));
 
