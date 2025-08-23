@@ -31,6 +31,7 @@ body {
 
 .PRZYCISK.IKONA {
   position: relative;
+  min-width: 44px; 
   width: var(--w, 44px);
   height: var(--h, 44px);
   min-height: var(--h, 44px);
