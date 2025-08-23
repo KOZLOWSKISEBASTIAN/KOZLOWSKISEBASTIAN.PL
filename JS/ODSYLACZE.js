@@ -11,6 +11,7 @@
     ["POGODA", "POGODA"],
     ["GENERATOR", "GENERATOR"],
     ["PRZYBORNIK", "PRZYBORNIK"],
+    ["ODSYŁACZ", "ODSYLACZ"],
 
     ["ADRES_KSG", "https://ksgroup.pl/"],
     ["ADRES_KSPL", "https://kozlowskisebastian.pl/"],
