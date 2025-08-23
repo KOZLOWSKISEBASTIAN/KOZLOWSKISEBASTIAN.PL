@@ -84,12 +84,33 @@
 }
 
 @media (max-width: 899px) {
+  .LISTA-WIERSZY { display: grid; grid-template-columns: 1fr; gap: 7px; }
+
+  .WIERSZ { display: contents; }
+
   .PRZYCISK.PUSTY,
-  .PRZYCISK.IKONA.OTWORZ {
-    display: none !important;
+  .PRZYCISK.IKONA.OTWORZ { display: none !important; }
+
+  .PRZYCISK.IKONA {
+    width: 100% !important;
+    min-height: 60px;
+    height: auto;
+    text-indent: -9999px;
   }
 
-  .WIERSZ {
-    justify-content: flex-start;
+  .PRZYCISK.IKONA::before {
+    inset: auto;
+    left: 12px;
+    right: auto;
+    top: 12px;
+    bottom: 12px;
+    width: 36px;
+    background-color: var(--TEKST-PRZYCISK);
+    -webkit-mask-position: center;
+            mask-position: center;
+    -webkit-mask-size: contain;
+            mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
   }
 }
