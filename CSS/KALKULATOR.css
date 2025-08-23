@@ -137,15 +137,10 @@
   background: var(--TLO-PANEL);
   transform: translateY(-1px);
 }
+
 .KALKULATOR_KLAWIATURA > button:focus-visible {
   outline: 2px solid var(--AKCENT-TEKST);
   outline-offset: 2px;
-}
-
-@media (max-width: 768px) {
-  .KALKULATOR_EKRAN {
-    font-size: clamp(36px, 9vw, 64px);
-  }
 }
 
 :root[WYBOR_MOTYW="CIEMNY"] .KALKULATOR_KLAWIATURA [data-akcja="clear"],
@@ -160,6 +155,7 @@
 :root[WYBOR_MOTYW="CIEMNY"] .KALKULATOR_KLAWIATURA [data-akcja="eq"] {
   color: #FF00FF !important;
 }
+
 :root[WYBOR_MOTYW="CIEMNY"] .KALKULATOR_KLAWIATURA [data-akcja="eq"]:active {
   color: #9E9E9E !important;
 }
