@@ -16,7 +16,7 @@ body {
   height: 100%;
 }
 
-.RAMKA { width: 100%; padding: 20px; }
+.RAMKA { width: 100%; padding: 4px; }
 .KONTENER { width: 100%; margin: 0 auto; }
 @media (min-width: 900px) { .KONTENER { max-width: 66.666vw; } }
 .SIATKA { display: grid; grid-template-columns: 1fr; gap: 7px; }
@@ -57,13 +57,14 @@ body {
   overflow: hidden;
   white-space: nowrap;
   word-break: keep-all;
+  cursor: pointer;
 }
 
 .PRZYCISK > *,
 .PRZYCISK_PRZYBORNIK_POWROT > *,
 .PRZYCISK_KLAWISZ > *,
 .PRZYCISK--KLAWISZ > *,
-.PRZYBORNIK_PRZYCISK_POLOWA .half > * {
+.PRZYBORNIK_PRZYCISK_POLOWA .PRZYCISK > * {
   position: static !important;
   transform: none !important;
   margin: 0 !important;
@@ -78,7 +79,7 @@ body {
 .PRZYCISK_PRZYBORNIK_POWROT .LABEL_AUTOSIZE,
 .PRZYCISK_KLAWISZ .LABEL_AUTOSIZE,
 .PRZYCISK--KLAWISZ .LABEL_AUTOSIZE,
-.PRZYBORNIK_PRZYCISK_POLOWA .half .LABEL_AUTOSIZE {
+.PRZYBORNIK_PRZYCISK_POLOWA .PRZYCISK .LABEL_AUTOSIZE {
   display: inline-block;
   width: auto;
   white-space: inherit;
@@ -109,13 +110,18 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 7px;
 }
-.PRZYBORNIK_PRZYCISK_POLOWA .half {
+.PRZYBORNIK_PRZYCISK_POLOWA .PRZYCISK {
   display: flex;
   align-items: center;
   justify-content: flex-start;
   text-align: left;
   padding-left: var(--padL) !important;
   gap: 0;
+}
+
+.PRZYCISK:focus-visible {
+  outline: 2px solid var(--AKCENT-TEKST);
+  outline-offset: 2px;
 }
 
 @media (min-width: 1024px) {
@@ -128,4 +134,8 @@ body {
 @media (min-width: 1600px) {
   .PRZYCISK,
   .PRZYCISK_PRZYBORNIK_POWROT { --fs-base: clamp(14px, 1vw, 16px); }
+}
+
+@media (max-width: 899px) {
+  .PRZYCISK.PUSTY { display: none !important; }
 }
