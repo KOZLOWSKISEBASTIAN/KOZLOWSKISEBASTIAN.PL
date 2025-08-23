@@ -82,3 +82,14 @@
   .PRZYCISK.IKONA:hover,
   .PRZYCISK.PUSTY:hover { transform: none; }
 }
+
+@media (max-width: 899px) {
+  .PRZYCISK.PUSTY,
+  .PRZYCISK.IKONA.OTWORZ {
+    display: none !important;
+  }
+
+  .WIERSZ {
+    justify-content: flex-start;
+  }
+}
