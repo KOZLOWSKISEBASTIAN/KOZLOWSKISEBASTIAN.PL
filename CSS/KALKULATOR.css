@@ -52,7 +52,7 @@
   display: grid;
   gap: 0;
   border: none;
-  padding: 0;
+  padding: 0 14px;
   margin: 0;
   text-align: right;
   overflow: visible;
