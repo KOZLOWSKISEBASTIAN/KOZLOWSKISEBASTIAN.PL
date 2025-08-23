@@ -1,5 +1,4 @@
 (function(){
-
   const BAZA = new URL('https://kozlowskisebastian.pl', document.baseURI);
 
   const SCIEZKI = new Map([
@@ -12,7 +11,7 @@
     ["GENERATOR", "GENERATOR"],
     ["PRZYBORNIK", "PRZYBORNIK"],
     ["ODSYŁACZ", "ODSYLACZ"],
-
+	
     ["ADRES_KSG", "https://ksgroup.pl/"],
     ["ADRES_KSPL", "https://kozlowskisebastian.pl/"],
   ]);
@@ -24,11 +23,14 @@
 
       if (/^https?:\/\//i.test(SCIEZKA)) {
         EL.href = SCIEZKA;
+        EL.target = '_blank';
+        EL.rel = 'noopener noreferrer';
       } else {
 
         EL.href = new URL(SCIEZKA + '/', BAZA).href;
       }
     } else {
+
       EL.setAttribute('tabindex', '-1');
       EL.addEventListener('click', E => E.preventDefault());
     }
@@ -42,7 +44,7 @@
     '.PRZYCISK_PRZYBORNIK_POWROT',
     '.PRZYCISK_KLAWISZ',
     '.PRZYCISK--KLAWISZ',
-    '.PRZYBORNIK_PRZYCISK_POLOWA .half'
+    '.PRZYBORNIK_PRZYCISK_POLOWA .PRZYCISK'
   ].join(',');
 
   const MIN_PX   = 11;
@@ -150,7 +152,6 @@
     const availW = Math.max(1, btn.clientWidth  - SAFE_PAD);
     const availH = Math.max(1, btn.clientHeight - SAFE_PAD);
 
-    const base = getBaseFont(btn);
     let lo = MIN_PX;
     let hi = Math.max(lo, getMaxFont(btn));
 
@@ -183,8 +184,11 @@
     window.addEventListener('resize', fitAll);
     window.addEventListener('orientationchange', fitAll);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAll).catch(()=>{});
+
     const ro = new ResizeObserver(() => requestAnimationFrame(fitAll));
-    document.querySelectorAll(BTN_SEL).forEach(el => ro.observe(el));
+    const panel = document.querySelector('.PANEL') || document.body;
+    ro.observe(panel);
+
     setTimeout(fitAll, 60);
     setTimeout(fitAll, 180);
   }
