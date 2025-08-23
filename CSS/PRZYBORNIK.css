@@ -1,6 +1,3 @@
-/* 22:09 */
-
-/* Reset i podstawy */
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body {
@@ -19,7 +16,6 @@ body {
   height: 100%;
 }
 
-/* Layout */
 .RAMKA { width: 100%; padding: 20px; }
 .KONTENER { width: 100%; margin: 0 auto; }
 @media (min-width: 900px) { .KONTENER { max-width: 66.666vw; } }
@@ -27,11 +23,10 @@ body {
 @media (min-width: 900px) { .SIATKA { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .PANEL { background: var(--TLO-PANEL); border-radius: 8px; padding: 4px !important; margin: 0 auto; }
 
-/* ===== PRZYCISKI ===== */
 :root {
   --padL: 0px;
-  --fs-base: clamp(17px, 4.6vw, 20px); /* startowy, gdy JS jeszcze nie policzył */
-  --fs-max: 240px;                     /* miękki sufit bezpieczeństwa */
+  --fs-base: clamp(17px, 4.6vw, 20px);
+  --fs-max: 240px;
 }
 
 .PRZYCISK,
@@ -40,31 +35,30 @@ body {
 .PRZYCISK--KLAWISZ,
 .PRZYCISK.POLOWA {
   display: flex;
-  align-items: center;           /* środek w pionie; optycznie pełna wysokość */
-  justify-content: flex-start;   /* od lewej */
+  align-items: center;
+  justify-content: flex-start;
   width: 100%;
   text-align: left;
   min-height: 60px;
   padding: 0 0 0 var(--padL) !important;
   margin: 0;
   gap: 0;
-  line-height: 1;                /* => scrollHeight ~= font-size */
+  line-height: 1;
   border-radius: 8px;
   border: 0px solid var(--TLO-PANEL);
   background: var(--TLO-PRZYCISK);
   color: var(--TEKST-PRZYCISK);
   text-decoration: none;
   font-weight: 500;
-  font-size: var(--fs, var(--fs-base)); /* JS nadpisuje --fs */
+  font-size: var(--fs, var(--fs-base));
   letter-spacing: 0;
   -webkit-tap-highlight-color: transparent;
   transition: color .12s ease, transform .06s ease, background-color .12s ease;
-  overflow: hidden;              /* nic nie wyjdzie poza */
-  white-space: nowrap;           /* 1 linia – ułatwia pełną wysokość */
+  overflow: hidden;
+  white-space: nowrap;
   word-break: keep-all;
 }
 
-/* Reset wnętrza */
 .PRZYCISK > *,
 .PRZYCISK_PRZYBORNIK_POWROT > *,
 .PRZYCISK_KLAWISZ > *,
@@ -80,19 +74,17 @@ body {
   white-space: inherit !important;
 }
 
-/* Label mierzony przez JS */
 .PRZYCISK .LABEL_AUTOSIZE,
 .PRZYCISK_PRZYBORNIK_POWROT .LABEL_AUTOSIZE,
 .PRZYCISK_KLAWISZ .LABEL_AUTOSIZE,
 .PRZYCISK--KLAWISZ .LABEL_AUTOSIZE,
 .PRZYBORNIK_PRZYCISK_POLOWA .half .LABEL_AUTOSIZE {
   display: inline-block;
-  width: auto;                 /* ważne przy pomiarach */
-  white-space: inherit;        /* 1 linia */
+  width: auto;
+  white-space: inherit;
   line-height: 1;
 }
 
-/* Ikony/obrazy (gdyby się pojawiły obok tekstu) */
 .PRZYCISK svg, .PRZYCISK img,
 .PRZYCISK_PRZYBORNIK_POWROT svg, .PRZYCISK_PRZYBORNIK_POWROT img,
 .PRZYCISK_KLAWISZ svg, .PRZYCISK_KLAWISZ img,
@@ -101,7 +93,6 @@ body {
   padding: 0 !important;
 }
 
-/* Hover/disabled */
 .PRZYCISK:hover,
 .PRZYCISK_PRZYBORNIK_POWROT:hover,
 .PRZYCISK_KLAWISZ:hover,
@@ -112,7 +103,6 @@ body {
 }
 .PRZYCISK[aria-disabled="true"] { pointer-events: none; color: #777; opacity: .7; }
 
-/* Połówki */
 .PRZYBORNIK_PRZYCISK_POLOWA {
   display: grid;
   width: 100%;
@@ -128,7 +118,6 @@ body {
   gap: 0;
 }
 
-/* Desktop */
 @media (min-width: 1024px) {
   .PRZYCISK,
   .PRZYCISK_PRZYBORNIK_POWROT {
