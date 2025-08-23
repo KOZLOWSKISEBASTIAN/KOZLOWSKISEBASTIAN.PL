@@ -1,65 +1,78 @@
-// ODSYLACZ.js — ikony jako maski, rozciąganie kafelków (z min-width), „otwórz wszystkie”, ciche chrome://
 (function(){
-  const BASE   = "https://kozlowskisebastian.pl/GRAFIKA/";
-  const ICON_H = 44; // px – stała wysokość kafelka/ikony
-  const MIN_W  = 44; // px – minimalna szerokość, żeby kafelki nie znikały
+  const BASE    = "https://kozlowskisebastian.pl/GRAFIKA/";
+  const ICON_H  = 44;
+  const MIN_W   = 28;
 
   function applyIcon(btn){
     let file = (btn.dataset.ikon || "").trim();
     if (!file) return;
-
-    // dopnij .svg, jeśli brak
     if (!/\.(svg)(\?|#|$)/i.test(file)) file += ".svg";
-
     const url = BASE + encodeURIComponent(file);
 
-    // maska w ::before + stała wysokość
     btn.style.setProperty('--mask', `url("${url}")`);
-    btn.style.setProperty('--h', ICON_H + 'px');
-
-    // ukryj ewentualny tekst (zostaje aria-label)
     btn.textContent = "";
 
-    const isOpenAll = btn.classList.contains('OTWORZ');
+    const img = new Image();
+    img.onload = () => {
+      const nh = img.naturalHeight || ICON_H;
+      const nw = img.naturalWidth  || ICON_H;
+      const width = Math.max(MIN_W, Math.round(ICON_H * (nw / nh)));
+      btn.style.setProperty('--w', width + 'px');
+      btn.style.width = width + 'px';
 
-    if (!isOpenAll) {
-      // Rozciągane kafelki: niech rosną, ale mają minimum 44px,
-      // oraz startowy flex-basis ~120px (ładne „wyjustowanie”).
-      btn.style.width    = 'auto';
-      btn.style.flex     = '1 1 120px';
-      btn.style.minWidth = MIN_W + 'px';
-    } else {
-      // ŁAPA – kompaktowa szerokość wg naturalnych proporcji SVG
-      const img = new Image();
-      img.onload = () => {
-        const nh = img.naturalHeight || ICON_H;
-        const nw = img.naturalWidth  || ICON_H;
-        const width = Math.max(MIN_W, Math.round(ICON_H * (nw / nh)));
-        btn.style.removeProperty('flex');
-        btn.style.minWidth = MIN_W + 'px';
-        btn.style.width    = width + 'px';
-      };
-      img.onerror = () => {
-        btn.style.removeProperty('flex');
-        btn.style.minWidth = MIN_W + 'px';
-        btn.style.width    = ICON_H + 'px';
-      };
-      img.src = url;
-    }
+      const row = btn.closest('.WIERSZ');
+      if (row) adjustGhost(row);
+    };
+    img.onerror = () => {
+      btn.style.setProperty('--w', ICON_H + 'px');
+      btn.style.width = ICON_H + 'px';
+      const row = btn.closest('.WIERSZ');
+      if (row) adjustGhost(row);
+    };
+    img.src = url;
   }
 
-  function initIcons(){
+  function getGapPx(row){
+    const cs = getComputedStyle(row);
+    const g = parseFloat(cs.columnGap || cs.gap || '7') || 7;
+    return Math.max(0, g);
+  }
+
+  function adjustGhost(row){
+    const ghost = row.querySelector('.PRZYCISK.PUSTY');
+    if (!ghost) return;
+
+    const others = Array.from(row.children).filter(el => !el.classList.contains('PUSTY'));
+
+    if (!others.length) { ghost.style.width = '0px'; return; }
+
+    const gap = getGapPx(row);
+    const sumWidths = others.reduce((acc, el) => acc + el.getBoundingClientRect().width, 0);
+    const gapsCount = others.length;
+    const gapsTotal = gapsCount * gap;
+    const rowW = row.getBoundingClientRect().width;
+
+    let W = Math.floor(rowW - sumWidths - gapsTotal);
+    if (W < 0) W = 0;
+
+    ghost.style.width = W + 'px';
+  }
+
+  function adjustAllGhosts(){
+    document.querySelectorAll('.WIERSZ').forEach(adjustGhost);
+  }
+
+  function layoutAll(){
     document.querySelectorAll('.PRZYCISK.IKONA').forEach(applyIcon);
+    requestAnimationFrame(adjustAllGhosts);
   }
 
-  // — chrome:// obsługa: kopiuj do schowka + spróbuj otworzyć nową kartę (bez komunikatów) —
   function handleChromeUrl(url){
     try { navigator.clipboard?.writeText(url); } catch(e) {}
-    try { window.open(url, "_blank", "noopener"); } catch(e) {}
+    try { window.open('about:blank', '_blank', 'noopener'); } catch(e) {}
   }
 
-  // Delegacja kliknięć na ikony (pojedyncze)
-  function initClicks(){
+  function initSingleClicks(){
     document.addEventListener('click', (e) => {
       const a = e.target.closest('a.PRZYCISK.IKONA');
       if (!a) return;
@@ -69,50 +82,36 @@
         handleChromeUrl(href);
       }
     }, { passive: false });
+  }
 
-    // „Otwórz wszystkie” – w obrębie wiersza
+  function initOpenAll(){
     document.querySelectorAll('[data-open-all]').forEach(btn => {
       btn.addEventListener('click', () => {
-        const row = btn.closest('[data-wiersz]');
+        const row = btn.closest('.WIERSZ');
         if (!row) return;
         const links = Array.from(row.querySelectorAll('a.PRZYCISK.IKONA')).map(a => a.href);
-        links.forEach((href, i) => setTimeout(() => {
-          if (/^chrome:\/\//i.test(href)) handleChromeUrl(href);
-          else window.open(href, "_blank", "noopener");
-        }, i * 120));
+        links.forEach((href, i) => {
+          setTimeout(() => {
+            if (/^chrome:\/\//i.test(href)) handleChromeUrl(href);
+            else window.open(href, "_blank", "noopener");
+          }, i * 120);
+        });
       });
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => { initIcons(); initClicks(); }, { once:true });
-  } else {
-    initIcons(); initClicks();
+  function bindRelayout(){
+    const relayout = () => { adjustAllGhosts(); };
+    window.addEventListener('resize', relayout);
+    window.addEventListener('orientationchange', relayout);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout).catch(()=>{});
   }
 
-  // Przy zmianie orientacji przelicz tylko ŁAPĘ (reszta rozciąga się z flexem)
-  window.addEventListener('orientationchange', () => {
-    document.querySelectorAll('.PRZYCISK.IKONA.OTWORZ').forEach(btn => {
-      let file = (btn.dataset.ikon || "").trim();
-      if (!file) return;
-      if (!/\.(svg)(\?|#|$)/i.test(file)) file += ".svg";
-      const url = BASE + encodeURIComponent(file);
-
-      const img = new Image();
-      img.onload = () => {
-        const nh = img.naturalHeight || ICON_H;
-        const nw = img.naturalWidth  || ICON_H;
-        const width = Math.max(MIN_W, Math.round(ICON_H * (nw / nh)));
-        btn.style.removeProperty('flex');
-        btn.style.minWidth = MIN_W + 'px';
-        btn.style.width    = width + 'px';
-      };
-      img.onerror = () => {
-        btn.style.removeProperty('flex');
-        btn.style.minWidth = MIN_W + 'px';
-        btn.style.width    = ICON_H + 'px';
-      };
-      img.src = url;
-    });
-  });
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      layoutAll(); initSingleClicks(); initOpenAll(); bindRelayout();
+    }, { once:true });
+  } else {
+    layoutAll(); initSingleClicks(); initOpenAll(); bindRelayout();
+  }
 })();
