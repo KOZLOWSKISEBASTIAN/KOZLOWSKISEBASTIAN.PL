@@ -1,5 +1,5 @@
 (function(){
-  // Stała baza dla ścieżek wewnętrznych
+
   const BAZA = new URL('https://kozlowskisebastian.pl', document.baseURI);
 
   const SCIEZKI = new Map([
@@ -12,20 +12,19 @@
     ["GENERATOR", "GENERATOR"],
     ["PRZYBORNIK", "PRZYBORNIK"],
 
-    // nowe adresy
-    ["ADRES_KSG", "https://ksgroup.pl/"],                 // zawsze na ksgroup.pl
-    ["ADRES_KSPL", "https://kozlowskisebastian.pl/"],     // zawsze na kozlowskisebastian.pl
+    ["ADRES_KSG", "https://ksgroup.pl/"],
+    ["ADRES_KSPL", "https://kozlowskisebastian.pl/"],
   ]);
 
   document.querySelectorAll('[data-klucz]').forEach(EL => {
     const KLUCZ = EL.getAttribute('data-klucz');
     const SCIEZKA = SCIEZKI.get(KLUCZ);
     if (SCIEZKA) {
-      // jeśli pełny adres → bezpośrednio
+
       if (/^https?:\/\//i.test(SCIEZKA)) {
         EL.href = SCIEZKA;
       } else {
-        // inaczej → ścieżka na bazowej domenie
+
         EL.href = new URL(SCIEZKA + '/', BAZA).href;
       }
     } else {
@@ -35,7 +34,6 @@
   });
 })();
 
-/* === AUTOFIT v3 (grow + shrink + justify do prawej) === */
 (function(){
   const BTN_SEL = [
     'a.PRZYCISK',
