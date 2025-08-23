@@ -1,40 +1,31 @@
-html, body { height: 100%; margin: 0; padding: 0; }
-:root { scrollbar-gutter: stable both-edges; }
-
-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  min-height: 100svh;
-  min-height: 100dvh;
-
-  background: var(--TLO);
-  overflow: hidden;
-}
-
 .LISTA-WIERSZY {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  align-items: center;
-  justify-content: center;
+  gap: 7px;
 }
 
 .WIERSZ {
   display: flex;
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
+  justify-content: flex-start;
   gap: 7px;
+  width: 100%;
+}
+
+.KALKULATOR_NAGLOWEK {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 6px;
 }
 
 .PRZYCISK.IKONA {
   position: relative;
-  min-width: 44px; 
-  width: var(--w, 44px);
-  height: var(--h, 44px);
-  min-height: var(--h, 44px);
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  width: var(--w, auto);
+  min-width: 28px;
+  height: 44px;
   border-radius: 8px;
   background-color: var(--TLO-PRZYCISK);
   overflow: hidden;
@@ -42,27 +33,52 @@ body {
   white-space: nowrap;
   -webkit-tap-highlight-color: transparent;
   transition: background-color .12s ease, transform .06s ease;
+  cursor: pointer;
+}
+
+.PRZYCISK.IKONA.OTWORZ { flex: 0 0 auto; }
+
+.PRZYCISK.PUSTY {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  min-width: 0;
+  width: 0;
+  height: 44px;
+  border-radius: 8px;
+  background: var(--TLO-PRZYCISK);
+  transition: background-color .12s ease, transform .06s ease;
+  pointer-events: auto;
+  cursor: pointer;
 }
 
 .PRZYCISK.IKONA::before {
   content: "";
   position: absolute;
   inset: 8px;
-  background-color: var(--IKONA-KOLOR, var(--TEKST-PRZYCISK));
+  background-color: var(--TEKST-PRZYCISK);
   -webkit-mask: var(--mask) center/contain no-repeat;
   mask: var(--mask) center/contain no-repeat;
+  pointer-events: none;
 }
 
-.PRZYCISK.IKONA:hover {
+.PRZYCISK.IKONA:hover,
+.PRZYCISK.PUSTY:hover {
   background-color: var(--TLO-PANEL);
   transform: translateY(-1px);
 }
+
 .PRZYCISK.IKONA:hover::before {
-  background-color: #FF00FF;
+  background-color: var(--AKCENT-TEKST);
 }
 
-.PRZYCISK.IKONA.OTWORZ::before { inset: 10px; }
+:root[WYBOR_MOTYW="JASNY"] .PRZYCISK.IKONA:hover::before {
+  background-color: var(--TEKST-PRZYCISK);
+}
+:root[WYBOR_MOTYW="JASNY"] .PRZYCISK.PUSTY:hover {
+  background-color: var(--TLO-PANEL);
+}
 
 @media (hover: none) {
-  .PRZYCISK.IKONA:hover { transform: none; }
+  .PRZYCISK.IKONA:hover,
+  .PRZYCISK.PUSTY:hover { transform: none; }
 }
