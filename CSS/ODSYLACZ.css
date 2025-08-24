@@ -57,7 +57,7 @@
   inset: 8px;
   background-color: var(--TEKST-PRZYCISK);
   -webkit-mask: var(--mask) center/contain no-repeat;
-  mask: var(--mask) center/contain no-repeat;
+          mask: var(--mask) center/contain no-repeat;
   pointer-events: none;
 }
 
@@ -67,16 +67,10 @@
   transform: translateY(-1px);
 }
 
-.PRZYCISK.IKONA:hover::before {
-  background-color: var(--AKCENT-TEKST);
-}
+.PRZYCISK.IKONA:hover::before { background-color: var(--AKCENT-TEKST); }
 
-:root[WYBOR_MOTYW="JASNY"] .PRZYCISK.IKONA:hover::before {
-  background-color: var(--TEKST-PRZYCISK);
-}
-:root[WYBOR_MOTYW="JASNY"] .PRZYCISK.PUSTY:hover {
-  background-color: var(--TLO-PANEL);
-}
+:root[WYBOR_MOTYW="JASNY"] .PRZYCISK.IKONA:hover::before { background-color: var(--TEKST-PRZYCISK); }
+:root[WYBOR_MOTYW="JASNY"] .PRZYCISK.PUSTY:hover { background-color: var(--TLO-PANEL); }
 
 @media (hover: none) {
   .PRZYCISK.IKONA:hover,
@@ -85,32 +79,27 @@
 
 @media (max-width: 899px) {
   .LISTA-WIERSZY { display: grid; grid-template-columns: 1fr; gap: 7px; }
-
   .WIERSZ { display: contents; }
 
   .PRZYCISK.PUSTY,
-  .PRZYCISK.IKONA.OTWORZ { display: none !important; }
+  .PRZYCISK.IKONA.OTWORZ,
+  [data-open-all] { display: none !important; }
 
   .PRZYCISK.IKONA {
     width: 100% !important;
     min-height: 60px;
     height: auto;
-    text-indent: -9999px;
+    text-indent: 0 !important;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 16px;
+    -webkit-mask: none !important;
+            mask: none !important;
+    -webkit-mask-image: none !important;
+            mask-image: none !important;
+    background-image: none !important;
   }
 
-  .PRZYCISK.IKONA::before {
-    inset: auto;
-    left: 12px;
-    right: auto;
-    top: 12px;
-    bottom: 12px;
-    width: 36px;
-    background-color: var(--TEKST-PRZYCISK);
-    -webkit-mask-position: center;
-            mask-position: center;
-    -webkit-mask-size: contain;
-            mask-size: contain;
-    -webkit-mask-repeat: no-repeat;
-            mask-repeat: no-repeat;
-  }
+  .PRZYCISK.IKONA::before { content: none !important; }
 }
