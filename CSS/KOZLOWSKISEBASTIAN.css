@@ -1,35 +1,69 @@
-html, body { margin: 0; height: 100%; }
+html, body {
+	margin: 0;
+	height: 100%;
+}
 
-:root { --app-vh: 100vh; }
-@supports (height: 100svh) { :root { --app-vh: 100svh; } }
-@supports (height: 100dvh) { :root { --app-vh: 100dvh; } }
+:root {
+	--app-vh: 100vh;
+}
+
+@supports (height: 100svh) {
+	:root {
+		--app-vh: 100svh;
+	}
+}
+
+@supports (height: 100dvh) {
+	:root {
+		--app-vh: 100dvh;
+	}
+}
 
 #KSGROUP-STRONA {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
 }
 
 #KSGROUP-LOGO-SVG {
-  display: block;
-  margin: auto;
-  width: auto;
-  height: auto;
-  max-width: calc(100vw - 4vmin);
-  max-height: calc(var(--app-vh) - 4vmin);
-  object-fit: contain;
+	display: block;
+	margin: auto;
+	width: auto;
+	height: auto;
+	max-width: calc(100vw - 4vmin);
+	max-height: calc(var(--app-vh) - 4vmin);
+	object-fit: contain;
 }
 
-html[data-theme="neon"] body { background: #FF00FF; }
-html[data-theme="neon"] #KSGROUP-LOGO-SVG { filter: none; }
-html[data-theme="neon"] body.hover-active { background: #000000; }
+html[data-theme="neon"] body {
+	background: #FF00FF;
+}
+
+html[data-theme="neon"] #KSGROUP-LOGO-SVG {
+	filter: none;
+}
+
+html[data-theme="neon"] body.hover-active {
+	background: #000000;
+}
+
 html[data-theme="neon"] body.hover-active #KSGROUP-LOGO-SVG {
-
-  filter: brightness(0) saturate(100%) invert(36%) sepia(99%) saturate(7472%) hue-rotate(300deg) brightness(102%) contrast(102%);
+	filter: brightness(0) saturate(100%) invert(36%) sepia(99%) saturate(7472%) hue-rotate(300deg) brightness(102%) contrast(102%);
 }
 
-html[data-theme="white"] body { background: #FFFFFF; }
-html[data-theme="white"] #KSGROUP-LOGO-SVG { filter: none; }
-html[data-theme="white"] body.hover-active { background: #000000; }
-html[data-theme="white"] body.hover-active #KSGROUP-LOGO-SVG { filter: invert(1); }
+html[data-theme="white"] body {
+	background: #FFFFFF;
+}
+
+html[data-theme="white"] #KSGROUP-LOGO-SVG {
+	filter: none;
+}
+
+html[data-theme="white"] body.hover-active {
+	background: #000000;
+}
+
+html[data-theme="white"] body.hover-active #KSGROUP-LOGO-SVG {
+	filter: invert(1);
+}
