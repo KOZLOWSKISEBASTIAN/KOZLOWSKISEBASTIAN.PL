@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>PRZYBORNIK</title>
+	<meta name="color-scheme" content="dark light" />
+
+	<link rel="stylesheet" href="CSS/HEXAGON.css">  
+	<link rel="stylesheet" href="CSS/KOLORY.css">
+	<link rel="stylesheet" href="CSS/PRZYBORNIK.css">
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&family=Poppins:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+	<div class="RAMKA">
+		<main class="KONTENER">
+			<div class="PANEL">
+
+				<section class="SIATKA">
+					<a class="PRZYCISK" data-klucz="KARTY">KARTY</a>
+					<a class="PRZYCISK" data-klucz="NOTATNIK">NOTATNIK</a>
+					<a class="PRZYCISK" data-klucz="KALKULATOR">KALKULATOR</a>
+					<a class="PRZYCISK" data-klucz="LICZYDŁO">LICZYDŁO</a>
+					<a class="PRZYCISK" data-klucz="LATARKA" aria-disabled="true">LATARKA</a>
+					<a class="PRZYCISK" data-klucz="POGODA" aria-disabled="true">POGODA IMGW</a>
+					<a class="PRZYCISK" data-klucz="GENERATOR">GENERATOR</a>
+				<div class="PRZYBORNIK_PRZYCISK_POLOWA">
+					<a class="PRZYCISK POLOWA" data-klucz="ADRES_KSG">KSG</a>
+					<a class="PRZYCISK POLOWA" data-klucz="ADRES_KSPL">KS PL</a>
+				</div>
+					<a class="PRZYCISK" data-klucz="ODSYŁACZ">ODSYŁACZ</a>
+					<a class="PRZYCISK PUSTY" aria-hidden="true"></a>
+				</section>
+
+			</div>
+		</main>
+	</div>
+	<div class="HEXAGON_KONTENER" id="HEXAGON">
+		<div class="HEXAGON" title="MOTYW"></div>
+	</div>
+	<span class="WYLACZNIK" id="WYLACZNIK"></span>
+	<div class="TROJKAT_KONTENER" id="TROJKATY">
+		<div class="TROJKAT TROJKAT_JASNY" title="JASNY MOTYW"></div>
+		<div class="TROJKAT TROJKAT_CIEMNY" title="CIEMNY MOTYW"></div>
+	</div>
+
+	<script src="JS/HEXAGON.js"></script>
+	<script src="JS/MOTYWAUTO.js"></script>
+	<script src="JS/PRZYBORNIK.js"></script>
+</body>
+</html>
