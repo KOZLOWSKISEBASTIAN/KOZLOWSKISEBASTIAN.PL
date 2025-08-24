@@ -1,0 +1,121 @@
+/* ODSYLACZ.css — desktop: ikony SVG, mobile: napisy z aria-label */
+
+.LISTA-WIERSZY {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.WIERSZ {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 7px;
+  width: 100%;
+}
+
+.KALKULATOR_NAGLOWEK {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 6px;
+}
+
+/* ——— PRZYCISKI IKONOWE — DESKTOP ——— */
+.PRZYCISK.IKONA {
+  position: relative;
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  width: var(--w, auto);
+  min-width: 28px;
+  height: 44px;
+  border-radius: 8px;
+  background-color: var(--TLO-PRZYCISK);
+  overflow: hidden;
+  text-indent: -9999px; /* desktop: ukryj tekst, bo używamy maski */
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color .12s ease, transform .06s ease;
+  cursor: pointer;
+}
+
+.PRZYCISK.IKONA.OTWORZ { flex: 0 0 auto; }
+
+.PRZYCISK.PUSTY {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+  min-width: 0;
+  width: 0;
+  height: 44px;
+  border-radius: 8px;
+  background: var(--TLO-PRZYCISK);
+  transition: background-color .12s ease, transform .06s ease;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.PRZYCISK.IKONA::before {
+  content: "";
+  position: absolute;
+  inset: 8px;
+  background-color: var(--TEKST-PRZYCISK);
+  -webkit-mask: var(--mask) center/contain no-repeat;
+          mask: var(--mask) center/contain no-repeat;
+  pointer-events: none;
+}
+
+.PRZYCISK.IKONA:hover,
+.PRZYCISK.PUSTY:hover {
+  background-color: var(--TLO-PANEL);
+  transform: translateY(-1px);
+}
+
+.PRZYCISK.IKONA:hover::before { background-color: var(--AKCENT-TEKST); }
+
+:root[WYBOR_MOTYW="JASNY"] .PRZYCISK.IKONA:hover::before { background-color: var(--TEKST-PRZYCISK); }
+:root[WYBOR_MOTYW="JASNY"] .PRZYCISK.PUSTY:hover { background-color: var(--TLO-PANEL); }
+
+@media (hover: none) {
+  .PRZYCISK.IKONA:hover,
+  .PRZYCISK.PUSTY:hover { transform: none; }
+}
+
+/* ======= TYLKO MOBILE (≤1000px): napisy z aria-label, zero SVG ======= */
+@media (max-width: 1000px) {
+  .LISTA-WIERSZY { display: grid; grid-template-columns: 1fr; gap: 7px; }
+  .WIERSZ { display: contents; }
+
+  /* chowamy puste i „łapki” */
+  .PRZYCISK.PUSTY,
+  .PRZYCISK.IKONA.OTWORZ,
+  [data-open-all] { display: none !important; }
+
+  /* przycisk ikonowy staje się pełnoszerokowym przyciskiem tekstowym */
+  .PRZYCISK.IKONA {
+    width: 100% !important;
+    min-height: 60px;
+    height: auto;
+    text-indent: 0 !important;           /* ← pokaż tekst */
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding-left: 16px;
+
+    /* wyczyść wszelkie możliwe pozostałości po SVG */
+    -webkit-mask: none !important;
+            mask: none !important;
+    -webkit-mask-image: none !important;
+            mask-image: none !important;
+    background-image: none !important;
+  }
+
+  /* wyłącz pseudo‑ikonę */
+  .PRZYCISK.IKONA::before { content: none !important; }
+}
+
+/* ======= TABLET (1001px–1578px): wrap + wypełniacz per rząd ======= */
+@media (min-width: 1001px) and (max-width: 1578px) {
+  .WIERSZ { flex-wrap: wrap; }
+  /* ukryj oryginalny wypełniacz z HTML, zostaw tylko dynamiczne */
+  .PRZYCISK.PUSTY:not([data-filler="1"]) { display: none !important; width: 0 !important; }
+}
