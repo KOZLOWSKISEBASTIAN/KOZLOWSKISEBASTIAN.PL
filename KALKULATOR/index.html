@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>KALKULATOR</title>
+	<meta name="color-scheme" content="dark light" />
+
+	<link rel="stylesheet" href="CSS/HEXAGON.css">  
+	<link rel="stylesheet" href="CSS/KOLORY.css">
+	<link rel="stylesheet" href="CSS/PRZYBORNIK.css">
+	<link rel="stylesheet" href="CSS/KALKULATOR.css">
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&family=Poppins:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+	<div class="RAMKA">
+		<main class="KONTENER">
+			<div class="PANEL">
+				<div class="RESZTA_NAGLOWEK">
+					<a class="PRZYCISK_PRZYBORNIK_POWROT" data-klucz="PRZYBORNIK">PRZYBORNIK</a>
+				</div>
+
+				<section class="KALKULATOR" aria-label="KALKULATOR">
+				<div class="KALKULATOR_WIDOK">
+				<div id="LOG" class="KALKULATOR_LOG"></div>
+					<output id="EKRAN" class="KALKULATOR_EKRAN" aria-live="polite" role="status">0</output>
+				</div>
+				<div class="KALKULATOR_KLAWIATURA" id="klawisze">
+					<button type="button" data-akcja="clear" class="PRZYCISK_KLAWISZ K_B">⌦</button>
+					<button type="button" data-akcja="sign" class="PRZYCISK_KLAWISZ K_B">±</button>
+					<button type="button" data-oper="%" class="PRZYCISK_KLAWISZ K_O">%</button>
+					<button type="button" data-oper="/" class="PRZYCISK_KLAWISZ K_O">÷</button>
+
+					<button type="button" data-cyfra="7" class="PRZYCISK_KLAWISZ K_C">7</button>
+					<button type="button" data-cyfra="8" class="PRZYCISK_KLAWISZ K_C">8</button>
+					<button type="button" data-cyfra="9" class="PRZYCISK_KLAWISZ K_C">9</button>
+					<button type="button" data-oper="*" class="PRZYCISK_KLAWISZ K_O">×</button>
+
+					<button type="button" data-cyfra="4" class="PRZYCISK_KLAWISZ K_C">4</button>
+					<button type="button" data-cyfra="5" class="PRZYCISK_KLAWISZ K_C">5</button>
+					<button type="button" data-cyfra="6" class="PRZYCISK_KLAWISZ K_C">6</button>
+					<button type="button" data-oper="-" class="PRZYCISK_KLAWISZ K_O">−</button>            
+
+					<button type="button" data-cyfra="1" class="PRZYCISK_KLAWISZ K_C">1</button>
+					<button type="button" data-cyfra="2" class="PRZYCISK_KLAWISZ K_C">2</button>
+					<button type="button" data-cyfra="3" class="PRZYCISK_KLAWISZ K_C">3</button>
+					<button type="button" data-oper="+" class="PRZYCISK_KLAWISZ K_O">+</button>
+
+					<button type="button" data-cyfra="0" class="PRZYCISK_KLAWISZ K_C">0</button>
+					<button type="button" data-akcja="dot" class="PRZYCISK_KLAWISZ K_C">,</button>
+					<button type="button" data-akcja="back" class="PRZYCISK_KLAWISZ K_B">⌫</button>
+					<button type="button" data-akcja="eq" class="PRZYCISK_KLAWISZ K_EQ">=</button>
+				</div>
+				</section>
+
+			</div>
+		</main>
+	</div>
+	<div class="HEXAGON_KONTENER" id="HEXAGON">
+		<div class="HEXAGON" title="MOTYW"></div>
+	</div>
+	<span class="WYLACZNIK" id="WYLACZNIK"></span>
+	<div class="TROJKAT_KONTENER" id="TROJKATY">
+		<div class="TROJKAT TROJKAT_JASNY" title="JASNY MOTYW"></div>
+		<div class="TROJKAT TROJKAT_CIEMNY" title="CIEMNY MOTYW"></div>
+	</div>
+
+	<script src="JS/HEXAGON.js"></script>
+	<script src="JS/MOTYWAUTO.js"></script>
+	<script src="JS/PRZYBORNIK.js"></script>
+	<script src="JS/KALKULATOR.js"></script>
+</body>
+</html>
