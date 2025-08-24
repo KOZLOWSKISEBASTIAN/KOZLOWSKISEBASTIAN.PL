@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>ODSYŁACZ</title>
+	<meta name="color-scheme" content="dark light" />
+
+	<link rel="stylesheet" href="CSS/HEXAGON.css">  
+	<link rel="stylesheet" href="CSS/KOLORY.css">
+	<link rel="stylesheet" href="CSS/PRZYBORNIK.css">
+	<link rel="stylesheet" href="CSS/ODSYLACZ.css">
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&family=Poppins:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+	<div class="RAMKA">
+		<main class="KONTENER">
+			<div class="PANEL">
+				<div class="RESZTA_NAGLOWEK">
+					<a class="PRZYCISK_PRZYBORNIK_POWROT" data-klucz="PRZYBORNIK">PRZYBORNIK</a>
+				</div>
+
+				<section class="ODSYLACZ_LISTA_WIERSZY">
+				<div class="ODSYLACZ_WIERSZ" data-ODSYLACZ_WIERSZ>
+					<a class="PRZYCISK PUSTY" aria-hidden="true"></a>
+					<a class="PRZYCISK ODSYLACZ_GRAFIKA" href="https://www.beta.messenger.com/" aria-label="MESSENGER" data-ikon="MESSENGER-N"></a>
+					<a class="PRZYCISK ODSYLACZ_GRAFIKA" href="https://x.com/" aria-label="X" data-ikon="X"></a>
+					<a class="PRZYCISK ODSYLACZ_GRAFIKA" href="https://www.beta.facebook.com/" aria-label="FACEBOOK" data-ikon="FACEBOOK-N"></a>
+					<a class="PRZYCISK ODSYLACZ_GRAFIKA" href="https://miuipolska.pl/forum/" aria-label="MIUI POLSKA" data-ikon="MIUIPOLSKA-L"></a>
+					<a class="PRZYCISK ODSYLACZ_GRAFIKA" href="https://youtube.com/" aria-label="YOUTUBE" data-ikon="YOUTUBE"></a>
+					<a class="PRZYCISK ODSYLACZ_GRAFIKA" href="https://music.youtube.com/" aria-label="YOUTUBE MUSIC" data-ikon="YOUTUBEMUSIC"></a>
+					<a class="PRZYCISK ODSYLACZ_GRAFIKA" href="chrome://password-manager/passwords" aria-label="HASŁA" data-ikon="HASLA"></a>
+					<button class="PRZYCISK ODSYLACZ_GRAFIKA OTWORZ" data-open-all aria-label="OTWÓRZ WSZYSTKO" data-ikon="LAPA"></button>
+				</div>
+				<div class="ODSYLACZ_WIERSZ" data-ODSYLACZ_WIERSZ>
+					<a class="PRZYCISK PUSTY" aria-hidden="true"></a>
+					<a class="PRZYCISK ODSYLACZ_GRAFIKA" href="http://borg.org.pl/board/" aria-label="BORG" data-ikon="BORG"></a>
+					<a class="PRZYCISK ODSYLACZ_GRAFIKA" href="https://github.com/" aria-label="GITHUB" data-ikon="GITHUB"></a>
+					<a class="PRZYCISK ODSYLACZ_GRAFIKA" href="https://rumble.com/" aria-label="RUMBLE" data-ikon="RUMBLE"></a>
+					<button class="PRZYCISK ODSYLACZ_GRAFIKA OTWORZ" data-open-all aria-label="OTWÓRZ WSZYSTKO" data-ikon="LAPA"></button>
+				</div>
+				</section>
+
+			</div>
+		</main>
+	</div>
+	<div class="HEXAGON_KONTENER" id="HEXAGON">
+		<div class="HEXAGON" title="MOTYW"></div>
+	</div>
+	<span class="WYLACZNIK" id="WYLACZNIK"></span>
+	<div class="TROJKAT_KONTENER" id="TROJKATY">
+		<div class="TROJKAT TROJKAT_JASNY" title="JASNY MOTYW"></div>
+		<div class="TROJKAT TROJKAT_CIEMNY" title="CIEMNY MOTYW"></div>
+	</div>
+
+	<script src="JS/HEXAGON.js"></script>
+	<script src="JS/MOTYWAUTO.js"></script>
+	<script src="JS/PRZYBORNIK.js"></script>
+	<script src="JS/ODSYLACZ.js"></script>
+</body>
+</html>
