@@ -1,4 +1,3 @@
-/* 25081408 */
 .ODSYLACZ_LISTA-WIERSZY{display:flex;flex-direction:column;gap:7px}
 .ODSYLACZ_WIERSZ{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:7px;width:100%}
 
@@ -22,19 +21,21 @@
 
 .PRZYCISK.PUSTY{
 	position:relative;
+	z-index:1;
 	display:block;
 	box-sizing:border-box;
-	flex:0 0 auto;
+	flex:1 1 auto;
 	min-width:0;
-	width:0;
+	width:auto;
 	height:44px;
 	border-radius:8px;
 	background:var(--TLO-PRZYCISK);
-	transition:background-color .12s ease,transform .06s ease,width .12s ease;
+	transition:background-color .12s ease,transform .06s ease;
 	pointer-events:auto;
-	cursor:default
+	cursor:pointer
 }
-.PRZYCISK.PUSTY.HOV{background-color:var(--TLO-PANEL)!important;transform:translateY(-1px)}
+.ODSYLACZ_WIERSZ>.PRZYCISK.PUSTY:hover,
+.ODSYLACZ_WIERSZ>.PRZYCISK.PUSTY.HOV{background-color:var(--TLO-PANEL)!important;transform:translateY(-1px)}
 
 .PRZYCISK.ODSYLACZ_GRAFIKA::before{
 	content:"";
@@ -54,6 +55,8 @@
 	.PRZYCISK.ODSYLACZ_GRAFIKA:hover,
 	.PRZYCISK.PUSTY:hover{transform:none}
 }
+
+body[data-resizing] .PRZYCISK.PUSTY{display:none!important}
 
 @media (max-width:1000px){
 	body{overflow-x:hidden}
@@ -83,5 +86,5 @@
 
 @media (min-width:1001px) and (max-width:1578px){
 	.ODSYLACZ_WIERSZ{flex-wrap:wrap}
-	.PRZYCISK.PUSTY:not([data-filler="1"]){display:none!important;width:0!important}
+	.PRZYCISK.PUSTY:not([data-filler="1"]){display:none!important}
 }
