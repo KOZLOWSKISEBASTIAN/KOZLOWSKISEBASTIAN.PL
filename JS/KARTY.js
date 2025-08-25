@@ -40,6 +40,7 @@
 		items.forEach(a=>{
 			const li  = a.closest('li');
 			const img = a.querySelector('img');
+
 			if (img){
 				let svgFile =
 					getAttrAny(img, 'DATA-GRAFIKALOGOSVG', 'data-grafikalogosvg') ||
@@ -52,6 +53,7 @@
 				img.src = BASE_SVG + encodeURIComponent(svgFile);
 				if (!img.hasAttribute('alt')) img.setAttribute('alt','');
 			}
+
 			let pngFile =
 				getAttrAny(a, 'DATA-GRAFIKALOGOPNG', 'data-grafikalogopng') ||
 				getAttrAny(a, 'data-obraz', 'data-image') || "";
@@ -227,29 +229,10 @@
 		}
 	});
 
-	function isMobileLike(){
-		return window.innerWidth < 1000 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-	}
-	function getPngUrlsToPrecache(){
-		const items = Array.from(LIST.querySelectorAll('li[data-grupa="KARTY_PODSTAWOWE"] a.PRZYCISK_ODSYLACZ'));
-		return items.map(a => a.getAttribute('data-image')).filter(Boolean);
-	}
-	async function registerSWandPrecache(){
-		if (!('serviceWorker' in navigator)) return;
-		if (!isMobileLike()) return;
-		try {
-			const reg = await navigator.serviceWorker.register('JS/SW_KARTY.js', { scope: './' });
-			const ready = await navigator.serviceWorker.ready;
-			const urls = getPngUrlsToPrecache();
-			ready.active?.postMessage({ type: 'PRECACHE_PNGS', urls });
-		} catch (e) {}
-	}
-
 	migrateStripAddresses();
 	sortuj('uzycie-domyslne');
 	filtruj();
 	fitSearchLabel();
-	registerSWandPrecache();
 
 	const ro = ('ResizeObserver' in window) ? new ResizeObserver(()=>fitSearchLabel()) : null;
 	ro?.observe(INPUT); ro?.observe(PODPOWIEDZ);
