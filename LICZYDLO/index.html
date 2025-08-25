@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="pl">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>LICZYDŁO</title>
+	<meta name="color-scheme" content="dark light" />
+
+	<link rel="stylesheet" href="CSS/HEXAGON.css">
+	<link rel="stylesheet" href="CSS/KOLORY.css">
+	<link rel="stylesheet" href="CSS/PRZYBORNIK.css">
+	<link rel="stylesheet" href="CSS/LICZYDLO.css">
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&family=Poppins:wght@400&display=swap" rel="stylesheet">
+</head>
+<body>
+	<div class="RAMKA">
+		<main class="KONTENER">
+			<div class="PANEL">
+				<div class="RESZTA_NAGLOWEK">
+					<a class="PRZYCISK_PRZYBORNIK_POWROT" data-klucz="PRZYBORNIK">PRZYBORNIK</a>
+				</div>
+
+				<section class="LICZYDLO" aria-label="LICZYDŁO">
+					<div class="LICZYDLO_TOP" id="LICZYDLO_TOP">
+						<div class="LICZYDLO_POLE_WRAP" id="LICZYDLO_WRAP_CENA">
+							<span class="LICZYDLO_LABEL LABEL_AUTOSIZE">CENA</span>
+							<input id="CENA" class="LICZYDLO_POLE" type="text" inputmode="decimal" autocomplete="off" placeholder="">
+						</div>
+						<div class="LICZYDLO_POLE_WRAP" id="LICZYDLO_WRAP_ILOSC">
+							<span class="LICZYDLO_LABEL LABEL_AUTOSIZE" id="LICZYDLO_LABEL_ILOSC">ILOŚĆ</span>
+							<input id="ILOSC" class="LICZYDLO_POLE" type="text" inputmode="decimal" autocomplete="off" placeholder="">
+						</div>
+						<div class="LICZYDLO_POLE_WRAP" id="LICZYDLO_WRAP_KILOMETRY">
+							<span class="LICZYDLO_LABEL LABEL_AUTOSIZE">KILOMETRY</span>
+							<input id="KILOMETRY" class="LICZYDLO_POLE" type="text" inputmode="decimal" autocomplete="off" placeholder="">
+						</div>
+						<a class="PRZYCISK PUSTY" id="LICZYDLO_PUSTY_KILOMETRY" aria-hidden="true"></a>
+					</div>
+					<div class="LICZYDLO_PRZYCISK">
+						<select id="JEDNOSTKA" class="LICZYDLO_WYBOR">
+							<option value="ML">MILILITR ml → LITR</option>
+							<option value="DAG">DEKAGRAM dag → KILOGRAM</option>
+							<option value="PALIWO">SPALANIE PALIWA</option>
+							<option value="TRASA">PLANOWANY KOSZT TRASY</option>
+						</select>
+						<button type="button" id="PRZELICZ" class="PRZYCISK">PRZELICZ</button>
+					</div>
+
+					<output id="WYNIK" class="LICZYDLO_WYNIK" aria-live="polite" role="status"></output>
+				</section>
+
+			</div>
+		</main>
+	</div>
+
+	<div class="HEXAGON_KONTENER" id="HEXAGON">
+		<div class="HEXAGON" title="MOTYW"></div>
+	</div>
+	<span class="WYLACZNIK" id="WYLACZNIK"></span>
+	<div class="TROJKAT_KONTENER" id="TROJKATY">
+		<div class="TROJKAT TROJKAT_JASNY" title="JASNY MOTYW"></div>
+		<div class="TROJKAT TROJKAT_CIEMNY" title="CIEMNY MOTYW"></div>
+	</div>
+
+	<script src="JS/HEXAGON.js"></script>
+	<script src="JS/MOTYWAUTO.js"></script>
+	<script src="JS/PRZYBORNIK.js"></script>
+	<script src="JS/LICZYDLO.js"></script>
+</body>
+</html>
