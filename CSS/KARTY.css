@@ -1,219 +1,244 @@
 :root {}
 
-/* ===== Pasek / wyszukiwarka ===== */
-.KARTY_PASEK{
-  display:grid;
-  gap:7px;
-  margin-bottom:7px;
+.KARTY_PASEK {
+	display: grid;
+	gap: 7px;
+	margin-bottom: 7px;
 }
 
-/* Kontener pola z nakładką-placeholderem */
-.KARTY_POLE{
-  position:relative;
+.KARTY_POLE {
+	position: relative;
 }
 
-/* Pole wpisywania (ty sam ustawiłeś clamp(56px,1vw,84px)) */
-.KARTY_POLE_WYSZUKIWANIA{
-  width:100%;
-  margin:0;
-  border:0;
-  border-radius:8px;
-  background:var(--TLO-PRZYCISK);
-  color:var(--AKCENT-TEKST);
-  font-family:'Montserrat','Poppins',sans-serif;
-  font-weight:600;
-  font-size:clamp(56px, 1vw, 84px);
-  line-height:1;
-  padding:0 14px;
-  min-height:60px;
-  outline:none;
-  text-align:right; /* wpisywany tekst z prawej */
+.KARTY_POLE_WYSZUKIWANIA {
+	width: 100%;
+	margin: 0;
+	border: 0;
+	border-radius: 8px;
+	background: var(--TLO-PRZYCISK);
+	color: var(--AKCENT-TEKST);
+	font-family: 'Montserrat','Poppins',sans-serif;
+	font-weight: 600;
+	font-size: clamp(56px, 1vw, 84px);
+	line-height: 1;
+	padding: 0 14px;
+	min-height: 60px;
+	outline: none;
+	text-align: right;
 }
 @media (min-width:999px){
-  .KARTY_POLE_WYSZUKIWANIA{ min-height:56px }
+	.KARTY_POLE_WYSZUKIWANIA { min-height: 56px; }
 }
-:root[WYBOR_MOTYW="JASNY"] .KARTY_POLE_WYSZUKIWANIA{ color:var(--TEKST-PRZYCISK) }
-
-/* Nakładka-placeholder: JS dopasowuje rozmiar i letter-spacing, by wypełnił całość */
-.KARTY_PODPOWIEDZ{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  padding:0 14px;
-  pointer-events:none;
-  color:var(--TEKST-PRZYCISK);
-  opacity:.6;
-  width:100%;
-  height:100%;
-  white-space:nowrap;
-  line-height:1;
+:root[WYBOR_MOTYW="JASNY"] .KARTY_POLE_WYSZUKIWANIA {
+	color: var(--TEKST-PRZYCISK);
 }
 
-/* Rząd przycisków pod polem */
-.KARTY_PASEK_WIERSZ{
-  display:grid;
-  grid-template-columns:1fr 1fr;  /* mobile: 50/50 */
-  gap:7px;
+.KARTY_POLE_WYSZUKIWANIA::-webkit-search-cancel-button,
+.KARTY_POLE_WYSZUKIWANIA::-webkit-search-decoration,
+.KARTY_POLE_WYSZUKIWANIA::-webkit-search-results-button,
+.KARTY_POLE_WYSZUKIWANIA::-webkit-search-results-decoration { 
+	-webkit-appearance: none; 
+	appearance: none; 
+}
+.KARTY_POLE_WYSZUKIWANIA::-ms-clear { 
+	display: none; 
+	width: 0; 
+	height: 0; 
+}
+
+.KARTY_PODPOWIEDZ {
+	position: absolute;
+	inset: 0;
+	display: flex;
+	align-items: flex-start;
+	justify-content: flex-start;
+	padding: 0;
+	pointer-events: none;
+	color: var(--TEKST-PRZYCISK);
+	opacity: .66;
+	overflow: hidden;
+}
+.KARTY_PODPOWIEDZ span {
+	display: inline-block;
+	white-space: nowrap;
+	line-height: 1;
+	transform-origin: left top;
+}
+
+.KARTY_PASEK_WIERSZ {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 7px;
 }
 @media (min-width:999px){
-  .KARTY_PASEK_WIERSZ{ grid-template-columns:2fr 1fr } /* desktop: INNE 2/3, SORTUJ 1/3 */
+	.KARTY_PASEK_WIERSZ { grid-template-columns: 2fr 1fr; }
 }
 
-/* ===== Siatka kart ===== */
-.KARTY_LISTA{
-  list-style:none;
-  padding:0;
-  margin:7px 0 0 0;
-  display:flex;
-  flex-wrap:wrap;
-  gap:7px;
-  justify-content:space-between;
+.KARTY_LISTA {
+	list-style: none;
+	padding: 0;
+	margin: 7px 0 0 0;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 7px;
+	justify-content: space-between;
 }
-.KARTY_LISTA li{
-  margin:0;
-  transition:transform .12s ease;
-  flex:1 1 calc(50% - 6px);
-  max-width:calc(50% - 6px);                /* mobile: 2 w rzędzie */
+
+.KARTY_LISTA li {
+	margin: 0;
+	transition: transform .12s ease;
+	flex: 1 1 calc(50% - 6px);
+	max-width: calc(50% - 6px);
 }
+
 @media (min-width:999px){
-  .KARTY_LISTA li{
-    flex:1 1 calc(25% - 6px);
-    max-width:calc(25% - 6px);              /* desktop: 4 w rzędzie */
-  }
-}
-.KARTY_LISTA li.ukryta{ display:none !important }
-
-/* ===== Kafelek ===== */
-.KARTY_LISTA a{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-decoration:none;
-  padding:6px;
-  background:var(--TLO-PRZYCISK);
-  color:var(--TEKST-PRZYCISK);
-  border-radius:8px;
-  min-height:74px;
-  transition:background-color .12s ease,color .12s ease,transform .06s ease;
-  overflow:hidden;
-}
-.KARTY_LISTA a:hover{
-  background:var(--TLO-PANEL);
-  color:var(--AKCENT-TEKST);
-  transform:translateY(-1px);
-}
-.KARTY_LISTA a:active{ transform:scale(.98) }
-
-/* Ikona (SVG/PNG): ciemny = róż na hover; jasny = kolor tekstu */
-.KARTY_LISTA a img{
-  width:100%;
-  height:auto;
-  max-height:28px;
-  object-fit:contain;
-  margin-bottom:4px;
-  filter: invert(1) brightness(.69) contrast(.95);
-  transition: transform .2s ease, filter .15s ease;
-}
-:root[WYBOR_MOTYW="JASNY"] .KARTY_LISTA a img{
-  filter: brightness(0) saturate(100%) invert(20%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
-}
-.KARTY_LISTA a:hover img{
-  filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
-  transform: scale(1.06);
-}
-:root[WYBOR_MOTYW="JASNY"] .KARTY_LISTA a:hover img{
-  filter: brightness(0) saturate(100%) invert(20%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
+	.KARTY_LISTA li {
+		flex: 1 1 calc(25% - 6px);
+		max-width: calc(25% - 6px);
+	}
 }
 
-.KARTY_LISTA a .nazwa{
-  font-size:11px;
-  opacity:.85;
+.KARTY_LISTA li.ukryta { display: none!important; }
+
+.KARTY_LISTA a {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	text-decoration: none;
+	padding: 0px 0px 0px 0px;
+	background: var(--TLO-PRZYCISK);
+	color: var(--TEKST-PRZYCISK);
+	border-radius: 8px;
+	min-height: 74px;
+	transition: background-color .12s,color .12s,transform .06s;
+	overflow: hidden;
 }
 
-/* ===== Sort menu ===== */
-.sort-menu{
-  position:absolute;
-  z-index:999;
-  width:220px;
-  display:none;
-  overflow:hidden;
-  border-radius:8px;
-  background:var(--TLO-PRZYCISK);
-  box-shadow:0 4px 8px rgba(0,0,0,.3);
-}
-.KARTY_POZYCJA_SORTOWANIE{
-  padding:10px;
-  color:var(--TEKST-PRZYCISK);
-  cursor:pointer;
-  transition:background .12s,color .12s;
-}
-.KARTY_POZYCJA_SORTOWANIE:hover{
-  background:var(--TLO-PANEL);
-  color:var(--AKCENT-TEKST);
+.KARTY_LISTA a:hover {
+	background: var(--TLO-PANEL);
+	color: var(--AKCENT-TEKST);
+	transform: translateY(-1px);
 }
 
-/* ===== Fullscreen (ZAPISZ + numer) ===== */
-.KARTY_FULL{
-  position:fixed;
-  inset:0;
-  background:#B0B0B0;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  z-index:1000;
+.KARTY_LISTA a:active { transform: scale(.98); }
+
+.KARTY_LISTA a img {
+	width: 100%;
+	height: auto;
+	max-height: 50px;
+	object-fit: contain;
+	margin-bottom: 1px;
+	padding: 0px 0px 0px 0px;
+	filter: invert(1) brightness(.69) contrast(.95);
+	transition: transform .2s, filter .15s;
 }
-.KARTY_FULL.AKTYWNY{ display:flex }
-.KARTY_FULL__BAR{
-  position:fixed;
-  top:10px;
-  left:0;
-  right:0;
-  display:grid;
-  grid-template-columns:1fr;
-  justify-items:center;
-  gap:6px;
-  pointer-events:none;
+
+:root[WYBOR_MOTYW="JASNY"] .KARTY_LISTA a img {
+	filter: brightness(0) saturate(100%) invert(20%);
 }
-.KARTY_FULL__LINK{
-  pointer-events:auto;
-  text-decoration:none;
-  background:var(--TLO-PRZYCISK);
-  color:var(--TEKST-PRZYCISK);
-  border-radius:8px;
-  padding:8px 10px;
-  min-width:220px;
-  text-align:center;
+
+.KARTY_LISTA a:hover img {
+	filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
+	transform: scale(1.06);
 }
-.KARTY_FULL__NUMER{
-  pointer-events:none;
-  background:transparent;
-  color:#000;
-  font-weight:700;
-  font-size:16px;
-  text-align:center;
+
+:root[WYBOR_MOTYW="JASNY"] .KARTY_LISTA a:hover img {
+	filter: brightness(0) saturate(100%) invert(20%);
 }
-.KARTY_FULL__IMG{
-  max-width:50%;
-  max-height:50%;
-  object-fit:contain;
-  transition:transform .5s ease;
+
+.KARTY_LISTA a .KARTY_NAZWA {
+	font-size: 13px;
+	opacity: .85;
+	line-height: 1;
+	margin: 0px;
+	padding: 0px;
+}
+
+.KARTY_MENUSORTOWANIA {
+	position: absolute;
+	z-index: 999;
+	width: 220px;
+	display: none;
+	overflow: hidden;
+	border-radius: 8px;
+	background: var(--TLO-PRZYCISK);
+	box-shadow: 0 4px 8px rgba(0,0,0,.3);
+}
+
+.KARTY_POZYCJA_SORTOWANIE {
+	padding: 10px;
+	color: var(--TEKST-PRZYCISK);
+	cursor: pointer;
+	transition: background .12s,color .12s;
+}
+.KARTY_POZYCJA_SORTOWANIE:hover {
+	background: var(--TLO-PANEL);
+	color: var(--AKCENT-TEKST);
+}
+
+.KARTY_FULL {
+	position: fixed;
+	inset: 0;
+	background: #B0B0B0;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	z-index: 1000;
+}
+
+.KARTY_FULL.AKTYWNY { display: flex; }
+.KARTY_FULL_BAR {
+	position: fixed;
+	top: 10px;
+	left: 0;
+	right: 0;
+	display: grid;
+	grid-template-columns: 1fr;
+	justify-items: center;
+	gap: 6px;
+	pointer-events: none;
+}
+.KARTY_FULL_LINK {
+	pointer-events: auto;
+	text-decoration: none;
+	background: var(--TLO-PRZYCISK);
+	color: var(--TEKST-PRZYCISK);
+	border-radius: 8px;
+	padding: 8px 10px;
+	min-width: 220px;
+	text-align: center;
+}
+.KARTY_FULL_NUMER {
+	pointer-events: none;
+	background: transparent;
+	color: #000;
+	font-weight: 700;
+	font-size: 22px;
+	text-align: center;
+}
+.KARTY_FULL_IMG {
+	max-width: 60%;
+	max-height: 60%;
+	object-fit: contain;
+	transition: transform .5s ease;
 }
 @media (max-width:768px) and (orientation:portrait){
-  .KARTY_FULL__IMG{ transform:rotate(90deg) }
+	.KARTY_FULL_IMG { transform: rotate(90deg); }
 }
 
-/* ===== Placeholder (puste przyciski) – mobile i desktop ===== */
-.KARTY_LISTA li.placeholder a{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:var(--TLO-PRZYCISK);
-  color:var(--TEKST-PRZYCISK);
-  border-radius:8px;
-  cursor:default;
-  text-decoration:none;
+.KARTY_LISTA li.placeholder a {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: var(--TLO-PRZYCISK);
+	color: var(--TEKST-PRZYCISK);
+	border-radius: 8px;
+	cursor: default;
+	text-decoration: none;
 }
-.KARTY_LISTA li.placeholder a:hover{ background:var(--TLO-PANEL) }
+.KARTY_LISTA li.placeholder a:hover {
+	background: var(--TLO-PANEL);
+}
+
+.PRZYCISK_ODSYLACZ {}
