@@ -21,7 +21,6 @@
 
 .PRZYCISK.PUSTY{
 	position:relative;
-	z-index:1;
 	display:block;
 	box-sizing:border-box;
 	flex:0 0 auto;
@@ -34,7 +33,6 @@
 	pointer-events:auto;
 	cursor:default
 }
-.PRZYCISK.PUSTY>span{position:absolute;inset:0;display:block}
 .PRZYCISK.PUSTY.HOV{background-color:var(--TLO-PANEL)!important;transform:translateY(-1px)}
 
 .PRZYCISK.ODSYLACZ_GRAFIKA::before{
