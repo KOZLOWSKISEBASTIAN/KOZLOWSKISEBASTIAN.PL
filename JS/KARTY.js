@@ -1,218 +1,260 @@
 (function(){
-  'use strict';
+	'use strict';
 
-  const LIST       = document.getElementById('KARTY_LISTA');
-  const INPUT      = document.getElementById('KARTY_POLE_WYSZUKIWANIA');
-  const PODPOWIEDZ = document.getElementById('KARTY_PODPOWIEDZ');
+	const BASE_SVG = "https://kozlowskisebastian.pl/GRAFIKA/";
+	const BASE_PNG = "https://kozlowskisebastian.pl/GRAFIKA/KARTY/";
 
-  const BTN_INNE = document.getElementById('KARTY_PRZYCISK_RZADKIE');
-  const BTN_SORT = document.getElementById('KARTY_BTN_SORT');
-  const MENU     = document.getElementById('KARTY_SORTOWANIE');
+	const LIST       = document.getElementById('KARTY_LISTA');
+	const INPUT      = document.getElementById('KARTY_POLE_WYSZUKIWANIA');
+	const PODPOWIEDZ = document.getElementById('KARTY_PODPOWIEDZ');
+	const POD_TEKST  = document.getElementById('KARTY_PODPOWIEDZ_TEKST');
 
-  if (!LIST) return;
+	const BTN_INNE   = document.getElementById('KARTY_PRZYCISK_RZADKIE');
+	const BTN_SORT   = document.getElementById('KARTY_SORTOWANIE_BTN');
+	const MENU       = document.getElementById('KARTY_SORTOWANIE');
 
-  /* ====== Funkcje do placeholdera (jak w LICZYDŁO) ====== */
-  function justifyToWidth(el, targetW){
-    el.style.letterSpacing = '0px';
-    const base = el.getBoundingClientRect().width;
-    const delta = Math.floor(targetW - base);
-    if (delta <= 0) return;
-    const txt = (el.textContent || '').trim();
-    const gaps = Math.max(txt.length - 1, 0);
-    if (gaps <= 0) return;
-    const ls = delta / gaps;
-    el.style.letterSpacing = ls + 'px';
-  }
+	if (!LIST) return;
 
-  function fitHint(){
-    if (!PODPOWIEDZ || !INPUT) return;
-    const empty = !(INPUT.value || '').trim();
-    PODPOWIEDZ.style.opacity = empty ? '.6' : '0';
-    if (!empty) return;
+	function fileNameOf(urlOrName){
+		if (!urlOrName) return "";
+		try {
+			const u = new URL(urlOrName, location.href);
+			return decodeURIComponent(u.pathname.split('/').pop() || "");
+		} catch {
+			return (urlOrName + '').split('/').pop();
+		}
+	}
+	function ensureExt(file, ext){ return /\.[a-z0-9]+$/i.test(file) ? file : (file + ext); }
 
-    const availW = Math.max(1, INPUT.clientWidth - 28); // padding 14px L/R
-    const availH = Math.max(1, INPUT.clientHeight - 6);
+	function getAttrAny(el, ...names){
+		for (const n of names){
+			if (!n) continue;
+			const v = el.getAttribute(n);
+			if (v != null && v !== '') return v;
+		}
+		return "";
+	}
 
-    PODPOWIEDZ.style.whiteSpace    = 'nowrap';
-    PODPOWIEDZ.style.letterSpacing = '0px';
-    PODPOWIEDZ.style.fontSize      = '';
+	function migrateStripAddresses(){
+		const items = Array.from(LIST.querySelectorAll('li a.PRZYCISK_ODSYLACZ'));
+		items.forEach(a=>{
+			const li  = a.closest('li');
+			const img = a.querySelector('img');
+			if (img){
+				let svgFile =
+					getAttrAny(img, 'DATA-GRAFIKALOGOSVG', 'data-grafikalogosvg') ||
+					getAttrAny(img, 'data-ikon') ||
+					img.getAttribute('src') ||
+					li?.getAttribute('data-name') || "";
+				svgFile = ensureExt(fileNameOf(svgFile), '.svg');
+				img.removeAttribute('src');
+				img.setAttribute('DATA-GRAFIKALOGOSVG', svgFile);
+				img.src = BASE_SVG + encodeURIComponent(svgFile);
+				if (!img.hasAttribute('alt')) img.setAttribute('alt','');
+			}
+			let pngFile =
+				getAttrAny(a, 'DATA-GRAFIKALOGOPNG', 'data-grafikalogopng') ||
+				getAttrAny(a, 'data-obraz', 'data-image') || "";
+			pngFile = ensureExt(fileNameOf(pngFile || (li?.getAttribute('data-name') || "")), '.png');
+			a.setAttribute('DATA-GRAFIKALOGOPNG', pngFile);
+			a.removeAttribute('data-image');
+			a.removeAttribute('data-obraz');
+			a.setAttribute('data-image', BASE_PNG + encodeURIComponent(pngFile));
+		});
+	}
 
-    let lo = 12;
-    let hi = Math.max(12, Math.floor(availH));
-    let best = lo;
+	function justifyToWidth(el, targetW){
+		el.style.letterSpacing = '0px';
+		const base = el.getBoundingClientRect().width;
+		const delta = Math.floor(targetW - base);
+		if (delta <= 0) return;
+		const txt = (el.textContent || '').trim();
+		const gaps = Math.max(txt.length - 1, 0);
+		if (gaps <= 0) return;
+		el.style.letterSpacing = (delta / gaps) + 'px';
+	}
+	function fitSearchLabel(){
+		if (!PODPOWIEDZ || !POD_TEKST || !INPUT) return;
+		const hasValue = !!(INPUT.value || '').trim();
+		PODPOWIEDZ.style.opacity = hasValue ? '0' : '.66';
+		PODPOWIEDZ.style.display = hasValue ? 'none' : 'flex';
+		if (hasValue) return;
+		const availW = Math.max(1, INPUT.clientWidth);
+		const availH = Math.max(1, INPUT.clientHeight - 2);
+		POD_TEKST.style.transform = 'none';
+		POD_TEKST.style.whiteSpace = 'nowrap';
+		POD_TEKST.style.letterSpacing = '0px';
+		POD_TEKST.style.fontSize = '16px';
+		let lo = 8, hi = Math.max(12, availH), best = lo;
+		while (lo <= hi){
+			const mid = Math.floor((lo + hi) / 2);
+			POD_TEKST.style.fontSize = mid + 'px';
+			const r = POD_TEKST.getBoundingClientRect();
+			if (r.height <= availH && r.width <= availW){ best = mid; lo = mid + 1; }
+			else { hi = mid - 1; }
+		}
+		POD_TEKST.style.fontSize = best + 'px';
+		justifyToWidth(POD_TEKST, availW);
+	}
 
-    while (lo <= hi){
-      const mid = Math.floor((lo + hi) / 2);
-      PODPOWIEDZ.style.fontSize = mid + 'px';
-      const r = PODPOWIEDZ.getBoundingClientRect();
-      if (r.height <= availH && r.width <= availW){ best = mid; lo = mid + 1; }
-      else { hi = mid - 1; }
-    }
-    PODPOWIEDZ.style.fontSize = best + 'px';
-    justifyToWidth(PODPOWIEDZ, availW);
-  }
+	const tiles = () => Array.from(LIST.querySelectorAll('li[data-grupa]'));
+	const getName = li => (li.getAttribute('data-name')||'').toLowerCase();
+	const getDesc = li => (li.querySelector('.KARTY_NAZWA')?.textContent||'').toLowerCase();
+	const getId   = li => (li.dataset.numerKarty || '').toLowerCase();
 
-  /* ====== KAFELKI ====== */
-  const tiles = () => Array.from(LIST.querySelectorAll('li[data-grupa]'));
+	function filtruj(){
+		const q = (INPUT?.value || '').trim().toLowerCase();
+		const parts = q.split(/\s+/).filter(Boolean);
+		const trybInne = (!q && document.body.classList.contains('pokaz-rzadkie'));
+		tiles().forEach(li=>{
+			const grupa = li.getAttribute('data-grupa');
+			if (trybInne) { li.classList.toggle('ukryta', grupa !== 'KARTY_INNE'); return; }
+			if (!q)       { li.classList.toggle('ukryta', grupa !== 'KARTY_PODSTAWOWE'); return; }
+			const hay = (getName(li)+' '+getDesc(li)+' '+getId(li)).trim();
+			const ok  = parts.every(p => hay.includes(p));
+			li.classList.toggle('ukryta', !ok);
+		});
+		normalizePlaceholders();
+	}
 
-  // Jeżeli ktoś jeszcze ma numer w klasie, przenieś do data-numer-karty (fallback)
-  tiles().forEach(li=>{
-    if (!li.dataset.numerKarty){
-      const cls = (li.className||'').trim();
-      if (/^\d{8,}$/.test(cls)) li.dataset.numerKarty = cls;
-    }
-  });
+	function sortuj(token){
+		const els = tiles();
+		els.sort((a,b)=>{
+			switch(token){
+				case 'nazwa-az':  return getName(a).localeCompare(getName(b),'pl');
+				case 'nazwa-za':  return getName(b).localeCompare(getName(a),'pl');
+				case 'opis-az':   return getDesc(a).localeCompare(getDesc(b),'pl');
+				case 'opis-za':   return getDesc(b).localeCompare(getDesc(a),'pl');
+				case 'uzycie-domyslne':
+				default: {
+					const ga = a.getAttribute('data-grupa') || 'KARTY_INNE';
+					const gb = b.getAttribute('data-grupa') || 'KARTY_INNE';
+					if (ga !== gb) return (gb === 'KARTY_PODSTAWOWE') - (ga === 'KARTY_PODSTAWOWE');
+					return 0;
+				}
+			}
+		});
+		const frag = document.createDocumentFragment();
+		els.forEach(el => frag.appendChild(el));
+		LIST.innerHTML = '';
+		LIST.appendChild(frag);
+		filtruj();
+	}
 
-  const getName = li => (li.getAttribute('data-name')||'').toLowerCase();
-  const getDesc = li => (li.querySelector('.nazwa')?.textContent||'').toLowerCase();
-  const getId   = li => (li.dataset.numerKarty || '').toLowerCase();
+	function normalizePlaceholders(){
+		const desktop = window.innerWidth >= 999;
+		const cols = desktop ? 4 : 2;
+		LIST.querySelectorAll('li.placeholder').forEach(p => p.remove());
+		const visCount = tiles().filter(li => !li.classList.contains('ukryta')).length;
+		if (!visCount) return;
+		const mod = visCount % cols;
+		if (mod === 0) return;
+		const toAdd = cols - mod;
+		for (let i=0;i<toAdd;i++){
+			const li = document.createElement('li');
+			li.className = 'placeholder';
+			const a = document.createElement('a');
+			a.className = 'PRZYCISK PUSTY';
+			a.setAttribute('aria-hidden','true');
+			li.appendChild(a);
+			LIST.appendChild(li);
+		}
+	}
 
-  /* ====== FILTR / INNE ====== */
-  function filtruj(){
-    const q = (INPUT?.value || '').trim().toLowerCase();
-    const parts = q.split(/\s+/).filter(Boolean);
-    const trybInne = (!q && document.body.classList.contains('pokaz-rzadkie'));
+	BTN_SORT?.addEventListener('click', (e)=>{
+		if (!MENU) return;
+		e.stopPropagation();
+		const r = e.currentTarget.getBoundingClientRect();
+		MENU.style.display = 'block';
+		MENU.style.top  = (r.bottom + window.scrollY) + 'px';
+		MENU.style.left = (r.left   + window.scrollX) + 'px';
+	});
+	document.addEventListener('click', (e)=>{
+		if (!MENU) return;
+		if (e.target!==BTN_SORT && !MENU.contains(e.target)) MENU.style.display = 'none';
+	});
+	MENU?.querySelectorAll('.KARTY_POZYCJA_SORTOWANIE').forEach(btn=>{
+		btn.addEventListener('click', ()=>{
+			sortuj(btn.getAttribute('data-sort') || 'uzycie-domyslne');
+			MENU.style.display = 'none';
+		});
+	});
 
-    tiles().forEach(li=>{
-      const grupa = li.getAttribute('data-grupa'); // "glowne" lub "inne"
-      if (trybInne) { li.classList.toggle('ukryta', grupa !== 'inne'); return; }   // INNE
-      if (!q)       { li.classList.toggle('ukryta', grupa !== 'glowne'); return; } // domyślnie
-      const hay = (getName(li)+' '+getDesc(li)+' '+getId(li)).trim();
-      const ok  = parts.every(p => hay.includes(p));
-      li.classList.toggle('ukryta', !ok);
-    });
+	INPUT?.addEventListener('input', ()=>{
+		document.body.classList.remove('pokaz-rzadkie');
+		filtruj();
+		fitSearchLabel();
+	});
+	INPUT?.addEventListener('focus', fitSearchLabel);
+	INPUT?.addEventListener('blur',  fitSearchLabel);
 
-    normalizePlaceholders();
-  }
+	BTN_INNE?.addEventListener('click', ()=>{
+		if ((INPUT?.value || '').trim()) return;
+		document.body.classList.toggle('pokaz-rzadkie');
+		filtruj();
+	});
 
-  /* ====== SORT ====== */
-  function sortuj(metoda){
-    const els = tiles();
-    els.sort((a,b)=>{
-      switch(metoda){
-        case 'name-asc':  return getName(a).localeCompare(getName(b));
-        case 'name-desc': return getName(b).localeCompare(getName(a));
-        case 'desc-asc':  return getDesc(a).localeCompare(getDesc(b));
-        case 'desc-desc': return getDesc(b).localeCompare(getDesc(a));
-        case 'usage-desc':
-        default: {
-          // glowne nad inne
-          const ga = a.getAttribute('data-grupa') || 'inne';
-          const gb = b.getAttribute('data-grupa') || 'inne';
-          if (ga !== gb) return (gb === 'glowne') - (ga === 'glowne');
-          return 0;
-        }
-      }
-    });
-    const frag = document.createDocumentFragment();
-    els.forEach(el => frag.appendChild(el));
-    LIST.innerHTML = '';
-    LIST.appendChild(frag);
-    filtruj();
-  }
+	const FULL = document.createElement('div');
+	FULL.className = 'KARTY_FULL';
+	FULL.innerHTML = `
+		<div class="KARTY_FULL_BAR">
+			<a id="KARTY_FULL_LINK" class="KARTY_FULL_LINK" href="#" target="_blank" rel="noopener">ZAPISZ</a>
+			<div id="KARTY_FULL_NUM" class="KARTY_FULL_NUMER">—</div>
+		</div>
+		<img id="KARTY_FULL_IMG" class="KARTY_FULL_IMG" src="" alt="Podgląd karty">
+	`;
+	document.body.appendChild(FULL);
+	const FULL_IMG  = document.getElementById('KARTY_FULL_IMG');
+	const FULL_LINK = document.getElementById('KARTY_FULL_LINK');
+	const FULL_NUM  = document.getElementById('KARTY_FULL_NUM');
 
-  /* ====== PLACEHOLDERY ====== */
-  function normalizePlaceholders(){
-    const desktop = window.innerWidth >= 999;
-    const cols = desktop ? 4 : 2;
+	LIST.addEventListener('click', (e)=>{
+		const a=e.target.closest('a'); if(!a) return;
+		e.preventDefault();
+		if (a.closest('li')?.classList.contains('placeholder')) return;
+		const li  = a.closest('li');
+		const png = a.getAttribute('data-image') || '';
+		FULL_IMG.src   = png || '';
+		FULL_LINK.href = png || '#';
+		const numer = (li?.dataset.numerKarty || '').trim() || '—';
+		FULL_NUM.textContent = numer;
+		FULL.classList.add('AKTYWNY');
+	});
+	FULL.addEventListener('click', (e)=>{
+		if (e.target===FULL || e.target===FULL_IMG){
+			FULL.classList.remove('AKTYWNY');
+			FULL_IMG.src='';
+		}
+	});
 
-    // usuń stare
-    LIST.querySelectorAll('li.placeholder').forEach(p => p.remove());
+	function isMobileLike(){
+		return window.innerWidth < 1000 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+	}
+	function getPngUrlsToPrecache(){
+		const items = Array.from(LIST.querySelectorAll('li[data-grupa="KARTY_PODSTAWOWE"] a.PRZYCISK_ODSYLACZ'));
+		return items.map(a => a.getAttribute('data-image')).filter(Boolean);
+	}
+	async function registerSWandPrecache(){
+		if (!('serviceWorker' in navigator)) return;
+		if (!isMobileLike()) return;
+		try {
+			const reg = await navigator.serviceWorker.register('JS/SW_KARTY.js', { scope: './' });
+			const ready = await navigator.serviceWorker.ready;
+			const urls = getPngUrlsToPrecache();
+			ready.active?.postMessage({ type: 'PRECACHE_PNGS', urls });
+		} catch (e) {}
+	}
 
-    // policz widoczne
-    const visCount = tiles().filter(li => !li.classList.contains('ukryta')).length;
-    if (!visCount) return;
+	migrateStripAddresses();
+	sortuj('uzycie-domyslne');
+	filtruj();
+	fitSearchLabel();
+	registerSWandPrecache();
 
-    const mod = visCount % cols;
-    if (mod === 0) return;
-
-    const toAdd = cols - mod;
-    for (let i=0;i<toAdd;i++){
-      const li = document.createElement('li');
-      li.className = 'placeholder';
-      const a = document.createElement('a');
-      a.className = 'PRZYCISK PUSTY';
-      a.setAttribute('aria-hidden','true');
-      li.appendChild(a);
-      LIST.appendChild(li);
-    }
-  }
-
-  /* ====== MENU SORT ====== */
-  BTN_SORT?.addEventListener('click', (e)=>{
-    if (!MENU) return;
-    e.stopPropagation();
-    const r = e.currentTarget.getBoundingClientRect();
-    MENU.style.display = 'block';
-    MENU.style.top  = (r.bottom + window.scrollY) + 'px';
-    MENU.style.left = (r.left   + window.scrollX) + 'px';
-  });
-  document.addEventListener('click', (e)=>{
-    if (!MENU) return;
-    if (e.target!==BTN_SORT && !MENU.contains(e.target)) MENU.style.display = 'none';
-  });
-  MENU?.querySelectorAll('.KARTY_POZYCJA_SORTOWANIE').forEach(btn=>{
-    btn.addEventListener('click', ()=>{
-      sortuj(btn.getAttribute('data-sort') || 'usage-desc');
-      MENU.style.display = 'none';
-    });
-  });
-
-  /* ====== INNE / SZUKAJ ====== */
-  INPUT?.addEventListener('input', ()=>{
-    document.body.classList.remove('pokaz-rzadkie'); // szukaj = obie grupy
-    filtruj();
-    fitHint();
-  });
-  const BTN_INNE_CLICK = ()=>{
-    if ((INPUT?.value || '').trim()) return; // INNE tylko gdy brak zapytania
-    document.body.classList.toggle('pokaz-rzadkie');
-    filtruj();
-  };
-  BTN_INNE?.addEventListener('click', BTN_INNE_CLICK);
-
-  /* ====== FULLSCREEN PREVIEW ====== */
-  // Numer z data-numer-karty; PNG ze źródła obrazka / a[data-image]
-  const FULL = document.createElement('div');
-  FULL.className = 'KARTY_FULL';
-  FULL.innerHTML = `
-    <div class="KARTY_FULL__BAR">
-      <a id="KARTY_FULL_LINK" class="KARTY_FULL__LINK" href="#" target="_blank" rel="noopener">ZAPISZ</a>
-      <div id="KARTY_FULL_NUM" class="KARTY_FULL__NUMER">—</div>
-    </div>
-    <img id="KARTY_FULL_IMG" class="KARTY_FULL__IMG" src="" alt="Podgląd karty">
-  `;
-  document.body.appendChild(FULL);
-  const FULL_IMG  = document.getElementById('KARTY_FULL_IMG');
-  const FULL_LINK = document.getElementById('KARTY_FULL_LINK');
-  const FULL_NUM  = document.getElementById('KARTY_FULL_NUM');
-
-  LIST.addEventListener('click', (e)=>{
-    const a=e.target.closest('a'); if(!a) return;
-    e.preventDefault();
-    if (a.closest('li')?.classList.contains('placeholder')) return;
-    const li = a.closest('li');
-    const img = a.querySelector('img');
-    const png = a.getAttribute('data-image') || img?.getAttribute('data-image') || img?.src || '';
-    FULL_IMG.src   = png;
-    FULL_LINK.href = png || '#';
-    const numer = (li?.dataset.numerKarty || '').trim() || '—';
-    FULL_NUM.textContent = numer;
-    FULL.classList.add('AKTYWNY');
-  });
-  FULL.addEventListener('click', (e)=>{
-    if (e.target===FULL || e.target===FULL_IMG){
-      FULL.classList.remove('AKTYWNY');
-      FULL_IMG.src='';
-    }
-  });
-
-  /* ====== REAKCJE ====== */
-  window.addEventListener('resize', ()=>{ normalizePlaceholders(); fitHint(); });
-  window.addEventListener('orientationchange', ()=>{ normalizePlaceholders(); fitHint(); });
-
-  /* ====== START ====== */
-  sortuj('usage-desc'); // glowne nad inne
-  filtruj();            // domyślnie pokaż glowne
-  fitHint();            // dopasuj placeholder do pola
+	const ro = ('ResizeObserver' in window) ? new ResizeObserver(()=>fitSearchLabel()) : null;
+	ro?.observe(INPUT); ro?.observe(PODPOWIEDZ);
+	window.addEventListener('resize', ()=>{ normalizePlaceholders(); fitSearchLabel(); });
+	window.addEventListener('orientationchange', ()=>{ normalizePlaceholders(); fitSearchLabel(); });
+	const mo = new MutationObserver(()=>fitSearchLabel());
+	mo.observe(document.documentElement, { attributes:true, attributeFilter:['WYBOR_MOTYW','class'] });
 })();
