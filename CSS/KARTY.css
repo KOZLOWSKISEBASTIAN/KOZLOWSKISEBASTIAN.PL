@@ -83,21 +83,18 @@
 	gap: 7px;
 	justify-content: space-between;
 }
-
 .KARTY_LISTA li {
 	margin: 0;
 	transition: transform .12s ease;
 	flex: 1 1 calc(50% - 6px);
 	max-width: calc(50% - 6px);
 }
-
 @media (min-width:999px){
 	.KARTY_LISTA li {
 		flex: 1 1 calc(25% - 6px);
 		max-width: calc(25% - 6px);
 	}
 }
-
 .KARTY_LISTA li.ukryta { display: none!important; }
 
 .KARTY_LISTA a {
@@ -106,7 +103,7 @@
 	align-items: center;
 	justify-content: center;
 	text-decoration: none;
-	padding: 0px 0px 0px 0px;
+	padding: 6px;
 	background: var(--TLO-PRZYCISK);
 	color: var(--TEKST-PRZYCISK);
 	border-radius: 8px;
@@ -114,48 +111,39 @@
 	transition: background-color .12s,color .12s,transform .06s;
 	overflow: hidden;
 }
-
 .KARTY_LISTA a:hover {
 	background: var(--TLO-PANEL);
 	color: var(--AKCENT-TEKST);
 	transform: translateY(-1px);
 }
-
 .KARTY_LISTA a:active { transform: scale(.98); }
 
 .KARTY_LISTA a img {
 	width: 100%;
 	height: auto;
-	max-height: 50px;
+	max-height: 40px;
 	object-fit: contain;
-	margin-bottom: 1px;
-	padding: 0px 0px 0px 0px;
+	margin-bottom: 4px;
 	filter: invert(1) brightness(.69) contrast(.95);
 	transition: transform .2s, filter .15s;
 }
-
 :root[WYBOR_MOTYW="JASNY"] .KARTY_LISTA a img {
 	filter: brightness(0) saturate(100%) invert(20%);
 }
-
 .KARTY_LISTA a:hover img {
 	filter: brightness(0) saturate(100%) invert(24%) sepia(75%) saturate(5815%) hue-rotate(293deg) brightness(111%) contrast(129%);
 	transform: scale(1.06);
 }
-
 :root[WYBOR_MOTYW="JASNY"] .KARTY_LISTA a:hover img {
 	filter: brightness(0) saturate(100%) invert(20%);
 }
 
 .KARTY_LISTA a .KARTY_NAZWA {
-	font-size: 13px;
+	font-size: 18px;
 	opacity: .85;
-	line-height: 1;
-	margin: 0px;
-	padding: 0px;
 }
 
-.KARTY_MENUSORTOWANIA {
+.sort-menu {
 	position: absolute;
 	z-index: 999;
 	width: 220px;
@@ -165,7 +153,6 @@
 	background: var(--TLO-PRZYCISK);
 	box-shadow: 0 4px 8px rgba(0,0,0,.3);
 }
-
 .KARTY_POZYCJA_SORTOWANIE {
 	padding: 10px;
 	color: var(--TEKST-PRZYCISK);
@@ -186,7 +173,6 @@
 	justify-content: center;
 	z-index: 1000;
 }
-
 .KARTY_FULL.AKTYWNY { display: flex; }
 .KARTY_FULL_BAR {
 	position: fixed;
@@ -214,7 +200,7 @@
 	background: transparent;
 	color: #000;
 	font-weight: 700;
-	font-size: 22px;
+	font-size: 26px;
 	text-align: center;
 }
 .KARTY_FULL_IMG {
