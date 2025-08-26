@@ -17,7 +17,8 @@ body {
 	-webkit-font-smoothing: antialiased;
 	text-rendering: optimizeLegibility;
 	display: flex;
-	align-items: center;
+	align-items: top;
+	padding: 7px;
 	justify-content: center;
 	height: 100%;
 }
