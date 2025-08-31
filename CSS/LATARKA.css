@@ -1,0 +1,33 @@
+/* Minimalne, reszta bierze z PRZYBORNIK.css / KOLORY.css */
+:root { --lat-gap:8px; }
+
+.LATARKA_PANEL { background: var(--tlo-panel, #333); border-radius: 8px; padding: 8px; }
+.ukryj { display: none !important; }
+
+.LATARKA_GRID_2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--lat-gap); }
+.LATARKA_OPCJE_KONTENER { display:flex; flex-wrap:wrap; gap:var(--lat-gap); margin-top:var(--lat-gap); }
+.LATARKA_PANEL_OPCJI { flex:1 1 420px; min-width:320px; background: var(--tlo-przycisk, #222); border-radius:8px; padding:8px; }
+
+.LATARKA_LABEL { display:block; font-size:14px; opacity:.8; margin:4px 0; }
+.LATARKA_BOX { margin-top:6px; }
+.LATARKA_INPUT { width:100%; border:0; border-radius:8px; padding:8px; background:#222; color:#B0B0B0; }
+.LATARKA_SLIDER { width:100%; height:6px; border-radius:3px; background:#222; -webkit-appearance:none; appearance:none; }
+.LATARKA_SLIDER::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%; background:#FF00FF; }
+.LATARKA_INFO { font-size:12px; opacity:.7; margin-top:2px; }
+
+.LATARKA_TIMER { display:flex; gap:var(--lat-gap); align-items:center; }
+.KOLORY_LISTA { display:flex; flex-wrap:wrap; gap:6px; }
+.KOLOR { width:26px; height:26px; border-radius:50%; border:2px solid #333; background:var(--c); cursor:pointer; }
+.KOLOR.aktywny { transform: scale(1.06); border-color:#FF00FF; }
+.KOLOR_DODAJ { display:flex; gap:var(--lat-gap); margin-top:6px; }
+
+.LIGHT_OVERLAY, .SCREEN_OVERLAY {
+  position: fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index: 1; opacity: .92;
+}
+.LIGHT_OVERLAY   { background:#FFFFFF; }
+.SCREEN_OVERLAY  { background:#000000; }
+
+@media (max-width: 999px) {
+  .LATARKA_GRID_2 { grid-template-columns: 1fr; }
+  .LATARKA_PANEL_OPCJI { flex-basis:100%; min-width:0; }
+}
