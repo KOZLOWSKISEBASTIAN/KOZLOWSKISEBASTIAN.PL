@@ -1,0 +1,76 @@
+/* Minimal: trzymamy się PRZYBORNIK.css; tu tylko to, czego brakuje.
+   Mobile od 999px w dół. */
+
+.APP { min-height: 100svh; }
+.APP_SRODEK { display:flex; justify-content:center; padding:8px; }
+.PANEL { width:100%; max-width:520px; background:var(--TLO-PANEL); border-radius:12px; padding:8px; }
+
+.WIERSZ { display:flex; gap:8px; margin-bottom:6px; }
+.KOLUMNY { flex-direction:column; }
+.BTN { flex:1; }
+.INPUT, .SELECT {
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  background:var(--TLO-PRZYCISK);
+  color:var(--TEKST-PRZYCISK);
+  border:none;
+  outline:none;
+  font: 600 14px/1.2 system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+}
+.INPUT::placeholder { color:var(--TEKST-PRZYCISK-SLABY); }
+
+.ZAKLADKI .BTN { border-radius:10px; }
+.TAB.AKTYWNA { outline:2px solid var(--AKCENT); color:var(--AKCENT); }
+
+.KARTA { display:none; }
+.KARTA.AKTYWNA { display:block; }
+
+.KAFEL {
+  background:var(--TLO-PRZYCISK);
+  border-radius:12px;
+  padding:10px;
+  color:var(--TEKST-PRZYCISK);
+}
+
+.INFO-MALA { font-size:12px; opacity:.8; }
+
+.ZRODLO {
+  text-align:center;
+  font-size:11px;
+  color:var(--TEKST-SZARY);
+  margin-top:6px;
+}
+
+/* Karta „Aktualna” */
+.AKT_HEAD { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.AKT_MIASTO { font-weight:700; font-size:16px; }
+.AKT_CZAS { font-size:12px; opacity:.8; }
+.AKT_TEMPA { display:flex; align-items:flex-end; gap:8px; }
+.AKT_T { font-size:34px; font-weight:800; position:relative; }
+.AKT_T::after { content:"°C"; position:absolute; right:-18px; top:2px; font-size:14px; opacity:.8; }
+
+.AKT_GRID {
+  margin-top:8px;
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:6px;
+}
+.AKT_BOX {
+  background:var(--TLO-POD);
+  border-radius:10px;
+  padding:10px;
+  text-align:center;
+}
+.AKT_W { font-weight:700; font-size:15px; }
+.AKT_E { font-size:10px; opacity:.8; margin-top:3px; }
+
+/* Iframe opakowania */
+.IFRAME { width:100%; height:260px; border:0; border-radius:10px; background:var(--TLO-POD); }
+.IFRAME_AKCJE { margin-top:6px; display:flex; gap:6px; }
+
+/* Mobile */
+@media (max-width: 999px) {
+  .AKT_T { font-size:30px; }
+  .IFRAME { height:220px; }
+}
