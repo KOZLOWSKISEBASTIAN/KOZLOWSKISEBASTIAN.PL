@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>POGODA IMGW+</title>
+
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KOLORY.css">
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/HEXAGON.css">
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/POGODA.css">
+
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FF00FF">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#000000">
+</head>
+<body class="APP TLO">
+  <!-- HeX przycisk (shared) -->
+  <div id="HEXAGON_ROOT" class="HEXAGON_POZYCJA-DOL-LEWO"></div>
+
+  <main class="APP_SRODEK">
+    <section class="PANEL">
+      <!-- Wiersz: powrót do PRZYBORNIK -->
+      <div class="WIERSZ">
+        <button class="BTN" onclick="location.href='https://kozlowskisebastian.pl/PRZYBORNIK'">PRZYBORNIK</button>
+      </div>
+
+      <!-- Wybór stacji / wyszukiwanie / działania -->
+      <div class="WIERSZ KOLUMNY">
+        <input id="POGODA_SZUKAJ" class="INPUT" type="search" placeholder="Szukaj stacji (np. Poznań, Wrocław)…" autocomplete="off">
+        <select id="POGODA_STACJA" class="SELECT"></select>
+      </div>
+      <div class="WIERSZ">
+        <button id="POGODA_ODSWIEZ" class="BTN">Odśwież</button>
+        <button id="POGODA_LOKALIZUJ" class="BTN">Lokalizuj</button>
+      </div>
+
+      <!-- Zakładki -->
+      <div class="WIERSZ ZAKLADKI">
+        <button class="TAB BTN AKTYWNA" data-tab="aktualna">Aktualna</button>
+        <button class="TAB BTN" data-tab="radar">Radar</button>
+        <button class="TAB BTN" data-tab="mapa">Mapa</button>
+        <!-- (opcjonalnie) <button class="TAB BTN" data-tab="prognoza">Prognoza</button> -->
+      </div>
+
+      <!-- Karty danych -->
+      <div id="KARTA_aktualna" class="KARTA AKTYWNA">
+        <div id="AKTUALNA_WYNIK" class="KAFEL"></div>
+        <div class="ZRODLO">
+          Dane: IMGW-PIB, endpoint SYNOP. Ostatnia aktualizacja:
+          <span id="POGODA_CZAS">—</span>
+        </div>
+      </div>
+
+      <div id="KARTA_radar" class="KARTA">
+        <div class="KAFEL">
+          <iframe id="RADAR_IFRAME" class="IFRAME" title="Radar IMGW" loading="lazy"
+                  src="https://radar-opadow.imgw.pl"></iframe>
+          <div class="IFRAME_AKCJE">
+            <a class="BTN" href="https://radar-opadow.imgw.pl" target="_blank" rel="noopener">Otwórz pełny radar</a>
+          </div>
+        </div>
+        <div class="ZRODLO">Radar opadów IMGW-PIB (aktualizacje co ~10 min).</div>
+      </div>
+
+      <div id="KARTA_mapa" class="KARTA">
+        <div class="KAFEL">
+          <iframe id="MAPA_IFRAME" class="IFRAME" title="Mapa IMGW" loading="lazy"
+                  src="https://meteo.imgw.pl/dyn/"></iframe>
+          <div class="IFRAME_AKCJE">
+            <a id="MAPA_LINK" class="BTN" href="https://meteo.imgw.pl/dyn/" target="_blank" rel="noopener">
+              Otwórz mapę dla tej lokalizacji
+            </a>
+          </div>
+        </div>
+        <div class="ZRODLO">Mapa meteo IMGW-PIB.</div>
+      </div>
+
+      <!-- (opcjonalnie) prognoza:
+      <div id="KARTA_prognoza" class="KARTA">
+        <div class="KAFEL INFO-MALA">
+          Publiczne API IMGW po HTTPS nie udostępnia darmowej prognozy wprost. Zostawiam kartę na przyszłość.
+        </div>
+      </div> -->
+    </section>
+  </main>
+
+  <script src="https://kozlowskisebastian.pl/JS/MOTYWAUTO.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/HEXAGON.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/POGODA.js"></script>
+</body>
+</html>
