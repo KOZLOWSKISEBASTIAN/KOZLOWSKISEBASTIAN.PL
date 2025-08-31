@@ -1,0 +1,285 @@
+/* NOTATNIK – korzysta z KOLORY.css i PRZYBORNIK.css */
+.NOTATNIK {
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+	width: 100%;
+}
+
+/* Wiersze/przyciski */
+.NOTATNIK_WIERSZ {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 7px;
+}
+
+.NOTATNIK_WIERSZ + .NOTATNIK_WIERSZ { margin-top: 0; }
+
+/* Edytor nowej notatki */
+.NOTATNIK_INPUT {
+	background: var(--TLO-PRZYCISK);
+	color: var(--TEKST-PRZYCISK);
+	border-radius: 8px;
+	padding: 10px 12px;
+	min-height: 84px;
+	outline: none;
+	transition: background-color .12s ease, color .12s ease;
+	grid-column: 1 / -1;
+}
+
+.NOTATNIK_INPUT:focus {
+	outline: 2px solid var(--AKCENT-TEKST);
+	outline-offset: 2px;
+}
+
+.NOTATNIK_INPUT[placeholder]:empty::before {
+	content: attr(placeholder);
+	opacity: .6;
+}
+
+/* Pasek formatowania */
+.NOTATNIK_FORMATOWANIE {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 6px;
+	background: var(--TLO-PRZYCISK);
+	border-radius: 8px;
+	padding: 6px;
+	margin-bottom: 4px;
+	align-items: center;
+}
+
+.NOTATNIK_BTN_F,
+.NOTATNIK_ZAPISZ {
+	background: var(--TLO-PANEL);
+	color: var(--TEKST-PRZYCISK);
+	border: 0;
+	border-radius: 6px;
+	font: inherit;
+	font-size: 12px;
+	padding: 6px 8px;
+	cursor: pointer;
+	transition: color .12s ease, background-color .12s ease, transform .06s ease;
+}
+
+.NOTATNIK_BTN_F:hover,
+.NOTATNIK_ZAPISZ:hover {
+	background: var(--TLO-PRZYCISK);
+	color: var(--AKCENT-TEKST);
+	transform: translateY(-1px);
+}
+
+.NOTATNIK_KOLOR_WRAP { position: relative; }
+
+.NOTATNIK_KOLOR {
+	width: 34px; height: 28px;
+	border: 0; border-radius: 6px;
+	background: var(--TLO-PANEL);
+	cursor: pointer;
+}
+
+.NOTATNIK_KOLOR_OK {
+	position: absolute;
+	right: -42px; top: 0;
+	height: 28px;
+	background: var(--TLO-PANEL);
+	color: var(--TEKST-PRZYCISK);
+	border: 0;
+	border-radius: 6px;
+	padding: 0 8px;
+	cursor: pointer;
+	transition: color .12s, background-color .12s;
+}
+.NOTATNIK_KOLOR_OK:hover { background: var(--TLO-PRZYCISK); color: var(--AKCENT-TEKST); }
+
+/* Nazwa wybranego pliku */
+.NOTATNIK_PLIK_NAZWA {
+	font-size: 12px;
+	color: var(--TEKST-PRZYCISK);
+	opacity: .9;
+	background: var(--TLO-PRZYCISK);
+	border-radius: 8px;
+	padding: 8px 10px;
+}
+
+/* Lista notatek */
+.NOTATNIK_LISTA {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: grid;
+	gap: 6px;
+}
+
+.NOTATNIK_EL {
+	position: relative;
+	background: var(--TLO-PRZYCISK);
+	border-radius: 8px;
+	padding: 10px 12px;
+	transition: background-color .12s ease, transform .06s ease;
+}
+
+.NOTATNIK_EL:hover { background: var(--TLO-PANEL); transform: translateY(-1px); }
+
+.NOTATNIK_TEKST {
+	color: var(--TEKST-PRZYCISK);
+	transition: color .12s ease;
+	word-break: break-word;
+	padding-right: 60px;
+}
+
+.NOTATNIK_EL:hover .NOTATNIK_TEKST { color: var(--AKCENT-TEKST); }
+
+.NOTATNIK_TEKST.editing {
+	background: var(--TLO-PANEL);
+	border-radius: 6px;
+	padding: 8px;
+	outline: none;
+	min-height: 20px;
+	max-height: 200px;
+	overflow-y: auto;
+}
+
+/* Załączniki w elemencie */
+.NOTATNIK_IMG_WRAP { position: relative; display: inline-block; margin-top: 6px; }
+.NOTATNIK_IMG {
+	max-width: 100%;
+	max-height: 150px;
+	border-radius: 6px;
+	object-fit: contain;
+	cursor: pointer;
+}
+.NOTATNIK_FILE {
+	margin-top: 6px;
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	text-decoration: underline;
+	color: var(--TEKST-PRZYCISK);
+	cursor: pointer;
+}
+
+.NOTATNIK_FILE:hover { color: var(--AKCENT-TEKST); }
+
+.NOTATNIK_DEL_FILE {
+	position: absolute;
+	top: -8px; left: -8px;
+	width: 20px; height: 20px;
+	border-radius: 50%;
+	background: var(--AKCENT-TEKST);
+	color: var(--TLO);
+	font-size: 12px;
+	display: flex; align-items: center; justify-content: center;
+	cursor: pointer;
+	opacity: 0;
+	transition: opacity .12s ease;
+}
+.NOTATNIK_EL:hover .NOTATNIK_DEL_FILE,
+.NOTATNIK_EL.editing .NOTATNIK_DEL_FILE { opacity: 1; }
+
+/* Akcje w elemencie */
+.NOTATNIK_AKCJE {
+	position: absolute;
+	right: 8px; top: 8px;
+	display: flex; gap: 8px;
+}
+
+.NOTATNIK_AKCJE > button {
+	background: transparent;
+	border: 0;
+	color: var(--TEKST-PRZYCISK);
+	cursor: pointer;
+	font-size: 14px;
+	border-radius: 6px;
+	padding: 2px 6px;
+	transition: color .12s ease, transform .06s ease;
+}
+.NOTATNIK_AKCJE > button:hover { color: var(--AKCENT-TEKST); transform: scale(1.06); }
+
+.NOTATNIK_ZAPISZ_INLINE,
+.NOTATNIK_ANULUJ_INLINE { display: none; }
+
+/* Tabela w treści notatki */
+.NOTATNIK_TABELA {
+	border-collapse: collapse;
+	margin: 6px 0;
+	max-width: 100%;
+	overflow-x: auto;
+	display: block;
+}
+.NOTATNIK_TABELA th,
+.NOTATNIK_TABELA td {
+	border: 1px solid var(--TEKST-PRZYCISK);
+	padding: 5px;
+	min-width: 20px;
+	height: 20px;
+}
+.NOTATNIK_TABELA th { color: var(--AKCENT-TEKST); font-weight: 600; }
+
+/* Dialogi / overlay */
+.NOTATNIK_OVERLAY {
+	display: none;
+	position: fixed;
+	inset: 0;
+	background: rgba(0,0,0,.7);
+	z-index: 999;
+}
+.NOTATNIK_DIALOG {
+	display: none;
+	position: fixed;
+	z-index: 1000;
+	left: 50%; top: 50%;
+	transform: translate(-50%,-50%);
+	background: var(--TLO-PANEL);
+	color: var(--TEKST-PRZYCISK);
+	border-radius: 10px;
+	padding: 16px;
+	box-shadow: 0 10px 30px rgba(0,0,0,.35);
+	min-width: min(92vw, 520px);
+}
+.NOTATNIK_DIALOG_BTN {
+	background: var(--TLO-PRZYCISK);
+	color: var(--TEKST-PRZYCISK);
+	border: 0; border-radius: 8px;
+	padding: 8px 12px;
+	cursor: pointer;
+	transition: color .12s ease, background-color .12s ease;
+}
+.NOTATNIK_DIALOG_BTN:hover { background: var(--TLO-PANEL); color: var(--AKCENT-TEKST); }
+.NOTATNIK_DIALOG_GRID {
+	display: grid; grid-template-columns: auto 1fr; gap: 8px 10px; margin: 8px 0 12px 0;
+}
+.NOTATNIK_DIALOG_INP {
+	background: var(--TLO-PRZYCISK);
+	color: var(--TEKST-PRZYCISK);
+	border: 0; border-radius: 6px;
+	padding: 6px 10px;
+}
+
+/* Link-popup */
+.NOTATNIK_LINK_DIALOG {
+	display: none;
+	position: absolute;
+	z-index: 1010;
+	background: var(--TLO-PANEL);
+	color: var(--TEKST-PRZYCISK);
+	border-radius: 8px;
+	padding: 10px;
+	box-shadow: 0 8px 20px rgba(0,0,0,.35);
+}
+.NOTATNIK_LINK_INP {
+	background: var(--TLO-PRZYCISK);
+	color: var(--TEKST-PRZYCISK);
+	border: 0; border-radius: 6px;
+	padding: 6px 10px;
+	width: 220px;
+}
+.NOTATNIK_LINK_AKCJE { display: flex; gap: 8px; margin-top: 8px; }
+
+/* Ukryte inputy plików */
+.NOTATNIK_FILE_INPUT { display: none; }
+
+/* Responsive */
+@media (max-width: 998px){
+	.NOTATNIK_WIERSZ { grid-template-columns: 1fr; }
+}
