@@ -1,1216 +1,139 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LATARKA</title>
-    <meta name="theme-color" content="#000000">
-    <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* STYLE LATARKI */
-        .KOZLOWSKISEBASTIAN .latarka-kontener {
-            background: #333333;
-            padding-top: 4px;
-            border-radius: 8px;
-            display: none;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-kontener {
-            background: #F5F5F5 !important;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-przyciski {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-grupa-przyciskow {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-przycisk {
-            background: #222222;
-            color: #B0B0B0;
-            border: none;
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.15s;
-            -webkit-tap-highlight-color: transparent;
-            width: 100%;
-            box-sizing: border-box;
-            text-align: center;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-przycisk:hover {
-            color: #FF00FF;
-            background: #333333;
-            transform: translateY(-2px);
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-przycisk.aktywny {
-            color: #FF00FF;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-opcje {
-            margin-top: 8px;
-            display: none;
-            width: 100%;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-opcje.aktywne {
-            display: block;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-opcje-latarka {
-            margin-top: 8px;
-            display: none;
-            width: 100%;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-opcje-latarka.aktywne {
-            display: block;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-opcja {
-            margin-bottom: 8px;
-            width: 100%;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-opcja label {
-            display: block;
-            margin-bottom: 4px;
-            color: #B0B0B0;
-            font-size: 14px;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-slider {
-            width: 100%;
-            -webkit-appearance: none;
-            height: 6px;
-            border-radius: 3px;
-            background: #222;
-            outline: none;
-            margin-bottom: 8px;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #FF00FF;
-            cursor: pointer;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-kolory {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 6px;
-            margin-top: 8px;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-kolor {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            cursor: pointer;
-            border: 2px solid #333;
-            transition: transform 0.15s;
-            position: relative;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-kolor:hover {
-            transform: scale(1.1);
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-kolor.aktywny {
-            border-color: #FF00FF;
-            transform: scale(1.1);
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-kolor-usun {
-            position: absolute;
-            top: -6px;
-            right: -6px;
-            background: #FF0000;
-            color: white;
-            border-radius: 50%;
-            width: 14px;
-            height: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            cursor: pointer;
-            display: none;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-kolor:hover .latarka-kolor-usun {
-            display: flex;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-kolor-hex {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-kolor-input {
-            flex: 1;
-            background: #222;
-            color: #B0B0B0;
-            border: none;
-            padding: 8px;
-            border-radius: 8px;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-kolor-przycisk {
-            background: #222;
-            color: #B0B0B0;
-            border: none;
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-kolor-przycisk:hover {
-            color: #FF00FF;
-            background: #333;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-profil {
-            background: #222222;
-            color: #B0B0B0;
-            border: none;
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.15s;
-            margin-top: 6px;
-            width: 100%;
-            text-align: left;
-            box-sizing: border-box;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-profil:hover {
-            color: #FF00FF;
-            background: #333333;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-czasowy {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 8px;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-czasowy-input {
-            flex: 1;
-            background: #222;
-            color: #B0B0B0;
-            border: none;
-            padding: 8px;
-            border-radius: 8px;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-czasowy-przycisk {
-            background: #222;
-            color: #B0B0B0;
-            border: none;
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.15s;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-czasowy-przycisk:hover {
-            color: #FF00FF;
-            background: #333;
-        }
-        
-        /* STYLE PRZYCISKU LATARKA */
-        .KOZLOWSKISEBASTIAN .latarka-glowny-przycisk {
-            background: #222222;
-            color: #B0B0B0;
-            border: none;
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.15s;
-            -webkit-tap-highlight-color: transparent;
-            width: 100%;
-            margin-top: 0;
-            box-sizing: border-box;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-glowny-przycisk:hover {
-            color: #FF00FF;
-            background: #333333;
-            transform: translateY(-2px);
-        }
-        
-        /* STYLE ELEMENTÓW AKTYWNYCH */
-        .KOZLOWSKISEBASTIAN .latarka-aktywny-element {
-            position: fixed;
-            top: 0;
-            height: 100%;
-            z-index: -1;
-            transition: all 0.3s;
-            opacity: 0.9;
-            display: none;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-element {
-            left: 0;
-            background-color: white;
-            pointer-events: none;
-        }
-        
-        .KOZLOWSKISEBASTIAN .latarka-ekran-element {
-            background-color: #000;
-            pointer-events: none;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-        /* STYLE PANELI OPCJI */
-        .KOZLOWSKISEBASTIAN .opcje-container {
-            display: flex;
-            flex-wrap: wrap;
-            width: 100%;
-            gap: 8px;
-        }
-        
-        .KOZLOWSKISEBASTIAN .opcje-panel {
-            width: 100%;
-            transition: all 0.3s;
-        }
-        
-        .KOZLOWSKISEBASTIAN .opcje-panel.polowa {
-            width: calc(50% - 4px);
-        }
-        
-        .KOZLOWSKISEBASTIAN .opcje-panel.polowa .latarka-przycisk,
-        .KOZLOWSKISEBASTIAN .opcje-panel.polowa .latarka-kolor-input,
-        .KOZLOWSKISEBASTIAN .opcje-panel.polowa .latarka-czasowy-input {
-            width: 100%;
-            box-sizing: border-box;
-        }
-        
-        .KOZLOWSKISEBASTIAN .opcje-panel.polowa .latarka-grupa-przyciskow {
-            grid-template-columns: 1fr;
-        }
-        
-        /* STYLE JASNEGO MOTYWU */
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-kontener {
-            background: #F5F5F5 !important;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-przycisk {
-            background: #EEEEEE;
-            color: #555555;
-            border: 1px solid #E0E0E0;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-opcja label {
-            color: #555555;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-opcje-latarka label {
-            color: #555555;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-slider {
-            background: #EEEEEE;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-przycisk:hover {
-            color: #333333;
-            background: #E0E0E0;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-przycisk.aktywny {
-            color: #333333;
-            background: #E0E0E0;
-            border-color: #CCCCCC;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-kolor-input {
-            background: #EEEEEE;
-            color: #555555;
-            border: 1px solid #E0E0E0;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-kolor-przycisk {
-            background: #EEEEEE;
-            color: #555555;
-            border: 1px solid #E0E0E0;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-kolor-przycisk:hover {
-            color: #333333;
-            background: #E0E0E0;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-profil {
-            background: #EEEEEE;
-            color: #555555;
-            border: 1px solid #E0E0E0;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-profil:hover {
-            color: #333333;
-            background: #E0E0E0;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-opcje-latarka select {
-            background: #EEEEEE;
-            color: #555555;
-            border: 1px solid #E0E0E0;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-czasowy-input {
-            background: #EEEEEE;
-            color: #555555;
-            border: 1px solid #E0E0E0;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-czasowy-przycisk {
-            background: #EEEEEE;
-            color: #555555;
-            border: 1px solid #E0E0E0;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-czasowy-przycisk:hover {
-            color: #333333;
-            background: #E0E0E0;
-        }
-        
-        /* STYLE PRZYCISKU LATARKA DLA JASNEGO MOTYWU */
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-glowny-przycisk {
-            background: #EEEEEE;
-            color: #555555;
-            border: 1px solid #E0E0E0;
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-glowny-przycisk:hover {
-            color: #333333;
-            background: #E0E0E0;
-            transform: translateY(-2px);
-        }
-        
-        .KOZLOWSKISEBASTIAN_JASNY .latarka-glowny-przycisk.aktywny {
-            color: #333333;
-            background: #E0E0E0;
-            border-color: #CCCCCC;
-        }
-        
-        /* STYLE HEXAGON */
-        .KOZLOWSKISEBASTIAN .hexagon-ksztalt {
-            background: #F5F5F5;
-            transition: background-color 0.3s;
-        }
-        
-        /* UKRYWANIE PRZYCISKU PRZYBORNIK NA STARCIE */
-        .KOZLOWSKISEBASTIAN .przybornik-przycisk {
-            display: none;
-        }
-    </style>
+  <title>LATARKA</title>
+
+  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FF00FF">
+  <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#000000">
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KOLORY.css">
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/HEXAGON.css">
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/LATARKA.css">
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
 </head>
 <body class="KOZLOWSKISEBASTIAN">
-    <div class="KOZLOWSKISEBASTIAN_HEXAGON_KONTENER">
-        <div class="KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT"></div>
-        <div class="KOZLOWSKISEBASTIAN_TROJKAT_KONTENER">
-            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_JEDEN"></div>
-            <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_DWA"></div>
-        </div>
+
+  <!-- HEXAGON (współdzielony wygląd) -->
+  <div class="KOZLOWSKISEBASTIAN_HEXAGON_KONTENER">
+    <div class="KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT"></div>
+    <div class="KOZLOWSKISEBASTIAN_TROJKAT_KONTENER">
+      <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_JEDEN"></div>
+      <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_DWA"></div>
     </div>
-    
-    <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK">
-        <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER">
-            <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
-                <button class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK przybornik-przycisk" id="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
-            </div>
-            <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
-                <button class="KOZLOWSKISEBASTIAN_LATARKA-PRZYCISK latarka-glowny-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-PRZYCISK">LATARKA</button>
-            </div>
-            
-            <!-- Kontener latarki - początkowo ukryty -->
-            <div class="latarka-kontener" id="KOZLOWSKISEBASTIAN_LATARKA">
-                <div class="latarka-przyciski">
-                    <div class="latarka-grupa-przyciskow">
-                        <button class="latarka-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-WLACZ">WŁĄCZ LATARKĘ</button>
-                        <button class="latarka-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-EKRAN">WŁĄCZ EKRAN</button>
-                    </div>
-                    <div class="latarka-grupa-przyciskow">
-                        <button class="latarka-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-OPCJE-LATARKA-BTN">OPCJE LATARKI</button>
-                        <button class="latarka-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-OPCJE-EKRAN-BTN">OPCJE EKRANU</button>
-                    </div>
-                    <button class="latarka-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-TRYB" style="display:none;">TRYB: WYŁ.</button>
-                </div>
-                
-                <!-- Kontener dla paneli opcji -->
-                <div class="opcje-container">
-                    <!-- Kontener opcji latarki -->
-                    <div class="opcje-panel" id="KOZLOWSKISEBASTIAN_LATARKA-OPCJE-LATARKA">
-                        <div class="latarka-opcje-latarka">
-                            <div class="latarka-opcja">
-                                <label for="KOZLOWSKISEBASTIAN_LATARKA-TRYB-LATARKA">Tryb latarki:</label>
-                                <select id="KOZLOWSKISEBASTIAN_LATARKA-TRYB-LATARKA" class="latarka-przycisk" style="width: 100%; padding: 6px; font-size: 14px; box-sizing: border-box;">
-                                    <option value="solid">Stały</option>
-                                    <option value="sos">SOS</option>
-                                    <option value="strobe">Stroboskop</option>
-                                </select>
-                            </div>
-                            <div class="latarka-opcja" id="latarka-szybkosc-container" style="display: none;">
-                                <label for="KOZLOWSKISEBASTIAN_LATARKA-SZYBKOSC">Szybkość stroboskopu (ms):</label>
-                                <input type="range" min="50" max="1000" value="200" class="latarka-slider" id="KOZLOWSKISEBASTIAN_LATARKA-SZYBKOSC">
-                                <span id="latarka-szybkosc-value">200 ms</span>
-                            </div>
-                            <div class="latarka-opcja">
-                                <label>Wyłącznik czasowy:</label>
-                                <div class="latarka-czasowy">
-                                    <input type="number" id="KOZLOWSKISEBASTIAN_LATARKA-CZAS" class="latarka-czasowy-input" placeholder="Minuty (0 = wyłącz)" min="0" max="60">
-                                    <button class="latarka-czasowy-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-CZAS-USTAW">OK</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Kontener opcji ekranu -->
-                    <div class="opcje-panel" id="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-OPCJE">
-                        <div class="latarka-opcje">
-                            <div class="latarka-opcja">
-                                <label for="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-TRYB">Tryb ekranu:</label>
-                                <select id="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-TRYB" class="latarka-przycisk" style="width: 100%; padding: 6px; font-size: 14px; box-sizing: border-box;">
-                                    <option value="solid">Stały</option>
-                                    <option value="sos">SOS</option>
-                                    <option value="strobe">Stroboskop</option>
-                                    <option value="fire">Straż Pożarna</option>
-                                    <option value="ambulance">Pogotowie</option>
-                                    <option value="police">Policja</option>
-                                    <option value="special">Specjalistyczny Żółty</option>
-                                </select>
-                            </div>
-                            <div class="latarka-opcja" id="ekran-szybkosc-container">
-                                <label for="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-SZYBKOSC">Szybkość (ms):</label>
-                                <input type="range" min="50" max="1000" value="200" class="latarka-slider" id="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-SZYBKOSC">
-                                <span id="ekran-szybkosc-value">200 ms</span>
-                            </div>
-                            <div class="latarka-opcja">
-                                <label>Kolory:</label>
-                                <div class="latarka-kolory" id="KOZLOWSKISEBASTIAN_LATARKA-KOLORY-LISTA">
-                                    <div class="latarka-kolor aktywny" style="background: #FFFFFF;" data-kolor="#FFFFFF">
-                                        <span class="latarka-kolor-usun">×</span>
-                                    </div>
-                                    <div class="latarka-kolor" style="background: #FF0000;" data-kolor="#FF0000">
-                                        <span class="latarka-kolor-usun">×</span>
-                                    </div>
-                                    <div class="latarka-kolor" style="background: #00FF00;" data-kolor="#00FF00">
-                                        <span class="latarka-kolor-usun">×</span>
-                                    </div>
-                                    <div class="latarka-kolor" style="background: #0000FF;" data-kolor="#0000FF">
-                                        <span class="latarka-kolor-usun">×</span>
-                                    </div>
-                                    <div class="latarka-kolor" style="background: #FFFF00;" data-kolor="#FFFF00">
-                                        <span class="latarka-kolor-usun">×</span>
-                                    </div>
-                                </div>
-                                <div class="latarka-kolor-hex">
-                                    <input type="text" id="KOZLOWSKISEBASTIAN_LATARKA-HEX" class="latarka-kolor-input" placeholder="#FFFFFF" maxlength="7">
-                                    <button class="latarka-kolor-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-HEX-DODAJ">+</button>
-                                </div>
-                            </div>
-                            <div class="latarka-opcja">
-                                <label>Wyłącznik czasowy:</label>
-                                <div class="latarka-czasowy">
-                                    <input type="number" id="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-CZAS" class="latarka-czasowy-input" placeholder="Minuty (0 = wyłącz)" min="0" max="60">
-                                    <button class="latarka-czasowy-przycisk" id="KOZLOWSKISEBASTIAN_LATARKA-EKRAN-CZAS-USTAW">OK</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+  </div>
+
+  <!-- PRZYBORNIK + LATARKA -->
+  <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK">
+    <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER">
+
+      <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
+        <button id="PRZYBORNIK_PRZYCISK" class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
+      </div>
+
+      <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
+        <button id="LATARKA_MENU" class="KOZLOWSKISEBASTIAN_PRZYCISK">LATARKA</button>
+      </div>
+
+      <!-- PANEL LATARKI -->
+      <section id="LATARKA_PANEL" class="LATARKA_PANEL ukryj">
+        <!-- wiersz: przyciski główne -->
+        <div class="LATARKA_GRID_2">
+          <button id="BTN_TORCH" class="KOZLOWSKISEBASTIAN_PRZYCISK">WŁĄCZ LATARKĘ</button>
+          <button id="BTN_SCREEN" class="KOZLOWSKISEBASTIAN_PRZYCISK">WŁĄCZ EKRAN</button>
         </div>
+
+        <!-- wiersz: przyciski opcji -->
+        <div class="LATARKA_GRID_2">
+          <button id="BTN_TORCH_OPCJE"  class="KOZLOWSKISEBASTIAN_PRZYCISK">OPCJE LATARKI</button>
+          <button id="BTN_SCREEN_OPCJE" class="KOZLOWSKISEBASTIAN_PRZYCISK">OPCJE EKRANU</button>
+        </div>
+
+        <!-- OPCJE – układ dzielony jak w LICZYDŁO/KARTY -->
+        <div class="LATARKA_OPCJE_KONTENER">
+          <!-- Opcje fizycznej latarki -->
+          <div id="OPCJE_TORCH" class="LATARKA_PANEL_OPCJI ukryj">
+            <label class="LATARKA_LABEL" for="TORCH_TRYB">Tryb latarki</label>
+            <select id="TORCH_TRYB" class="KOZLOWSKISEBASTIAN_PRZYCISK">
+              <option value="solid">Stały</option>
+              <option value="sos">SOS</option>
+              <option value="strobe">Stroboskop</option>
+            </select>
+
+            <div id="TORCH_SZYBKOSC_BOX" class="LATARKA_BOX ukryj">
+              <label class="LATARKA_LABEL" for="TORCH_SZYBKOSC">Szybkość strobo (ms)</label>
+              <input id="TORCH_SZYBKOSC" type="range" min="50" max="1000" value="200" class="LATARKA_SLIDER" />
+              <div class="LATARKA_INFO"><span id="TORCH_SZYBKOSC_VAL">200 ms</span></div>
+            </div>
+
+            <div class="LATARKA_BOX">
+              <label class="LATARKA_LABEL" for="TORCH_TIMER">Wyłącznik czasowy (min)</label>
+              <div class="LATARKA_TIMER">
+                <input id="TORCH_TIMER" type="number" min="0" max="60" placeholder="0 = wyłącz" class="LATARKA_INPUT" />
+                <button id="TORCH_TIMER_SET" class="KOZLOWSKISEBASTIAN_PRZYCISK">OK</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Opcje „latarki ekranu” -->
+          <div id="OPCJE_SCREEN" class="LATARKA_PANEL_OPCJI ukryj">
+            <label class="LATARKA_LABEL" for="SCREEN_TRYB">Tryb ekranu</label>
+            <select id="SCREEN_TRYB" class="KOZLOWSKISEBASTIAN_PRZYCISK">
+              <option value="solid">Stały</option>
+              <option value="sos">SOS</option>
+              <option value="strobe">Stroboskop</option>
+              <option value="fire">Straż Pożarna</option>
+              <option value="ambulance">Pogotowie</option>
+              <option value="police">Policja</option>
+              <option value="special">Specjalistyczny Żółty</option>
+            </select>
+
+            <div id="SCREEN_SZYBKOSC_BOX" class="LATARKA_BOX">
+              <label class="LATARKA_LABEL" for="SCREEN_SZYBKOSC">Szybkość (ms)</label>
+              <input id="SCREEN_SZYBKOSC" type="range" min="50" max="1000" value="200" class="LATARKA_SLIDER" />
+              <div class="LATARKA_INFO"><span id="SCREEN_SZYBKOSC_VAL">200 ms</span></div>
+            </div>
+
+            <div class="LATARKA_BOX">
+              <label class="LATARKA_LABEL">Kolory</label>
+              <div id="KOLORY_LISTA" class="KOLORY_LISTA">
+                <!-- domyślne -->
+                <button class="KOLOR" data-kolor="#FFFFFF" style="--c:#FFFFFF"></button>
+                <button class="KOLOR" data-kolor="#FF0000" style="--c:#FF0000"></button>
+                <button class="KOLOR" data-kolor="#00FF00" style="--c:#00FF00"></button>
+                <button class="KOLOR" data-kolor="#0000FF" style="--c:#0000FF"></button>
+                <button class="KOLOR" data-kolor="#FFFF00" style="--c:#FFFF00"></button>
+              </div>
+              <div class="KOLOR_DODAJ">
+                <input id="HEX_INPUT" maxlength="7" placeholder="#FFFFFF" class="LATARKA_INPUT" />
+                <button id="HEX_ADD" class="KOZLOWSKISEBASTIAN_PRZYCISK">+</button>
+              </div>
+            </div>
+
+            <div class="LATARKA_BOX">
+              <label class="LATARKA_LABEL" for="SCREEN_TIMER">Wyłącznik czasowy (min)</label>
+              <div class="LATARKA_TIMER">
+                <input id="SCREEN_TIMER" type="number" min="0" max="60" placeholder="0 = wyłącz" class="LATARKA_INPUT" />
+                <button id="SCREEN_TIMER_SET" class="KOZLOWSKISEBASTIAN_PRZYCISK">OK</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </div>
-
-    <!-- Elementy aktywne -->
-    <div id="KOZLOWSKISEBASTIAN_LATARKA-ELEMENT" class="latarka-aktywny-element latarka-element"></div>
-    <div id="KOZLOWSKISEBASTIAN_EKRAN-ELEMENT" class="latarka-aktywny-element latarka-ekran-element"></div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    <script>
-        // MODUŁ LATARKI
-        const Latarka = (function() {
-            // Elementy DOM
-            const elements = {
-                przybornikPrzycisk: document.getElementById('KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK'),
-                latarkaPrzycisk: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-PRZYCISK'),
-                latarkaKontener: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA'),
-                hexagonKontener: document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KONTENER'),
-                hexagonKsztalt: document.querySelector('.KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT'),
-                latarkaElement: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-ELEMENT'),
-                ekranElement: document.getElementById('KOZLOWSKISEBASTIAN_EKRAN-ELEMENT'),
-                wlaczBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-WLACZ'),
-                trybBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-TRYB'),
-                ekranBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN'),
-                opcjeLatarkaBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-OPCJE-LATARKA-BTN'),
-                opcjeEkranBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-OPCJE-EKRAN-BTN'),
-                opcjeLatarka: document.querySelector('#KOZLOWSKISEBASTIAN_LATARKA-OPCJE-LATARKA .latarka-opcje-latarka'),
-                opcjeEkran: document.querySelector('#KOZLOWSKISEBASTIAN_LATARKA-EKRAN-OPCJE .latarka-opcje'),
-                latarkaTrybSelect: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-TRYB-LATARKA'),
-                ekranTrybSelect: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-TRYB'),
-                latarkaSzybkoscSlider: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-SZYBKOSC'),
-                latarkaSzybkoscValue: document.getElementById('latarka-szybkosc-value'),
-                latarkaSzybkoscContainer: document.getElementById('latarka-szybkosc-container'),
-                ekranSzybkoscSlider: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-SZYBKOSC'),
-                ekranSzybkoscValue: document.getElementById('ekran-szybkosc-value'),
-                koloryLista: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-KOLORY-LISTA'),
-                hexInput: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX'),
-                hexDodajBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-HEX-DODAJ'),
-                latarkaCzasInput: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-CZAS'),
-                latarkaCzasUstawBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-CZAS-USTAW'),
-                ekranCzasInput: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-CZAS'),
-                ekranCzasUstawBtn: document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-CZAS-USTAW')
-            };
-
-            // Stan aplikacji
-            let state = {
-                menuWidoczne: false,
-                latarkaWlaczona: false,
-                latarkaTryb: 'solid', // Domyślnie stały
-                latarkaSzybkosc: 200,
-                latarkaCzasowy: 0,
-                latarkaTimer: null,
-                ekranWlaczony: false,
-                trybEkranu: 'solid', // Domyślnie stały
-                szybkoscEkranu: 200,
-                koloryEkranu: ['#FFFFFF'],
-                aktualnyKolorIndex: 0,
-                intervalEkranu: null,
-                intervalLatarki: null,
-                ekranCzasowy: 0,
-                ekranTimer: null,
-                videoTrack: null
-            };
-
-            // Profile kolorów
-            const profile = {
-                straz: ['#FF0000', '#FFFFFF'],
-                pogotowie: ['#FFFFFF', '#0000FF'],
-                policja: ['#0000FF', '#FF0000'],
-                specjalny: ['#FFFF00', '#FFA500']
-            };
-
-            // Wzorzec SOS
-            const sosPattern = [
-                200, 200, // Krótki (S)
-                200, 200, // Krótki
-                200, 200, // Krótki
-                600, 200, // Długi (O)
-                600, 200, // Długi
-                600, 200, // Długi
-                200, 200, // Krótki (S)
-                200, 200, // Krótki
-                200, 1000 // Krótki, przerwa
-            ];
-
-            // Inicjalizacja
-            function init() {
-                setupEventListeners();
-                ukryjElementyNaStarcie();
-                dodajPierwszyAktywnyKolor();
-                updateSzybkoscValues();
-                updateElementyAktywne();
-            }
-
-            // Ustawienie nasłuchiwaczy zdarzeń
-            function setupEventListeners() {
-                elements.przybornikPrzycisk.addEventListener('click', () => {
-                    window.location.href = 'https://kozlowskisebastian.pl/PRZYBORNIK';
-                });
-
-                elements.latarkaPrzycisk.addEventListener('click', toggleMenu);
-                elements.wlaczBtn.addEventListener('click', toggleLatarke);
-                elements.ekranBtn.addEventListener('click', toggleEkran);
-                
-                elements.opcjeLatarkaBtn.addEventListener('click', function() {
-                    toggleOpcjeLatarka();
-                    // Ukryj opcje ekranu jeśli są widoczne
-                    if (elements.opcjeEkran.classList.contains('aktywne')) {
-                        elements.opcjeEkran.classList.remove('aktywne');
-                    }
-                    adjustPanelsWidth();
-                });
-
-                elements.opcjeEkranBtn.addEventListener('click', function() {
-                    toggleOpcjeEkran();
-                    // Ukryj opcje latarki jeśli są widoczne
-                    if (elements.opcjeLatarka.classList.contains('aktywne')) {
-                        elements.opcjeLatarka.classList.remove('aktywne');
-                    }
-                    adjustPanelsWidth();
-                });
-
-                elements.latarkaTrybSelect.addEventListener('change', handleLatarkaTrybChange);
-                elements.ekranTrybSelect.addEventListener('change', handleEkranTrybChange);
-                elements.latarkaSzybkoscSlider.addEventListener('input', handleLatarkaSzybkoscChange);
-                elements.ekranSzybkoscSlider.addEventListener('input', handleEkranSzybkoscChange);
-                elements.koloryLista.addEventListener('click', handleColorSelection);
-                elements.hexDodajBtn.addEventListener('click', addCustomColor);
-                elements.latarkaCzasUstawBtn.addEventListener('click', setLatarkaCzasowy);
-                elements.ekranCzasUstawBtn.addEventListener('click', setEkranCzasowy);
-
-                window.addEventListener('unload', () => {
-                    if (state.videoTrack) {
-                        state.videoTrack.stop();
-                    }
-                });
-            }
-
-            // Aktualizuj wartości szybkości
-            function updateSzybkoscValues() {
-                elements.latarkaSzybkoscValue.textContent = `${state.latarkaSzybkosc} ms`;
-                elements.ekranSzybkoscValue.textContent = `${state.szybkoscEkranu} ms`;
-            }
-
-            // Aktualizuj elementy aktywne (latarka/ekran) i panele opcji
-            function updateElementyAktywne() {
-                // Resetuj style dla elementów świetlnych
-                elements.latarkaElement.style.display = 'none';
-                elements.ekranElement.style.display = 'none';
-                elements.latarkaElement.style.width = '100%';
-                elements.ekranElement.style.width = '100%';
-                elements.latarkaElement.style.left = '0';
-                elements.ekranElement.style.left = '0';
-
-                if (state.latarkaWlaczona && state.ekranWlaczony) {
-                    // Obie opcje włączone - pół szerokości
-                    elements.latarkaElement.style.display = 'block';
-                    elements.ekranElement.style.display = 'block';
-                    elements.latarkaElement.style.width = '50%';
-                    elements.ekranElement.style.width = '50%';
-                    elements.ekranElement.style.left = '50%';
-                } else if (state.latarkaWlaczona) {
-                    // Tylko latarka włączona
-                    elements.latarkaElement.style.display = 'block';
-                } else if (state.ekranWlaczony) {
-                    // Tylko ekran włączony
-                    elements.ekranElement.style.display = 'block';
-                }
-            }
-
-            // Pokaz/ukryj opcje latarki
-            function toggleOpcjeLatarka() {
-                elements.opcjeLatarka.classList.toggle('aktywne');
-                adjustPanelsWidth();
-            }
-
-            // Pokaz/ukryj opcje ekranu
-            function toggleOpcjeEkran() {
-                elements.opcjeEkran.classList.toggle('aktywne');
-                adjustPanelsWidth();
-            }
-
-            // Dostosuj szerokość paneli opcji
-            function adjustPanelsWidth() {
-                const latarkaActive = elements.opcjeLatarka.classList.contains('aktywne');
-                const ekranActive = elements.opcjeEkran.classList.contains('aktywne');
-                
-                const latarkaPanel = document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-OPCJE-LATARKA');
-                const ekranPanel = document.getElementById('KOZLOWSKISEBASTIAN_LATARKA-EKRAN-OPCJE');
-                
-                if (latarkaActive && ekranActive) {
-                    latarkaPanel.classList.add('polowa');
-                    ekranPanel.classList.add('polowa');
-                } else {
-                    latarkaPanel.classList.remove('polowa');
-                    ekranPanel.classList.remove('polowa');
-                }
-            }
-
-            // Ukryj elementy na starcie
-            function ukryjElementyNaStarcie() {
-                elements.hexagonKontener.style.display = 'none';
-                elements.latarkaKontener.style.display = 'none';
-                elements.przybornikPrzycisk.style.display = 'none';
-                elements.trybBtn.style.display = 'none';
-                elements.latarkaElement.style.display = 'none';
-                elements.ekranElement.style.display = 'none';
-                elements.opcjeLatarka.classList.remove('aktywne');
-                elements.opcjeEkran.classList.remove('aktywne');
-            }
-
-            // Dodaj pierwszy aktywny kolor
-            function dodajPierwszyAktywnyKolor() {
-                document.querySelector('.latarka-kolor').classList.add('aktywny');
-            }
-
-            // Pokaz/ukryj menu
-            function toggleMenu() {
-                state.menuWidoczne = !state.menuWidoczne;
-
-                if (state.menuWidoczne) {
-                    elements.przybornikPrzycisk.style.display = 'block';
-                    elements.latarkaKontener.style.display = 'block';
-                    elements.hexagonKontener.style.display = 'block';
-                    elements.latarkaPrzycisk.style.marginTop = '4px';
-                } else {
-                    elements.przybornikPrzycisk.style.display = 'none';
-                    elements.latarkaKontener.style.display = 'none';
-                    elements.hexagonKontener.style.display = 'none';
-                    elements.latarkaPrzycisk.style.marginTop = '0';
-                    // Ukryj również panele opcji przy zamykaniu menu
-                    elements.opcjeLatarka.classList.remove('aktywne');
-                    elements.opcjeEkran.classList.remove('aktywne');
-                    adjustPanelsWidth();
-                }
-            }
-
-            // Aktualizuj przyciski
-            function aktualizujPrzyciski() {
-                elements.wlaczBtn.textContent = state.latarkaWlaczona ? 'WYŁĄCZ LATARKĘ' : 'WŁĄCZ LATARKĘ';
-                elements.wlaczBtn.classList.toggle('aktywny', state.latarkaWlaczona);
-                elements.ekranBtn.textContent = state.ekranWlaczony ? 'WYŁĄCZ EKRAN' : 'WŁĄCZ EKRAN';
-                elements.ekranBtn.classList.toggle('aktywny', state.ekranWlaczony);
-            }
-
-            // Włącz/wyłącz latarkę
-            async function toggleLatarke() {
-                state.latarkaWlaczona = !state.latarkaWlaczona;
-
-                if (state.latarkaWlaczona) {
-                    await startLatarka();
-                    if (state.latarkaCzasowy > 0) {
-                        startLatarkaTimer();
-                    }
-                } else {
-                    await stopLatarka();
-                    stopLatarkaTimer();
-                }
-
-                aktualizujPrzyciski();
-                updateElementyAktywne();
-            }
-
-            // Start latarki
-            async function startLatarka() {
-                await stopLatarka(); // Zatrzymaj poprzedni stan
-                state.latarkaTryb = elements.latarkaTrybSelect.value;
-
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({
-                        video: { facingMode: 'environment', torch: true }
-                    });
-                    state.videoTrack = stream.getVideoTracks()[0];
-                    elements.latarkaElement.style.backgroundColor = '#FFFFFF';
-                    elements.hexagonKsztalt.style.backgroundColor = '#333333';
-
-                    if (state.latarkaTryb === 'solid') {
-                        await state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
-                    } else if (state.latarkaTryb === 'sos') {
-                        runSosLatarka();
-                    } else if (state.latarkaTryb === 'strobe') {
-                        runStrobeLatarka();
-                    }
-                } catch (error) {
-                    console.error('Błąd włączenia latarki:', error);
-                    state.latarkaWlaczona = false;
-                    elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                    aktualizujPrzyciski();
-                    updateElementyAktywne();
-                    alert('Nie można włączyć latarki. Sprawdź uprawnienia kamery lub dostępność latarki.');
-                }
-            }
-
-            // Funkcja SOS dla latarki
-            function runSosLatarka() {
-                let step = 0;
-
-                function nextStep() {
-                    if (!state.latarkaWlaczona) return;
-                    if (step >= sosPattern.length) step = 0;
-                    const duration = sosPattern[step];
-
-                    try {
-                        if (step % 2 === 0) {
-                            state.videoTrack.applyConstraints({ advanced: [{ torch: true }] });
-                            elements.latarkaElement.style.backgroundColor = '#FFFFFF';
-                        } else {
-                            state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
-                            elements.latarkaElement.style.backgroundColor = '#000000';
-                        }
-
-                        step++;
-                        setTimeout(nextStep, duration);
-                    } catch (error) {
-                        console.error('Błąd w trybie SOS:', error);
-                        clearInterval(state.intervalLatarki);
-                        state.latarkaWlaczona = false;
-                        elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                        aktualizujPrzyciski();
-                        updateElementyAktywne();
-                        alert('Błąd w trybie SOS. Latarka została wyłączona.');
-                    }
-                }
-
-                nextStep();
-            }
-
-            // Funkcja stroboskopu dla latarki
-            function runStrobeLatarka() {
-                let isOn = false;
-
-                state.intervalLatarki = setInterval(async () => {
-                    try {
-                        isOn = !isOn;
-                        await state.videoTrack.applyConstraints({ advanced: [{ torch: isOn }] });
-                        elements.latarkaElement.style.backgroundColor = isOn ? '#FFFFFF' : '#000000';
-                    } catch (error) {
-                        console.error('Błąd w trybie stroboskopu:', error);
-                        clearInterval(state.intervalLatarki);
-                        state.latarkaWlaczona = false;
-                        elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                        aktualizujPrzyciski();
-                        updateElementyAktywne();
-                        alert('Błąd w trybie stroboskopu. Latarka została wyłączona.');
-                    }
-                }, state.latarkaSzybkosc);
-            }
-
-            // Stop latarki
-            async function stopLatarka() {
-                clearInterval(state.intervalLatarki);
-                if (state.videoTrack) {
-                    try {
-                        await state.videoTrack.applyConstraints({ advanced: [{ torch: false }] });
-                        state.videoTrack.stop();
-                    } catch (error) {
-                        console.error('Błąd wyłączania latarki:', error);
-                    }
-                    state.videoTrack = null;
-                }
-                elements.latarkaElement.style.backgroundColor = '#000000';
-                elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-            }
-
-            // Timer dla latarki
-            function startLatarkaTimer() {
-                stopLatarkaTimer();
-                const minutes = state.latarkaCzasowy;
-                if (minutes <= 0) return;
-
-                state.latarkaTimer = setTimeout(async () => {
-                    state.latarkaWlaczona = false;
-                    await stopLatarka();
-                    aktualizujPrzyciski();
-                    updateElementyAktywne();
-                    alert(`Latarka została automatycznie wyłączona po ${minutes} minutach.`);
-                }, minutes * 60 * 1000);
-            }
-
-            function stopLatarkaTimer() {
-                if (state.latarkaTimer) {
-                    clearTimeout(state.latarkaTimer);
-                    state.latarkaTimer = null;
-                }
-            }
-
-            // Ustaw wyłącznik czasowy dla latarki
-            function setLatarkaCzasowy() {
-                const minutes = parseInt(elements.latarkaCzasInput.value) || 0;
-                if (minutes < 0 || minutes > 60) {
-                    alert('Wprowadź wartość od 0 do 60 minut');
-                    return;
-                }
-
-                state.latarkaCzasowy = minutes;
-                if (state.latarkaWlaczona && minutes > 0) {
-                    startLatarkaTimer();
-                }
-                alert(`Wyłącznik czasowy latarki ustawiony na ${minutes} minut.`);
-            }
-
-            // Start ekranu
-            function startEkran() {
-                stopEkran();
-                state.trybEkranu = elements.ekranTrybSelect.value;
-                state.szybkoscEkranu = parseInt(elements.ekranSzybkoscSlider.value);
-
-                if (state.trybEkranu === 'solid') {
-                    elements.ekranElement.style.backgroundColor = state.koloryEkranu[0];
-                    elements.hexagonKsztalt.style.backgroundColor = invertColor(state.koloryEkranu[0]);
-                    return;
-                }
-
-                let pattern = [];
-                if (state.trybEkranu === 'sos') {
-                    pattern = sosPattern;
-                } else if (state.trybEkranu === 'strobe') {
-                    pattern = [state.szybkoscEkranu, state.szybkoscEkranu];
-                } else if (state.trybEkranu === 'fire') {
-                    state.koloryEkranu = profile.straz;
-                    pattern = [200, 200];
-                } else if (state.trybEkranu === 'ambulance') {
-                    state.koloryEkranu = profile.pogotowie;
-                    pattern = [200, 200];
-                } else if (state.trybEkranu === 'police') {
-                    state.koloryEkranu = profile.policja;
-                    pattern = [100, 100];
-                } else if (state.trybEkranu === 'special') {
-                    state.koloryEkranu = profile.specjalny;
-                    pattern = [200, 200];
-                }
-
-                let step = 0;
-
-                function nextStep() {
-                    if (!state.ekranWlaczony) return;
-                    if (step >= pattern.length) step = 0;
-                    const duration = pattern[step];
-
-                    if (['strobe', 'fire', 'ambulance', 'police', 'special'].includes(state.trybEkranu)) {
-                        state.aktualnyKolorIndex = (state.aktualnyKolorIndex + 1) % state.koloryEkranu.length;
-                        elements.ekranElement.style.backgroundColor = state.koloryEkranu[state.aktualnyKolorIndex];
-                        elements.hexagonKsztalt.style.backgroundColor = invertColor(state.koloryEkranu[state.aktualnyKolorIndex]);
-                    } else if (state.trybEkranu === 'sos') {
-                        if (step % 2 === 0) {
-                            elements.ekranElement.style.backgroundColor = state.koloryEkranu[0];
-                            elements.hexagonKsztalt.style.backgroundColor = invertColor(state.koloryEkranu[0]);
-                        } else {
-                            elements.ekranElement.style.backgroundColor = '#000000';
-                            elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-                        }
-                    }
-
-                    step++;
-                    setTimeout(nextStep, duration);
-                }
-
-                nextStep();
-            }
-
-            // Stop ekranu
-            function stopEkran() {
-                clearInterval(state.intervalEkranu);
-                elements.ekranElement.style.backgroundColor = '#000000';
-                elements.hexagonKsztalt.style.backgroundColor = '#F5F5F5';
-            }
-
-            // Timer dla ekranu
-            function startEkranTimer() {
-                stopEkranTimer();
-                const minutes = state.ekranCzasowy;
-                if (minutes <= 0) return;
-
-                state.ekranTimer = setTimeout(() => {
-                    state.ekranWlaczony = false;
-                    stopEkran();
-                    aktualizujPrzyciski();
-                    updateElementyAktywne();
-                    alert(`Ekran został automatycznie wyłączony po ${minutes} minutach.`);
-                }, minutes * 60 * 1000);
-            }
-
-            function stopEkranTimer() {
-                if (state.ekranTimer) {
-                    clearTimeout(state.ekranTimer);
-                    state.ekranTimer = null;
-                }
-            }
-
-            // Ustaw wyłącznik czasowy dla ekranu
-            function setEkranCzasowy() {
-                const minutes = parseInt(elements.ekranCzasInput.value) || 0;
-                if (minutes < 0 || minutes > 60) {
-                    alert('Wprowadź wartość od 0 do 60 minut');
-                    return;
-                }
-
-                state.ekranCzasowy = minutes;
-                if (state.ekranWlaczony && minutes > 0) {
-                    startEkranTimer();
-                }
-                alert(`Wyłącznik czasowy ekranu ustawiony na ${minutes} minut.`);
-            }
-
-            // Włącz/wyłącz ekran
-            function toggleEkran() {
-                state.ekranWlaczony = !state.ekranWlaczony;
-
-                if (state.ekranWlaczony) {
-                    startEkran();
-                    if (state.ekranCzasowy > 0) {
-                        startEkranTimer();
-                    }
-                } else {
-                    stopEkran();
-                    stopEkranTimer();
-                }
-
-                aktualizujPrzyciski();
-                updateElementyAktywne();
-            }
-
-            // Odwróć kolor HEX
-            function invertColor(hex) {
-                if (hex.indexOf('#') === 0) {
-                    hex = hex.slice(1);
-                }
-                if (hex.length === 3) {
-                    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
-                }
-                if (hex.length !== 6) {
-                    return '#F5F5F5';
-                }
-                const r = (255 - parseInt(hex.slice(0, 2), 16)).toString(16).padStart(2, '0');
-                const g = (255 - parseInt(hex.slice(2, 4), 16)).toString(16).padStart(2, '0');
-                const b = (255 - parseInt(hex.slice(4, 6), 16)).toString(16).padStart(2, '0');
-                return `#${r}${g}${b}`;
-            }
-
-            // Sprawdź poprawność koloru HEX
-            function isValidHexColor(hex) {
-                return /^#([0-9A-F]{3}){1,2}$/i.test(hex);
-            }
-
-            // Obsługa wyboru koloru
-            function handleColorSelection(e) {
-                if (e.target.classList.contains('latarka-kolor')) {
-                    const kolor = e.target;
-                    const wybranyKolor = kolor.dataset.kolor;
-
-                    document.querySelectorAll('.latarka-kolor').forEach(el => el.classList.remove('aktywny'));
-
-                    kolor.classList.add('aktywny');
-                    state.koloryEkranu = [wybranyKolor];
-
-                    if (state.ekranWlaczony) {
-                        startEkran();
-                    }
-                } else if (e.target.classList.contains('latarka-kolor-usun')) {
-                    e.stopPropagation();
-                    const kolor = e.target.parentElement;
-                    if (document.querySelectorAll('.latarka-kolor').length <= 1) {
-                        alert('Musisz mieć przynajmniej jeden kolor');
-                        return;
-                    }
-
-                    const isActive = kolor.classList.contains('aktywny');
-                    kolor.remove();
-
-                    if (isActive) {
-                        document.querySelector('.latarka-kolor').classList.add('aktywny');
-                        state.koloryEkranu = [document.querySelector('.latarka-kolor').dataset.kolor];
-                    }
-
-                    if (state.ekranWlaczony) {
-                        startEkran();
-                    }
-                }
-            }
-
-            // Dodaj własny kolor HEX
-            function addCustomColor() {
-                const hexValue = elements.hexInput.value.trim();
-                if (isValidHexColor(hexValue)) {
-                    const colorExists = Array.from(document.querySelectorAll('.latarka-kolor'))
-                        .some(el => el.dataset.kolor.toLowerCase() === hexValue.toLowerCase());
-                    
-                    if (colorExists) {
-                        alert('Ten kolor już istnieje na liście!');
-                        return;
-                    }
-
-                    const newColor = document.createElement('div');
-                    newColor.className = 'latarka-kolor';
-                    newColor.style.backgroundColor = hexValue;
-                    newColor.dataset.kolor = hexValue;
-                    newColor.innerHTML = '<span class="latarka-kolor-usun">×</span>';
-                    
-                    document.querySelectorAll('.latarka-kolor').forEach(el => el.classList.remove('aktywny'));
-                    newColor.classList.add('aktywny');
-                    state.koloryEkranu = [hexValue];
-                    
-                    elements.koloryLista.appendChild(newColor);
-                    elements.hexInput.value = '';
-
-                    if (state.ekranWlaczony) {
-                        startEkran();
-                    }
-                } else {
-                    alert('Wprowadź poprawny kod koloru HEX (np. #FFFFFF)');
-                }
-            }
-
-            // Obsługa zmiany trybu latarki
-            function handleLatarkaTrybChange() {
-                state.latarkaTryb = elements.latarkaTrybSelect.value;
-                
-                if (state.latarkaTryb === 'strobe') {
-                    elements.latarkaSzybkoscContainer.style.display = 'block';
-                } else {
-                    elements.latarkaSzybkoscContainer.style.display = 'none';
-                }
-                
-                if (state.latarkaWlaczona) {
-                    startLatarka();
-                }
-            }
-
-            // Obsługa zmiany szybkości latarki
-            function handleLatarkaSzybkoscChange() {
-                state.latarkaSzybkosc = parseInt(elements.latarkaSzybkoscSlider.value);
-                elements.latarkaSzybkoscValue.textContent = `${state.latarkaSzybkosc} ms`;
-                
-                if (state.latarkaWlaczona && state.latarkaTryb === 'strobe') {
-                    startLatarka();
-                }
-            }
-
-            // Obsługa zmiany trybu ekranu
-            function handleEkranTrybChange() {
-                state.trybEkranu = elements.ekranTrybSelect.value;
-                
-                if (state.trybEkranu === 'solid') {
-                    elements.ekranSzybkoscContainer.style.display = 'none';
-                } else {
-                    elements.ekranSzybkoscContainer.style.display = 'block';
-                }
-                
-                if (state.ekranWlaczony) {
-                    startEkran();
-                }
-            }
-
-            // Obsługa zmiany szybkości ekranu
-            function handleEkranSzybkoscChange() {
-                state.szybkoscEkranu = parseInt(elements.ekranSzybkoscSlider.value);
-                elements.ekranSzybkoscValue.textContent = `${state.szybkoscEkranu} ms`;
-                
-                if (state.ekranWlaczony) {
-                    startEkran();
-                }
-            }
-
-            // Publiczne metody
-            return {
-                init: init
-            };
-        })();
-
-        // Inicjalizacja latarki po załadowaniu DOM
-        document.addEventListener('DOMContentLoaded', Latarka.init);
-    </script>
-    <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
+  </div>
+
+  <!-- AKTYWNE „ŹRÓDŁA ŚWIATŁA” -->
+  <div id="TORCH_OVERLAY"  class="LIGHT_OVERLAY ukryj"></div>
+  <div id="SCREEN_OVERLAY" class="SCREEN_OVERLAY ukryj"></div>
+
+  <script src="https://kozlowskisebastian.pl/JS/MOTYWAUTO.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/HEXAGON.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/LATARKA.js"></script>
 </body>
 </html>
