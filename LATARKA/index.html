@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="pl">
 <head>
@@ -45,7 +44,7 @@
           <!-- 3) Zawartość zakładek -->
           <section id="LATARKA_PANEL" class="LATARKA_PANEL">
 
-            <!-- LATARKA (APARAT) -->
+            <!-- LATARKA (APARAT) — ukrywana na desktopie -->
             <div id="SEKCJA_TORCH" class="PRZYBORNIK_SEKCJA">
               <!-- Tryby: 3 równe kolumny -->
               <div class="TRYMY3">
@@ -54,9 +53,9 @@
                 <button id="TORCH_STROBE" class="PRZYCISK">STROBOSKOP</button>
               </div>
 
-              <!-- Suwak szybkości dla LATARKI (własny rząd) -->
+              <!-- Suwak szybkości dla LATARKI -->
               <div class="ROW_STROBE">
-                <input id="TORCH_SZYBKOSC" type="range" min="50" max="1000" value="200" class="SUWAK" />
+                <input id="TORCH_SZYBKOSC" type="range" min="50" max="1000" value="200" class="SUWAK SUWAK_HEX" />
               </div>
             </div>
 
@@ -69,8 +68,8 @@
                 <button id="SCREEN_STROBE" class="PRZYCISK">STROBOSKOP</button>
               </div>
 
-              <!-- Paleta kolorów: MIX po lewej, potem biały i reszta -->
-              <div class="BLOK">
+              <!-- Paleta + (Suwak, HEX, DODAJ) w tej samej linii, wyrównane do środka -->
+              <div class="BLOK BLOK-PALETA">
                 <div id="KOLORY_LISTA" class="KOLORY_LISTA">
                   <button class="KOLOR KOLOR_MIX" id="MIX_SWATCH" title="MIESZANY (pełne RGB)"></button>
                   <button class="KOLOR AKTYWNY" data-kolor="#FFFFFF" style="--c:#FFFFFF" title="#FFFFFF"></button>
@@ -79,13 +78,12 @@
                   <button class="KOLOR" data-kolor="#FF0000" style="--c:#FF0000" title="#FF0000"></button>
                   <button class="KOLOR" data-kolor="#0000FF" style="--c:#0000FF" title="#0000FF"></button>
                 </div>
-              </div>
 
-              <!-- HEX + suwak szybkości EKRANU + Dodaj (obok siebie) -->
-              <div class="ROW3">
-                <input id="HEX_INPUT" class="POLE LICZYDLO_POLE" type="text" inputmode="latin" maxlength="7" value="#" />
-                <input id="SCREEN_SZYBKOSC" type="range" min="50" max="1000" value="200" class="SUWAK" />
-                <button id="HEX_ADD" class="PRZYCISK">Dodaj kolor</button>
+                <div class="ROW3">
+                  <input id="SCREEN_SZYBKOSC" type="range" min="50" max="1000" value="200" class="SUWAK SUWAK_HEX" />
+                  <input id="HEX_INPUT" class="POLE LICZYDLO_POLE POLE_HEX" type="text" inputmode="latin" maxlength="7" value="#" />
+                  <button id="HEX_ADD" class="PRZYCISK">DODAJ KOLOR</button>
+                </div>
               </div>
             </div>
 
