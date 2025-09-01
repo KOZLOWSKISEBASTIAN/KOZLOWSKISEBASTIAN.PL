@@ -6,7 +6,6 @@
   <title>LATARKA</title>
   <meta name="color-scheme" content="dark light" />
 
-  <!-- STYLE (lokalne, współdzielone) -->
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/HEXAGON.css" />
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KOLORY.css" />
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css" />
@@ -16,7 +15,6 @@
 </head>
 <body>
 
-  <!-- TŁO ŚWIECĄCE (pod całym UI) -->
   <div id="SCREEN_OVERLAY" class="SCREEN_OVERLAY UKRYTY" aria-hidden="true"></div>
 
   <div class="RAMKA">
@@ -35,7 +33,7 @@
         <!-- wszystko chowane przy UKRYJ -->
         <div id="WSZYSTKO">
 
-          <!-- 2) Zakładki LATARKA / EKRAN -->
+          <!-- 2) Zakładki LATARKA / EKRAN (ukryte na desktopie) -->
           <section class="SIATKA STEROWANIE_TABS">
             <button id="TAB_TORCH"  class="PRZYCISK">LATARKA</button>
             <button id="TAB_SCREEN" class="PRZYCISK">EKRAN</button>
@@ -44,7 +42,7 @@
           <!-- 3) Zawartość zakładek -->
           <section id="LATARKA_PANEL" class="LATARKA_PANEL">
 
-            <!-- LATARKA (APARAT) — ukrywana na desktopie -->
+            <!-- LATARKA (APARAT) — desktop ukryty w CSS -->
             <div id="SEKCJA_TORCH" class="PRZYBORNIK_SEKCJA">
               <!-- Tryby: 3 równe kolumny -->
               <div class="TRYMY3">
@@ -53,8 +51,8 @@
                 <button id="TORCH_STROBE" class="PRZYCISK">STROBOSKOP</button>
               </div>
 
-              <!-- Suwak szybkości dla LATARKI -->
-              <div class="ROW_STROBE">
+              <!-- Suwak (na dole, pełna szerokość) -->
+              <div class="ROW_FULL">
                 <input id="TORCH_SZYBKOSC" type="range" min="50" max="1000" value="200" class="SUWAK SUWAK_HEX" />
               </div>
             </div>
@@ -68,7 +66,7 @@
                 <button id="SCREEN_STROBE" class="PRZYCISK">STROBOSKOP</button>
               </div>
 
-              <!-- Paleta + (Suwak, HEX, DODAJ) w tej samej linii, wyrównane do środka -->
+              <!-- Paleta + (HEX + DODAJ) w jednej linii z paletą -->
               <div class="BLOK BLOK-PALETA">
                 <div id="KOLORY_LISTA" class="KOLORY_LISTA">
                   <button class="KOLOR KOLOR_MIX" id="MIX_SWATCH" title="MIESZANY (pełne RGB)"></button>
@@ -79,11 +77,15 @@
                   <button class="KOLOR" data-kolor="#0000FF" style="--c:#0000FF" title="#0000FF"></button>
                 </div>
 
-                <div class="ROW3">
-                  <input id="SCREEN_SZYBKOSC" type="range" min="50" max="1000" value="200" class="SUWAK SUWAK_HEX" />
+                <div class="ROW_HEX">
                   <input id="HEX_INPUT" class="POLE LICZYDLO_POLE POLE_HEX" type="text" inputmode="latin" maxlength="7" value="#" />
                   <button id="HEX_ADD" class="PRZYCISK">DODAJ KOLOR</button>
                 </div>
+              </div>
+
+              <!-- Suwak (na samym dole, pełna szerokość) -->
+              <div class="ROW_FULL">
+                <input id="SCREEN_SZYBKOSC" type="range" min="50" max="1000" value="200" class="SUWAK SUWAK_HEX" />
               </div>
             </div>
 
@@ -103,7 +105,6 @@
     <div class="TROJKAT TROJKAT_CIEMNY" title="CIEMNY MOTYW"></div>
   </div>
 
-  <!-- SKRYPTY (lokalne) -->
   <script src="https://kozlowskisebastian.pl/JS/HEXAGON.js"></script>
   <script src="https://kozlowskisebastian.pl/JS/MOTYWAUTO.js"></script>
   <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
