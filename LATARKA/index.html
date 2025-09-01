@@ -1,138 +1,108 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pl">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
   <title>LATARKA</title>
+  <meta name="color-scheme" content="dark light" />
 
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FF00FF">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#000000">
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/HEXAGON.css">
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KOLORY.css">
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
-  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/HEXAGON.css">
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/LATARKA.css">
-
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet">
 </head>
-<body class="KOZLOWSKISEBASTIAN">
+<body>
 
-  <!-- HEXAGON (współdzielony wygląd) -->
-  <div class="KOZLOWSKISEBASTIAN_HEXAGON_KONTENER">
-    <div class="KOZLOWSKISEBASTIAN_HEXAGON_KSZTALT"></div>
-    <div class="KOZLOWSKISEBASTIAN_TROJKAT_KONTENER">
-      <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_JEDEN"></div>
-      <div class="KOZLOWSKISEBASTIAN_TROJKAT KOZLOWSKISEBASTIAN_TROJKAT_DWA"></div>
-    </div>
+  <div id="SCREEN_OVERLAY" class="SCREEN_OVERLAY UKRYTY" aria-hidden="true"></div>
+
+  <div class="RAMKA">
+    <main class="KONTENER">
+      <div class="PANEL" id="PANEL_ROOT">
+
+        <div class="RESZTA_NAGLOWEK">
+          <a class="PRZYCISK_PRZYBORNIK_POWROT" data-klucz="PRZYBORNIK">PRZYBORNIK</a>
+        </div>
+
+        <section class="SIATKA STEROWANIE">
+          <button id="BTN_PANEL_TOGGLE" class="PRZYCISK">POKAŻ</button>
+          <button id="TAB_TORCH"  class="PRZYCISK">LATARKA</button>
+          <button id="TAB_SCREEN" class="PRZYCISK">EKRAN</button>
+        </section>
+
+        <div id="WSZYSTKO">
+
+          <section id="LATARKA_PANEL" class="LATARKA_PANEL" aria-label="USTAWIENIA">
+            <!-- LATARKA (APARAT) -->
+            <div id="SEKCJA_TORCH" class="PRZYBORNIK_SEKCJA">
+              <div class="PODPANEL">
+                <div class="SIATKA GAP">
+                  <button data-val="solid"  id="TORCH_SOLID"  class="PRZYCISK">STAŁY</button>
+                  <button data-val="sos"    id="TORCH_SOS"    class="PRZYCISK">SOS</button>
+                  <button data-val="strobe" id="TORCH_STROBE" class="PRZYCISK">STROBOSKOP</button>
+                </div>
+                <div id="TORCH_SZYBKOSC_BOX" class="BLOK UKRYTY">
+                  <input id="TORCH_SZYBKOSC" type="range" min="50" max="1000" value="200" class="SUWAK" />
+                </div>
+                <div class="BLOK">
+                  <button id="BTN_TORCH" class="PRZYCISK">WŁĄCZ LATARKĘ (APARAT)</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- EKRAN (TŁO) -->
+            <div id="SEKCJA_SCREEN" class="PRZYBORNIK_SEKCJA UKRYTY">
+              <div class="PODPANEL">
+
+                <div class="SIATKA GAP">
+                  <button data-val="solid"  id="SCREEN_SOLID"  class="PRZYCISK">STAŁY</button>
+                  <button data-val="strobe" id="SCREEN_STROBE" class="PRZYCISK">STROBOSKOP</button>
+                </div>
+
+                <div id="SCREEN_SZYBKOSC_BOX" class="BLOK UKRYTY">
+                  <input id="SCREEN_SZYBKOSC" type="range" min="50" max="1000" value="200" class="SUWAK" />
+                </div>
+
+                <!-- Paleta: biały + MIESZANY (okrągła ikona) + reszta -->
+                <div class="BLOK">
+                  <div id="KOLORY_LISTA" class="KOLORY_LISTA">
+                    <button class="KOLOR AKTYWNY" data-kolor="#FFFFFF" style="--c:#FFFFFF" title="Biały"></button>
+                    <button class="KOLOR KOLOR_MIX" id="MIX_SWATCH" title="MIESZANY (pełne RGB)"></button>
+                    <button class="KOLOR" data-kolor="#FF00FF" style="--c:#FF00FF" title="#FF00FF"></button>
+                    <button class="KOLOR" data-kolor="#FFFF00" style="--c:#FFFF00" title="#FFFF00"></button>
+                    <button class="KOLOR" data-kolor="#FF0000" style="--c:#FF0000" title="#FF0000"></button>
+                    <button class="KOLOR" data-kolor="#0000FF" style="--c:#0000FF" title="#0000FF"></button>
+                  </div>
+                </div>
+
+                <!-- Dodaj kolor + Włącz/Wyłącz obok siebie -->
+                <div class="SZEREG ROWACTIONS">
+                  <input id="HEX_INPUT" maxlength="7" placeholder="#00FF00" class="POLE" />
+                  <button id="HEX_ADD" class="PRZYCISK">Dodaj kolor</button>
+                  <button id="BTN_SCREEN" class="PRZYCISK">WŁĄCZ EKRAN (TŁO)</button>
+                </div>
+
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </main>
   </div>
 
-  <!-- PRZYBORNIK + LATARKA -->
-  <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK">
-    <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-KONTENER">
 
-      <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
-        <button id="PRZYBORNIK_PRZYCISK" class="KOZLOWSKISEBASTIAN_PRZYBORNIK-PRZYCISK">PRZYBORNIK</button>
-      </div>
-
-      <div class="KOZLOWSKISEBASTIAN_PRZYBORNIK-WIERSZ">
-        <button id="LATARKA_MENU" class="KOZLOWSKISEBASTIAN_PRZYCISK">LATARKA</button>
-      </div>
-
-      <!-- PANEL LATARKI -->
-      <section id="LATARKA_PANEL" class="LATARKA_PANEL ukryj">
-        <!-- wiersz: przyciski główne -->
-        <div class="LATARKA_GRID_2">
-          <button id="BTN_TORCH" class="KOZLOWSKISEBASTIAN_PRZYCISK">WŁĄCZ LATARKĘ</button>
-          <button id="BTN_SCREEN" class="KOZLOWSKISEBASTIAN_PRZYCISK">WŁĄCZ EKRAN</button>
-        </div>
-
-        <!-- wiersz: przyciski opcji -->
-        <div class="LATARKA_GRID_2">
-          <button id="BTN_TORCH_OPCJE"  class="KOZLOWSKISEBASTIAN_PRZYCISK">OPCJE LATARKI</button>
-          <button id="BTN_SCREEN_OPCJE" class="KOZLOWSKISEBASTIAN_PRZYCISK">OPCJE EKRANU</button>
-        </div>
-
-        <!-- OPCJE – układ dzielony jak w LICZYDŁO/KARTY -->
-        <div class="LATARKA_OPCJE_KONTENER">
-          <!-- Opcje fizycznej latarki -->
-          <div id="OPCJE_TORCH" class="LATARKA_PANEL_OPCJI ukryj">
-            <label class="LATARKA_LABEL" for="TORCH_TRYB">Tryb latarki</label>
-            <select id="TORCH_TRYB" class="KOZLOWSKISEBASTIAN_PRZYCISK">
-              <option value="solid">Stały</option>
-              <option value="sos">SOS</option>
-              <option value="strobe">Stroboskop</option>
-            </select>
-
-            <div id="TORCH_SZYBKOSC_BOX" class="LATARKA_BOX ukryj">
-              <label class="LATARKA_LABEL" for="TORCH_SZYBKOSC">Szybkość strobo (ms)</label>
-              <input id="TORCH_SZYBKOSC" type="range" min="50" max="1000" value="200" class="LATARKA_SLIDER" />
-              <div class="LATARKA_INFO"><span id="TORCH_SZYBKOSC_VAL">200 ms</span></div>
-            </div>
-
-            <div class="LATARKA_BOX">
-              <label class="LATARKA_LABEL" for="TORCH_TIMER">Wyłącznik czasowy (min)</label>
-              <div class="LATARKA_TIMER">
-                <input id="TORCH_TIMER" type="number" min="0" max="60" placeholder="0 = wyłącz" class="LATARKA_INPUT" />
-                <button id="TORCH_TIMER_SET" class="KOZLOWSKISEBASTIAN_PRZYCISK">OK</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Opcje „latarki ekranu” -->
-          <div id="OPCJE_SCREEN" class="LATARKA_PANEL_OPCJI ukryj">
-            <label class="LATARKA_LABEL" for="SCREEN_TRYB">Tryb ekranu</label>
-            <select id="SCREEN_TRYB" class="KOZLOWSKISEBASTIAN_PRZYCISK">
-              <option value="solid">Stały</option>
-              <option value="sos">SOS</option>
-              <option value="strobe">Stroboskop</option>
-              <option value="fire">Straż Pożarna</option>
-              <option value="ambulance">Pogotowie</option>
-              <option value="police">Policja</option>
-              <option value="special">Specjalistyczny Żółty</option>
-            </select>
-
-            <div id="SCREEN_SZYBKOSC_BOX" class="LATARKA_BOX">
-              <label class="LATARKA_LABEL" for="SCREEN_SZYBKOSC">Szybkość (ms)</label>
-              <input id="SCREEN_SZYBKOSC" type="range" min="50" max="1000" value="200" class="LATARKA_SLIDER" />
-              <div class="LATARKA_INFO"><span id="SCREEN_SZYBKOSC_VAL">200 ms</span></div>
-            </div>
-
-            <div class="LATARKA_BOX">
-              <label class="LATARKA_LABEL">Kolory</label>
-              <div id="KOLORY_LISTA" class="KOLORY_LISTA">
-                <!-- domyślne -->
-                <button class="KOLOR" data-kolor="#FFFFFF" style="--c:#FFFFFF"></button>
-                <button class="KOLOR" data-kolor="#FF0000" style="--c:#FF0000"></button>
-                <button class="KOLOR" data-kolor="#00FF00" style="--c:#00FF00"></button>
-                <button class="KOLOR" data-kolor="#0000FF" style="--c:#0000FF"></button>
-                <button class="KOLOR" data-kolor="#FFFF00" style="--c:#FFFF00"></button>
-              </div>
-              <div class="KOLOR_DODAJ">
-                <input id="HEX_INPUT" maxlength="7" placeholder="#FFFFFF" class="LATARKA_INPUT" />
-                <button id="HEX_ADD" class="KOZLOWSKISEBASTIAN_PRZYCISK">+</button>
-              </div>
-            </div>
-
-            <div class="LATARKA_BOX">
-              <label class="LATARKA_LABEL" for="SCREEN_TIMER">Wyłącznik czasowy (min)</label>
-              <div class="LATARKA_TIMER">
-                <input id="SCREEN_TIMER" type="number" min="0" max="60" placeholder="0 = wyłącz" class="LATARKA_INPUT" />
-                <button id="SCREEN_TIMER_SET" class="KOZLOWSKISEBASTIAN_PRZYCISK">OK</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-    </div>
+  <div class="HEXAGON_KONTENER" id="HEXAGON">
+    <div class="HEXAGON" title="MOTYW"></div>
+  </div>
+  <span class="WYLACZNIK" id="WYLACZNIK"></span>
+  <div class="TROJKAT_KONTENER" id="TROJKATY">
+    <div class="TROJKAT TROJKAT_JASNY" title="JASNY MOTYW"></div>
+    <div class="TROJKAT TROJKAT_CIEMNY" title="CIEMNY MOTYW"></div>
   </div>
 
-  <!-- AKTYWNE „ŹRÓDŁA ŚWIATŁA” -->
-  <div id="TORCH_OVERLAY"  class="LIGHT_OVERLAY ukryj"></div>
-  <div id="SCREEN_OVERLAY" class="SCREEN_OVERLAY ukryj"></div>
-
-  <script src="https://kozlowskisebastian.pl/JS/MOTYWAUTO.js"></script>
   <script src="https://kozlowskisebastian.pl/JS/HEXAGON.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/MOTYWAUTO.js"></script>
   <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
   <script src="https://kozlowskisebastian.pl/JS/LATARKA.js"></script>
 </body>
