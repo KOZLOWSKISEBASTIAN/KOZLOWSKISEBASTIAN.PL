@@ -1,7 +1,7 @@
 /* ukrywanie */
 .UKRYTY{display:none!important}
 
-/* POKAŻ/UKRYJ – środek + mniejszy odstęp pod spodem */
+/* POKAŻ/UKRYJ – środek + mała przerwa pod spodem */
 .STEROWANIE_TOP{
   display:grid;
   grid-template-columns:1fr;
@@ -31,11 +31,20 @@
 /* odstępy między elementami poniżej */
 .BLOK{ margin-top: var(--ODSTEP,7px); }
 
-/* HEX + Dodaj kolor obok siebie, bez zawijania */
-.ROW2{
-  display:flex; gap: var(--ODSTEP,7px); align-items:stretch; flex-wrap:nowrap;
+/* Rząd suwaka LATARKI */
+.ROW_STROBE{ margin-top: var(--ODSTEP,7px); }
+
+/* Wiersz: HEX + suwak EKRANU + Dodaj kolor (obok siebie) */
+.ROW3{
+  display:grid;
+  grid-template-columns: 1fr minmax(140px, 260px) auto;
+  gap: var(--ODSTEP,7px);
+  align-items:stretch;
+  margin-top: var(--ODSTEP,7px);
 }
-.ROW2 .POLE{ flex:1 1 240px }
+@media (max-width:999px){
+  .ROW3{ grid-template-columns: 1fr; }
+}
 
 /* Paleta kolorów */
 .KOLORY_LISTA{ display:flex; flex-wrap:wrap; gap:6px }
@@ -55,9 +64,16 @@
   border-radius:50%; background:rgba(0,0,0,.18); mix-blend-mode:multiply;
 }
 
-/* Suwak szybkości */
-.SUWAK{ width:100%; height:6px; border-radius:3px; background:var(--TLO-PANEL); -webkit-appearance:none; appearance:none }
-.SUWAK::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%; background:var(--AKCENT-TEKST) }
+/* Suwaki */
+.SUWAK{
+  width:100%; height:6px; border-radius:3px;
+  background:var(--TLO-PANEL); -webkit-appearance:none; appearance:none
+}
+.SUWAK::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none;
+  width:16px; height:16px; border-radius:50%;
+  background:var(--AKCENT-TEKST)
+}
 
 /* TŁO świecące – POD UI */
 .SCREEN_OVERLAY{
@@ -68,7 +84,7 @@
 /* UI nad tłem */
 .RAMKA, .KONTENER, .PANEL, .SIATKA, .PRZYBORNIK_SEKCJA{ position:relative; z-index:1 }
 
-/* Tryb „ZWINIĘTY”: zostaje tylko POKAŻ (ukryj też PRZYBORNIK) */
+/* Tryb „ZWINIETY”: zostaje tylko POKAŻ (ukryj też PRZYBORNIK) */
 .ZWINIETY .RESZTA_NAGLOWEK{ display:none!important; }
 .ZWINIETY #WSZYSTKO{ display:none!important; }
 
@@ -76,11 +92,4 @@
 .TRYB_AKTYWNY{
   outline:2px solid var(--AKCENT-TEKST);
   outline-offset: -2px;
-}
-
-/* Mobile (poniżej 1000px) możesz zostawić 3 kolumny lub zwinąć do 1-2 kolumn – tu zostawiamy 3 */
-@media (max-width:999px){
-  /* jeśli chcesz po 2 na wiersz, odkomentuj:
-  .TRYMY3{ grid-template-columns: repeat(2,1fr); }
-  */
 }
