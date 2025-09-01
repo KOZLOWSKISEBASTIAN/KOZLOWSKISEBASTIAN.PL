@@ -1,6 +1,5 @@
-/* LATARKA – tryby jako toggle (STAŁY/SOS/STROBOSKOP) dla LATARKI i EKRANU.
-   Klik = włącz; ponowny klik tego samego = wyłącz.
-   UKRYJ/POKAŻ steruje całym panelem; HEX input auto-#, MIX = pełne RGB + zawiera #FF00FF. */
+/* LATARKA – tryby jako toggle; suwaki: obok HEX (ekran) i osobny rząd (latarka);
+   HEX auto-#, MIX = koło RGB + #FF00FF, wygląd pól jak w LICZYDŁO (klasa LICZYDLO_POLE). */
 (function(){
   'use strict';
 
@@ -14,19 +13,17 @@
   const TAB_TORCH  = $('TAB_TORCH');
   const TAB_SCREEN = $('TAB_SCREEN');
 
-  // Torch (aparat) – przyciski trybów
+  // Torch (aparat) – tryby i suwak
   const TORCH_SOLID   = $('TORCH_SOLID');
   const TORCH_SOS     = $('TORCH_SOS');
   const TORCH_STROBE  = $('TORCH_STROBE');
   const TORCH_SPEED   = $('TORCH_SZYBKOSC');
-  const TORCH_SPEED_BOX = $('TORCH_SZYBKOSC_BOX');
 
-  // Screen (tło) – przyciski trybów
+  // Screen (tło) – tryby i suwak
   const SCREEN_SOLID   = $('SCREEN_SOLID');
   const SCREEN_SOS     = $('SCREEN_SOS');
   const SCREEN_STROBE  = $('SCREEN_STROBE');
   const SCREEN_SPEED   = $('SCREEN_SZYBKOSC');
-  const SCREEN_SPEED_BOX = $('SCREEN_SZYBKOSC_BOX');
 
   // Kolory
   const KOLORY_LISTA = $('KOLORY_LISTA');
@@ -111,7 +108,7 @@
       immediateScreenPreview(false);
     });
 
-    // HEX input: auto ‘#’, filtr znaków, UPPERCASE
+    // HEX input: auto ‘#’, filtr znaków, UPPERCASE (wygląd bierze z LICZYDLO.css przez klasę LICZYDLO_POLE)
     if(HEX_INPUT){
       if(!HEX_INPUT.value) HEX_INPUT.value = '#';
       HEX_INPUT.addEventListener('input', ()=>{
