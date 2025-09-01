@@ -1,4 +1,6 @@
-/* LATARKA – POKAŻ tylko toggle; Dodaj/Włącz obok siebie; MIX po lewej od białego; MIX = pełne RGB + zawiera #FF00FF */
+/* LATARKA – tryby jako toggle (STAŁY/SOS/STROBOSKOP) dla LATARKI i EKRANU.
+   Klik = włącz; ponowny klik tego samego = wyłącz.
+   UKRYJ/POKAŻ steruje całym panelem; HEX input auto-#, MIX = pełne RGB + zawiera #FF00FF. */
 (function(){
   'use strict';
 
@@ -12,19 +14,18 @@
   const TAB_TORCH  = $('TAB_TORCH');
   const TAB_SCREEN = $('TAB_SCREEN');
 
-  // Torch
-  const BTN_TORCH    = $('BTN_TORCH');
-  const TORCH_SOLID  = $('TORCH_SOLID');
-  const TORCH_SOS    = $('TORCH_SOS');
-  const TORCH_STROBE = $('TORCH_STROBE');
-  const TORCH_SPEED  = $('TORCH_SZYBKOSC');
+  // Torch (aparat) – przyciski trybów
+  const TORCH_SOLID   = $('TORCH_SOLID');
+  const TORCH_SOS     = $('TORCH_SOS');
+  const TORCH_STROBE  = $('TORCH_STROBE');
+  const TORCH_SPEED   = $('TORCH_SZYBKOSC');
   const TORCH_SPEED_BOX = $('TORCH_SZYBKOSC_BOX');
 
-  // Screen
-  const BTN_SCREEN   = $('BTN_SCREEN');
-  const SCREEN_SOLID = $('SCREEN_SOLID');
-  const SCREEN_STROBE= $('SCREEN_STROBE');
-  const SCREEN_SPEED = $('SCREEN_SZYBKOSC');
+  // Screen (tło) – przyciski trybów
+  const SCREEN_SOLID   = $('SCREEN_SOLID');
+  const SCREEN_SOS     = $('SCREEN_SOS');
+  const SCREEN_STROBE  = $('SCREEN_STROBE');
+  const SCREEN_SPEED   = $('SCREEN_SZYBKOSC');
   const SCREEN_SPEED_BOX = $('SCREEN_SZYBKOSC_BOX');
 
   // Kolory
@@ -42,21 +43,21 @@
 
   // Stan
   const S = {
-    // torch
-    torchOn:false, torchMode:'solid', torchSpeed:200,
-    stream:null, videoTrack:null, torchIntervalId:null,
+    // torch (flash)
+    torchOn:false, torchMode:null, torchSpeed:200,
+    stream:null, videoTrack:null, torchIntervalId:null, torchSOSId:null,
 
-    // screen
-    screenOn:false, screenMode:'solid', screenSpeed:200,
-    screenColors:['#FFFFFF','#FF00FF'], screenIntervalId:null,
+    // screen (overlay)
+    screenOn:false, screenMode:null, screenSpeed:200,
+    screenColors:['#FFFFFF','#FF00FF'], screenIntervalId:null, screenSOSId:null,
     mixOn:false, // pełne RGB
   };
 
-  const SOS = [200,200, 200,200, 200,600, 600,200, 600,200, 600,600, 200,200, 200,200, 200,1000];
+  const SOS_SEQ = [200,200, 200,200, 200,600, 600,200, 600,200, 600,600, 200,200, 200,200, 200,1200];
 
-  // INIT
   function init(){
-    // POKAŻ/UKRYJ – jedyny widoczny w trybie zwinietym
+    // Domyślnie panel rozwinięty → napis „UKRYJ”
+    BTN_PANEL_TOGGLE.textContent = 'UKRYJ';
     BTN_PANEL_TOGGLE.addEventListener('click', ()=>{
       const zwin = !PANEL_ROOT.classList.contains('ZWINIETY');
       PANEL_ROOT.classList.toggle('ZWINIETY', zwin);
@@ -67,20 +68,22 @@
     TAB_TORCH .addEventListener('click', ()=>aktywujZakladke('torch'));
     TAB_SCREEN.addEventListener('click', ()=>aktywujZakladke('screen'));
 
-    // LATARKA
-    BTN_TORCH .addEventListener('click', toggleTorch);
-    [TORCH_SOLID,TORCH_SOS,TORCH_STROBE].forEach(b=>b.addEventListener('click', ()=>setTorchMode(b.dataset.val)));
+    // TORCH tryby (toggle)
+    TORCH_SOLID .addEventListener('click', ()=>toggleTorchMode('solid', TORCH_SOLID));
+    TORCH_SOS   .addEventListener('click', ()=>toggleTorchMode('sos',   TORCH_SOS));
+    TORCH_STROBE.addEventListener('click', ()=>toggleTorchMode('strobe',TORCH_STROBE));
     TORCH_SPEED.addEventListener('input', ()=>{
       S.torchSpeed = toInt(TORCH_SPEED.value,200);
-      if(S.torchOn && S.torchMode==='strobe') restartTorch();
+      if(S.torchOn && S.torchMode==='strobe') runTorchStrobe();
     });
 
-    // EKRAN
-    BTN_SCREEN  .addEventListener('click', toggleScreen);
-    [SCREEN_SOLID,SCREEN_STROBE].forEach(b=>b.addEventListener('click', ()=>setScreenMode(b.dataset.val)));
+    // EKRAN tryby (toggle)
+    SCREEN_SOLID .addEventListener('click', ()=>toggleScreenMode('solid', SCREEN_SOLID));
+    SCREEN_SOS   .addEventListener('click', ()=>toggleScreenMode('sos',   SCREEN_SOS));
+    SCREEN_STROBE.addEventListener('click', ()=>toggleScreenMode('strobe',SCREEN_STROBE));
     SCREEN_SPEED.addEventListener('input', ()=>{
       S.screenSpeed = toInt(SCREEN_SPEED.value,200);
-      if(S.screenOn) startScreen();
+      if(S.screenOn && S.screenMode==='strobe') startScreen(); // restart interwału
     });
 
     // Swatche
@@ -91,11 +94,8 @@
         S.mixOn = !S.mixOn;
         btn.classList.toggle('AKTYWNY', S.mixOn);
         if(S.mixOn){
-          S.screenColors = generateHueWheel(24); // koło barw HSL (zawiera magentę ~300°)
-          // upewnij się, że #FF00FF jest literalnie w tablicy
-          if(!S.screenColors.map(x=>x.toUpperCase()).includes('#FF00FF')){
-            S.screenColors.push('#FF00FF');
-          }
+          S.screenColors = generateHueWheel(24);
+          if(!S.screenColors.map(x=>x.toUpperCase()).includes('#FF00FF')) S.screenColors.push('#FF00FF');
         }else{
           updateSelectedColors();
           if(S.screenColors.length===0) S.screenColors=['#FFFFFF'];
@@ -111,27 +111,33 @@
       immediateScreenPreview(false);
     });
 
-    // Dodaj kolor
-    HEX_ADD.addEventListener('click', ()=>{
+    // HEX input: auto ‘#’, filtr znaków, UPPERCASE
+    if(HEX_INPUT){
+      if(!HEX_INPUT.value) HEX_INPUT.value = '#';
+      HEX_INPUT.addEventListener('input', ()=>{
+        let v = HEX_INPUT.value.toUpperCase();
+        if(!v.startsWith('#')) v = '#' + v.replace(/#/g,'');
+        v = '#' + v.slice(1).replace(/[^0-9A-F]/g,'').slice(0,6);
+        HEX_INPUT.value = v;
+      });
+    }
+    HEX_ADD && HEX_ADD.addEventListener('click', ()=>{
       const v = (HEX_INPUT.value||'').trim().toUpperCase();
-      if(!/^#([0-9A-F]{3}){1,2}$/.test(v)){ alert('Podaj HEX, np. #00FF00'); return; }
+      if(!/^#([0-9A-F]{3}){1,2}$/.test(v)){ alert('Podaj HEX (#RRGGBB lub #RGB)'); return; }
       const exists = [...KOLORY_LISTA.querySelectorAll('.KOLOR')].find(x=>x.dataset.kolor && x.dataset.kolor.toUpperCase()===v);
       if(exists){ exists.classList.add('AKTYWNY'); S.mixOn=false; MIX_SWATCH.classList.remove('AKTYWNY'); updateSelectedColors(); immediateScreenPreview(false); return; }
       const b = document.createElement('button');
       b.className='KOLOR AKTYWNY'; b.dataset.kolor=v; b.style.setProperty('--c',v); b.title=v;
       KOLORY_LISTA.appendChild(b);
-      HEX_INPUT.value='';
       S.mixOn=false; MIX_SWATCH.classList.remove('AKTYWNY');
       updateSelectedColors(); immediateScreenPreview(false);
     });
 
-    // Start
-    aktywujZakladke('screen');     // łatwiej testować kolory
-    setTorchMode('solid');
-    setScreenMode('solid');
+    // Start: pokaż zakładkę EKRAN do testów
+    aktywujZakladke('screen');
   }
 
-  // Zakładki
+  // ----- Zakładki
   function aktywujZakladke(which){
     if(which==='torch'){
       SEKCJA_TORCH.classList.remove('UKRYTY');
@@ -142,33 +148,32 @@
     }
   }
 
-  // TORCH
-  function setTorchMode(val){
-    S.torchMode = val;
-    TORCH_SPEED_BOX.classList.toggle('UKRYTY', val!=='strobe');
-    if(S.torchOn) restartTorch();
-  }
-  async function toggleTorch(){
-    S.torchOn = !S.torchOn;
-    if(S.torchOn){
-      await startTorch();
-      BTN_TORCH.textContent='WYŁĄCZ LATARKĘ (APARAT)';
-    }else{
+  // ----- TORCH (aparat) – tryby jako toggle
+  async function toggleTorchMode(mode, btn){
+    const sameMode = (S.torchMode===mode && S.torchOn);
+    if(sameMode){
       await stopTorch();
-      BTN_TORCH.textContent='WŁĄCZ LATARKĘ (APARAT)';
+      setActiveBtn([TORCH_SOLID,TORCH_SOS,TORCH_STROBE], null);
+      return;
     }
+    S.torchMode = mode;
+    await startTorch();
+    setActiveBtn([TORCH_SOLID,TORCH_SOS,TORCH_STROBE], btn);
   }
+
   async function startTorch(){
     await stopTorch();
     try{
       const stream = await navigator.mediaDevices.getUserMedia({ video:{ facingMode:'environment', torch:true } });
       S.stream = stream;
       S.videoTrack = stream.getVideoTracks()[0];
+      S.torchOn = true;
+
       if(S.torchMode==='solid'){
         await S.videoTrack.applyConstraints({ advanced:[{ torch:true }] });
       }else if(S.torchMode==='sos'){
         runTorchSOS();
-      }else{
+      }else if(S.torchMode==='strobe'){
         runTorchStrobe();
       }
     }catch(err){
@@ -177,129 +182,155 @@
       alert('Nie mogę włączyć latarki. Uprawnienia lub wsparcie „torch” mogą być wyłączone.');
     }
   }
+
   async function stopTorch(){
-    clearInterval(S.torchIntervalId);
+    clearInterval(S.torchIntervalId); S.torchIntervalId=null;
+    if(S.torchSOSId){ clearTimeout(S.torchSOSId); S.torchSOSId=null; }
     try{
       if(S.videoTrack){
         await S.videoTrack.applyConstraints({ advanced:[{ torch:false }] });
         S.videoTrack.stop();
       }
     }catch(_){}
-    S.videoTrack=null;
     if(S.stream){ S.stream.getTracks().forEach(t=>t.stop()); }
-    S.stream=null;
+    S.stream=null; S.videoTrack=null; S.torchOn=false;
   }
-  async function restartTorch(){ if(S.torchOn){ await startTorch(); } }
+
   function runTorchStrobe(){
-    let on=false;
     clearInterval(S.torchIntervalId);
+    let on=false;
     S.torchIntervalId = setInterval(async ()=>{
       on=!on;
       try{ await S.videoTrack.applyConstraints({ advanced:[{ torch:on }] }); }
-      catch(err){ console.error(err); toggleTorch(); }
+      catch(err){ console.error(err); stopTorch(); }
     }, S.torchSpeed);
   }
+
   function runTorchSOS(){
+    if(S.torchSOSId){ clearTimeout(S.torchSOSId); }
     let i=0;
-    const step=async ()=>{
-      if(!S.torchOn) return;
-      if(i>=SOS.length) i=0;
-      try{
-        const on = (i%2===0);
-        await S.videoTrack.applyConstraints({ advanced:[{ torch:on }] });
-      }catch(err){ console.error(err); toggleTorch(); return; }
-      const wait = SOS[i++]; setTimeout(step, wait);
+    const step = async ()=>{
+      if(!S.torchOn || S.torchMode!=='sos') return;
+      const on = (i%2===0);
+      try{ await S.videoTrack.applyConstraints({ advanced:[{ torch:on }] }); }catch(_){ stopTorch(); return; }
+      const wait = SOS_SEQ[i++ % SOS_SEQ.length];
+      S.torchSOSId = setTimeout(step, wait);
     };
     step();
   }
 
-  // EKRAN
-  function setScreenMode(val){
-    S.screenMode = val;
-    SCREEN_SPEED_BOX.classList.toggle('UKRYTY', val!=='strobe');
-    if(S.screenOn) startScreen();
-  }
-  function toggleScreen(){
-    S.screenOn = !S.screenOn;
-    if(S.screenOn){
-      startScreen();
-      BTN_SCREEN.textContent='WYŁĄCZ EKRAN (TŁO)';
-      SCREEN_OVERLAY.classList.remove('UKRYTY');
-    }else{
-      stopScreen();
-      BTN_SCREEN.textContent='WŁĄCZ EKRAN (TŁO)';
-      SCREEN_OVERLAY.classList.add('UKRYTY');
+  // ----- EKRAN (tło) – tryby jako toggle
+  function toggleScreenMode(mode, btn){
+    const sameMode = (S.screenMode===mode && S.screenOn);
+    if(sameMode){
+      stopScreenFull();
+      setActiveBtn([SCREEN_SOLID,SCREEN_SOS,SCREEN_STROBE], null);
+      return;
     }
+    S.screenMode = mode;
+    startScreenFull();
+    setActiveBtn([SCREEN_SOLID,SCREEN_SOS,SCREEN_STROBE], btn);
   }
-  function startScreen(){
-    stopScreen();
-    const setBg = (c)=>{ SCREEN_OVERLAY.style.background = c; };
 
-    // Źródło kolorów: MIX (pełne koło RGB) albo zaznaczone swatche
-    let colors;
-    if(S.mixOn){
-      colors = generateHueWheel(24);
-      // dopilnuj literalnego #FF00FF
-      if(!colors.map(x=>x.toUpperCase()).includes('#FF00FF')) colors.push('#FF00FF');
-    }else{
-      colors = (S.screenColors.length>0 ? S.screenColors.slice() : ['#FFFFFF']);
+  function startScreenFull(){
+    SCREEN_OVERLAY.classList.remove('UKRYTY');
+    S.screenOn = true;
+
+    stopScreenTimersOnly();
+    if(S.screenMode==='solid'){
+      const colors = getActiveColors();
+      SCREEN_OVERLAY.style.background = colors[0];
+    }else if(S.screenMode==='strobe'){
+      startScreen(); // interwał
+    }else if(S.screenMode==='sos'){
+      runScreenSOS();
     }
+  }
+
+  function stopScreenFull(){
+    stopScreenTimersOnly();
+    SCREEN_OVERLAY.style.background='#000000';
+    SCREEN_OVERLAY.classList.add('UKRYTY');
+    S.screenOn=false;
+  }
+
+  function stopScreenTimersOnly(){
+    if(S.screenIntervalId){ clearInterval(S.screenIntervalId); S.screenIntervalId=null; }
+    if(S.screenSOSId){ clearTimeout(S.screenSOSId); S.screenSOSId=null; }
+  }
+
+  function startScreen(){
+    stopScreenTimersOnly();
+    const setBg = (c)=>{ SCREEN_OVERLAY.style.background = c; };
+    const colors = getActiveColors();
 
     if(S.screenMode==='solid'){
-      setBg(colors[0]);
-      return;
+      setBg(colors[0]); return;
     }
-
     // STROBE
-    let idx = -1;
-    clearInterval(S.screenIntervalId);
-
-    if(colors.length===2){
-      S.screenIntervalId = setInterval(()=>{
-        idx = (idx+1) & 1;
-        setBg(colors[idx]);
-      }, S.screenSpeed);
-      return;
-    }
-    if(colors.length===1){
-      S.screenIntervalId = setInterval(()=>{
-        idx = (idx+1) & 1;
-        setBg(idx===0 ? colors[0] : '#000000');
-      }, S.screenSpeed);
-      return;
-    }
+    let idx=-1;
     S.screenIntervalId = setInterval(()=>{
-      idx = (idx+1) % colors.length;
-      setBg(colors[idx]);
+      idx = (idx+1) % (colors.length===1?2:colors.length);
+      if(colors.length===1){
+        setBg(idx===0 ? colors[0] : '#000000');
+      }else if(colors.length===2){
+        setBg(idx===0 ? colors[0] : colors[1]);
+      }else{
+        setBg(colors[idx]);
+      }
     }, S.screenSpeed);
   }
-  function stopScreen(){
-    SCREEN_OVERLAY.style.background='#000000';
-    clearInterval(S.screenIntervalId);
+
+  function runScreenSOS(){
+    if(S.screenSOSId){ clearTimeout(S.screenSOSId); }
+    const base = getActiveColors()[0] || '#FFFFFF';
+    let i=0;
+    const step=()=>{
+      if(!S.screenOn || S.screenMode!=='sos') return;
+      const on = (i%2===0);
+      SCREEN_OVERLAY.style.background = on ? base : '#000000';
+      const wait = SOS_SEQ[i++ % SOS_SEQ.length];
+      S.screenSOSId = setTimeout(step, wait);
+    };
+    step();
   }
+
+  function getActiveColors(){
+    if(S.mixOn){
+      let arr = generateHueWheel(24);
+      if(!arr.map(x=>x.toUpperCase()).includes('#FF00FF')) arr.push('#FF00FF');
+      return arr;
+    }
+    const list = (S.screenColors.length>0? S.screenColors.slice(): ['#FFFFFF']);
+    return list;
+  }
+
   function updateSelectedColors(){
     S.screenColors = [...KOLORY_LISTA.querySelectorAll('.KOLOR.AKTYWNY')]
       .filter(k=>k!==MIX_SWATCH && k.dataset.kolor)
       .map(k=>k.dataset.kolor.toUpperCase());
     if(S.screenColors.length===0) S.screenColors=['#FFFFFF'];
   }
+
   function immediateScreenPreview(forceRestart){
     if(!S.screenOn) return;
     if(S.screenMode==='solid' && !S.mixOn && !forceRestart){
       SCREEN_OVERLAY.style.background = (S.screenColors[0]||'#FFFFFF');
     }else{
-      startScreen();
+      startScreenFull();
     }
   }
 
   // utils
   const toInt=(v,f)=>{ v=parseInt(v,10); return isNaN(v)?f:v; };
-  // Koło barw RGB (HSL, S=100%, L=50%) – n kroków, obejmuje całą paletę podstawową RGB
+  function setActiveBtn(group, active){
+    group.forEach(b=>b.classList.toggle('TRYB_AKTYWNY', b===active));
+  }
   function generateHueWheel(n=24){
     const out=[];
     for(let i=0;i<n;i++){
       const h = Math.round((360/n)*i);
-      out.push(`hsl(${h} 100% 50%)`); // zawiera m.in. magentę (~300°)
+      out.push(`hsl(${h} 100% 50%)`);
     }
     return out;
   }
