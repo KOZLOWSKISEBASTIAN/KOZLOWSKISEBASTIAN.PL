@@ -69,10 +69,10 @@
 #HEX_ADD.PRZYCISK{
   display:flex; align-items:center; justify-content:flex-start;
   text-align:left;
-  padding-left: var(--padL, 16px);   /* jak w Twoim UI */
+  padding-left: var(--padL, 16px);
   padding-right: 14px;
   min-height:56px;
-  border-radius:8px;                 /* jak w PRZYBORNIK/LICZYDŁO */
+  border-radius:8px;
 }
 
 /* === Pole HEX: większa czcionka + wysokość/zaokrąglenia jak przyciski ==== */
@@ -86,7 +86,7 @@
   color: var(--AKCENT-TEKST);
   padding: 0 14px;
   font: inherit;
-  font-size: 1.125rem;               /* większa czcionka wpisywania (~18px) */
+  font-size: 1.125rem;               /* większa czcionka */
   letter-spacing:.55px;
   text-transform: uppercase;
   display:flex; align-items:center; justify-content:flex-start;
@@ -111,44 +111,38 @@
   border-radius:50%; background:rgba(0,0,0,.18); mix-blend-mode:multiply;
 }
 
-/* === SUWAK: DUŻY jak przycisk (56px), promień 8px, LINIA POZIOMA na środku
-   + kciuk–HEXAGON IDEALNIE NA ŚRODKU paska z możliwością mikro-regulacji === */
-
-/* precyzyjne zmienne do centrowania */
+/* === SUWAK: DUŻY jak przycisk (56px), promień 8px, LINIA POZIOMA w środku === */
 :root{
-  --SUWAK-H: 56px;      /* wysokość toru */
-  --KCIUK:   26px;      /* rozmiar heksagonu */
-  --MID-LINE: 1px;      /* grubość linii poziomej */
-  --ALIGN-FIX: 1px;     /* mikro-regulacja centrowania kciuka (0–2px) */
+  --SUWAK-H: 56px;  /* wysokość toru (było 56px) */
+  --KCIUK:   54px;   /* rozmiar heksagonu (było 26px) */
+  --MID:      2px;   /* grubość linii środka – też grubiej, żeby pasowało */
+  --ALIGN-FIX: -2px;  /* nie trzeba kombinować, hexagon sam usiądzie */
 }
 
 .SUWAK{
   width:100%;
   height:var(--SUWAK-H);
-  border-radius:8px;
   -webkit-appearance:none; appearance:none;
   outline:none;
+  border-radius:8px;
   background:
     linear-gradient(to bottom,
-      transparent calc(50% - var(--MID-LINE)),
-      rgba(255,255,255,.18) calc(50% - var(--MID-LINE)),
-      rgba(255,255,255,.18) calc(50% + var(--MID-LINE)),
-      transparent calc(50% + var(--MID-LINE))
+      transparent calc(50% - var(--MID)),
+      rgba(255,255,255,.18) calc(50% - var(--MID)),
+      rgba(255,255,255,.18) calc(50% + var(--MID)),
+      transparent calc(50% + var(--MID))
     ),
     var(--TLO-PRZYCISK);
   box-shadow:
     inset 0 0 0 2px rgba(0,0,0,.20),
     0 1px 0 rgba(255,255,255,.06);
 }
-.SUWAK:focus{
-  box-shadow:
-    inset 0 0 0 2px rgba(255,255,255,.18),
-    0 1px 0 rgba(255,255,255,.06);
-}
 
-/* WebKit (Chrome/Edge/Safari) – tor + heksagon na POZIOMEJ LINII */
+/* WebKit (Chrome/Edge/Safari) */
 .SUWAK_HEX::-webkit-slider-runnable-track{
-  height:var(--SUWAK-H); border-radius:8px; background:transparent;
+  height:var(--SUWAK-H);
+  background:transparent;
+  border-radius:8px;
 }
 .SUWAK_HEX::-webkit-slider-thumb{
   -webkit-appearance:none; appearance:none;
@@ -157,21 +151,21 @@
   clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
   transform: rotate(90deg);
   border:0;
-  /* CENTROWANIE na linii środka: (H - K)/2 + ALIGN-FIX */
-  margin-top: calc((var(--SUWAK-H) - var(--KCIUK))/2 * -1 - var(--ALIGN-FIX));
+  margin-top: calc(((var(--SUWAK-H) - var(--KCIUK)) / 2) * -1 - var(--ALIGN-FIX));
   box-shadow: 0 0 0 2px rgba(0,0,0,.25);
   cursor:pointer;
 }
 
-/* Firefox – tor + heksagon na POZIOMEJ LINII */
+/* Firefox */
 .SUWAK_HEX::-moz-range-track{
-  height:var(--SUWAK-H); border-radius:8px;
+  height:var(--SUWAK-H);
+  border-radius:8px;
   background:
     linear-gradient(to bottom,
-      transparent calc(50% - var(--MID-LINE)),
-      rgba(255,255,255,.18) calc(50% - var(--MID-LINE)),
-      rgba(255,255,255,.18) calc(50% + var(--MID-LINE)),
-      transparent calc(50% + var(--MID-LINE))
+      transparent calc(50% - var(--MID)),
+      rgba(255,255,255,.18) calc(50% - var(--MID)),
+      rgba(255,255,255,.18) calc(50% + var(--MID)),
+      transparent calc(50% + var(--MID))
     ),
     var(--TLO-PRZYCISK);
   box-shadow:
