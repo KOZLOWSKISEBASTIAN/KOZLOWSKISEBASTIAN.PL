@@ -20,6 +20,13 @@
   margin-bottom: var(--ODSTEP,7px);
 }
 
+/* --- Desktop: ukryj zakładkę LATARKA i całą sekcję TORCH ---------------- */
+@media (min-width: 999px){
+  #TAB_TORCH{ display:none !important; }
+  #SEKCJA_TORCH{ display:none !important; }
+  /* Na starcie pokaż EKRAN – JS też to ustawia, tu tylko bezpieczeństwo */
+}
+
 /* Tryby – 3 równe kolumny, pełna szerokość + odstępy */
 .TRYMY3{
   display:grid;
@@ -34,17 +41,39 @@
 /* Rząd suwaka LATARKI */
 .ROW_STROBE{ margin-top: var(--ODSTEP,7px); }
 
-/* Wiersz: HEX + suwak EKRANU + Dodaj kolor (obok siebie) */
+/* Paleta + kontrolki w jednej linii (wyrównane) */
+.BLOK-PALETA{
+  display:grid;
+  grid-template-columns: 1fr minmax(360px, 520px);
+  gap: var(--ODSTEP,7px);
+  align-items:center;
+}
+
+/* Wiersz: SUWAK (lewo) + HEX (wąski środek) + DODAJ (prawo) */
 .ROW3{
   display:grid;
-  grid-template-columns: 1fr minmax(140px, 260px) auto;
+  grid-template-columns: 1fr minmax(120px, 180px) auto;
   gap: var(--ODSTEP,7px);
-  align-items:stretch;
-  margin-top: var(--ODSTEP,7px);
+  align-items:center;
 }
 @media (max-width:999px){
+  .BLOK-PALETA{ grid-template-columns: 1fr; }
   .ROW3{ grid-template-columns: 1fr; }
 }
+
+/* Pole HEX – jak w LICZYDŁO, tylko węższe */
+.POLE_HEX{
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  text-align: left;
+  padding-inline: 12px;
+  width: 100%;
+  min-width: 120px;
+  max-width: 180px;
+}
+
+/* „DODAJ KOLOR” – jak inne .PRZYCISK (bez override'ów) */
+#HEX_ADD.PRZYCISK{ width:100%; }
 
 /* Paleta kolorów */
 .KOLORY_LISTA{ display:flex; flex-wrap:wrap; gap:6px }
@@ -64,15 +93,54 @@
   border-radius:50%; background:rgba(0,0,0,.18); mix-blend-mode:multiply;
 }
 
-/* Suwaki */
+/* --- SUWAK: tor jak POLE/PRZYCISK + heksagon w środku -------------------- */
 .SUWAK{
-  width:100%; height:6px; border-radius:3px;
-  background:var(--TLO-PANEL); -webkit-appearance:none; appearance:none
-}
-.SUWAK::-webkit-slider-thumb{
+  width:100%; height:16px; border-radius:10px;
+  /* tor jak „pole/przycisk” – tło i obramowanie spójne z projektem */
+  background: var(--TLO-PRZYCISK);           /* kolor toru = tło przycisków */
   -webkit-appearance:none; appearance:none;
-  width:16px; height:16px; border-radius:50%;
-  background:var(--AKCENT-TEKST)
+  outline: none;
+  box-shadow:
+    inset 0 0 0 2px rgba(0,0,0,.20),
+    0 1px 0 rgba(255,255,255,.06);           /* delikatny „inputowy” look */
+}
+.SUWAK:focus{
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.18),
+    0 1px 0 rgba(255,255,255,.06);
+}
+
+/* WebKit (Chrome/Edge/Safari) */
+.SUWAK_HEX::-webkit-slider-runnable-track{
+  height:16px; border-radius:10px; background:transparent;
+}
+.SUWAK_HEX::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none;
+  width:26px; height:26px;
+  background: var(--AKCENT-TEKST);
+  /* heksagon – „w środku pola” */
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  transform: rotate(90deg);
+  border: 0;
+  margin-top: -5px; /* centrowanie na torze 16px */
+  box-shadow: 0 0 0 2px rgba(0,0,0,.25);
+  cursor: pointer;
+}
+
+/* Firefox */
+.SUWAK_HEX::-moz-range-track{
+  height:16px; border-radius:10px; background: var(--TLO-PRZYCISK);
+  box-shadow:
+    inset 0 0 0 2px rgba(0,0,0,.20),
+    0 1px 0 rgba(255,255,255,.06);
+}
+.SUWAK_HEX::-moz-range-thumb{
+  width:26px; height:26px; border:0;
+  background: var(--AKCENT-TEKST);
+  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
+  transform: rotate(90deg);
+  box-shadow: 0 0 0 2px rgba(0,0,0,.25);
+  cursor: pointer;
 }
 
 /* TŁO świecące – POD UI */
@@ -84,7 +152,7 @@
 /* UI nad tłem */
 .RAMKA, .KONTENER, .PANEL, .SIATKA, .PRZYBORNIK_SEKCJA{ position:relative; z-index:1 }
 
-/* Tryb „ZWINIETY”: zostaje tylko POKAŻ (ukryj też PRZYBORNIK) */
+/* Tryb „ZWINIĘTY”: zostaje tylko POKAŻ (ukryj też PRZYBORNIK) */
 .ZWINIETY .RESZTA_NAGLOWEK{ display:none!important; }
 .ZWINIETY #WSZYSTKO{ display:none!important; }
 
