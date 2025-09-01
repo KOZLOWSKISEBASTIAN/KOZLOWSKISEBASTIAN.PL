@@ -1,16 +1,18 @@
-/* LATARKA – padding/gap; „Dodaj kolor” i „Włącz ekran” obok siebie; POKAŻ wyśrodkowany; MIX = pełne RGB */
+/* LATARKA – POKAŻ tylko toggle; Dodaj/Włącz obok siebie; MIX po lewej od białego; MIX = pełne RGB + zawiera #FF00FF */
 (function(){
   'use strict';
 
   const $ = (id)=>document.getElementById(id);
 
-  // Sterowanie i korzeń
+  // Korzeń + sterowanie
   const PANEL_ROOT = $('PANEL_ROOT');
   const BTN_PANEL_TOGGLE = $('BTN_PANEL_TOGGLE');
+
+  // Zakładki
   const TAB_TORCH  = $('TAB_TORCH');
   const TAB_SCREEN = $('TAB_SCREEN');
 
-  // Torch (aparat)
+  // Torch
   const BTN_TORCH    = $('BTN_TORCH');
   const TORCH_SOLID  = $('TORCH_SOLID');
   const TORCH_SOS    = $('TORCH_SOS');
@@ -18,7 +20,7 @@
   const TORCH_SPEED  = $('TORCH_SZYBKOSC');
   const TORCH_SPEED_BOX = $('TORCH_SZYBKOSC_BOX');
 
-  // Screen (tło)
+  // Screen
   const BTN_SCREEN   = $('BTN_SCREEN');
   const SCREEN_SOLID = $('SCREEN_SOLID');
   const SCREEN_STROBE= $('SCREEN_STROBE');
@@ -47,14 +49,14 @@
     // screen
     screenOn:false, screenMode:'solid', screenSpeed:200,
     screenColors:['#FFFFFF','#FF00FF'], screenIntervalId:null,
-    mixOn:false, // tryb pełnego RGB
+    mixOn:false, // pełne RGB
   };
 
   const SOS = [200,200, 200,200, 200,600, 600,200, 600,200, 600,600, 200,200, 200,200, 200,1000];
 
-  // --- INIT
+  // INIT
   function init(){
-    // POKAŻ/UKRYJ (chowa wszystko, łącznie z PRZYBORNIK)
+    // POKAŻ/UKRYJ – jedyny widoczny w trybie zwinietym
     BTN_PANEL_TOGGLE.addEventListener('click', ()=>{
       const zwin = !PANEL_ROOT.classList.contains('ZWINIETY');
       PANEL_ROOT.classList.toggle('ZWINIETY', zwin);
@@ -65,46 +67,47 @@
     TAB_TORCH .addEventListener('click', ()=>aktywujZakladke('torch'));
     TAB_SCREEN.addEventListener('click', ()=>aktywujZakladke('screen'));
 
-    // Główne
+    // LATARKA
     BTN_TORCH .addEventListener('click', toggleTorch);
-    BTN_SCREEN.addEventListener('click', toggleScreen);
-
-    // Tryby torch
     [TORCH_SOLID,TORCH_SOS,TORCH_STROBE].forEach(b=>b.addEventListener('click', ()=>setTorchMode(b.dataset.val)));
     TORCH_SPEED.addEventListener('input', ()=>{
       S.torchSpeed = toInt(TORCH_SPEED.value,200);
       if(S.torchOn && S.torchMode==='strobe') restartTorch();
     });
 
-    // Tryby ekranu
+    // EKRAN
+    BTN_SCREEN  .addEventListener('click', toggleScreen);
     [SCREEN_SOLID,SCREEN_STROBE].forEach(b=>b.addEventListener('click', ()=>setScreenMode(b.dataset.val)));
     SCREEN_SPEED.addEventListener('input', ()=>{
       S.screenSpeed = toInt(SCREEN_SPEED.value,200);
       if(S.screenOn) startScreen();
     });
 
-    // Swatche kolorów
+    // Swatche
     KOLORY_LISTA.addEventListener('click',(e)=>{
       const btn = e.target.closest('.KOLOR'); if(!btn) return;
+
       if(btn===MIX_SWATCH){
         S.mixOn = !S.mixOn;
         btn.classList.toggle('AKTYWNY', S.mixOn);
         if(S.mixOn){
-          // tryb mieszany – pełne koło barw
-          S.screenColors = generateHueWheel(24); // 24 odcienie (co 15°)
+          S.screenColors = generateHueWheel(24); // koło barw HSL (zawiera magentę ~300°)
+          // upewnij się, że #FF00FF jest literalnie w tablicy
+          if(!S.screenColors.map(x=>x.toUpperCase()).includes('#FF00FF')){
+            S.screenColors.push('#FF00FF');
+          }
         }else{
-          // wracamy do aktualnie zaznaczonych „zwykłych” kolorów
           updateSelectedColors();
           if(S.screenColors.length===0) S.screenColors=['#FFFFFF'];
         }
         immediateScreenPreview(true);
         return;
       }
+
       // zwykły kolor
       btn.classList.toggle('AKTYWNY');
+      S.mixOn=false; MIX_SWATCH.classList.remove('AKTYWNY');
       updateSelectedColors();
-      S.mixOn = false;
-      MIX_SWATCH.classList.remove('AKTYWNY');
       immediateScreenPreview(false);
     });
 
@@ -123,12 +126,12 @@
     });
 
     // Start
-    aktywujZakladke('screen');  // zaczniemy od EKRAN, łatwiej testować kolory
+    aktywujZakladke('screen');     // łatwiej testować kolory
     setTorchMode('solid');
     setScreenMode('solid');
   }
 
-  // --- Zakładki
+  // Zakładki
   function aktywujZakladke(which){
     if(which==='torch'){
       SEKCJA_TORCH.classList.remove('UKRYTY');
@@ -139,7 +142,7 @@
     }
   }
 
-  // --- TORCH (aparat)
+  // TORCH
   function setTorchMode(val){
     S.torchMode = val;
     TORCH_SPEED_BOX.classList.toggle('UKRYTY', val!=='strobe');
@@ -210,7 +213,7 @@
     step();
   }
 
-  // --- EKRAN (tło)
+  // EKRAN
   function setScreenMode(val){
     S.screenMode = val;
     SCREEN_SPEED_BOX.classList.toggle('UKRYTY', val!=='strobe');
@@ -232,8 +235,15 @@
     stopScreen();
     const setBg = (c)=>{ SCREEN_OVERLAY.style.background = c; };
 
-    // Źródło kolorów: MIX albo zwykłe swatche
-    const colors = (S.mixOn ? generateHueWheel(24) : (S.screenColors.length>0 ? S.screenColors.slice() : ['#FFFFFF']));
+    // Źródło kolorów: MIX (pełne koło RGB) albo zaznaczone swatche
+    let colors;
+    if(S.mixOn){
+      colors = generateHueWheel(24);
+      // dopilnuj literalnego #FF00FF
+      if(!colors.map(x=>x.toUpperCase()).includes('#FF00FF')) colors.push('#FF00FF');
+    }else{
+      colors = (S.screenColors.length>0 ? S.screenColors.slice() : ['#FFFFFF']);
+    }
 
     if(S.screenMode==='solid'){
       setBg(colors[0]);
@@ -268,7 +278,6 @@
     clearInterval(S.screenIntervalId);
   }
   function updateSelectedColors(){
-    // zbiera TYLKO zwykłe swatche (bez MIX)
     S.screenColors = [...KOLORY_LISTA.querySelectorAll('.KOLOR.AKTYWNY')]
       .filter(k=>k!==MIX_SWATCH && k.dataset.kolor)
       .map(k=>k.dataset.kolor.toUpperCase());
@@ -279,19 +288,18 @@
     if(S.screenMode==='solid' && !S.mixOn && !forceRestart){
       SCREEN_OVERLAY.style.background = (S.screenColors[0]||'#FFFFFF');
     }else{
-      startScreen(); // restart interwału / trybu MIX
+      startScreen();
     }
   }
 
-  // --- utils
+  // utils
   const toInt=(v,f)=>{ v=parseInt(v,10); return isNaN(v)?f:v; };
-
-  // Pełne koło barw RGB (HSL: S=100%, L=50%); n = liczba „kroków”
+  // Koło barw RGB (HSL, S=100%, L=50%) – n kroków, obejmuje całą paletę podstawową RGB
   function generateHueWheel(n=24){
     const out=[];
     for(let i=0;i<n;i++){
       const h = Math.round((360/n)*i);
-      out.push(`hsl(${h} 100% 50%)`);
+      out.push(`hsl(${h} 100% 50%)`); // zawiera m.in. magentę (~300°)
     }
     return out;
   }
