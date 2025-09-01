@@ -1,5 +1,5 @@
-/* LATARKA – tryby jako toggle; suwaki: obok HEX (ekran) i osobny rząd (latarka);
-   HEX auto-#, MIX = koło RGB + #FF00FF, wygląd pól jak w LICZYDŁO (klasa LICZYDLO_POLE). */
+/* LATARKA – tryby jako toggle; desktop ukrywa LATARKĘ; suwak = „pole” w kolorze przycisków,
+   heksagonowy kursor przesuwa się w środku; HEX auto-#, MIX = koło RGB + #FF00FF. */
 (function(){
   'use strict';
 
@@ -65,6 +65,11 @@
     TAB_TORCH .addEventListener('click', ()=>aktywujZakladke('torch'));
     TAB_SCREEN.addEventListener('click', ()=>aktywujZakladke('screen'));
 
+    // Na desktopie wymuś od razu zakładkę EKRAN (latarka ukryta w CSS)
+    if (window.matchMedia('(min-width: 999px)').matches){
+      aktywujZakladke('screen');
+    }
+
     // TORCH tryby (toggle)
     TORCH_SOLID .addEventListener('click', ()=>toggleTorchMode('solid', TORCH_SOLID));
     TORCH_SOS   .addEventListener('click', ()=>toggleTorchMode('sos',   TORCH_SOS));
@@ -108,7 +113,7 @@
       immediateScreenPreview(false);
     });
 
-    // HEX input: auto ‘#’, filtr znaków, UPPERCASE (wygląd bierze z LICZYDLO.css przez klasę LICZYDLO_POLE)
+    // HEX input: auto ‘#’, filtr znaków, UPPERCASE
     if(HEX_INPUT){
       if(!HEX_INPUT.value) HEX_INPUT.value = '#';
       HEX_INPUT.addEventListener('input', ()=>{
@@ -130,7 +135,7 @@
       updateSelectedColors(); immediateScreenPreview(false);
     });
 
-    // Start: pokaż zakładkę EKRAN do testów
+    // Start: pokazuj EKRAN (łatwiej testować na desktopie)
     aktywujZakladke('screen');
   }
 
