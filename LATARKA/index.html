@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="pl">
 <head>
@@ -6,10 +7,11 @@
   <title>LATARKA</title>
   <meta name="color-scheme" content="dark light" />
 
-  <!-- STYLE (lokalne) -->
+  <!-- STYLE (lokalne, współdzielone) -->
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/HEXAGON.css" />
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KOLORY.css" />
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css" />
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/LICZYDLO.css" />
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/LATARKA.css" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet" />
 </head>
@@ -45,31 +47,26 @@
 
             <!-- LATARKA (APARAT) -->
             <div id="SEKCJA_TORCH" class="PRZYBORNIK_SEKCJA">
-              <!-- Tryby: 3 równe kolumny, pełna szerokość -->
+              <!-- Tryby: 3 równe kolumny -->
               <div class="TRYMY3">
                 <button id="TORCH_SOLID"  class="PRZYCISK">STAŁY</button>
                 <button id="TORCH_SOS"    class="PRZYCISK">SOS</button>
                 <button id="TORCH_STROBE" class="PRZYCISK">STROBOSKOP</button>
               </div>
 
-              <!-- Suwak szybkości dla STROBOSKOPU (tylko gdy aktywny) -->
-              <div id="TORCH_SZYBKOSC_BOX" class="BLOK UKRYTY">
+              <!-- Suwak szybkości dla LATARKI (własny rząd) -->
+              <div class="ROW_STROBE">
                 <input id="TORCH_SZYBKOSC" type="range" min="50" max="1000" value="200" class="SUWAK" />
               </div>
             </div>
 
             <!-- EKRAN (TŁO) -->
             <div id="SEKCJA_SCREEN" class="PRZYBORNIK_SEKCJA UKRYTY">
-              <!-- Tryby: 3 równe kolumny, pełna szerokość -->
+              <!-- Tryby: 3 równe kolumny -->
               <div class="TRYMY3">
                 <button id="SCREEN_SOLID"  class="PRZYCISK">STAŁY</button>
                 <button id="SCREEN_SOS"    class="PRZYCISK">SOS</button>
                 <button id="SCREEN_STROBE" class="PRZYCISK">STROBOSKOP</button>
-              </div>
-
-              <!-- Suwak szybkości dla STROBOSKOPU (tylko gdy aktywny) -->
-              <div id="SCREEN_SZYBKOSC_BOX" class="BLOK UKRYTY">
-                <input id="SCREEN_SZYBKOSC" type="range" min="50" max="1000" value="200" class="SUWAK" />
               </div>
 
               <!-- Paleta kolorów: MIX po lewej, potem biały i reszta -->
@@ -84,9 +81,10 @@
                 </div>
               </div>
 
-              <!-- HEX + Dodaj (obok siebie) -->
-              <div class="ROW2">
-                <input id="HEX_INPUT" class="POLE" type="text" inputmode="latin" maxlength="7" value="#" />
+              <!-- HEX + suwak szybkości EKRANU + Dodaj (obok siebie) -->
+              <div class="ROW3">
+                <input id="HEX_INPUT" class="POLE LICZYDLO_POLE" type="text" inputmode="latin" maxlength="7" value="#" />
+                <input id="SCREEN_SZYBKOSC" type="range" min="50" max="1000" value="200" class="SUWAK" />
                 <button id="HEX_ADD" class="PRZYCISK">Dodaj kolor</button>
               </div>
             </div>
@@ -107,7 +105,8 @@
     <div class="TROJKAT TROJKAT_CIEMNY" title="CIEMNY MOTYW"></div>
   </div>
 
-    <script src="https://kozlowskisebastian.pl/JS/HEXAGON.js"></script>
+  <!-- SKRYPTY (lokalne) -->
+  <script src="https://kozlowskisebastian.pl/JS/HEXAGON.js"></script>
   <script src="https://kozlowskisebastian.pl/JS/MOTYWAUTO.js"></script>
   <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
   <script src="https://kozlowskisebastian.pl/JS/LATARKA.js"></script>
