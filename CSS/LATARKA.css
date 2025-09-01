@@ -1,58 +1,63 @@
-/* Minimal — wygląd/rozmiary przejmuje PRZYBORNIK.css; tu tylko drobna siatka/gap i logika ukrywania */
+/* Minimal – wygląd przejmuje PRZYBORNIK.css; tu gapy/ukrywanie i kilka ułożeń */
 .UKRYTY{display:none!important}
 
-/* GAP między przyciskami w naszych sekcjach (bez psucia globalnego) */
-.SIATKA.GAP{ gap: var(--ODSTEP,7px); }
-.SZEREG{ display:flex; gap: var(--ODSTEP,7px); flex-wrap:wrap }
-.ROWACTIONS .POLE{ flex:1 1 180px }     /* input elastyczny */
-.ROWACTIONS .PRZYCISK{ flex:0 0 auto }  /* przyciski obok siebie */
-
-/* Pasek sterowania: 1/2 + 1/4 + 1/4 */
-.STEROWANIE{
+/* Górny wiersz z POKAŻ/UKRYJ – środek */
+.STEROWANIE_TOP{
   display:grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: var(--ODSTEP,7px);
+  grid-template-columns:1fr;
 }
-@media (max-width:999px){
-  .STEROWANIE{ grid-template-columns:1fr; }
+#BTN_PANEL_TOGGLE{
+  justify-self:center; align-self:center;
+  min-width:220px;
 }
 
-/* Panele wewnętrzne */
-.PODPANEL{
-  background: var(--TLO-PRZYCISK);
-  border-radius: 8px;
-  padding: 8px;
+/* Zakładki LATARKA/EKRAN (po rozwinięciu) */
+.STEROWANIE_TABS{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap: var(--ODSTEP,7px);
+  margin-bottom: var(--ODSTEP,7px);
 }
+
+/* GAP między przyciskami w naszych siatkach */
+.SIATKA.GAP{ gap: var(--ODSTEP,7px); }
+
+/* Wspólne drobiazgi */
+.PODPANEL{ background:var(--TLO-PRZYCISK); border-radius:8px; padding:8px }
 .BLOK{ margin-top:6px }
 .POLE{
-  width:100%; min-height:56px;
-  border:0; border-radius:8px;
+  width:100%; min-height:56px; border:0; border-radius:8px;
   background:var(--TLO-PRZYCISK); color:var(--TEKST-PRZYCISK);
   padding:10px 14px; font:inherit;
 }
 .SUWAK{ width:100%; height:6px; border-radius:3px; background:var(--TLO-PANEL); -webkit-appearance:none; appearance:none }
 .SUWAK::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%; background:var(--AKCENT-TEKST) }
 
-/* Kolory (swatche) */
+/* Paleta kolorów */
 .KOLORY_LISTA{ display:flex; flex-wrap:wrap; gap:6px }
 .KOLOR{
-  width:28px; height:28px; border-radius:50%;
-  border:2px solid #333; background:var(--c); cursor:pointer; opacity:.92
+  width:28px; height:28px; border-radius:50%; border:2px solid #333;
+  background:var(--c); cursor:pointer; opacity:.92
 }
 .KOLOR.AKTYWNY{ transform:scale(1.06); border-color:var(--AKCENT-TEKST); opacity:1 }
 
-/* Swatch „MIESZANY” – okrągła ikona z pełnym kołem barw */
+/* Swatch MIX – okrąg z pełnym kołem barw */
 .KOLOR_MIX{
-  background: conic-gradient(
-    from 0deg,
-    red, #ff0, lime, cyan, blue, magenta, red
-  ) !important;
+  background: conic-gradient(from 0deg, red, #ff0, lime, cyan, blue, magenta, red) !important;
   position:relative;
 }
 .KOLOR_MIX::after{
   content:""; position:absolute; inset:4px;
-  border-radius:50%; background:rgba(0,0,0,.25); mix-blend-mode:multiply;
+  border-radius:50%; background:rgba(0,0,0,.2); mix-blend-mode:multiply;
 }
+
+/* Rząd: input + (Dodaj, Włącz) obok siebie, bez zawijania */
+.ROW2{
+  display:flex; gap: var(--ODSTEP,7px); align-items:stretch; flex-wrap:nowrap;
+}
+.ROW2 .POLE{ flex:1 1 240px }
+.ROW_ACTIONS{ display:flex; gap: var(--ODSTEP,7px); flex-wrap:nowrap }
+.ROW_ACTIONS .PRZYCISK{ white-space:nowrap }
 
 /* TŁO świecące – POD UI */
 .SCREEN_OVERLAY{
@@ -62,12 +67,6 @@
 /* UI nad tłem */
 .RAMKA, .KONTENER, .PANEL, .SIATKA, .PRZYBORNIK_SEKCJA, .PODPANEL{ position:relative; z-index:1 }
 
-/* Tryb „ZWINIĘTY”: zostaje tylko POKAŻ, wyśrodkowany */
+/* Tryb „ZWINIETY”: zostaje tylko POKAŻ (środek), wszystko inne – znik */
 .ZWINIETY .RESZTA_NAGLOWEK{ display:none!important; }
 .ZWINIETY #WSZYSTKO{ display:none!important; }
-.ZWINIETY .STEROWANIE{
-  grid-template-columns:1fr !important;
-}
-.ZWINIETY #BTN_PANEL_TOGGLE{
-  justify-self:center; align-self:center; width:auto; min-width:220px;
-}
