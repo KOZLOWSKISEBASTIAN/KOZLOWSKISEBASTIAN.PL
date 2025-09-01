@@ -1,5 +1,5 @@
-/* LATARKA – tryby jako toggle; desktop ukrywa LATARKĘ; suwak = „pole” w kolorze przycisków,
-   heksagonowy kursor przesuwa się w środku; HEX auto-#, MIX = koło RGB + #FF00FF. */
+/* LATARKA – tryby jako toggle; desktop ukrywa zakładki i LATARKĘ; suwak pełna szerokość na dole.
+   HEX auto-#, pole jak w LICZYDŁO; MIX = koło RGB + #FF00FF. */
 (function(){
   'use strict';
 
@@ -65,8 +65,11 @@
     TAB_TORCH .addEventListener('click', ()=>aktywujZakladke('torch'));
     TAB_SCREEN.addEventListener('click', ()=>aktywujZakladke('screen'));
 
-    // Na desktopie wymuś od razu zakładkę EKRAN (latarka ukryta w CSS)
+    // Wymuś EKRAN na desktopie (LATARKA ukryta w CSS)
     if (window.matchMedia('(min-width: 999px)').matches){
+      aktywujZakladke('screen');
+    } else {
+      // na mobile pokaż ostatnio używaną? domyślnie też ekran, żeby od razu testować kolory
       aktywujZakladke('screen');
     }
 
@@ -134,9 +137,6 @@
       S.mixOn=false; MIX_SWATCH.classList.remove('AKTYWNY');
       updateSelectedColors(); immediateScreenPreview(false);
     });
-
-    // Start: pokazuj EKRAN (łatwiej testować na desktopie)
-    aktywujZakladke('screen');
   }
 
   // ----- Zakładki
