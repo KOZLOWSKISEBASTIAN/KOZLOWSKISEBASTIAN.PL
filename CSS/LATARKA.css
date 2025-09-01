@@ -1,17 +1,18 @@
-/* Minimal – wygląd przejmuje PRZYBORNIK.css; tu gapy/ukrywanie i kilka ułożeń */
+/* ukrywanie */
 .UKRYTY{display:none!important}
 
-/* Górny wiersz z POKAŻ/UKRYJ – środek */
+/* POKAŻ/UKRYJ – środek + mniejszy odstęp pod spodem */
 .STEROWANIE_TOP{
   display:grid;
   grid-template-columns:1fr;
+  margin-bottom: calc(var(--ODSTEP,7px) * 0.6);
 }
 #BTN_PANEL_TOGGLE{
   justify-self:center; align-self:center;
   min-width:220px;
 }
 
-/* Zakładki LATARKA/EKRAN (po rozwinięciu) */
+/* Zakładki (LATARKA/EKRAN) z odstępem do sekcji poniżej */
 .STEROWANIE_TABS{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -19,19 +20,22 @@
   margin-bottom: var(--ODSTEP,7px);
 }
 
-/* GAP między przyciskami w naszych siatkach */
-.SIATKA.GAP{ gap: var(--ODSTEP,7px); }
-
-/* Wspólne drobiazgi */
-.PODPANEL{ background:var(--TLO-PRZYCISK); border-radius:8px; padding:8px }
-.BLOK{ margin-top:6px }
-.POLE{
-  width:100%; min-height:56px; border:0; border-radius:8px;
-  background:var(--TLO-PRZYCISK); color:var(--TEKST-PRZYCISK);
-  padding:10px 14px; font:inherit;
+/* Tryby – 3 równe kolumny, pełna szerokość + odstępy */
+.TRYMY3{
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--ODSTEP,7px);
 }
-.SUWAK{ width:100%; height:6px; border-radius:3px; background:var(--TLO-PANEL); -webkit-appearance:none; appearance:none }
-.SUWAK::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%; background:var(--AKCENT-TEKST) }
+.TRYMY3 .PRZYCISK{ width:100% }
+
+/* odstępy między elementami poniżej */
+.BLOK{ margin-top: var(--ODSTEP,7px); }
+
+/* HEX + Dodaj kolor obok siebie, bez zawijania */
+.ROW2{
+  display:flex; gap: var(--ODSTEP,7px); align-items:stretch; flex-wrap:nowrap;
+}
+.ROW2 .POLE{ flex:1 1 240px }
 
 /* Paleta kolorów */
 .KOLORY_LISTA{ display:flex; flex-wrap:wrap; gap:6px }
@@ -41,32 +45,42 @@
 }
 .KOLOR.AKTYWNY{ transform:scale(1.06); border-color:var(--AKCENT-TEKST); opacity:1 }
 
-/* Swatch MIX – okrąg z pełnym kołem barw */
+/* MIX – okrągłe koło barw */
 .KOLOR_MIX{
   background: conic-gradient(from 0deg, red, #ff0, lime, cyan, blue, magenta, red) !important;
   position:relative;
 }
 .KOLOR_MIX::after{
   content:""; position:absolute; inset:4px;
-  border-radius:50%; background:rgba(0,0,0,.2); mix-blend-mode:multiply;
+  border-radius:50%; background:rgba(0,0,0,.18); mix-blend-mode:multiply;
 }
 
-/* Rząd: input + (Dodaj, Włącz) obok siebie, bez zawijania */
-.ROW2{
-  display:flex; gap: var(--ODSTEP,7px); align-items:stretch; flex-wrap:nowrap;
-}
-.ROW2 .POLE{ flex:1 1 240px }
-.ROW_ACTIONS{ display:flex; gap: var(--ODSTEP,7px); flex-wrap:nowrap }
-.ROW_ACTIONS .PRZYCISK{ white-space:nowrap }
+/* Suwak szybkości */
+.SUWAK{ width:100%; height:6px; border-radius:3px; background:var(--TLO-PANEL); -webkit-appearance:none; appearance:none }
+.SUWAK::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%; background:var(--AKCENT-TEKST) }
 
 /* TŁO świecące – POD UI */
 .SCREEN_OVERLAY{
   position:fixed; inset:0; pointer-events:none;
   z-index:0; background:#000; opacity:.96; transition:background 40ms linear;
 }
-/* UI nad tłem */
-.RAMKA, .KONTENER, .PANEL, .SIATKA, .PRZYBORNIK_SEKCJA, .PODPANEL{ position:relative; z-index:1 }
 
-/* Tryb „ZWINIETY”: zostaje tylko POKAŻ (środek), wszystko inne – znik */
+/* UI nad tłem */
+.RAMKA, .KONTENER, .PANEL, .SIATKA, .PRZYBORNIK_SEKCJA{ position:relative; z-index:1 }
+
+/* Tryb „ZWINIĘTY”: zostaje tylko POKAŻ (ukryj też PRZYBORNIK) */
 .ZWINIETY .RESZTA_NAGLOWEK{ display:none!important; }
 .ZWINIETY #WSZYSTKO{ display:none!important; }
+
+/* Podświetlenie aktywnego trybu (toggle) */
+.TRYB_AKTYWNY{
+  outline:2px solid var(--AKCENT-TEKST);
+  outline-offset: -2px;
+}
+
+/* Mobile (poniżej 1000px) możesz zostawić 3 kolumny lub zwinąć do 1-2 kolumn – tu zostawiamy 3 */
+@media (max-width:999px){
+  /* jeśli chcesz po 2 na wiersz, odkomentuj:
+  .TRYMY3{ grid-template-columns: repeat(2,1fr); }
+  */
+}
