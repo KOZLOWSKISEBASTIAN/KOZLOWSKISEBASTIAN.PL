@@ -1,33 +1,73 @@
-/* Minimalne, reszta bierze z PRZYBORNIK.css / KOLORY.css */
-:root { --lat-gap:8px; }
+/* Minimal — wygląd/rozmiary przejmuje PRZYBORNIK.css; tu tylko drobna siatka/gap i logika ukrywania */
+.UKRYTY{display:none!important}
 
-.LATARKA_PANEL { background: var(--tlo-panel, #333); border-radius: 8px; padding: 8px; }
-.ukryj { display: none !important; }
+/* GAP między przyciskami w naszych sekcjach (bez psucia globalnego) */
+.SIATKA.GAP{ gap: var(--ODSTEP,7px); }
+.SZEREG{ display:flex; gap: var(--ODSTEP,7px); flex-wrap:wrap }
+.ROWACTIONS .POLE{ flex:1 1 180px }     /* input elastyczny */
+.ROWACTIONS .PRZYCISK{ flex:0 0 auto }  /* przyciski obok siebie */
 
-.LATARKA_GRID_2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--lat-gap); }
-.LATARKA_OPCJE_KONTENER { display:flex; flex-wrap:wrap; gap:var(--lat-gap); margin-top:var(--lat-gap); }
-.LATARKA_PANEL_OPCJI { flex:1 1 420px; min-width:320px; background: var(--tlo-przycisk, #222); border-radius:8px; padding:8px; }
-
-.LATARKA_LABEL { display:block; font-size:14px; opacity:.8; margin:4px 0; }
-.LATARKA_BOX { margin-top:6px; }
-.LATARKA_INPUT { width:100%; border:0; border-radius:8px; padding:8px; background:#222; color:#B0B0B0; }
-.LATARKA_SLIDER { width:100%; height:6px; border-radius:3px; background:#222; -webkit-appearance:none; appearance:none; }
-.LATARKA_SLIDER::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%; background:#FF00FF; }
-.LATARKA_INFO { font-size:12px; opacity:.7; margin-top:2px; }
-
-.LATARKA_TIMER { display:flex; gap:var(--lat-gap); align-items:center; }
-.KOLORY_LISTA { display:flex; flex-wrap:wrap; gap:6px; }
-.KOLOR { width:26px; height:26px; border-radius:50%; border:2px solid #333; background:var(--c); cursor:pointer; }
-.KOLOR.aktywny { transform: scale(1.06); border-color:#FF00FF; }
-.KOLOR_DODAJ { display:flex; gap:var(--lat-gap); margin-top:6px; }
-
-.LIGHT_OVERLAY, .SCREEN_OVERLAY {
-  position: fixed; top:0; left:0; width:100vw; height:100vh; pointer-events:none; z-index: 1; opacity: .92;
+/* Pasek sterowania: 1/2 + 1/4 + 1/4 */
+.STEROWANIE{
+  display:grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--ODSTEP,7px);
 }
-.LIGHT_OVERLAY   { background:#FFFFFF; }
-.SCREEN_OVERLAY  { background:#000000; }
+@media (max-width:999px){
+  .STEROWANIE{ grid-template-columns:1fr; }
+}
 
-@media (max-width: 999px) {
-  .LATARKA_GRID_2 { grid-template-columns: 1fr; }
-  .LATARKA_PANEL_OPCJI { flex-basis:100%; min-width:0; }
+/* Panele wewnętrzne */
+.PODPANEL{
+  background: var(--TLO-PRZYCISK);
+  border-radius: 8px;
+  padding: 8px;
+}
+.BLOK{ margin-top:6px }
+.POLE{
+  width:100%; min-height:56px;
+  border:0; border-radius:8px;
+  background:var(--TLO-PRZYCISK); color:var(--TEKST-PRZYCISK);
+  padding:10px 14px; font:inherit;
+}
+.SUWAK{ width:100%; height:6px; border-radius:3px; background:var(--TLO-PANEL); -webkit-appearance:none; appearance:none }
+.SUWAK::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%; background:var(--AKCENT-TEKST) }
+
+/* Kolory (swatche) */
+.KOLORY_LISTA{ display:flex; flex-wrap:wrap; gap:6px }
+.KOLOR{
+  width:28px; height:28px; border-radius:50%;
+  border:2px solid #333; background:var(--c); cursor:pointer; opacity:.92
+}
+.KOLOR.AKTYWNY{ transform:scale(1.06); border-color:var(--AKCENT-TEKST); opacity:1 }
+
+/* Swatch „MIESZANY” – okrągła ikona z pełnym kołem barw */
+.KOLOR_MIX{
+  background: conic-gradient(
+    from 0deg,
+    red, #ff0, lime, cyan, blue, magenta, red
+  ) !important;
+  position:relative;
+}
+.KOLOR_MIX::after{
+  content:""; position:absolute; inset:4px;
+  border-radius:50%; background:rgba(0,0,0,.25); mix-blend-mode:multiply;
+}
+
+/* TŁO świecące – POD UI */
+.SCREEN_OVERLAY{
+  position:fixed; inset:0; pointer-events:none;
+  z-index:0; background:#000; opacity:.96; transition:background 40ms linear;
+}
+/* UI nad tłem */
+.RAMKA, .KONTENER, .PANEL, .SIATKA, .PRZYBORNIK_SEKCJA, .PODPANEL{ position:relative; z-index:1 }
+
+/* Tryb „ZWINIĘTY”: zostaje tylko POKAŻ, wyśrodkowany */
+.ZWINIETY .RESZTA_NAGLOWEK{ display:none!important; }
+.ZWINIETY #WSZYSTKO{ display:none!important; }
+.ZWINIETY .STEROWANIE{
+  grid-template-columns:1fr !important;
+}
+.ZWINIETY #BTN_PANEL_TOGGLE{
+  justify-self:center; align-self:center; width:auto; min-width:220px;
 }
