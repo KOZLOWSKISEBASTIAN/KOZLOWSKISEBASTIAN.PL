@@ -63,7 +63,7 @@
 .ROW_FULL{ margin-top: var(--ODSTEP,7px); }
 .ROW_FULL .SUWAK{ width:100%; }
 
-/* === Przyciski: padding i wyrównanie jak w przycisku PRZYBORNIK ========= */
+/* Przyciski: padding i wyrównanie jak w PRZYBORNIK */
 .TRYMY3 .PRZYCISK,
 .STEROWANIE_TABS .PRZYCISK,
 #HEX_ADD.PRZYCISK{
@@ -75,7 +75,7 @@
   border-radius:8px;
 }
 
-/* === Pole HEX: większa czcionka + wysokość/zaokrąglenia jak przyciski ==== */
+/* Pole HEX: większa czcionka + wysokość/zaokrąglenia jak przyciski */
 .POLE_HEX{
   box-sizing: border-box;
   width:100%;
@@ -86,14 +86,14 @@
   color: var(--AKCENT-TEKST);
   padding: 0 14px;
   font: inherit;
-  font-size: 1.125rem;               /* większa czcionka */
+  font-size: 1.125rem;
   letter-spacing:.55px;
   text-transform: uppercase;
   display:flex; align-items:center; justify-content:flex-start;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
 }
 
-/* Paleta kolorów */
+/* Paleta kolorów (okrągłe swatche) */
 .KOLORY_LISTA{ display:flex; flex-wrap:wrap; gap:6px }
 .KOLOR{
   width:28px; height:28px; border-radius:50%; border:2px solid #333;
@@ -101,7 +101,7 @@
 }
 .KOLOR.AKTYWNY{ transform:scale(1.06); border-color:var(--AKCENT-TEKST); opacity:1 }
 
-/* MIX – okrągłe koło barw */
+/* MIX – koło barw */
 .KOLOR_MIX{
   background: conic-gradient(from 0deg, red, #ff0, lime, cyan, blue, magenta, red) !important;
   position:relative;
@@ -111,14 +111,35 @@
   border-radius:50%; background:rgba(0,0,0,.18); mix-blend-mode:multiply;
 }
 
-/* === SUWAK: DUŻY jak przycisk (56px), promień 8px, LINIA POZIOMA w środku === */
-:root{
-  --SUWAK-H: 56px;  /* wysokość toru (było 56px) */
-  --KCIUK:   54px;   /* rozmiar heksagonu (było 26px) */
-  --MID:      2px;   /* grubość linii środka – też grubiej, żeby pasowało */
-  --ALIGN-FIX: -2px;  /* nie trzeba kombinować, hexagon sam usiądzie */
+/* RETROWAVE – neonowy podgląd */
+.KOLOR_RETRO{
+  background: conic-gradient(
+    from 0deg,
+    #ff00ff, #b000ff, #5d00ff, #00eaff, #00ffd5, #ff0080, #ff00ff
+  ) !important;
+  position:relative;
+}
+.KOLOR_RETRO::after{
+  content:""; position:absolute; inset:4px;
+  border-radius:50%; background:rgba(0,0,0,.18); mix-blend-mode:multiply;
 }
 
+/* Presety służb – wizualizacja */
+.KOLOR_POLICJA{ background:#0000FF !important; }
+.KOLOR_POGOTOWIE{
+  background: linear-gradient(90deg,#0000FF 0 50%, #FFFFFF 50% 100%) !important;
+}
+.KOLOR_STRAZ{
+  background: linear-gradient(90deg,#FF0000 0 50%, #0000FF 50% 100%) !important;
+}
+
+/* SUWAK: duży jak przycisk (56px), linia w środku, HEXAGON na środku */
+:root{
+  --SUWAK-H: 56px;   /* wysokość toru */
+  --KCIUK:   54px;   /* wymiar heksagonu */
+  --MID:      2px;   /* grubość linii środka */
+  --ALIGN-FIX: -2px; /* delikatna korekta pionu */
+}
 .SUWAK{
   width:100%;
   height:var(--SUWAK-H);
@@ -135,6 +156,11 @@
     var(--TLO-PRZYCISK);
   box-shadow:
     inset 0 0 0 2px rgba(0,0,0,.20),
+    0 1px 0 rgba(255,255,255,.06);
+}
+.SUWAK:focus{
+  box-shadow:
+    inset 0 0 0 2px rgba(255,255,255,.18),
     0 1px 0 rgba(255,255,255,.06);
 }
 
