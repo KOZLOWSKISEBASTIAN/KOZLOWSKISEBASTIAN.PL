@@ -7,10 +7,7 @@
   grid-template-columns:1fr;
   margin-bottom: calc(var(--ODSTEP,7px) * 0.45);
 }
-#BTN_PANEL_TOGGLE{
-  justify-self:center; align-self:center;
-  min-width:220px;
-}
+#BTN_PANEL_TOGGLE{ justify-self:center; align-self:center; min-width:220px; }
 .ZWINIETY .STEROWANIE_TOP{ margin-bottom:4px; }
 
 /* Zakładki */
@@ -20,7 +17,7 @@
   margin-bottom: var(--ODSTEP,7px);
 }
 
-/* Desktop: tylko ekran */
+/* Desktop: tylko ekran (≥1000px) */
 @media (min-width: 999px){
   .STEROWANIE_TABS{ display:none !important; }
   #SEKCJA_TORCH{ display:none !important; }
@@ -93,47 +90,60 @@
   box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
 }
 
-/* Paleta kolorów (okrągłe swatche) */
-.KOLORY_LISTA{ display:flex; flex-wrap:wrap; gap:6px }
+/* ===================== PALETA KOLORÓW – HEKSAGONY (obrót 90°) ===================== */
+:root{
+  --K-SIZE: 42px;          /* rozmiar heksagonu */
+  --K-BORDER: 4px;         /* grubość ramki aktywnej */
+}
+
+.KOLORY_LISTA{ display:flex; flex-wrap:wrap; gap:10px }
+
+/* .KOLOR zostaje – spójne z istniejącym HTML/JS */
 .KOLOR{
-  width:28px; height:28px; border-radius:50%; border:2px solid #333;
-  background:var(--c); cursor:pointer; opacity:.92
+  width: var(--K-SIZE);
+  height: var(--K-SIZE);
+  background: var(--c, #fff);
+  /* heksagon smukły i obrócony o 90° */
+  clip-path: polygon(
+    20% 4%, 80% 4%,
+    100% 50%,
+    80% 96%, 20% 96%,
+    0% 50%
+  );
+  transform: rotate(90deg);
+  cursor:pointer;
+  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+  /* kontrastowa obwódka bazowa */
+  box-shadow: 0 0 0 2px rgba(0,0,0,.3);
 }
-.KOLOR.AKTYWNY{ transform:scale(1.06); border-color:var(--AKCENT-TEKST); opacity:1 }
+.KOLOR:hover{ transform: scale(1.08) rotate(90deg); }
 
-/* MIX – koło barw */
+/* Aktywny heksagon → RAMKA:
+   - jasny motyw: czarna,
+   - ciemny motyw: jasnoszara (#B0B0B0) */
+.KOLOR.AKTYWNY{
+  filter: brightness(88%);
+  box-shadow:
+    0 0 0 var(--K-BORDER) var(--TEKST-PRZYCISK),
+    0 0 6px 1px color-mix(in srgb, var(--TEKST-PRZYCISK), transparent 60%);
+}
+:root[WYBOR_MOTYW="JASNY"] .KOLOR.AKTYWNY{
+  box-shadow:
+    0 0 0 var(--K-BORDER) #000,
+    0 0 6px 1px rgba(0,0,0,.5);
+}
+:root[WYBOR_MOTYW="CIEMNY"] .KOLOR.AKTYWNY{
+  box-shadow:
+    0 0 0 var(--K-BORDER) #B0B0B0,
+    0 0 8px 2px rgba(255,255,255,.25);
+}
+
+/* „MIESZANY” – tęcza */
 .KOLOR_MIX{
-  background: conic-gradient(from 0deg, red, #ff0, lime, cyan, blue, magenta, red) !important;
-  position:relative;
-}
-.KOLOR_MIX::after{
-  content:""; position:absolute; inset:4px;
-  border-radius:50%; background:rgba(0,0,0,.18); mix-blend-mode:multiply;
+  background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red) !important;
 }
 
-/* RETROWAVE – neonowy podgląd */
-.KOLOR_RETRO{
-  background: conic-gradient(
-    from 0deg,
-    #ff00ff, #b000ff, #5d00ff, #00eaff, #00ffd5, #ff0080, #ff00ff
-  ) !important;
-  position:relative;
-}
-.KOLOR_RETRO::after{
-  content:""; position:absolute; inset:4px;
-  border-radius:50%; background:rgba(0,0,0,.18); mix-blend-mode:multiply;
-}
-
-/* Presety służb – wizualizacja */
-.KOLOR_POLICJA{ background:#0000FF !important; }
-.KOLOR_POGOTOWIE{
-  background: linear-gradient(90deg,#0000FF 0 50%, #FFFFFF 50% 100%) !important;
-}
-.KOLOR_STRAZ{
-  background: linear-gradient(90deg,#FF0000 0 50%, #0000FF 50% 100%) !important;
-}
-
-/* SUWAK: duży jak przycisk (56px), linia w środku, HEXAGON na środku */
+/* ===================== SUWAK z HEXAGONEM na środku ===================== */
 :root{
   --SUWAK-H: 56px;   /* wysokość toru */
   --KCIUK:   54px;   /* wymiar heksagonu */
