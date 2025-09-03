@@ -6,15 +6,16 @@
   <title>LATARKA</title>
   <meta name="color-scheme" content="dark light" />
 
-  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/HEXAGON.css" />
-  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KOLORY.css" />
-  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css" />
-  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/LICZYDLO.css" />
-  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/LATARKA.css" />
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/CSS/HEXAGON.css" />
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/CSS/KOLORY.css" />
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/CSS/PRZYBORNIK.css" />
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/CSS/LICZYDLO.css" />
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/CSS/LATARKA.css" />
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet" />
 </head>
 <body>
 
+  <!-- TŁO ŚWIECĄCE (pod całym UI) -->
   <div id="SCREEN_OVERLAY" class="SCREEN_OVERLAY UKRYTY" aria-hidden="true"></div>
 
   <div class="RAMKA">
@@ -44,14 +45,11 @@
 
             <!-- LATARKA (APARAT) — desktop ukryty w CSS -->
             <div id="SEKCJA_TORCH" class="PRZYBORNIK_SEKCJA">
-              <!-- Tryby: 3 równe kolumny -->
               <div class="TRYMY3">
                 <button id="TORCH_SOLID"  class="PRZYCISK">STAŁY</button>
                 <button id="TORCH_SOS"    class="PRZYCISK">SOS</button>
                 <button id="TORCH_STROBE" class="PRZYCISK">STROBOSKOP</button>
               </div>
-
-              <!-- Suwak (na dole, pełna szerokość) -->
               <div class="ROW_FULL">
                 <input id="TORCH_SZYBKOSC" type="range" min="50" max="1000" value="200" class="SUWAK SUWAK_HEX" />
               </div>
@@ -59,16 +57,25 @@
 
             <!-- EKRAN (TŁO) -->
             <div id="SEKCJA_SCREEN" class="PRZYBORNIK_SEKCJA UKRYTY">
-              <!-- Tryby: 3 równe kolumny -->
               <div class="TRYMY3">
                 <button id="SCREEN_SOLID"  class="PRZYCISK">STAŁY</button>
                 <button id="SCREEN_SOS"    class="PRZYCISK">SOS</button>
                 <button id="SCREEN_STROBE" class="PRZYCISK">STROBOSKOP</button>
               </div>
 
-              <!-- Paleta + (HEX + DODAJ) w jednej linii z paletą -->
+              <!-- Paleta + (HEX + DODAJ) -->
               <div class="BLOK BLOK-PALETA">
                 <div id="KOLORY_LISTA" class="KOLORY_LISTA">
+
+                  <!-- PRESETY (nowe) -->
+                  <button class="KOLOR KOLOR_RETRO" id="RETRO_SWATCH" title="RETROWAVE (neon stroboskop)"></button>
+                  <button class="KOLOR KOLOR_POLICJA" id="POLICJA_SWATCH" title="POLICJA (stroboskop)"></button>
+                  <button class="KOLOR KOLOR_POGOTOWIE" id="POGOTOWIE_SWATCH" title="POGOTOWIE (stroboskop)"></button>
+                  <button class="KOLOR KOLOR_STRAZ" id="STRAZ_SWATCH" title="STRAŻ POŻARNA (stroboskop)"></button>
+                  <button class="KOLOR" id="MAGENTA_SWATCH" data-kolor="#FF00FF" style="--c:#FF00FF" title="FF00FF (stroboskop)"></button>
+                  <button class="KOLOR" id="BLACK_SWATCH" data-kolor="#000000" style="--c:#000000" title="CZARNY (stały)"></button>
+
+                  <!-- MIESZANY + podstawowe -->
                   <button class="KOLOR KOLOR_MIX" id="MIX_SWATCH" title="MIESZANY (pełne RGB)"></button>
                   <button class="KOLOR AKTYWNY" data-kolor="#FFFFFF" style="--c:#FFFFFF" title="#FFFFFF"></button>
                   <button class="KOLOR AKTYWNY" data-kolor="#FF00FF" style="--c:#FF00FF" title="#FF00FF"></button>
@@ -105,9 +112,10 @@
     <div class="TROJKAT TROJKAT_CIEMNY" title="CIEMNY MOTYW"></div>
   </div>
 
-  <script src="https://kozlowskisebastian.pl/JS/HEXAGON.js"></script>
-  <script src="https://kozlowskisebastian.pl/JS/MOTYWAUTO.js"></script>
-  <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
-  <script src="https://kozlowskisebastian.pl/JS/LATARKA.js"></script>
+  <!-- SKRYPTY (lokalne) -->
+  <script src="https://kozlowskisebastian.pl/CSS/JS/HEXAGON.js"></script>
+  <script src="https://kozlowskisebastian.pl/CSS/JS/MOTYWAUTO.js"></script>
+  <script src="https://kozlowskisebastian.pl/CSS/JS/PRZYBORNIK.js"></script>
+  <script src="https://kozlowskisebastian.pl/CSS/JS/LATARKA.js"></script>
 </body>
 </html>
