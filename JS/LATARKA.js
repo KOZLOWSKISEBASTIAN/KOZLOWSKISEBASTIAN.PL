@@ -1,9 +1,7 @@
-/* LATARKA – dodano presety: POLICJA, POGOTOWIE, STRAŻ, FF00FF, CZARNY.
-   Preset ustawia kolory, tryb (zwykle STROBOSKOP) i tempo. */
+/* LATARKA – heksagony kolorów z ramką po kliknięciu, MIESZANY, HEX + tryby EKRAN/LATARKA */
 (function(){
   'use strict';
-
-  const $ = (id)=>document.getElementById(id);
+  const $ = id => document.getElementById(id);
 
   // Korzeń + sterowanie
   const PANEL_ROOT = $('PANEL_ROOT');
@@ -25,19 +23,11 @@
   const SCREEN_STROBE  = $('SCREEN_STROBE');
   const SCREEN_SPEED   = $('SCREEN_SZYBKOSC');
 
-  // Kolory
+  // Paleta
   const KOLORY_LISTA = $('KOLORY_LISTA');
   const HEX_INPUT    = $('HEX_INPUT');
   const HEX_ADD      = $('HEX_ADD');
   const MIX_SWATCH   = $('MIX_SWATCH');
-  const RETRO_SWATCH = $('RETRO_SWATCH');
-
-  // Presety – nowe
-  const POLICJA_SWATCH   = $('POLICJA_SWATCH');
-  const POGOTOWIE_SWATCH = $('POGOTOWIE_SWATCH');
-  const STRAZ_SWATCH     = $('STRAZ_SWATCH');
-  const MAGENTA_SWATCH   = $('MAGENTA_SWATCH');
-  const BLACK_SWATCH     = $('BLACK_SWATCH');
 
   // Sekcje
   const SEKCJA_TORCH  = $('SEKCJA_TORCH');
@@ -48,20 +38,21 @@
 
   // Stan
   const S = {
-    // torch (flash)
+    // torch
     torchOn:false, torchMode:null, torchSpeed:200,
     stream:null, videoTrack:null, torchIntervalId:null, torchSOSId:null,
 
-    // screen (overlay)
+    // screen
     screenOn:false, screenMode:null, screenSpeed:200,
-    screenColors:['#FFFFFF','#FF00FF'], screenIntervalId:null, screenSOSId:null,
-    mixOn:false, retroOn:false, presetOn:null /* 'policja'|'pogotowie'|'straz'|'magenta'|'black' */,
+    screenColors:['#FFFFFF'], screenIntervalId:null, screenSOSId:null,
+    mixOn:false
   };
 
   const SOS_SEQ = [200,200, 200,200, 200,600, 600,200, 600,200, 600,600, 200,200, 200,200, 200,1200];
 
-  function init(){
-    // Domyślnie panel rozwinięty → „UKRYJ”
+  /* ===== INIT ===== */
+  document.addEventListener('DOMContentLoaded', () => {
+    // POKAŻ/UKRYJ
     BTN_PANEL_TOGGLE.textContent = 'UKRYJ';
     BTN_PANEL_TOGGLE.addEventListener('click', ()=>{
       const zwin = !PANEL_ROOT.classList.contains('ZWINIETY');
@@ -92,17 +83,17 @@
       if(S.screenOn && S.screenMode==='strobe') startScreen(); // restart interwału
     });
 
-    // Swatche (paleta standard)
+    // KOLORY – kliknięcia (wiele aktywnych dozwolone)
     KOLORY_LISTA.addEventListener('click',(e)=>{
       const btn = e.target.closest('.KOLOR'); if(!btn) return;
 
-      // MIESZANY (pełne RGB)
       if(btn===MIX_SWATCH){
-        clearPresetFlags();
-        S.mixOn = !S.mixOn; btn.classList.toggle('AKTYWNY', S.mixOn);
+        S.mixOn = !S.mixOn;
+        btn.classList.toggle('AKTYWNY', S.mixOn);
         if(S.mixOn){
           S.screenColors = generateHueWheel(24);
-          if(!S.screenColors.map(x=>x.toUpperCase()).includes('#FF00FF')) S.screenColors.push('#FF00FF');
+          // zdejmij wizualne zaznaczenie z innych (opcjonalnie)
+          [...KOLORY_LISTA.querySelectorAll('.KOLOR')].forEach(k=>{ if(k!==MIX_SWATCH) k.classList.remove('AKTYWNY'); });
         }else{
           updateSelectedColors();
           if(S.screenColors.length===0) S.screenColors=['#FFFFFF'];
@@ -111,68 +102,41 @@
         return;
       }
 
-      // RETROWAVE
-      if(btn===RETRO_SWATCH){
-        togglePreset('retrowave', getRetrowavePalette(), 'strobe', 160, RETRO_SWATCH);
-        return;
-      }
-
-      // PRESETY SŁUŻBY
-      if(btn===POLICJA_SWATCH){
-        // Policja – szybki Niebieski (opcjonalnie z off dla błysku)
-        togglePreset('policja', ['#0000FF','#000000'], 'strobe', 120, POLICJA_SWATCH);
-        return;
-      }
-      if(btn===POGOTOWIE_SWATCH){
-        // Pogotowie – Niebieski ↔ Biały
-        togglePreset('pogotowie', ['#0000FF','#FFFFFF'], 'strobe', 140, POGOTOWIE_SWATCH);
-        return;
-      }
-      if(btn===STRAZ_SWATCH){
-        // Straż – Czerwony ↔ Niebieski
-        togglePreset('straz', ['#FF0000','#0000FF'], 'strobe', 140, STRAZ_SWATCH);
-        return;
-      }
-      if(btn===MAGENTA_SWATCH){
-        // FF00FF – Magenta ↔ Off
-        togglePreset('magenta', ['#FF00FF','#000000'], 'strobe', 140, MAGENTA_SWATCH);
-        return;
-      }
-      if(btn===BLACK_SWATCH){
-        // CZARNY – stały czarny (wyłącza "świecenie" ekranu)
-        togglePreset('black', ['#000000'], 'solid', 200, BLACK_SWATCH);
-        return;
-      }
-
-      // Zwykły kolor z palety
+      // zwykły kolor – toggle wielu
       btn.classList.toggle('AKTYWNY');
-      clearPresetFlags();
+      S.mixOn=false; MIX_SWATCH.classList.remove('AKTYWNY');
       updateSelectedColors();
       immediateScreenPreview(false);
     });
 
     // HEX input: auto ‘#’, filtr znaków, UPPERCASE
-    if(HEX_INPUT){
-      if(!HEX_INPUT.value) HEX_INPUT.value = '#';
-      HEX_INPUT.addEventListener('input', ()=>{
-        let v = HEX_INPUT.value.toUpperCase();
-        if(!v.startsWith('#')) v = '#' + v.replace(/#/g,'');
-        v = '#' + v.slice(1).replace(/[^0-9A-F]/g,'').slice(0,6);
-        HEX_INPUT.value = v;
-      });
-    }
-    HEX_ADD && HEX_ADD.addEventListener('click', ()=>{
+    if(!HEX_INPUT.value) HEX_INPUT.value = '#';
+    HEX_INPUT.addEventListener('input', ()=>{
+      let v = HEX_INPUT.value.toUpperCase();
+      if(!v.startsWith('#')) v = '#' + v.replace(/#/g,'');
+      v = '#' + v.slice(1).replace(/[^0-9A-F]/g,'').slice(0,6);
+      HEX_INPUT.value = v;
+    });
+
+    HEX_ADD.addEventListener('click', ()=>{
       const v = (HEX_INPUT.value||'').trim().toUpperCase();
       if(!/^#([0-9A-F]{3}){1,2}$/.test(v)){ alert('Podaj HEX (#RRGGBB lub #RGB)'); return; }
       const exists = [...KOLORY_LISTA.querySelectorAll('.KOLOR')].find(x=>x.dataset.kolor && x.dataset.kolor.toUpperCase()===v);
-      if(exists){ exists.classList.add('AKTYWNY'); clearPresetFlags(); updateSelectedColors(); immediateScreenPreview(false); return; }
+      if(exists){
+        exists.classList.toggle('AKTYWNY', true);
+        S.mixOn=false; MIX_SWATCH.classList.remove('AKTYWNY');
+        updateSelectedColors(); immediateScreenPreview(false);
+        return;
+      }
       const b = document.createElement('button');
       b.className='KOLOR AKTYWNY'; b.dataset.kolor=v; b.style.setProperty('--c',v); b.title=v;
       KOLORY_LISTA.appendChild(b);
-      clearPresetFlags();
+      S.mixOn=false; MIX_SWATCH.classList.remove('AKTYWNY');
       updateSelectedColors(); immediateScreenPreview(false);
     });
-  }
+
+    updateSelectedColors();
+  });
 
   /* ===== Zakładki ===== */
   function aktywujZakladke(which){
@@ -278,7 +242,7 @@
       const colors = getActiveColors();
       SCREEN_OVERLAY.style.background = colors[0];
     }else if(S.screenMode==='strobe'){
-      startScreen(); // interwał
+      startScreen();
     }else if(S.screenMode==='sos'){
       runScreenSOS();
     }
@@ -332,81 +296,34 @@
     step();
   }
 
-  /* ===== Presety/palety ===== */
-  function togglePreset(name, colors, mode, speed, swatchEl){
-    const isActive = (S.presetOn===name);
-    // wyłącz, jeśli był aktywny
-    if(isActive){
-      S.presetOn = null;
-      swatchEl.classList.remove('AKTYWNY');
-      // powrót do palety użytkownika
-      updateSelectedColors();
-      immediateScreenPreview(true);
-      return;
-    }
-    // aktywuj preset
-    clearPresetFlags();
-    S.presetOn = name;
-    swatchEl.classList.add('AKTYWNY');
-
-    S.screenColors = colors.slice();
-    S.screenMode   = mode || 'strobe';
-    S.screenSpeed  = speed || 160;
-    SCREEN_SPEED.value = String(S.screenSpeed);
-
-    setActiveBtn([SCREEN_SOLID,SCREEN_SOS,SCREEN_STROBE],
-      S.screenMode==='solid' ? SCREEN_SOLID :
-      S.screenMode==='sos'   ? SCREEN_SOS   : SCREEN_STROBE);
-
-    startScreenFull();
-  }
-
-  function clearPresetFlags(){
-    S.retroOn=false; S.mixOn=false; S.presetOn=null;
-    RETRO_SWATCH && RETRO_SWATCH.classList.remove('AKTYWNY');
-    MIX_SWATCH && MIX_SWATCH.classList.remove('AKTYWNY');
-    POLICJA_SWATCH && POLICJA_SWATCH.classList.remove('AKTYWNY');
-    POGOTOWIE_SWATCH && POGOTOWIE_SWATCH.classList.remove('AKTYWNY');
-    STRAZ_SWATCH && STRAZ_SWATCH.classList.remove('AKTYWNY');
-    MAGENTA_SWATCH && MAGENTA_SWATCH.classList.remove('AKTYWNY');
-    BLACK_SWATCH && BLACK_SWATCH.classList.remove('AKTYWNY');
-  }
-
   function getActiveColors(){
-    if(S.presetOn==='retrowave'){ return getRetrowavePalette(); }
-    if(S.presetOn) return S.screenColors.slice();
-    if(S.retroOn){ return getRetrowavePalette(); }
     if(S.mixOn){
-      let arr = generateHueWheel(24);
-      if(!arr.map(x=>x.toUpperCase()).includes('#FF00FF')) arr.push('#FF00FF');
-      return arr;
+      return generateHueWheel(24);
     }
-    return (S.screenColors.length>0? S.screenColors.slice(): ['#FFFFFF']);
+    const list = [...S.screenColors];
+    return list.length? list : ['#FFFFFF'];
   }
 
-  // Neonowa paleta retrowave
-  function getRetrowavePalette(){
-    return ['#ff00ff','#b000ff','#5d00ff','#00eaff','#00ffd5','#ff0080'];
-  }
-
-  /* ===== Narzędzia ===== */
-  const toInt=(v,f)=>{ v=parseInt(v,10); return isNaN(v)?f:v; };
-  function setActiveBtn(group, active){
-    group.forEach(b=>b.classList.toggle('TRYB_AKTYWNY', b===active));
-  }
   function updateSelectedColors(){
     S.screenColors = [...KOLORY_LISTA.querySelectorAll('.KOLOR.AKTYWNY')]
       .filter(k=>k.dataset.kolor)
       .map(k=>k.dataset.kolor.toUpperCase());
     if(S.screenColors.length===0) S.screenColors=['#FFFFFF'];
   }
+
   function immediateScreenPreview(forceRestart){
     if(!S.screenOn) return;
-    if(S.screenMode==='solid' && !S.mixOn && !S.retroOn && !S.presetOn && !forceRestart){
+    if(S.screenMode==='solid' && !S.mixOn && !forceRestart){
       SCREEN_OVERLAY.style.background = (S.screenColors[0]||'#FFFFFF');
     }else{
       startScreenFull();
     }
+  }
+
+  /* ===== Utils ===== */
+  const toInt=(v,f)=>{ v=parseInt(v,10); return isNaN(v)?f:v; };
+  function setActiveBtn(group, active){
+    group.forEach(b=>b.classList.toggle('TRYB_AKTYWNY', b===active));
   }
   function generateHueWheel(n=24){
     const out=[];
@@ -416,6 +333,4 @@
     }
     return out;
   }
-
-  document.addEventListener('DOMContentLoaded', init);
 })();
