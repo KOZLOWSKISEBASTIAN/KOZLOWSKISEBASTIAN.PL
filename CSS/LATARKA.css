@@ -1,3 +1,4 @@
+/* ===================== LATARKA.css (pełny) ===================== */
 /* ukrywanie */
 .UKRYTY{display:none!important}
 
@@ -10,14 +11,14 @@
 #BTN_PANEL_TOGGLE{ justify-self:center; align-self:center; min-width:220px; }
 .ZWINIETY .STEROWANIE_TOP{ margin-bottom:4px; }
 
-/* Zakładki */
+/* Zakładki LATARKA / EKRAN */
 .STEROWANIE_TABS{
   display:grid; grid-template-columns:1fr 1fr;
   gap: var(--ODSTEP,7px);
   margin-bottom: var(--ODSTEP,7px);
 }
 
-/* Desktop: tylko ekran (≥1000px) */
+/* Desktop: tylko EKRAN (≥1000px) */
 @media (min-width: 999px){
   .STEROWANIE_TABS{ display:none !important; }
   #SEKCJA_TORCH{ display:none !important; }
@@ -31,10 +32,10 @@
 }
 .TRYMY3 .PRZYCISK{ width:100% }
 
-/* odstępy */
+/* odstępy sekcyjne */
 .BLOK{ margin-top: var(--ODSTEP,7px); }
 
-/* Paleta + sekcja HEX w jednej linii */
+/* Paleta + sekcja HEX w jednej linii (na mobile pod sobą) */
 .BLOK-PALETA{
   display:grid;
   grid-template-columns: 1fr minmax(320px, 480px);
@@ -72,7 +73,7 @@
   border-radius:8px;
 }
 
-/* Pole HEX: większa czcionka + wysokość/zaokrąglenia jak przyciski */
+/* Pole HEX: wygląd jak w LICZYDŁO */
 .POLE_HEX{
   box-sizing: border-box;
   width:100%;
@@ -90,60 +91,69 @@
   box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
 }
 
-/* ===================== PALETA KOLORÓW – HEKSAGONY (obrót 90°) ===================== */
+/* ===================== PALETA KOLORÓW – HEKSAGONY (na wierzchołek, bez artefaktów) ===================== */
 :root{
-  --K-SIZE: 42px;          /* rozmiar heksagonu */
-  --K-BORDER: 4px;         /* grubość ramki aktywnej */
+  --K-SIZE:   42px;      /* rozmiar heksagonu */
+  --BORDER:    0px;      /* grubość ramki (włącza .AKTYWNY) */
+  --OBWODKA: transparent;/* kolor ramki (per motyw w .AKTYWNY) */
+  --K-GAP-X:  10px;      /* odstęp poziomy między heksagonami */
+  --K-OVERLAP: 6px;      /* pionowe "zachodzenie" rzędów – usuwa trójkąty */
 }
 
-.KOLORY_LISTA{ display:flex; flex-wrap:wrap; gap:10px }
+/* używamy flex-wrap, poziome odstępy normalne, pionowe – celowy overlap */
+.KOLORY_LISTA{
+  display:flex; flex-wrap:wrap;
+  column-gap: var(--K-GAP-X);
+  row-gap: 0;                /* brak pionowego gapu, kontrolujemy marginesem */
+}
 
-/* .KOLOR zostaje – spójne z istniejącym HTML/JS */
+/* .KOLOR = RAMKA (outer), ::after = WYPEŁNIENIE (inner) */
 .KOLOR{
+  position:relative;
   width: var(--K-SIZE);
   height: var(--K-SIZE);
-  background: var(--c, #fff);
-  /* heksagon smukły i obrócony o 90° */
+  background: var(--OBWODKA); /* RAMKA */
   clip-path: polygon(
-    20% 4%, 80% 4%,
-    100% 50%,
-    80% 96%, 20% 96%,
-    0% 50%
+    50% 0%,
+    93% 25%,
+    93% 75%,
+    50% 100%,
+    7% 75%,
+    7% 25%
   );
-  transform: rotate(90deg);
   cursor:pointer;
-  transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
-  /* kontrastowa obwódka bazowa */
-  box-shadow: 0 0 0 2px rgba(0,0,0,.3);
-}
-.KOLOR:hover{ transform: scale(1.08) rotate(90deg); }
+  transition: filter .12s ease, transform .12s ease, background-color .12s ease;
+  box-shadow:none; outline:none;
 
-/* Aktywny heksagon → RAMKA:
-   - jasny motyw: czarna,
-   - ciemny motyw: jasnoszara (#B0B0B0) */
-.KOLOR.AKTYWNY{
-  filter: brightness(88%);
-  box-shadow:
-    0 0 0 var(--K-BORDER) var(--TEKST-PRZYCISK),
-    0 0 6px 1px color-mix(in srgb, var(--TEKST-PRZYCISK), transparent 60%);
-}
-:root[WYBOR_MOTYW="JASNY"] .KOLOR.AKTYWNY{
-  box-shadow:
-    0 0 0 var(--K-BORDER) #000,
-    0 0 6px 1px rgba(0,0,0,.5);
-}
-:root[WYBOR_MOTYW="CIEMNY"] .KOLOR.AKTYWNY{
-  box-shadow:
-    0 0 0 var(--K-BORDER) #B0B0B0,
-    0 0 8px 2px rgba(255,255,255,.25);
+  /* klucz: pionowy overlap, usuwa "trójkąty" nad/pod */
+  margin-top: calc(var(--K-OVERLAP) * -1);
+  margin-bottom: calc(var(--K-OVERLAP) * -1);
 }
 
-/* „MIESZANY” – tęcza */
-.KOLOR_MIX{
+.KOLOR::after{
+  content:"";
+  position:absolute; inset: var(--BORDER);  /* "zjada" środek → ramka */
+  background: var(--c, #fff);
+  clip-path: inherit;
+}
+
+.KOLOR:hover{ transform: scale(1.06); }
+
+/* aktywacja ramki (kilka px) */
+.KOLOR.AKTYWNY{ --BORDER: 4px; }
+
+/* motyw jasny → ramka czarna */
+:root[WYBOR_MOTYW="JASNY"] .KOLOR.AKTYWNY{ --OBWODKA: #000; }
+
+/* motyw ciemny → ramka jasnoszara */
+:root[WYBOR_MOTYW="CIEMNY"] .KOLOR.AKTYWNY{ --OBWODKA: #B0B0B0; }
+
+/* MIESZANY – tęcza wewnątrz (także bez prześwitów) */
+.KOLOR.KOLOR_MIX::after{
   background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red) !important;
 }
 
-/* ===================== SUWAK z HEXAGONEM na środku ===================== */
+/* ===================== SUWAK z HEXAGONEM na środku (obrócony kciuk) ===================== */
 :root{
   --SUWAK-H: 56px;   /* wysokość toru */
   --KCIUK:   54px;   /* wymiar heksagonu */
@@ -185,7 +195,7 @@
   width:var(--KCIUK); height:var(--KCIUK);
   background: var(--AKCENT-TEKST);
   clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
-  transform: rotate(90deg);
+  transform: rotate(90deg);           /* <<< obrót kciuka o 90° */
   border:0;
   margin-top: calc(((var(--SUWAK-H) - var(--KCIUK)) / 2) * -1 - var(--ALIGN-FIX));
   box-shadow: 0 0 0 2px rgba(0,0,0,.25);
@@ -212,12 +222,12 @@
   width:var(--KCIUK); height:var(--KCIUK); border:0;
   background: var(--AKCENT-TEKST);
   clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
-  transform: rotate(90deg);
+  transform: rotate(90deg);           /* <<< obrót kciuka o 90° */
   box-shadow: 0 0 0 2px rgba(0,0,0,.25);
   cursor:pointer;
 }
 
-/* TŁO świecące – POD UI */
+/* ===================== TŁO świecące – POD UI (ekran) ===================== */
 .SCREEN_OVERLAY{
   position:fixed; inset:0; pointer-events:none;
   z-index:0; background:#000; opacity:.96; transition:background 40ms linear;
@@ -230,7 +240,7 @@
 .ZWINIETY .RESZTA_NAGLOWEK{ display:none!important; }
 .ZWINIETY #WSZYSTKO{ display:none!important; }
 
-/* Podświetlenie aktywnego trybu (toggle) */
+/* Podświetlenie aktywnego trybu (toggle STAŁY/SOS/STROBOSKOP) */
 .TRYB_AKTYWNY{
   outline:2px solid var(--AKCENT-TEKST);
   outline-offset: -2px;
