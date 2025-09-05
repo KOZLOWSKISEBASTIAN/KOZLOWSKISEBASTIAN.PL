@@ -1,4 +1,4 @@
-/* LATARKA – heksagony kolorów z ramką po kliknięciu, MIESZANY, HEX + tryby EKRAN/LATARKA */
+/* LATARKA – kierunkowy obrót kciuka suwaka (prawo/lewo) i obrót małych hexów */
 (function(){
   'use strict';
   const $ = id => document.getElementById(id);
@@ -36,13 +36,18 @@
   // Tło
   const SCREEN_OVERLAY = $('SCREEN_OVERLAY');
 
+  // Wiersze z suwakami
+  const TORCH_ROW  = TORCH_SPEED?.closest('.ROW_FULL');
+  const SCREEN_ROW = SCREEN_SPEED?.closest('.ROW_FULL');
+
+  // Poprzednie wartości suwaków (do wykrycia kierunku)
+  const prevVal = new WeakMap();
+
   // Stan
   const S = {
-    // torch
     torchOn:false, torchMode:null, torchSpeed:200,
     stream:null, videoTrack:null, torchIntervalId:null, torchSOSId:null,
 
-    // screen
     screenOn:false, screenMode:null, screenSpeed:200,
     screenColors:['#FFFFFF'], screenIntervalId:null, screenSOSId:null,
     mixOn:false
@@ -50,9 +55,7 @@
 
   const SOS_SEQ = [200,200, 200,200, 200,600, 600,200, 600,200, 600,600, 200,200, 200,200, 200,1200];
 
-  /* ===== INIT ===== */
   document.addEventListener('DOMContentLoaded', () => {
-    // POKAŻ/UKRYJ
     BTN_PANEL_TOGGLE.textContent = 'UKRYJ';
     BTN_PANEL_TOGGLE.addEventListener('click', ()=>{
       const zwin = !PANEL_ROOT.classList.contains('ZWINIETY');
@@ -60,39 +63,34 @@
       BTN_PANEL_TOGGLE.textContent = zwin ? 'POKAŻ' : 'UKRYJ';
     });
 
-    // Zakładki
     TAB_TORCH .addEventListener('click', ()=>aktywujZakladke('torch'));
     TAB_SCREEN.addEventListener('click', ()=>aktywujZakladke('screen'));
     if (window.matchMedia('(min-width: 999px)').matches){ aktywujZakladke('screen'); } else { aktywujZakladke('screen'); }
 
-    // TORCH tryby (toggle)
+    /* ===== Suwaki: inicjalny prev i obrót kierunkowy ===== */
+    initSlider(TORCH_SPEED);
+    initSlider(SCREEN_SPEED);
+
+    // Tryby TORCH
     TORCH_SOLID .addEventListener('click', ()=>toggleTorchMode('solid', TORCH_SOLID));
     TORCH_SOS   .addEventListener('click', ()=>toggleTorchMode('sos',   TORCH_SOS));
     TORCH_STROBE.addEventListener('click', ()=>toggleTorchMode('strobe',TORCH_STROBE));
-    TORCH_SPEED.addEventListener('input', ()=>{
-      S.torchSpeed = toInt(TORCH_SPEED.value,200);
-      if(S.torchOn && S.torchMode==='strobe') runTorchStrobe();
-    });
 
-    // EKRAN tryby (toggle)
+    // Tryby EKRAN
     SCREEN_SOLID .addEventListener('click', ()=>toggleScreenMode('solid', SCREEN_SOLID));
     SCREEN_SOS   .addEventListener('click', ()=>toggleScreenMode('sos',   SCREEN_SOS));
     SCREEN_STROBE.addEventListener('click', ()=>toggleScreenMode('strobe',SCREEN_STROBE));
-    SCREEN_SPEED.addEventListener('input', ()=>{
-      S.screenSpeed = toInt(SCREEN_SPEED.value,200);
-      if(S.screenOn && S.screenMode==='strobe') startScreen(); // restart interwału
-    });
 
-    // KOLORY – kliknięcia (wiele aktywnych dozwolone)
+    // Paleta kolorów – obrót małego hexa jak w motywie
     KOLORY_LISTA.addEventListener('click',(e)=>{
       const btn = e.target.closest('.KOLOR'); if(!btn) return;
+      spinHex(btn);
 
       if(btn===MIX_SWATCH){
         S.mixOn = !S.mixOn;
         btn.classList.toggle('AKTYWNY', S.mixOn);
         if(S.mixOn){
           S.screenColors = generateHueWheel(24);
-          // zdejmij wizualne zaznaczenie z innych (opcjonalnie)
           [...KOLORY_LISTA.querySelectorAll('.KOLOR')].forEach(k=>{ if(k!==MIX_SWATCH) k.classList.remove('AKTYWNY'); });
         }else{
           updateSelectedColors();
@@ -102,14 +100,13 @@
         return;
       }
 
-      // zwykły kolor – toggle wielu
       btn.classList.toggle('AKTYWNY');
       S.mixOn=false; MIX_SWATCH.classList.remove('AKTYWNY');
       updateSelectedColors();
       immediateScreenPreview(false);
     });
 
-    // HEX input: auto ‘#’, filtr znaków, UPPERCASE
+    // HEX input: auto '#'
     if(!HEX_INPUT.value) HEX_INPUT.value = '#';
     HEX_INPUT.addEventListener('input', ()=>{
       let v = HEX_INPUT.value.toUpperCase();
@@ -123,6 +120,7 @@
       if(!/^#([0-9A-F]{3}){1,2}$/.test(v)){ alert('Podaj HEX (#RRGGBB lub #RGB)'); return; }
       const exists = [...KOLORY_LISTA.querySelectorAll('.KOLOR')].find(x=>x.dataset.kolor && x.dataset.kolor.toUpperCase()===v);
       if(exists){
+        spinHex(exists);
         exists.classList.toggle('AKTYWNY', true);
         S.mixOn=false; MIX_SWATCH.classList.remove('AKTYWNY');
         updateSelectedColors(); immediateScreenPreview(false);
@@ -131,12 +129,53 @@
       const b = document.createElement('button');
       b.className='KOLOR AKTYWNY'; b.dataset.kolor=v; b.style.setProperty('--c',v); b.title=v;
       KOLORY_LISTA.appendChild(b);
+      spinHex(b);
       S.mixOn=false; MIX_SWATCH.classList.remove('AKTYWNY');
       updateSelectedColors(); immediateScreenPreview(false);
     });
 
+    // Start: suwaki ukryte
+    showRow(TORCH_ROW, false);
+    showRow(SCREEN_ROW, false);
+
     updateSelectedColors();
   });
+
+  /* ===== Suwak: inicjalizacja i kierunek obrotu ===== */
+  function initSlider(input){
+    if(!input) return;
+    prevVal.set(input, Number(input.value)||0);
+
+    // animacja na start dotyku/kliknięcia w odpowiednim kierunku (na podstawie delta do środka nie ma sensu, więc tylko na input poniżej)
+    ['pointerdown','mousedown','touchstart'].forEach(ev=>{
+      input.addEventListener(ev, ()=>{ /* bez animacji – poczekamy na realny ruch */ });
+    });
+
+    input.addEventListener('input', ()=>{
+      const last = prevVal.get(input) ?? 0;
+      const now  = Number(input.value)||0;
+      const dir  = (now>last) ? 'P' : (now<last) ? 'L' : null; // P = prawo (CW), L = lewo (CCW)
+
+      if(dir){
+        input.classList.remove('OBROT_P','OBROT_L');
+        // restart animacji
+        void input.offsetWidth;
+        input.classList.add(dir==='P' ? 'OBROT_P' : 'OBROT_L');
+        // sprzątanie po ~ połowie sekundy
+        setTimeout(()=>input.classList.remove('OBROT_P','OBROT_L'), 400);
+      }
+      prevVal.set(input, now);
+
+      // dodatkowo – jeśli to suwak od stroboskopu, aktualizujemy prędkość
+      if(input===TORCH_SPEED){
+        S.torchSpeed = toInt(TORCH_SPEED.value,200);
+        if(S.torchOn && S.torchMode==='strobe') runTorchStrobe();
+      }else if(input===SCREEN_SPEED){
+        S.screenSpeed = toInt(SCREEN_SPEED.value,200);
+        if(S.screenOn && S.screenMode==='strobe') startScreen();
+      }
+    });
+  }
 
   /* ===== Zakładki ===== */
   function aktywujZakladke(which){
@@ -147,6 +186,7 @@
       SEKCJA_SCREEN.classList.remove('UKRYTY');
       SEKCJA_TORCH.classList.add('UKRYTY');
     }
+    updateSlidersVisibility();
   }
 
   /* ===== TORCH (aparat) ===== */
@@ -155,11 +195,13 @@
     if(sameMode){
       await stopTorch();
       setActiveBtn([TORCH_SOLID,TORCH_SOS,TORCH_STROBE], null);
+      updateSlidersVisibility();
       return;
     }
     S.torchMode = mode;
     await startTorch();
     setActiveBtn([TORCH_SOLID,TORCH_SOS,TORCH_STROBE], btn);
+    updateSlidersVisibility();
   }
 
   async function startTorch(){
@@ -226,11 +268,13 @@
     if(sameMode){
       stopScreenFull();
       setActiveBtn([SCREEN_SOLID,SCREEN_SOS,SCREEN_STROBE], null);
+      updateSlidersVisibility();
       return;
     }
     S.screenMode = mode;
     startScreenFull();
     setActiveBtn([SCREEN_SOLID,SCREEN_SOS,SCREEN_STROBE], btn);
+    updateSlidersVisibility();
   }
 
   function startScreenFull(){
@@ -268,7 +312,6 @@
     if(S.screenMode==='solid'){
       setBg(colors[0]); return;
     }
-    // STROBE
     let idx=-1;
     S.screenIntervalId = setInterval(()=>{
       idx = (idx+1) % (colors.length===1?2:colors.length);
@@ -282,24 +325,9 @@
     }, S.screenSpeed);
   }
 
-  function runScreenSOS(){
-    if(S.screenSOSId){ clearTimeout(S.screenSOSId); }
-    const base = getActiveColors()[0] || '#FFFFFF';
-    let i=0;
-    const step=()=>{
-      if(!S.screenOn || S.screenMode!=='sos') return;
-      const on = (i%2===0);
-      SCREEN_OVERLAY.style.background = on ? base : '#000000';
-      const wait = SOS_SEQ[i++ % SOS_SEQ.length];
-      S.screenSOSId = setTimeout(step, wait);
-    };
-    step();
-  }
-
+  /* ===== Pomocnicze ===== */
   function getActiveColors(){
-    if(S.mixOn){
-      return generateHueWheel(24);
-    }
+    if(S.mixOn){ return generateHueWheel(24); }
     const list = [...S.screenColors];
     return list.length? list : ['#FFFFFF'];
   }
@@ -320,17 +348,27 @@
     }
   }
 
+  /* ===== Suwaki – widoczne tylko dla STROBOSKOP + kierunkowa animacja ===== */
+  function updateSlidersVisibility(){
+    const showTorch  = (S.torchOn  && S.torchMode  === 'strobe');
+    const showScreen = (S.screenOn && S.screenMode === 'strobe');
+    showRow(TORCH_ROW,  showTorch);
+    showRow(SCREEN_ROW, showScreen);
+  }
+  function showRow(rowEl, show){ if(rowEl) rowEl.classList.toggle('UKRYTY', !show); }
+
+  /* ===== Animacje ===== */
+  function spinHex(el){
+    el.classList.remove('OBROT');
+    void el.offsetWidth;
+    el.classList.add('OBROT');
+    setTimeout(()=>el.classList.remove('OBROT'), 420);
+  }
+
   /* ===== Utils ===== */
   const toInt=(v,f)=>{ v=parseInt(v,10); return isNaN(v)?f:v; };
-  function setActiveBtn(group, active){
-    group.forEach(b=>b.classList.toggle('TRYB_AKTYWNY', b===active));
-  }
+  function setActiveBtn(group, active){ group.forEach(b=>b.classList.toggle('TRYB_AKTYWNY', b===active)); }
   function generateHueWheel(n=24){
-    const out=[];
-    for(let i=0;i<n;i++){
-      const h = Math.round((360/n)*i);
-      out.push(`hsl(${h} 100% 50%)`);
-    }
-    return out;
+    const out=[]; for(let i=0;i<n;i++){ const h=Math.round((360/n)*i); out.push(`hsl(${h} 100% 50%)`); } return out;
   }
 })();
