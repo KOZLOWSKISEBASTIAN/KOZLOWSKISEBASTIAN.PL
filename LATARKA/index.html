@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="pl">
 <head>
@@ -7,7 +6,6 @@
   <title>LATARKA</title>
   <meta name="color-scheme" content="dark light" />
 
-  <!-- STYLE (lokalne, współdzielone) -->
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/HEXAGON.css" />
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KOLORY.css" />
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css" />
@@ -17,7 +15,6 @@
 </head>
 <body>
 
-  <!-- TŁO ŚWIECĄCE (pod całym UI) -->
   <div id="SCREEN_OVERLAY" class="SCREEN_OVERLAY UKRYTY" aria-hidden="true"></div>
 
   <div class="RAMKA">
@@ -28,24 +25,19 @@
           <a class="PRZYCISK_PRZYBORNIK_POWROT" data-klucz="PRZYBORNIK">PRZYBORNIK</a>
         </div>
 
-        <!-- 1) POKAŻ/UKRYJ -->
         <section class="SIATKA STEROWANIE_TOP">
           <button id="BTN_PANEL_TOGGLE" class="PRZYCISK">UKRYJ</button>
         </section>
 
-        <!-- wszystko chowane przy UKRYJ -->
         <div id="WSZYSTKO">
 
-          <!-- 2) Zakładki LATARKA / EKRAN (ukryte na desktopie) -->
           <section class="SIATKA STEROWANIE_TABS">
             <button id="TAB_TORCH"  class="PRZYCISK">LATARKA</button>
             <button id="TAB_SCREEN" class="PRZYCISK">EKRAN</button>
           </section>
 
-          <!-- 3) Zawartość zakładek -->
           <section id="LATARKA_PANEL" class="LATARKA_PANEL">
 
-            <!-- LATARKA (APARAT) — desktop ukryty w CSS -->
             <div id="SEKCJA_TORCH" class="PRZYBORNIK_SEKCJA">
               <div class="TRYMY3">
                 <button id="TORCH_SOLID"  class="PRZYCISK">STAŁY</button>
@@ -107,7 +99,6 @@
     <div class="TROJKAT TROJKAT_CIEMNY" title="CIEMNY MOTYW"></div>
   </div>
 
-  <!-- SKRYPTY (lokalne) -->
   <script src="https://kozlowskisebastian.pl/JS/HEXAGON.js"></script>
   <script src="https://kozlowskisebastian.pl/JS/MOTYWAUTO.js"></script>
   <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
