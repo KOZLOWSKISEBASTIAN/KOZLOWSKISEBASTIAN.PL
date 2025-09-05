@@ -1,171 +1,178 @@
-/* ===================== LATARKA.css (pełny) ===================== */
-/* ukrywanie */
-.UKRYTY{display:none!important}
+/* ===================== LATARKA.css ===================== */
 
-/* POKAŻ/UKRYJ – mniejsza przerwa; w stanie zwinietym minimalna */
-.STEROWANIE_TOP{
+/* ukrywanie */
+.UKRYTY { display:none!important }
+
+/* POKAŻ/UKRYJ */
+.STEROWANIE_TOP {
   display:grid;
   grid-template-columns:1fr;
   margin-bottom: calc(var(--ODSTEP,7px) * 0.45);
 }
-#BTN_PANEL_TOGGLE{ justify-self:center; align-self:center; min-width:220px; }
-.ZWINIETY .STEROWANIE_TOP{ margin-bottom:4px; }
+#BTN_PANEL_TOGGLE { justify-self:center; align-self:center; min-width:220px; }
+.ZWINIETY .STEROWANIE_TOP { margin-bottom:4px; }
 
-/* Zakładki LATARKA / EKRAN */
-.STEROWANIE_TABS{
+/* Zakładki LATARKA / EKRAN (desktop: tylko EKRAN) */
+.STEROWANIE_TABS {
   display:grid; grid-template-columns:1fr 1fr;
   gap: var(--ODSTEP,7px);
   margin-bottom: var(--ODSTEP,7px);
 }
-
-/* Desktop: tylko EKRAN (≥1000px) */
-@media (min-width: 999px){
-  .STEROWANIE_TABS{ display:none !important; }
-  #SEKCJA_TORCH{ display:none !important; }
+@media (min-width:999px) {
+  .STEROWANIE_TABS { display:none!important }
+  #SEKCJA_TORCH { display:none!important }
 }
 
 /* Tryby – 3 równe kolumny */
-.TRYMY3{
+.TRYMY3 {
   display:grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns:repeat(3,1fr);
   gap: var(--ODSTEP,7px);
 }
-.TRYMY3 .PRZYCISK{ width:100% }
+.TRYMY3 .PRZYCISK { width:100% }
 
 /* odstępy sekcyjne */
-.BLOK{ margin-top: var(--ODSTEP,7px); }
+.BLOK { margin-top: var(--ODSTEP,7px) }
 
-/* Paleta + sekcja HEX w jednej linii (na mobile pod sobą) */
-.BLOK-PALETA{
+/* Paleta + HEX w jednej linii */
+.BLOK-PALETA {
   display:grid;
-  grid-template-columns: 1fr minmax(320px, 480px);
+  grid-template-columns:1fr minmax(320px,480px);
   gap: var(--ODSTEP,7px);
   align-items:center;
 }
-@media (max-width:999px){
-  .BLOK-PALETA{ grid-template-columns: 1fr; }
-}
+@media (max-width:999px) { .BLOK-PALETA { grid-template-columns:1fr } }
 
-/* Wiersz: HEX + DODAJ (wysokości jak przyciski) */
-.ROW_HEX{
+/* HEX + DODAJ */
+.ROW_HEX {
   display:grid;
-  grid-template-columns: minmax(120px, 200px) auto;
+  grid-template-columns:minmax(120px,200px) auto;
   gap: var(--ODSTEP,7px);
   align-items:stretch;
 }
-@media (max-width:999px){
-  .ROW_HEX{ grid-template-columns: 1fr; }
-}
+@media (max-width:999px) { .ROW_HEX { grid-template-columns:1fr } }
 
-/* pełnoszerokościowy suwak na dole sekcji */
-.ROW_FULL{ margin-top: var(--ODSTEP,7px); }
-.ROW_FULL .SUWAK{ width:100%; }
+/* pełnoszerokościowy suwak */
+.ROW_FULL { margin-top: var(--ODSTEP,7px) }
+.ROW_FULL .SUWAK { width:100% }
 
-/* Przyciski: padding i wyrównanie jak w PRZYBORNIK */
+/* Przyciski (jak w PRZYBORNIK) */
 .TRYMY3 .PRZYCISK,
 .STEROWANIE_TABS .PRZYCISK,
-#HEX_ADD.PRZYCISK{
+#HEX_ADD.PRZYCISK {
   display:flex; align-items:center; justify-content:flex-start;
   text-align:left;
-  padding-left: var(--padL, 16px);
-  padding-right: 14px;
+  padding-left:16px; padding-right:14px;
   min-height:56px;
   border-radius:8px;
 }
 
-/* Pole HEX: wygląd jak w LICZYDŁO */
-.POLE_HEX{
-  box-sizing: border-box;
-  width:100%;
-  min-height:56px;
+/* Pole HEX (jak w LICZYDŁO) */
+.POLE_HEX {
+  box-sizing:border-box;
+  width:100%; min-height:56px;
   border-radius:8px;
-  background: var(--TLO-PRZYCISK);
+  background:var(--TLO-PRZYCISK);
   border:0;
-  color: var(--AKCENT-TEKST);
-  padding: 0 14px;
-  font: inherit;
-  font-size: 1.125rem;
-  letter-spacing:.55px;
-  text-transform: uppercase;
+  color:var(--AKCENT-TEKST);
+  padding:0 14px;
+  font:inherit; font-size:1.125rem;
+  letter-spacing:.55px; text-transform:uppercase;
   display:flex; align-items:center; justify-content:flex-start;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
 }
 
-/* ===================== PALETA KOLORÓW – HEKSAGONY (na wierzchołek, bez artefaktów) ===================== */
+/* ===================== HEKSAGONY – MAŁE (PALETA) ===================== */
 :root{
-  --K-SIZE:   42px;      /* rozmiar heksagonu */
-  --BORDER:    0px;      /* grubość ramki (włącza .AKTYWNY) */
-  --OBWODKA: transparent;/* kolor ramki (per motyw w .AKTYWNY) */
-  --K-GAP-X:  10px;      /* odstęp poziomy między heksagonami */
-  --K-OVERLAP: 6px;      /* pionowe "zachodzenie" rzędów – usuwa trójkąty */
+  --K-SIZE:42px;             /* rozmiar heksa */
+  --BORDER:0px;              /* grubość ringu – TYLKO dla .AKTYWNY */
+  --K-GAP:10px;
+  --HEX-RAMKA-JASNY:#000;    /* ring aktywnego – jasny motyw */
+  --HEX-RAMKA-CIEMNY:#B0B0B0;/* ring aktywnego – ciemny motyw */
+
+  /* suwaki */
+  --SUWAK-H:56px;
+  --KCIUK:54px;
+  --MID:2px;
+  --ALIGN-FIX:-2px;
 }
 
-/* używamy flex-wrap, poziome odstępy normalne, pionowe – celowy overlap */
-.KOLORY_LISTA{
-  display:flex; flex-wrap:wrap;
-  column-gap: var(--K-GAP-X);
-  row-gap: 0;                /* brak pionowego gapu, kontrolujemy marginesem */
+/* animacja obrotu – jak hex do zmiany motywu */
+@keyframes HEX_ROTATE {
+  from { transform: rotate(90deg); }
+  to   { transform: rotate(450deg); } /* +360°, finalnie też 90° */
 }
 
-/* .KOLOR = RAMKA (outer), ::after = WYPEŁNIENIE (inner) */
+.KOLORY_LISTA { display:flex; flex-wrap:wrap; gap:var(--K-GAP); }
+
+/* RESET domyślnych ramek/outline */
+.KOLORY_LISTA .KOLOR{
+  -webkit-appearance:none; appearance:none;
+  background:transparent; border:none; outline:none; box-shadow:none;
+  padding:0; margin:0; display:inline-block;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* kształt, stały obrót 90° */
 .KOLOR{
+  --hex: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
+  --RING-SCALE: calc(1 - ((var(--BORDER) * 2) / var(--K-SIZE)));
   position:relative;
-  width: var(--K-SIZE);
-  height: var(--K-SIZE);
-  background: var(--OBWODKA); /* RAMKA */
-  clip-path: polygon(
-    50% 0%,
-    93% 25%,
-    93% 75%,
-    50% 100%,
-    7% 75%,
-    7% 25%
-  );
+  width:var(--K-SIZE); height:var(--K-SIZE);
+  clip-path:var(--hex); -webkit-clip-path:var(--hex);
   cursor:pointer;
-  transition: filter .12s ease, transform .12s ease, background-color .12s ease;
-  box-shadow:none; outline:none;
-
-  /* klucz: pionowy overlap, usuwa "trójkąty" nad/pod */
-  margin-top: calc(var(--K-OVERLAP) * -1);
-  margin-bottom: calc(var(--K-OVERLAP) * -1);
+  transform: rotate(90deg);
+  transition: transform .15s ease;
 }
 
+/* klik = pełny obrót (jak hex motywu) */
+.KOLOR.OBROT { animation: HEX_ROTATE 380ms ease; }
+
+/* ring – domyślnie niewidoczny */
+.KOLOR::before{
+  content:""; position:absolute; inset:0;
+  clip-path:inherit; -webkit-clip-path:inherit;
+  background: transparent;
+  z-index:0;
+}
+/* ring tylko dla .AKTYWNY, kolor wg motywu */
+:root[WYBOR_MOTYW="JASNY"] .KOLOR.AKTYWNY::before { background: var(--HEX-RAMKA-JASNY); }
+:root[WYBOR_MOTYW="CIEMNY"] .KOLOR.AKTYWNY::before { background: var(--HEX-RAMKA-CIEMNY); }
+
+/* wypełnienie – pomniejszony hex (tworzy ring) */
 .KOLOR::after{
   content:"";
-  position:absolute; inset: var(--BORDER);  /* "zjada" środek → ramka */
-  background: var(--c, #fff);
-  clip-path: inherit;
+  position:absolute; left:50%; top:50%; width:100%; height:100%;
+  transform: translate(-50%,-50%) scale(var(--RING-SCALE));
+  transform-origin:center center;
+  clip-path:inherit; -webkit-clip-path:inherit;
+  background:var(--c,#fff);
+  z-index:1;
 }
 
-.KOLOR:hover{ transform: scale(1.06); }
+/* grubość ringu tylko gdy aktywny */
+.KOLOR.AKTYWNY { --BORDER:4px }
 
-/* aktywacja ramki (kilka px) */
-.KOLOR.AKTYWNY{ --BORDER: 4px; }
-
-/* motyw jasny → ramka czarna */
-:root[WYBOR_MOTYW="JASNY"] .KOLOR.AKTYWNY{ --OBWODKA: #000; }
-
-/* motyw ciemny → ramka jasnoszara */
-:root[WYBOR_MOTYW="CIEMNY"] .KOLOR.AKTYWNY{ --OBWODKA: #B0B0B0; }
-
-/* MIESZANY – tęcza wewnątrz (także bez prześwitów) */
+/* „MIESZANY” */
 .KOLOR.KOLOR_MIX::after{
-  background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red) !important;
+  background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)!important;
 }
 
-/* ===================== SUWAK z HEXAGONEM na środku (obrócony kciuk) ===================== */
-:root{
-  --SUWAK-H: 56px;   /* wysokość toru */
-  --KCIUK:   54px;   /* wymiar heksagonu */
-  --MID:      2px;   /* grubość linii środka */
-  --ALIGN-FIX: -2px; /* delikatna korekta pionu */
+/* ===================== SUWAK – HEX KCIUK Z OBRÓTEM W KIERUNKU RUCHU ===================== */
+/* Rejestrowana zmienna CSS (animowalna) – kąt obrotu */
+@property --spin {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 0deg;
 }
-.SUWAK{
-  width:100%;
-  height:var(--SUWAK-H);
+
+/* input range – będziemy animować --spin na ELEMENCIE input */
+.SUWAK_HEX { --spin: 0deg; }
+
+.SUWAK {
+  width:100%; height:var(--SUWAK-H);
   -webkit-appearance:none; appearance:none;
-  outline:none;
-  border-radius:8px;
+  outline:none; border-radius:8px;
   background:
     linear-gradient(to bottom,
       transparent calc(50% - var(--MID)),
@@ -174,74 +181,54 @@
       transparent calc(50% + var(--MID))
     ),
     var(--TLO-PRZYCISK);
-  box-shadow:
-    inset 0 0 0 2px rgba(0,0,0,.20),
-    0 1px 0 rgba(255,255,255,.06);
-}
-.SUWAK:focus{
-  box-shadow:
-    inset 0 0 0 2px rgba(255,255,255,.18),
-    0 1px 0 rgba(255,255,255,.06);
+  box-shadow:inset 0 0 0 2px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.06);
 }
 
-/* WebKit (Chrome/Edge/Safari) */
-.SUWAK_HEX::-webkit-slider-runnable-track{
-  height:var(--SUWAK-H);
-  background:transparent;
-  border-radius:8px;
+/* tor */
+.SUWAK_HEX::-webkit-slider-runnable-track{ height:var(--SUWAK-H); background:transparent; border-radius:8px; }
+.SUWAK_HEX::-moz-range-track{
+  height:var(--SUWAK-H); border-radius:8px;
+  background:
+    linear-gradient(to bottom,
+      transparent calc(50% - var(--MID)),
+      rgba(255,255,255,.18) calc(50% - var(--MID)),
+      rgba(255,255,255,.18) calc(50% + var(--MID)),
+      transparent calc(50% + var(--MID))
+    ),
+    var(--TLO-PRZYCISK);
+  box-shadow:inset 0 0 0 2px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.06);
 }
+
+/* kciuk – obrót = 90deg + animowany --spin (dziedziczy z inputa!) */
 .SUWAK_HEX::-webkit-slider-thumb{
   -webkit-appearance:none; appearance:none;
   width:var(--KCIUK); height:var(--KCIUK);
-  background: var(--AKCENT-TEKST);
-  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
-  transform: rotate(90deg);           /* <<< obrót kciuka o 90° */
+  clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
+  transform: rotate(calc(90deg + var(--spin)));
   border:0;
   margin-top: calc(((var(--SUWAK-H) - var(--KCIUK)) / 2) * -1 - var(--ALIGN-FIX));
-  box-shadow: 0 0 0 2px rgba(0,0,0,.25);
+  background: var(--AKCENT-TEKST);
   cursor:pointer;
-}
-
-/* Firefox */
-.SUWAK_HEX::-moz-range-track{
-  height:var(--SUWAK-H);
-  border-radius:8px;
-  background:
-    linear-gradient(to bottom,
-      transparent calc(50% - var(--MID)),
-      rgba(255,255,255,.18) calc(50% - var(--MID)),
-      rgba(255,255,255,.18) calc(50% + var(--MID)),
-      transparent calc(50% + var(--MID))
-    ),
-    var(--TLO-PRZYCISK);
-  box-shadow:
-    inset 0 0 0 2px rgba(0,0,0,.20),
-    0 1px 0 rgba(255,255,255,.06);
 }
 .SUWAK_HEX::-moz-range-thumb{
   width:var(--KCIUK); height:var(--KCIUK); border:0;
+  clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
+  transform: rotate(calc(90deg + var(--spin)));
   background: var(--AKCENT-TEKST);
-  clip-path: polygon(25% 0, 75% 0, 100% 50%, 75% 100%, 25% 100%, 0 50%);
-  transform: rotate(90deg);           /* <<< obrót kciuka o 90° */
-  box-shadow: 0 0 0 2px rgba(0,0,0,.25);
   cursor:pointer;
 }
 
-/* ===================== TŁO świecące – POD UI (ekran) ===================== */
-.SCREEN_OVERLAY{
-  position:fixed; inset:0; pointer-events:none;
-  z-index:0; background:#000; opacity:.96; transition:background 40ms linear;
-}
+/* DWIE animacje zmiennej --spin: zgodnie i przeciwnie do wskazówek */
+@keyframes SPIN_VAR_CW  { from { --spin: 0deg; } to { --spin: 360deg; } }
+@keyframes SPIN_VAR_CCW { from { --spin: 0deg; } to { --spin: -360deg; } }
 
-/* UI nad tłem */
-.RAMKA, .KONTENER, .PANEL, .SIATKA, .PRZYBORNIK_SEKCJA{ position:relative; z-index:1 }
+/* Klasy sterujące (dokładane przez JS po wykryciu kierunku) */
+.SUWAK_HEX.OBROT_P { animation: SPIN_VAR_CW 320ms ease; }
+.SUWAK_HEX.OBROT_L { animation: SPIN_VAR_CCW 320ms ease; }
 
-/* Tryb „ZWINIĘTY”: zostaje tylko POKAŻ (ukryj też PRZYBORNIK) */
-.ZWINIETY .RESZTA_NAGLOWEK{ display:none!important; }
-.ZWINIETY #WSZYSTKO{ display:none!important; }
-
-/* Podświetlenie aktywnego trybu (toggle STAŁY/SOS/STROBOSKOP) */
-.TRYB_AKTYWNY{
-  outline:2px solid var(--AKCENT-TEKST);
-  outline-offset: -2px;
-}
+/* ===================== OVERLAY ===================== */
+.SCREEN_OVERLAY { position:fixed; inset:0; pointer-events:none; z-index:0; background:#000; opacity:.96; transition:background 40ms linear; }
+.RAMKA,.KONTENER,.PANEL,.SIATKA,.PRZYBORNIK_SEKCJA{ position:relative; z-index:1 }
+.ZWINIETY .RESZTA_NAGLOWEK{ display:none!important }
+.ZWINIETY #WSZYSTKO{ display:none!important }
+.TRYB_AKTYWNY{ outline:2px solid var(--AKCENT-TEKST); outline-offset:-2px }
