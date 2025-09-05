@@ -1,9 +1,15 @@
-/* LATARKA – kierunkowy obrót kciuka suwaka (prawo/lewo) i obrót małych hexów */
+/* LATARKA – stabilna wersja
+   - SOS (ekran i latarka)
+   - stroboskop + suwak z obrotem kierunkowym
+   - paleta małych hexów (klik = wybór/odznacz)
+   - MIX (tęcza HSL)
+   - AUTO-DODANIE brakujących kolorów: #FF00FF i #7412FC
+*/
 (function(){
   'use strict';
   const $ = id => document.getElementById(id);
 
-  // Korzeń + sterowanie
+  // Sterowanie
   const PANEL_ROOT = $('PANEL_ROOT');
   const BTN_PANEL_TOGGLE = $('BTN_PANEL_TOGGLE');
 
@@ -11,21 +17,21 @@
   const TAB_TORCH  = $('TAB_TORCH');
   const TAB_SCREEN = $('TAB_SCREEN');
 
-  // Torch (aparat)
+  // Torch
   const TORCH_SOLID   = $('TORCH_SOLID');
   const TORCH_SOS     = $('TORCH_SOS');
   const TORCH_STROBE  = $('TORCH_STROBE');
   const TORCH_SPEED   = $('TORCH_SZYBKOSC');
 
-  // Screen (tło)
+  // Screen
   const SCREEN_SOLID   = $('SCREEN_SOLID');
   const SCREEN_SOS     = $('SCREEN_SOS');
   const SCREEN_STROBE  = $('SCREEN_STROBE');
   const SCREEN_SPEED   = $('SCREEN_SZYBKOSC');
 
-  // Paleta
+  // Paleta / HEX
   const KOLORY_LISTA = $('KOLORY_LISTA');
-  const HEX_INPUT    = $('HEX_INPUT');
+  const HEX_INPUT    = $('HEX_INPUT');     // jeśli w HTML nadal jest (zostawiamy obsługę)
   const HEX_ADD      = $('HEX_ADD');
   const MIX_SWATCH   = $('MIX_SWATCH');
 
@@ -33,14 +39,14 @@
   const SEKCJA_TORCH  = $('SEKCJA_TORCH');
   const SEKCJA_SCREEN = $('SEKCJA_SCREEN');
 
-  // Tło
+  // Overlay
   const SCREEN_OVERLAY = $('SCREEN_OVERLAY');
 
   // Wiersze z suwakami
   const TORCH_ROW  = TORCH_SPEED?.closest('.ROW_FULL');
   const SCREEN_ROW = SCREEN_SPEED?.closest('.ROW_FULL');
 
-  // Poprzednie wartości suwaków (do wykrycia kierunku)
+  // Poprzednie wartości suwaków (do kierunku obrotu)
   const prevVal = new WeakMap();
 
   // Stan
@@ -56,83 +62,100 @@
   const SOS_SEQ = [200,200, 200,200, 200,600, 600,200, 600,200, 600,600, 200,200, 200,200, 200,1200];
 
   document.addEventListener('DOMContentLoaded', () => {
-    BTN_PANEL_TOGGLE.textContent = 'UKRYJ';
-    BTN_PANEL_TOGGLE.addEventListener('click', ()=>{
-      const zwin = !PANEL_ROOT.classList.contains('ZWINIETY');
-      PANEL_ROOT.classList.toggle('ZWINIETY', zwin);
-      BTN_PANEL_TOGGLE.textContent = zwin ? 'POKAŻ' : 'UKRYJ';
-    });
+    // POKAŻ/UKRYJ
+    if (BTN_PANEL_TOGGLE){
+      BTN_PANEL_TOGGLE.textContent = 'UKRYJ';
+      BTN_PANEL_TOGGLE.addEventListener('click', ()=>{
+        const zwin = !PANEL_ROOT.classList.contains('ZWINIETY');
+        PANEL_ROOT.classList.toggle('ZWINIETY', zwin);
+        BTN_PANEL_TOGGLE.textContent = zwin ? 'POKAŻ' : 'UKRYJ';
+      });
+    }
 
-    TAB_TORCH .addEventListener('click', ()=>aktywujZakladke('torch'));
-    TAB_SCREEN.addEventListener('click', ()=>aktywujZakladke('screen'));
-    if (window.matchMedia('(min-width: 999px)').matches){ aktywujZakladke('screen'); } else { aktywujZakladke('screen'); }
+    // Zakładki
+    TAB_TORCH && TAB_TORCH.addEventListener('click', ()=>aktywujZakladke('torch'));
+    TAB_SCREEN&& TAB_SCREEN.addEventListener('click', ()=>aktywujZakladke('screen'));
+    // Desktop i tak używa tylko EKRAN, ale ustawmy bezpiecznie:
+    aktywujZakladke('screen');
 
-    /* ===== Suwaki: inicjalny prev i obrót kierunkowy ===== */
+    // Suwaki – kierunek obrotu
     initSlider(TORCH_SPEED);
     initSlider(SCREEN_SPEED);
 
     // Tryby TORCH
-    TORCH_SOLID .addEventListener('click', ()=>toggleTorchMode('solid', TORCH_SOLID));
-    TORCH_SOS   .addEventListener('click', ()=>toggleTorchMode('sos',   TORCH_SOS));
-    TORCH_STROBE.addEventListener('click', ()=>toggleTorchMode('strobe',TORCH_STROBE));
+    TORCH_SOLID  && TORCH_SOLID .addEventListener('click', ()=>toggleTorchMode('solid', TORCH_SOLID));
+    TORCH_SOS    && TORCH_SOS   .addEventListener('click', ()=>toggleTorchMode('sos',   TORCH_SOS));
+    TORCH_STROBE && TORCH_STROBE.addEventListener('click', ()=>toggleTorchMode('strobe',TORCH_STROBE));
 
     // Tryby EKRAN
-    SCREEN_SOLID .addEventListener('click', ()=>toggleScreenMode('solid', SCREEN_SOLID));
-    SCREEN_SOS   .addEventListener('click', ()=>toggleScreenMode('sos',   SCREEN_SOS));
-    SCREEN_STROBE.addEventListener('click', ()=>toggleScreenMode('strobe',SCREEN_STROBE));
+    SCREEN_SOLID  && SCREEN_SOLID .addEventListener('click', ()=>toggleScreenMode('solid', SCREEN_SOLID));
+    SCREEN_SOS    && SCREEN_SOS   .addEventListener('click', ()=>toggleScreenMode('sos',   SCREEN_SOS));
+    SCREEN_STROBE && SCREEN_STROBE.addEventListener('click', ()=>toggleScreenMode('strobe',SCREEN_STROBE));
 
-    // Paleta kolorów – obrót małego hexa jak w motywie
-    KOLORY_LISTA.addEventListener('click',(e)=>{
-      const btn = e.target.closest('.KOLOR'); if(!btn) return;
-      spinHex(btn);
+    // Paleta kolorów – klik
+    if (KOLORY_LISTA){
+      KOLORY_LISTA.addEventListener('click',(e)=>{
+        const btn = e.target.closest('.KOLOR'); if(!btn) return;
+        spinHex(btn);
 
-      if(btn===MIX_SWATCH){
-        S.mixOn = !S.mixOn;
-        btn.classList.toggle('AKTYWNY', S.mixOn);
-        if(S.mixOn){
-          S.screenColors = generateHueWheel(24);
-          [...KOLORY_LISTA.querySelectorAll('.KOLOR')].forEach(k=>{ if(k!==MIX_SWATCH) k.classList.remove('AKTYWNY'); });
-        }else{
-          updateSelectedColors();
-          if(S.screenColors.length===0) S.screenColors=['#FFFFFF'];
+        if(btn===MIX_SWATCH){
+          S.mixOn = !S.mixOn;
+          btn.classList.toggle('AKTYWNY', S.mixOn);
+          if(S.mixOn){
+            S.screenColors = generateHueWheel(24);
+            [...KOLORY_LISTA.querySelectorAll('.KOLOR')].forEach(k=>{ if(k!==MIX_SWATCH) k.classList.remove('AKTYWNY'); });
+          }else{
+            updateSelectedColors();
+            if(S.screenColors.length===0) S.screenColors=['#FFFFFF'];
+          }
+          immediateScreenPreview(true);
+          return;
         }
-        immediateScreenPreview(true);
-        return;
-      }
 
-      btn.classList.toggle('AKTYWNY');
-      S.mixOn=false; MIX_SWATCH.classList.remove('AKTYWNY');
-      updateSelectedColors();
-      immediateScreenPreview(false);
-    });
+        btn.classList.toggle('AKTYWNY');
+        S.mixOn=false; MIX_SWATCH && MIX_SWATCH.classList.remove('AKTYWNY');
+        updateSelectedColors();
+        immediateScreenPreview(false);
+      });
+    }
 
-    // HEX input: auto '#'
-    if(!HEX_INPUT.value) HEX_INPUT.value = '#';
-    HEX_INPUT.addEventListener('input', ()=>{
-      let v = HEX_INPUT.value.toUpperCase();
-      if(!v.startsWith('#')) v = '#' + v.replace(/#/g,'');
-      v = '#' + v.slice(1).replace(/[^0-9A-F]/g,'').slice(0,6);
-      HEX_INPUT.value = v;
-    });
+    // HEX input: auto '#', jeśli istnieje w Twoim HTML
+    if(HEX_INPUT){
+      if(!HEX_INPUT.value) HEX_INPUT.value = '#';
+      HEX_INPUT.addEventListener('input', ()=>{
+        let v = HEX_INPUT.value.toUpperCase();
+        if(!v.startsWith('#')) v = '#' + v.replace(/#/g,'');
+        v = '#' + v.slice(1).replace(/[^0-9A-F]/g,'').slice(0,6);
+        HEX_INPUT.value = v;
+      });
+    }
 
-    HEX_ADD.addEventListener('click', ()=>{
-      const v = (HEX_INPUT.value||'').trim().toUpperCase();
-      if(!/^#([0-9A-F]{3}){1,2}$/.test(v)){ alert('Podaj HEX (#RRGGBB lub #RGB)'); return; }
-      const exists = [...KOLORY_LISTA.querySelectorAll('.KOLOR')].find(x=>x.dataset.kolor && x.dataset.kolor.toUpperCase()===v);
-      if(exists){
-        spinHex(exists);
-        exists.classList.toggle('AKTYWNY', true);
-        S.mixOn=false; MIX_SWATCH.classList.remove('AKTYWNY');
+    // „DODAJ” – dodaje wpisany HEX (jeśli masz pole), albo nic nie robi gdy pola brak
+    if(HEX_ADD){
+      HEX_ADD.addEventListener('click', ()=>{
+        if(!HEX_INPUT){ return; }
+        const v = (HEX_INPUT.value||'').trim().toUpperCase();
+        if(!/^#([0-9A-F]{3}){1,2}$/.test(v)){ alert('Podaj HEX (#RRGGBB lub #RGB)'); return; }
+        const exists = [...KOLORY_LISTA.querySelectorAll('.KOLOR')].find(x=>x.dataset.kolor && x.dataset.kolor.toUpperCase()===v);
+        if(exists){
+          spinHex(exists);
+          exists.classList.add('AKTYWNY');
+          S.mixOn=false; MIX_SWATCH && MIX_SWATCH.classList.remove('AKTYWNY');
+          updateSelectedColors(); immediateScreenPreview(false);
+          return;
+        }
+        const b = document.createElement('button');
+        b.className='KOLOR AKTYWNY'; b.dataset.kolor=v; b.style.setProperty('--c',v); b.title=v;
+        KOLORY_LISTA.appendChild(b);
+        spinHex(b);
+        S.mixOn=false; MIX_SWATCH && MIX_SWATCH.classList.remove('AKTYWNY');
         updateSelectedColors(); immediateScreenPreview(false);
-        return;
-      }
-      const b = document.createElement('button');
-      b.className='KOLOR AKTYWNY'; b.dataset.kolor=v; b.style.setProperty('--c',v); b.title=v;
-      KOLORY_LISTA.appendChild(b);
-      spinHex(b);
-      S.mixOn=false; MIX_SWATCH.classList.remove('AKTYWNY');
-      updateSelectedColors(); immediateScreenPreview(false);
-    });
+      });
+    }
+
+    // === AUTO-DODANIE DOMYŚLNYCH: #FF00FF oraz #7412FC (bez ruszania HTML/CSS) ===
+    ensureSwatch('#FF00FF');
+    ensureSwatch('#7412FC');
 
     // Start: suwaki ukryte
     showRow(TORCH_ROW, false);
@@ -141,16 +164,10 @@
     updateSelectedColors();
   });
 
-  /* ===== Suwak: inicjalizacja i kierunek obrotu ===== */
+  /* ===== Suwak: kierunek obrotu kciuka (prawo/lewo) ===== */
   function initSlider(input){
     if(!input) return;
     prevVal.set(input, Number(input.value)||0);
-
-    // animacja na start dotyku/kliknięcia w odpowiednim kierunku (na podstawie delta do środka nie ma sensu, więc tylko na input poniżej)
-    ['pointerdown','mousedown','touchstart'].forEach(ev=>{
-      input.addEventListener(ev, ()=>{ /* bez animacji – poczekamy na realny ruch */ });
-    });
-
     input.addEventListener('input', ()=>{
       const last = prevVal.get(input) ?? 0;
       const now  = Number(input.value)||0;
@@ -158,15 +175,13 @@
 
       if(dir){
         input.classList.remove('OBROT_P','OBROT_L');
-        // restart animacji
-        void input.offsetWidth;
+        void input.offsetWidth; /* restart animacji */
         input.classList.add(dir==='P' ? 'OBROT_P' : 'OBROT_L');
-        // sprzątanie po ~ połowie sekundy
-        setTimeout(()=>input.classList.remove('OBROT_P','OBROT_L'), 400);
+        setTimeout(()=>input.classList.remove('OBROT_P','OBROT_L'), 380);
       }
       prevVal.set(input, now);
 
-      // dodatkowo – jeśli to suwak od stroboskopu, aktualizujemy prędkość
+      // aktualizacja prędkości
       if(input===TORCH_SPEED){
         S.torchSpeed = toInt(TORCH_SPEED.value,200);
         if(S.torchOn && S.torchMode==='strobe') runTorchStrobe();
@@ -180,11 +195,11 @@
   /* ===== Zakładki ===== */
   function aktywujZakladke(which){
     if(which==='torch'){
-      SEKCJA_TORCH.classList.remove('UKRYTY');
-      SEKCJA_SCREEN.classList.add('UKRYTY');
+      SEKCJA_TORCH && SEKCJA_TORCH.classList.remove('UKRYTY');
+      SEKCJA_SCREEN&& SEKCJA_SCREEN.classList.add('UKRYTY');
     }else{
-      SEKCJA_SCREEN.classList.remove('UKRYTY');
-      SEKCJA_TORCH.classList.add('UKRYTY');
+      SEKCJA_SCREEN&& SEKCJA_SCREEN.classList.remove('UKRYTY');
+      SEKCJA_TORCH && SEKCJA_TORCH.classList.add('UKRYTY');
     }
     updateSlidersVisibility();
   }
@@ -250,12 +265,18 @@
   }
 
   function runTorchSOS(){
-    if(S.torchSOSId){ clearTimeout(S.torchSOSId); }
+    if(S.torchSOSId){ clearTimeout(S.torchSOSId); S.torchSOSId=null; }
+    clearInterval(S.torchIntervalId); S.torchIntervalId=null;
+
     let i=0;
     const step = async ()=>{
       if(!S.torchOn || S.torchMode!=='sos') return;
       const on = (i%2===0);
-      try{ await S.videoTrack.applyConstraints({ advanced:[{ torch:on }] }); }catch(_){ stopTorch(); return; }
+      try{
+        await S.videoTrack.applyConstraints({ advanced:[{ torch:on }] });
+      }catch(_){
+        stopTorch(); return;
+      }
       const wait = SOS_SEQ[i++ % SOS_SEQ.length];
       S.torchSOSId = setTimeout(step, wait);
     };
@@ -325,6 +346,20 @@
     }, S.screenSpeed);
   }
 
+  function runScreenSOS(){
+    stopScreenTimersOnly();
+    const base = getActiveColors()[0] || '#FFFFFF';
+    let i=0;
+    const step=()=>{
+      if(!S.screenOn || S.screenMode!=='sos') return;
+      const on = (i%2===0);
+      SCREEN_OVERLAY.style.background = on ? base : '#000000';
+      const wait = SOS_SEQ[i++ % SOS_SEQ.length];
+      S.screenSOSId = setTimeout(step, wait);
+    };
+    step();
+  }
+
   /* ===== Pomocnicze ===== */
   function getActiveColors(){
     if(S.mixOn){ return generateHueWheel(24); }
@@ -333,6 +368,7 @@
   }
 
   function updateSelectedColors(){
+    if(!KOLORY_LISTA){ S.screenColors=['#FFFFFF']; return; }
     S.screenColors = [...KOLORY_LISTA.querySelectorAll('.KOLOR.AKTYWNY')]
       .filter(k=>k.dataset.kolor)
       .map(k=>k.dataset.kolor.toUpperCase());
@@ -348,7 +384,6 @@
     }
   }
 
-  /* ===== Suwaki – widoczne tylko dla STROBOSKOP + kierunkowa animacja ===== */
   function updateSlidersVisibility(){
     const showTorch  = (S.torchOn  && S.torchMode  === 'strobe');
     const showScreen = (S.screenOn && S.screenMode === 'strobe');
@@ -357,12 +392,34 @@
   }
   function showRow(rowEl, show){ if(rowEl) rowEl.classList.toggle('UKRYTY', !show); }
 
-  /* ===== Animacje ===== */
+  // Obrót małych heksów (jak hex od motywu)
   function spinHex(el){
     el.classList.remove('OBROT');
     void el.offsetWidth;
     el.classList.add('OBROT');
     setTimeout(()=>el.classList.remove('OBROT'), 420);
+  }
+
+  // Upewnij się, że w palecie są dane kolory
+  function ensureSwatch(hex){
+    if(!KOLORY_LISTA) return;
+    hex = hex.toUpperCase();
+    const present = [...KOLORY_LISTA.querySelectorAll('.KOLOR')]
+      .some(k => (k.dataset.kolor||'').toUpperCase() === hex);
+    if(present) return;
+
+    // spróbuj wstawić po białym (#FFFFFF), jeśli jest
+    const bialy = [...KOLORY_LISTA.querySelectorAll('.KOLOR')]
+      .find(k => (k.dataset.kolor||'').toUpperCase() === '#FFFFFF');
+
+    const btn = document.createElement('button');
+    btn.className='KOLOR'; btn.dataset.kolor=hex; btn.style.setProperty('--c',hex); btn.title=hex;
+
+    if(bialy && bialy.nextSibling){
+      KOLORY_LISTA.insertBefore(btn, bialy.nextSibling);
+    }else{
+      KOLORY_LISTA.appendChild(btn);
+    }
   }
 
   /* ===== Utils ===== */
