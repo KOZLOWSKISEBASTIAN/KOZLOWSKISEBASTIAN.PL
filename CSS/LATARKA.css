@@ -1,6 +1,4 @@
 /* ======================= LATARKA.css ======================= */
-
-/* ---------- Zmienne modułu ---------- */
 :root{
   --ODSTEP: 10px;
   --K-SIZE: 42px;
@@ -11,59 +9,48 @@
   --MID:      2px;
   --ALIGN-FIX:-2px;
   --HEX-RAMKA-JASNY:#000;
-  --HEX-RAMKA-CIEMNY:#B0B0B0;
-}
-
-/* Animowalna zmienna kąta dla kciuka */
-@property --spin{
-  syntax:'<angle>';
-  inherits:true;
-  initial-value:0deg;
+  --HEX-RAMKA_CIEMNY:#B0B0B0;
 }
 
 *{ box-sizing:border-box }
 .UKRYTY{ display:none!important }
 
-/* ---------- POKAŻ/UKRYJ ---------- */
+/* POKAŻ/UKRYJ panelu */
 .STEROWANIE_TOP{ display:grid; grid-template-columns:1fr; margin-bottom: calc(var(--ODSTEP)*.6); }
 #BTN_PANEL_TOGGLE{ justify-self:center; align-self:center; min-width:220px; }
 
-/* ---------- Zakładki ---------- */
+/* TABS (na desktopie sekcja LATARKA ukryta) */
 .STEROWANIE_TABS{ display:grid; grid-template-columns:1fr 1fr; gap:var(--ODSTEP); margin-bottom:var(--ODSTEP); }
 @media (min-width:999px){ .STEROWANIE_TABS{ display:none!important } #SEKCJA_TORCH{ display:none!important } }
 
-/* ---------- Tryby ---------- */
+/* Przyciski trybów */
 .TRYMY3{ display:grid; grid-template-columns:repeat(3,1fr); gap:var(--ODSTEP); }
 .TRYMY3 .PRZYCISK{ width:100% }
 
-/* ---------- Bloki ---------- */
+/* Bloki */
 .BLOK{ margin-top: var(--ODSTEP) }
-.BLOK-PALETA{ display:grid; grid-template-columns:1fr minmax(240px,320px); gap:var(--ODSTEP); align-items:center; }
+.BLOK-PALETA{ display:grid; grid-template-columns:1fr minmax(180px,220px); gap:var(--ODSTEP); align-items:center; }
 @media (max-width:999px){ .BLOK-PALETA{ grid-template-columns:1fr } }
 .ROW_FULL{ margin-top:var(--ODSTEP) }
 .ROW_FULL .SUWAK{ width:100% }
+.ROW_HEX{ display:grid; grid-template-columns:1fr; gap:var(--ODSTEP); }
 
-/* ---------- Przyciski jak w PRZYBORNIK/LICZYDŁO – tekst „na krawędziach” ---------- */
-.PRZYCISK,
-.TRYMY3 .PRZYCISK,
-.STEROWANIE_TABS .PRZYCISK,
-#HEX_ADD.PRZYCISK{
+/* Przyciski ogólne */
+.PRZYCISK{
   display:grid; place-items:center;
   width:100%; min-height:56px; border-radius:8px;
   padding:0; text-align:center; line-height:1;
   background:var(--TLO-PRZYCISK); color:inherit; border:0; outline:none;
 }
 
-/* ---------- Mini-hex palety na stronie głównej ---------- */
+/* Lista kolorów (heksy) */
 @keyframes HEX_ROTATE{ from{transform:rotate(90deg)} to{transform:rotate(450deg)} }
-
 .KOLORY_LISTA{ display:flex; flex-wrap:wrap; gap:var(--K-GAP); }
 .KOLORY_LISTA .KOLOR{
   -webkit-appearance:none; appearance:none; background:transparent;
   border:none; outline:none; box-shadow:none; padding:0; margin:0; display:inline-block;
   -webkit-tap-highlight-color:transparent;
 }
-
 .KOLOR{
   --hex: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
   --RING-SCALE: calc(1 - ((var(--BORDER) * 2) / var(--K-SIZE)));
@@ -73,7 +60,7 @@
 }
 .KOLOR::before{ content:""; position:absolute; inset:0; clip-path:inherit; background:transparent; z-index:0; }
 :root[WYBOR_MOTYW="JASNY"] .KOLOR.AKTYWNY::before{ background:var(--HEX-RAMKA-JASNY) }
-:root[WYBOR_MOTYW="CIEMNY"] .KOLOR.AKTYWNY::before{ background:var(--HEX-RAMKA-CIEMNY) }
+:root[WYBOR_MOTYW="CIEMNY"] .KOLOR.AKTYWNY::before{ background:var(--HEX_RAMKA_CIEMNY, #B0B0B0) }
 .KOLOR::after{
   content:""; position:absolute; left:50%; top:50%; width:100%; height:100%;
   transform:translate(-50%,-50%) scale(var(--RING-SCALE));
@@ -83,101 +70,90 @@
 .KOLOR.KOLOR_MIX::after{ background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)!important; }
 .KOLOR.OBROT{ animation:HEX_ROTATE 380ms ease }
 
-/* input range – będziemy animować --spin na ELEMENCIE input */
-.SUWAK_HEX { --spin: 0deg; }
-
-.SUWAK {
+/* Suwak — kciuk w heks */
+.SUWAK_HEX{ --spin:0deg; color:#FF00FF; }
+.SUWAK{
   width:100%; height:var(--SUWAK-H);
-  -webkit-appearance:none; appearance:none;
-  outline:none; border-radius:8px;
+  -webkit-appearance:none; appearance:none; outline:none; border-radius:8px;
   background:
-    linear-gradient(to bottom,
-      transparent calc(50% - var(--MID)),
-      rgba(255,255,255,.18) calc(50% - var(--MID)),
-      rgba(255,255,255,.18) calc(50% + var(--MID)),
-      transparent calc(50% + var(--MID))
-    ),
+    linear-gradient(to bottom, transparent calc(50% - var(--MID)), rgba(255,255,255,.18) calc(50% - var(--MID)), rgba(255,255,255,.18) calc(50% + var(--MID)), transparent calc(50% + var(--MID))),
     var(--TLO-PRZYCISK);
   box-shadow:inset 0 0 0 2px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.06);
 }
-
-/* tor */
-.SUWAK_HEX::-webkit-slider-runnable-track{ height:var(--SUWAK-H); background:transparent; border-radius:8px; }
-.SUWAK_HEX::-moz-range-track{
-  height:var(--SUWAK-H); border-radius:8px;
-  background:
-    linear-gradient(to bottom,
-      transparent calc(50% - var(--MID)),
-      rgba(255,255,255,.18) calc(50% - var(--MID)),
-      rgba(255,255,255,.18) calc(50% + var(--MID)),
-      transparent calc(50% + var(--MID))
-    ),
-    var(--TLO-PRZYCISK);
-  box-shadow:inset 0 0 0 2px rgba(0,0,0,.2), 0 1px 0 rgba(255,255,255,.06);
-}
-
-/* kciuk – obrót = 90deg + animowany --spin (dziedziczy z inputa!) */
 .SUWAK_HEX::-webkit-slider-thumb{
   -webkit-appearance:none; appearance:none;
   width:var(--KCIUK); height:var(--KCIUK);
-  clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
-  transform: rotate(calc(90deg + var(--spin)));
-  border:0;
-  margin-top: calc(((var(--SUWAK-H) - var(--KCIUK)) / 2) * -1 - var(--ALIGN-FIX));
-  background: var(--AKCENT-TEKST);
-  cursor:pointer;
+  clip-path:polygon(25% 6.7%,75% 6.7%,100% 50%,75% 93.3%,25% 93.3%,0% 50%);
+  transform:rotate(calc(90deg + var(--spin)));
+  border:0; margin-top:calc(((var(--SUWAK-H) - var(--KCIUK)) / 2) * -1 - var(--ALIGN-FIX));
+  background:currentColor; cursor:pointer;
 }
-.SUWAK_HEX::-moz-range-thumb{
-  width:var(--KCIUK); height:var(--KCIUK); border:0;
-  clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
-  transform: rotate(calc(90deg + var(--spin)));
-  background: var(--AKCENT-TEKST);
-  cursor:pointer;
-}
-@keyframes SPIN_VAR_CW{ from{--spin:0deg} to{--spin:360deg} }
-@keyframes SPIN_VAR_CCW{ from{--spin:0deg} to{--spin:-360deg} }
-.SUWAK_HEX.OBROT_P{ animation:SPIN_VAR_CW 320ms ease }
-.SUWAK_HEX.OBROT_L{ animation:SPIN_VAR_CCW 320ms ease }
 
-/* ---------- Overlay ekranu ---------- */
+/* Tło świecenia ekranu */
 .SCREEN_OVERLAY{ position:fixed; inset:0; z-index:0; pointer-events:none; background:#000; opacity:.96; transition:background 40ms linear; }
 .RAMKA,.KONTENER,.PANEL,.SIATKA,.PRZYBORNIK_SEKCJA{ position:relative; z-index:1 }
 .ZWINIETY .RESZTA_NAGLOWEK{ display:none!important }
 .ZWINIETY #WSZYSTKO{ display:none!important }
 .TRYB_AKTYWNY{ outline:2px solid currentColor; outline-offset:-2px }
 
-/* ======================= MODAL DODAJ KOLOR ======================= */
-.MODAL{ position:fixed; inset:0; z-index:10; }
-.MODAL.UKRYTY{ display:none!important }
-.MODAL_BACKDROP{ position:absolute; inset:0; background:rgba(0,0,0,.5); }
-.MODAL_PANEL{
-  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  width:min(680px, 92vw); max-height:90vh; overflow:auto;
-  background:var(--TLO-PRZYCISK); color:inherit; border-radius:14px;
-  padding:16px; box-shadow:0 10px 40px rgba(0,0,0,.35);
+/* === OVERLAY „DODAJ KOLOR” — 100% szerokości i wysokości === */
+.LATARKA_OVERLAY{
+  position:fixed; inset:0; z-index:1000;
+  display:flex;
+  background:rgba(0,0,0,.9);           /* szare tło NA CAŁY ekran */
 }
-.MODAL_HDR{ font-weight:700; margin-bottom:10px; text-align:center; }
+.LATARKA_OVERLAY.UKRYTY{ display:none!important; }
 
-.MOD_PREVIEW{ display:grid; place-items:center; margin:10px 0 8px; }
-.HEX_PREVIEW{
-  width:120px; height:120px;
-  clip-path:polygon(25% 6.7%,75% 6.7%,100% 50%,75% 93.3%,25% 93.3%,0% 50%);
-  background:#7412FC;
-  transform:rotate(90deg);
+.LATARKA_OVERLAY_TRESC{
+  width:100vw; height:100vh;           /* równieź full */
+  display:grid; place-items:stretch;   /* wypełniamy */
+  background:transparent;
 }
 
-.MOD_SWATCHES{ display:flex; flex-wrap:wrap; gap:10px; justify-content:center; margin-bottom:10px; }
-.MOD_SWATCHES .KOLOR{ width:36px; height:36px; --K-SIZE:36px; }
-
-.PICKER_ROW{ display:flex; justify-content:center; margin:6px 0 8px; }
-.PICK_COLOR{ width:220px; height:56px; border-radius:8px; border:0; background:var(--TLO-PRZYCISK); }
-
-.MOD_GRID{
-  display:grid; grid-template-columns:72px 1fr; gap:10px; align-items:center; margin-top:6px;
+.LATARKA_OVERLAY_WNETRZE{
+  width:100vw; height:100vh;           /* „okno” = PEŁNY EKRAN */
+  display:grid;
+  grid-template-rows: auto 1fr auto auto; /* tytuł, picker, pola, przyciski */
+  align-content:stretch;
+  justify-items:center;
+  background:var(--TLO-PRZYCISK);      /* własne tło okna */
+  border-radius:0;                      /* brak ramki */
+  padding:16px;
+  overflow:auto;
 }
-.LBL{ opacity:.8; text-align:right; }
-.RGB_ROW{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
 
-.MOD_FOOT{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-top:14px; }
-.LINK{ color:inherit; opacity:.9; text-decoration:underline; }
-.MOD_BTNS{ display:flex; gap:10px; }
+/* Tytuł */
+.LATARKA_OVERLAY_GLOWA{ width:100%; display:flex; justify-content:center; margin-bottom:8px; }
+.LATARKA_TYTUL{ margin:0; font-weight:600; letter-spacing:.04em; }
+
+/* Pola HEX / RGB / HSL — DUŻE LITERY, obok siebie ≥1000px */
+.LATARKA_KOLORY_BOXES{
+  width:min(1440px, 96vw);
+  display:grid; gap:10px;
+  grid-template-columns:1fr; /* mobile */
+  align-self:end;
+}
+.LATARKA_FORM_GROUP{ display:grid; gap:6px; }
+.LATARKA_FORM_GROUP label{ text-transform:uppercase; letter-spacing:.04em; font-weight:600; }
+.LATARKA_FORM_GROUP input{
+  width:100%;
+  min-height:56px;
+  border:0; outline:0;
+  border-radius:10px;
+  background:var(--TLO-PRZYCISK);
+  color:inherit;
+  text-align:center;
+}
+@media (min-width:1000px){
+  .LATARKA_KOLORY_BOXES{ grid-template-columns:repeat(3,1fr); }
+}
+
+/* Przyciski w overlay */
+.LATARKA_OVERLAY_PRZYCISKI{ display:flex; gap:12px; justify-content:center; align-self:start; }
+
+/* Opakowanie pickera (lokalny prefiks) */
+.WYBORKOLORU_OPAKOWANIE{
+  width:min(1440px, 96vw);
+  display:grid; place-items:center;
+  align-self:stretch; justify-self:center;
+}
