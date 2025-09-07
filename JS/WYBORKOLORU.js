@@ -1,46 +1,105 @@
-/* ======================= WYBORKOLORU.js ======================= */
-/* Render prostego heksagonalnego pickera z ~128 kolorami. HSL usunięty. */
-(function(){
-  'use strict';
+document.addEventListener("DOMContentLoaded", () => {
+  const hexagonPicker = document.getElementById("hexagonPicker");
+  const inputHEX = document.getElementById("colorBoxHEX");
+  const inputRGB = document.getElementById("colorBoxRGB");
 
-  const MOUNT = document.getElementById('PICKER_MOUNT');
-  if (!MOUNT) return;
-
-  const PALETTE = [
-    '#000000','#1A1A1A','#333333','#4D4D4D','#666666','#808080','#999999','#B3B3B3','#CCCCCC','#E6E6E6','#FFFFFF',
-    '#FF0000','#FF3300','#FF6600','#FF9900','#FFCC00','#FFFF00',
-    '#CCFF00','#99FF00','#66FF00','#33FF00','#00FF00',
-    '#00FF33','#00FF66','#00FF99','#00FFCC','#00FFFF',
-    '#00CCFF','#0099FF','#0066FF','#0033FF','#0000FF',
-    '#3300FF','#6600FF','#9900FF','#CC00FF','#FF00FF',
-    '#FF00CC','#FF0099','#FF0066','#FF0033'
+  // siatka jak w plikach źródłowych
+  const rowOffsets = [90, 75, 60, 45, 30, 15, 0, 15, 30, 45, 60, 75, 90];
+  const colorRows = [
+    ["#003366","#336699","#3366CC","#003399","#000099","#0000CC","#000066"],
+    ["#006666","#006699","#0099CC","#0066CC","#0033CC","#0000FF","#3333FF","#333399"],
+    ["#669999","#009999","#33CCCC","#00CCFF","#0099FF","#0066FF","#3366FF","#3333CC","#666699"],
+    ["#339966","#00CC99","#00FFCC","#00FFFF","#33CCFF","#3399FF","#6699FF","#6666FF","#6600FF","#6600CC"],
+    ["#339933","#00CC66","#00FF99","#66FFCC","#66FFFF","#66CCFF","#99CCFF","#9999FF","#9966FF","#9933FF","#9900FF"],
+    ["#006600","#00CC00","#00FF00","#66FF99","#99FFCC","#CCFFFF","#CCCCFF","#CC99FF","#CC66FF","#CC33FF","#CC00FF","#9900CC"],
+    ["#003300","#009933","#33CC33","#66FF66","#99FF99","#CCFFCC","#FFFFFF","#FFCCFF","#FF99FF","#FF66FF","#FF00FF","#CC00CC","#660066"],
+    ["#336600","#009900","#66FF33","#99FF66","#CCFF99","#FFFFCC","#FFCCCC","#FF99CC","#FF66CC","#FF33CC","#CC0099","#993399"],
+    ["#333300","#669900","#99FF33","#CCFF66","#FFFF99","#FFCC99","#FF9999","#FF6699","#FF3399","#CC3399","#990099"],
+    ["#666633","#99CC00","#CCFF33","#FFFF66","#FFCC66","#FF9966","#FF6666","#FF0066","#CC6699","#993366"],
+    ["#999966","#CCCC00","#FFFF00","#FFCC00","#FF9933","#FF6600","#FF5050","#CC0066","#660033"],
+    ["#996633","#CC9900","#FF9900","#CC6600","#FF3300","#FF0000","#CC0000","#990033"],
+    ["#663300","#996600","#CC3300","#993300","#990000","#800000","#993333"]
   ];
-  // powiel, by mieć ~100+; (zachowujemy unikalność, ale wystarczy do testu)
-  const AUG = [...PALETTE, ...PALETTE.map(c=>c)];
 
-  const root = document.createElement('div');
-  root.className = 'hexagon-picker';
+  let locked = false;
+  let currentColor = "#FFFFFF";
 
-  // budujemy wiersze po ~12
-  const perRow = 12;
-  for (let i=0; i<AUG.length; i+=perRow){
-    const row = document.createElement('div');
-    row.className = 'hex-row';
-    AUG.slice(i,i+perRow).forEach(hex=>{
-      const b = document.createElement('button');
-      b.className = 'hex';
-      b.style.background = hex;
-      b.setAttribute('aria-label', hex);
-      b.addEventListener('click', ()=>{
-        const ev = new CustomEvent('wybrano-kolor', { detail:{ hex } });
-        window.dispatchEvent(ev);
-      }, { passive:true });
-      row.appendChild(b);
-    });
-    root.appendChild(row);
+  function setColor(hex) {
+    const rgb = hexToRgb(hex);
+    inputHEX.value = `HEX:${hex.toUpperCase()}`;
+    inputRGB.value = `RGB:${rgb.r},${rgb.g},${rgb.b}`;
+    currentColor = hex.toUpperCase();
   }
 
-  MOUNT.innerHTML = '';
-  MOUNT.appendChild(root);
+  function hexToRgb(hex) {
+    const h = hex.replace('#','');
+    const n = parseInt(h,16);
+    return { r:(n>>16)&255, g:(n>>8)&255, b:n&255 };
+  }
+  function rgbToHex(r,g,b) {
+    const to2 = v => v.toString(16).padStart(2,'0');
+    return ('#'+to2(r)+to2(g)+to2(b)).toUpperCase();
+  }
 
-})();
+  // Walidacja pól
+  inputHEX.addEventListener("blur", () => {
+    const m = inputHEX.value.trim().match(/#?[0-9a-f]{6}/i);
+    if (m){
+      const hex = ('#'+m[0].replace('#','')).toUpperCase();
+      setColor(hex);
+    } else {
+      inputHEX.value = `HEX:${currentColor}`;
+    }
+  });
+  inputRGB.addEventListener("blur", () => {
+    const m = inputRGB.value.trim().match(/rgb:?(\s*)?(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/i);
+    if (m){
+      const r = Math.min(255, parseInt(m[2],10));
+      const g = Math.min(255, parseInt(m[3],10));
+      const b = Math.min(255, parseInt(m[4],10));
+      setColor(rgbToHex(r,g,b));
+    } else {
+      const {r,g,b} = hexToRgb(currentColor);
+      inputRGB.value = `RGB:${r},${g},${b}`;
+    }
+  });
+
+  // Generowanie hexów + zdarzenia
+  let cols = 7;
+  rowOffsets.forEach((offset, rowIndex) => {
+    const rowDiv = document.createElement("div");
+    rowDiv.className = "hex-row";
+    rowDiv.style.marginLeft = offset + "px";
+
+    for (let i=0; i<cols; i++) {
+      const color = (colorRows[rowIndex] && colorRows[rowIndex][i]) ? colorRows[rowIndex][i] : "#000000";
+      const hexDiv = document.createElement("div");
+      hexDiv.className = "hex";
+      hexDiv.style.backgroundColor = color;
+
+      hexDiv.addEventListener("mouseover", () => {
+        if (!locked) setColor(color);
+      });
+      hexDiv.addEventListener("click", e => {
+        e.stopPropagation();
+        locked = true;
+        setColor(color);
+
+        // WYŚLIJ WYDARZENIE DO LATARKA.js (4) — natychmiastowe dodanie i zamknięcie
+        window.dispatchEvent(new CustomEvent('wybrano-kolor', { detail:{ hex: color } }));
+      });
+
+      rowDiv.appendChild(hexDiv);
+    }
+    hexagonPicker.appendChild(rowDiv);
+    cols += rowIndex < 6 ? 1 : -1;
+  });
+
+  // odblokowanie po kliknięciu poza hex
+  document.addEventListener("click", e => {
+    if (!e.target.closest(".hex")) locked = false;
+  });
+
+  // start
+  setColor("#FFFFFF");
+});
