@@ -1,24 +1,7 @@
-.hexagon-picker {
-    display: flex;
-    flex-wrap: wrap;
-    width: 364px;
-    margin: auto;
-}
+/* ======================= WYBORKOLORU.css ======================= */
+/* Minimalny styling pickera – zostawiony jak w Twoich plikach, HSL usunięty. */
 
-.hex {
-    width: 28px;
-    height: 32px;
-    background-color: #fff;
-    margin: 0;
-    display: inline-block;
-    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-    cursor: pointer;
-}
-
-.hex-row {
-    text-align: center;
-}
-
-.hex-row:not(:first-child) {
-    margin-top: -14px;
-}
+.hexagon-picker{ display:grid; gap:8px; place-items:center; }
+.hex-row{ display:flex; gap:1px; }
+.hex{ width:32px; height:32px; clip-path:polygon(25% 6.7%,75% 6.7%,100% 50%,75% 93.3%,25% 93.3%,0% 50%); border:none; padding:0; }
+.hex:focus{ outline:none; }
