@@ -1,107 +1,129 @@
-<!DOCTYPE html>
-<html lang="pl" WYBOR_MOTYW="JASNY">
+
+<!doctype html>
+<html lang="pl">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LATARKA</title>
+  <meta name="color-scheme" content="dark light" />
 
-  <!-- kolejność jak w projekcie -->
-  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css">
-  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KOLORY.css">
-  <link rel="stylesheet" href="https://kozlowskisebastian.pl//CSSHEXAGON.css">
-  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/LATARKA.css">
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/HEXAGON.css" />
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KOLORY.css" />
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css" />
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/LICZYDLO.css" />
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/LATARKA.css" />
+  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/WYBORKOLORU.css" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <!-- przełącznik motywu / nagłówki / przybornik -->
-  <div id="PRZYBORNIK_TOP" class="PRZYBORNIK_SEKCJA">
-    <div id="HEXAGON"></div>
-    <button id="WYLACZNIK" class="PRZYCISK">PRZYBORNIK</button>
+  <!-- TŁO EKRANU (światło ekranu) -->
+  <div id="SCREEN_OVERLAY" class="SCREEN_OVERLAY UKRYTY" aria-hidden="true"></div>
+
+  <div class="RAMKA">
+    <main class="KONTENER">
+      <div class="PANEL" id="PANEL_ROOT">
+
+        <div class="RESZTA_NAGLOWEK">
+          <a class="PRZYCISK_PRZYBORNIK_POWROT" data-klucz="PRZYBORNIK">PRZYBORNIK</a>
+        </div>
+
+        <!-- POKAŻ/UKRYJ -->
+        <section class="SIATKA STEROWANIE_TOP">
+          <button id="BTN_PANEL_TOGGLE" class="PRZYCISK">UKRYJ</button>
+        </section>
+
+        <div id="WSZYSTKO">
+          <!-- Zakładki -->
+          <section class="SIATKA STEROWANIE_TABS">
+            <button id="TAB_TORCH"  class="PRZYCISK">LATARKA</button>
+            <button id="TAB_SCREEN" class="PRZYCISK">EKRAN</button>
+          </section>
+
+          <section id="LATARKA_PANEL" class="LATARKA_PANEL">
+            <!-- LATARKA (aparat) -->
+            <div id="SEKCJA_TORCH" class="PRZYBORNIK_SEKCJA">
+              <div class="TRYMY3">
+                <button id="TORCH_SOLID"  class="PRZYCISK">STAŁY</button>
+                <button id="TORCH_SOS"    class="PRZYCISK">SOS</button>
+                <button id="TORCH_STROBE" class="PRZYCISK">STROBOSKOP</button>
+              </div>
+              <div class="ROW_FULL UKRYTY" id="ROW_TORCH">
+                <input id="TORCH_SZYBKOSC" type="range" min="50" max="1000" step="10" value="200" class="SUWAK SUWAK_HEX" />
+              </div>
+            </div>
+
+            <!-- EKRAN (kolory + tryby) -->
+            <div id="SEKCJA_SCREEN" class="PRZYBORNIK_SEKCJA UKRYTY">
+              <div class="TRYMY3">
+                <button id="SCREEN_SOLID"  class="PRZYCISK">STAŁY</button>
+                <button id="SCREEN_SOS"    class="PRZYCISK">SOS</button>
+                <button id="SCREEN_STROBE" class="PRZYCISK">STROBOSKOP</button>
+              </div>
+
+              <!-- Paleta + DODAJ -->
+              <div class="BLOK BLOK-PALETA">
+                <div id="KOLORY_LISTA" class="KOLORY_LISTA">
+                  <button class="KOLOR KOLOR_MIX" id="MIX_SWATCH" title="MIESZANY (pełne RGB)"></button>
+                  <button class="KOLOR" data-kolor="#FFFFFF" style="--c:#FFFFFF" title="#FFFFFF"></button>
+                  <button class="KOLOR" data-kolor="#FF00FF" style="--c:#FF00FF" title="#FF00FF"></button>
+                  <button class="KOLOR" data-kolor="#00FF00" style="--c:#00FF00" title="#00FF00"></button>
+                  <button class="KOLOR" data-kolor="#FFFF00" style="--c:#FFFF00" title="#FFFF00"></button>
+                  <button class="KOLOR" data-kolor="#FF0000" style="--c:#FF0000" title="#FF0000"></button>
+                  <button class="KOLOR" data-kolor="#7412FC" style="--c:#7412FC" title="#7412FC"></button>
+                  <button class="KOLOR" data-kolor="#0000FF" style="--c:#0000FF" title="#0000FF"></button>
+                </div>
+
+                <div class="ROW_HEX">
+                  <button id="HEX_ADD" class="PRZYCISK">DODAJ</button>
+                </div>
+              </div>
+
+              <div class="ROW_FULL UKRYTY" id="ROW_SCREEN">
+                <input id="SCREEN_SZYBKOSC" type="range" min="50" max="1000" step="10" value="200" class="SUWAK SUWAK_HEX" />
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
   </div>
 
-  <div id="PANEL_ROOT" class="KONTENER">
-    <div class="STEROWANIE_TOP">
-      <button id="BTN_PANEL_TOGGLE" class="PRZYCISK">UKRYJ</button>
-    </div>
-
-    <!-- zakładki (mobile) -->
-    <div class="STEROWANIE_TABS">
-      <button id="TAB_SCREEN" class="PRZYCISK">EKRAN</button>
-      <button id="TAB_TORCH"  class="PRZYCISK">LATARKA</button>
-    </div>
-
-    <!-- SEK CJA EKRAN -->
-    <section id="SEKCJA_SCREEN">
-      <div class="TRYMY3">
-        <button id="SCREEN_SOLID"  class="PRZYCISK">STAŁY</button>
-        <button id="SCREEN_SOS"    class="PRZYCISK">SOS</button>
-        <button id="SCREEN_STROBE" class="PRZYCISK">STROBOSKOP</button>
-      </div>
-
-      <div class="BLOK BLOK-PALETA">
-        <div>
-          <div id="KOLORY_LISTA" class="KOLORY_LISTA">
-            <!-- stałe kolory startowe; nowe będą dopinane JS-em -->
-            <button class="KOLOR" data-kolor="#FFFFFF" style="--c:#FFFFFF" title="#FFFFFF"></button>
-            <button class="KOLOR" data-kolor="#000000" style="--c:#000000" title="#000000"></button>
-            <button class="KOLOR" data-kolor="#FF0000" style="--c:#FF0000" title="#FF0000"></button>
-            <button class="KOLOR" data-kolor="#00FF00" style="--c:#00FF00" title="#00FF00"></button>
-            <button class="KOLOR" data-kolor="#0000FF" style="--c:#0000FF" title="#0000FF"></button>
-            <button class="KOLOR" data-kolor="#FFFF00" style="--c:#FFFF00" title="#FFFF00"></button>
-            <button class="KOLOR" data-kolor="#FF00FF" style="--c:#FF00FF" title="#FF00FF"></button>
-            <button class="KOLOR" data-kolor="#00FFFF" style="--c:#00FFFF" title="#00FFFF"></button>
-          </div>
-          <div class="ROW_FULL" style="margin-top:10px">
-            <button id="HEX_ADD" class="PRZYCISK">DODAJ</button>
-          </div>
-        </div>
-
-        <div class="ROW_HEX">
-          <!-- suwak (tylko dla stroboskopu) -->
-          <div id="ROW_SCREEN" class="UKRYTY">
-            <input id="SCREEN_SZYBKOSC" type="range" min="50" max="800" step="10" value="200" class="SUWAK SUWAK_HEX">
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- SEK CJA LATARKA (ukryta na desktop wg Twojego CSS) -->
-    <section id="SEKCJA_TORCH" class="UKRYTY">
-      <div class="TRYMY3">
-        <button id="TORCH_SOLID"  class="PRZYCISK">STAŁY</button>
-        <button id="TORCH_SOS"    class="PRZYCISK">SOS</button>
-        <button id="TORCH_STROBE" class="PRZYCISK">STROBOSKOP</button>
-      </div>
-      <div class="BLOK">
-        <div id="ROW_TORCH" class="UKRYTY">
-          <input id="TORCH_SZYBKOSC" type="range" min="50" max="800" step="10" value="200" class="SUWAK SUWAK_HEX">
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <!-- pełnoekranowe świecenie -->
-  <div id="SCREEN_OVERLAY" class="SCREEN_OVERLAY UKRYTY"></div>
-
-  <!-- OVERLAY DODAJ -->
+  <!-- OVERLAY „DODAJ KOLOR” — pełny ekran -->
   <div id="DODAJ_OVERLAY" class="LATARKA_OVERLAY UKRYTY" aria-hidden="true">
-    <div id="OVERLAY_BG" class="LATARKA_OVERLAY_TRESC">
-      <div id="OVERLAY_PANEL" class="LATARKA_OVERLAY_WNETRZE">
-        <!-- heksagonalny picker (z WYBORKOLORU.*) ma się tu wstrzyknąć/wyświetlić -->
-        <div id="PICKER_MOUNT"></div>
+    <div class="LATARKA_OVERLAY_TRESC" id="OVERLAY_BG">
+      <div class="LATARKA_OVERLAY_WNETRZE" id="OVERLAY_PANEL" role="dialog" aria-modal="true">
 
-        <!-- pola – na połówkach (HEX | RGB) -->
-        <div class="PRZYBORNIK_PRZYCISK_POLOWA LATARKA_KOLORY_BOXES">
-          <input id="colorBoxHEX" class="LICZYDLO_POLE" inputmode="text"  spellcheck="false" autocomplete="off" value="HEX:#FFFFFF">
-          <input id="colorBoxRGB" class="LICZYDLO_POLE" inputmode="numeric" spellcheck="false" autocomplete="off" value="RGB:255,255,255">
+        <div class="WYBORKOLORU_OPAKOWANIE">
+          <div id="hexagonPicker" class="hexagon-picker"></div>
         </div>
+
+        <!-- Pola w jednej linii, bez zewnętrznych etykiet -->
+        <div class="LATARKA_KOLORY_BOXES">
+          <input id="colorBoxHEX" class="LICZYDLO_POLE" type="text" value="HEX:#FFFFFF" autocomplete="off" spellcheck="false">
+          <input id="colorBoxRGB" class="LICZYDLO_POLE" type="text" value="RGB:255,255,255" autocomplete="off" spellcheck="false">
+          <input id="colorBoxHSL" class="LICZYDLO_POLE" type="text" value="HSL:0,0%,100%" autocomplete="off" spellcheck="false">
+        </div>
+
       </div>
     </div>
   </div>
 
-  <script src="https://kozlowskisebastian.pl/JS/MOTYWAUTO.js"></script>
+  <!-- HEXAGON do zmiany motywu -->
+  <div class="HEXAGON_KONTENER" id="HEXAGON">
+    <div class="HEXAGON" title="MOTYW"></div>
+  </div>
+  <span class="WYLACZNIK" id="WYLACZNIK"></span>
+  <div class="TROJKAT_KONTENER" id="TROJKATY">
+    <div class="TROJKAT TROJKAT_JASNY" title="JASNY MOTYW"></div>
+    <div class="TROJKAT TROJKAT_CIEMNY" title="CIEMNY MOTYW"></div>
+  </div>
+
   <script src="https://kozlowskisebastian.pl/JS/HEXAGON.js"></script>
-  <script src="https://kozlowskisebastian.pl/JS/WYBORKOLORU.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/MOTYWAUTO.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
   <script src="https://kozlowskisebastian.pl/JS/LATARKA.js"></script>
+  <script src="https://kozlowskisebastian.pl/JS/WYBORKOLORU.js"></script>
 </body>
 </html>
