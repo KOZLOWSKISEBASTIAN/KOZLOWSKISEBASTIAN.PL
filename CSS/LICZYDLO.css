@@ -69,6 +69,7 @@ html, body { overflow-x: hidden; }
 	line-height:1;
 	outline:none;
 	padding:0;
+	box-sizing:border-box;
 }
 
 .LICZYDLO_POLE {
