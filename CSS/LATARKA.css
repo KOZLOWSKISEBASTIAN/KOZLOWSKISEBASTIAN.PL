@@ -109,14 +109,14 @@
 :root[WYBOR_MOTYW="JASNY"] .LATARKA_OVERLAY_WNETRZE{ background:#F5F5F5; }
 :root[WYBOR_MOTYW="CIEMNY"] .LATARKA_OVERLAY_WNETRZE{ background:#333333; }
 
-/* NOWE: wyśrodkowanie wrappera palety i blokowanie poziomego scrolla strony */
+/* Wrapper palety – trzymamy w ryzach szerokosc i centrowanie */
 .WYBORKOLORU_OPAKOWANIE{
   width:100%;
   max-width:var(--SEKCJA-MAX);
   margin:0 auto;
   display:flex;
   justify-content:center;
-  overflow:hidden;           /* ewentualny nadmiar trzymamy w wrapperze */
+  overflow:hidden;
 }
 
 .LATARKA_DODAJ_POLA, .color-boxes{
