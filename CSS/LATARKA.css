@@ -109,13 +109,13 @@
 :root[WYBOR_MOTYW="JASNY"] .LATARKA_OVERLAY_WNETRZE{ background:#F5F5F5; }
 :root[WYBOR_MOTYW="CIEMNY"] .LATARKA_OVERLAY_WNETRZE{ background:#333333; }
 
-/* Wrapper palety – trzymamy w ryzach szerokosc i centrowanie */
+/* Wrapper palety – bez centrowania (żeby nie ucinalo), reszta bez zmian */
 .WYBORKOLORU_OPAKOWANIE{
   width:100%;
   max-width:var(--SEKCJA-MAX);
   margin:0 auto;
   display:flex;
-  justify-content:center;
+  justify-content:flex-start; /* <- jak wyzej */
   overflow:hidden;
 }
 
