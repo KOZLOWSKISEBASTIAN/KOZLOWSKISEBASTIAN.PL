@@ -61,12 +61,12 @@
 
   document.addEventListener('DOMContentLoaded', ()=>{
     if (PRZYCISK_PANEL_PRZELACZ){
-      PRZYCISK_PANEL_PRZELACZ.textContent = PANEL_KORZEN.classList.contains('ZWINIETY') ? 'POKAZ' : 'UKRYJ';
+      PRZYCISK_PANEL_PRZELACZ.textContent = PANEL_KORZEN.classList.contains('ZWINIETY') ? 'POKAŻ' : 'UKRYJ';
       PRZYCISK_PANEL_PRZELACZ.addEventListener('click', (e)=>{
         e.preventDefault();
         const zwin = !PANEL_KORZEN.classList.contains('ZWINIETY');
         PANEL_KORZEN.classList.toggle('ZWINIETY', zwin);
-        PRZYCISK_PANEL_PRZELACZ.textContent = zwin ? 'POKAZ' : 'UKRYJ';
+        PRZYCISK_PANEL_PRZELACZ.textContent = zwin ? 'POKAŻ' : 'UKRYJ';
       }, { passive:true });
     }
 
