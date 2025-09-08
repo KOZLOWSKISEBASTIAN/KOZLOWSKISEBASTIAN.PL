@@ -1,9 +1,9 @@
-/* ===== BAZA GEOMETRII (desktop 1:1) ===== */
+/* ===== GEOMETRIA BAZOWA (DESKTOP 1:1) ===== */
 :root{
   --PALETA-W-BASE: 364px;  /* szerokość całej siatki */
   --HEKS-W: 28px;          /* szerokość heksa */
-  --HEKS-H: 32px;          /* wysokość heksa  */
-  --WIERSZ-NAK: -14.5px;   /* nakładanie wierszy (ładne na desktop) */
+  --HEKS-H: 32px;          /* wysokość heksa */
+  --WIERSZ-NAK: -14.5px;   /* nakładanie wierszy (poprawne, nie spłaszcza) */
   --PALETA-RZEDY: 13;      /* liczba wierszy */
   --SEKCJA-MAX: 720px;     /* max szerokość wrappera */
 }
@@ -16,18 +16,20 @@
   display:flex;
   justify-content:center;
   overflow:hidden;
+  flex:0 0 auto; /* NIE ściskaj wrappera w flex rodzicu */
 }
 
-/* ===== SIATKA HEKSÓW ===== */
-/* Desktop: zero skalowania – realne wymiary */
+/* siatka heksów (desktop 1:1 — bez transform) */
 .szesciokat_wybor{
-  --SKALA: 1; /* desktop = 1:1 */
-
+  --SKALA: 1;
   display:flex;
   flex-wrap:wrap;
   width: calc(var(--PALETA-W-BASE) * var(--SKALA));
   margin:0 auto;
+  flex:0 0 auto; /* NIE ściskaj siatki w flex rodzicu */
 }
+
+/* pojedynczy heks */
 .szesciokat{
   width:  calc(var(--HEKS-W) * var(--SKALA));
   height: calc(var(--HEKS-H) * var(--SKALA));
@@ -36,36 +38,29 @@
   clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   cursor:pointer;
 }
+
+/* wiersze i nakładanie */
 .szesciokat_wiersz{ text-align:center; }
 .szesciokat_wiersz:not(:first-child){
   margin-top: calc(var(--WIERSZ-NAK) * var(--SKALA));
 }
 
-/* ===== MOBILE <1000px — dopasowanie do okna (tylko tu liczymy skalę) ===== */
+/* ===== MOBILE <1000px — liczymy skalę, ale TYLKO tu ===== */
 @media (max-width: 999px){
   .LATARKA_OVERLAY_WNETRZE{
-    /* wysokość bazowa palety z geometrii */
     --PALETA-H-BASE: calc(
       var(--HEKS-H) + (var(--PALETA-RZEDY) - 1) * (var(--HEKS-H) + var(--WIERSZ-NAK))
     );
-
-    /* dostępne pole (odejmujemy padding 2x16px i rezerwę ~220px) */
-    --OKNO-W: calc(100vw - 32px);
-    --OKNO-H: calc(100vh - 220px);
-
-    /* kandydaci skali */
+    --OKNO-W: calc(100vw - 32px);   /* padding overlaya 2x16px */
+    --OKNO-H: calc(100vh - 220px);  /* rezerwa na pola/przyciski pod paletą */
     --KAND-W: calc(var(--OKNO-W) / var(--PALETA-W-BASE));
     --KAND-H: calc(var(--OKNO-H) / var(--PALETA-H-BASE));
-
-    /* finalna skala dla mobile */
     --PALETA-SKALA: clamp(0.25, min(var(--KAND-W), var(--KAND-H)), 1);
   }
-
-  /* na mobile włączamy skalę przez zmienną */
   .szesciokat_wybor{ --SKALA: var(--PALETA-SKALA); }
 }
 
-/* Ultra-wąskie telefony (≤370px) – ciut więcej miejsca */
+/* ≤370px — trochę więcej miejsca */
 @media (max-width: 370px){
   .LATARKA_OVERLAY_WNETRZE{
     --OKNO-W: calc(100vw - 20px);
@@ -76,12 +71,7 @@
   }
 }
 
-/* Bardzo wąskie (≤330px) – pozwól zejść niżej */
+/* ≤330px — pozwalamy zejść do 0.22 */
 @media (max-width: 330px){
   .LATARKA_OVERLAY_WNETRZE{ --PALETA-SKALA: clamp(0.22, min(var(--KAND-W), var(--KAND-H)), 1); }
-}
-
-/* ===== DESKTOP-EXTRA: jeśli chcesz ciaśniej (Twoje -23px) ===== */
-@media (min-width: 1000px){
-  :root{ --WIERSZ-NAK: -23px; } /* tylko desktop, mobile nie ruszamy */
 }
