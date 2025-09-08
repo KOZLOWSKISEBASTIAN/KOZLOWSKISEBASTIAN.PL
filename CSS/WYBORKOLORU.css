@@ -8,7 +8,7 @@
 .hex {
   width: 28px;
   height: 32px;
-  background-color: #fff;
+
   margin: 0;
   display: inline-block;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
@@ -16,26 +16,4 @@
 }
 
 .hex-row { text-align: center; }
-.hex-row:not(:first-child) { margin-top: -14px; }
-
-/* Pola podglądu – mniejsze (połowa) i obok siebie */
-.color-boxes{
-  display:grid;
-  grid-template-columns:1fr 1fr;  /* HEX | RGB */
-  gap:10px;
-  width:min(1440px, 96vw);
-  margin:12px auto 0;
-}
-.color-boxes input{
-  display:flex; align-items:center;
-  min-height:30px;              /* połowa */
-  border:0; border-radius:8px;
-  padding:0 12px;
-  background:var(--TLO-PRZYCISK);
-  color:var(--AKCENT-TEKST);
-  font:inherit;
-  font-weight:600;
-  line-height:1;
-  outline:none;
-  font-size:clamp(28px, 6.5vw, 42px); /* połowa */
-}
+.hex-row:not(:first-child) { margin-top: -14.5px;}
