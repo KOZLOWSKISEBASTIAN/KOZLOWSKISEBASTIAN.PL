@@ -95,7 +95,7 @@
 .SCREEN_OVERLAY{ position:fixed; inset:0; z-index:0; pointer-events:none; background:#000; opacity:.96; transition:background 40ms linear; }
 .RAMKA,.KONTENER,.PANEL,.SIATKA,.PRZYBORNIK_SEKCJA{ position:relative; z-index:1 }
 
-/* ===== OVERLAY „DODAJ” — pionowe i poziome wycentrowanie ===== */
+/* ===== OVERLAY „DODAJ” ===== */
 .LATARKA_OVERLAY{ position:fixed; inset:0; z-index:1000; display:flex; background:rgba(0,0,0,.7); }
 .LATARKA_OVERLAY.UKRYTY{ display:none!important; }
 .LATARKA_OVERLAY_TRESC{ width:100vw; height:100vh; display:grid; place-items:stretch; background:transparent; }
@@ -112,7 +112,12 @@
 :root[WYBOR_MOTYW="JASNY"] .LATARKA_OVERLAY_WNETRZE{ background:#F5F5F5; }
 :root[WYBOR_MOTYW="CIEMNY"] .LATARKA_OVERLAY_WNETRZE{ background:#333333; }
 
-/* paleta — wrapper (trzyma srodek poziomo) */
+/* ultra-male: zyskaj pare pikseli z paddingu, zero poziomego scrolla */
+@media (max-width: 350px){
+  .LATARKA_OVERLAY_WNETRZE{ padding:8px; }
+}
+
+/* paleta — wrapper (trzyma srodek poziomo; na ultra-malych przestawia WYBORKOLORU.css) */
 .WYBORKOLORU_OPAKOWANIE{
   width:100%;
   max-width:var(--SEKCJA-MAX);
