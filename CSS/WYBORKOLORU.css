@@ -1,14 +1,13 @@
-/* ===== GEOMETRIA BAZOWA (DESKTOP 1:1) ===== */
 :root{
-  --PALETA-W-BASE: 364px;  /* szerokość całej siatki */
-  --HEKS-W: 28px;          /* szerokość heksa */
-  --HEKS-H: 32px;          /* wysokość heksa */
-  --WIERSZ-NAK: -14.5px;   /* nakładanie wierszy (poprawne, nie spłaszcza) */
-  --PALETA-RZEDY: 13;      /* liczba wierszy */
-  --SEKCJA-MAX: 720px;     /* max szerokość wrappera */
+  --PALETA-W-BASE: 364px;
+  --HEKS-W: 28px;
+  --HEKS-H: 32px;
+  --WIERSZ-NAK: -14.5px;
+  --PALETA-RZEDY: 13;
+  --SEKCJA-MAX: 720px;
 }
 
-/* wrapper palety */
+/* wrapper */
 .WYBORKOLORU_OPAKOWANIE{
   width:100%;
   max-width:var(--SEKCJA-MAX);
@@ -16,52 +15,35 @@
   display:flex;
   justify-content:center;
   overflow:hidden;
-  flex:0 0 auto; /* NIE ściskaj wrappera w flex rodzicu */
 }
 
-/* siatka heksów (desktop 1:1 — bez transform) */
+/* siatka heksów — desktop 1:1, mobile skaluje zmienną */
 .szesciokat_wybor{
-  --SKALA: 1;
+  --SKALA: var(--PALETA-SKALA, 1);
   display:flex;
   flex-wrap:wrap;
   width: calc(var(--PALETA-W-BASE) * var(--SKALA));
   margin:0 auto;
-  flex:0 0 auto; /* NIE ściskaj siatki w flex rodzicu */
 }
-
-/* pojedynczy heks */
-.szesciokat{
-  width:  calc(var(--HEKS-W) * var(--SKALA));
-  height: calc(var(--HEKS-H) * var(--SKALA));
-  margin:0;
-  display:inline-block;
-  clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  cursor:pointer;
-}
-
-/* wiersze i nakładanie */
+.szesciokat{ width:calc(var(--HEKS-W)*var(--SKALA)); height:calc(var(--HEKS-H)*var(--SKALA));
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%); display:inline-block; margin:0; cursor:pointer; }
 .szesciokat_wiersz{ text-align:center; }
-.szesciokat_wiersz:not(:first-child){
-  margin-top: calc(var(--WIERSZ-NAK) * var(--SKALA));
-}
+.szesciokat_wiersz:not(:first-child){ margin-top: calc(var(--WIERSZ-NAK) * var(--SKALA)); }
 
-/* ===== MOBILE <1000px — liczymy skalę, ale TYLKO tu ===== */
-@media (max-width: 999px){
+/* skala tylko <1000px */
+@media (max-width:999px){
   .LATARKA_OVERLAY_WNETRZE{
-    --PALETA-H-BASE: calc(
-      var(--HEKS-H) + (var(--PALETA-RZEDY) - 1) * (var(--HEKS-H) + var(--WIERSZ-NAK))
-    );
-    --OKNO-W: calc(100vw - 32px);   /* padding overlaya 2x16px */
-    --OKNO-H: calc(100vh - 220px);  /* rezerwa na pola/przyciski pod paletą */
+    --PALETA-H-BASE: calc(var(--HEKS-H) + (var(--PALETA-RZEDY) - 1) * (var(--HEKS-H) + var(--WIERSZ-NAK)));
+    --OKNO-W: calc(100vw - 32px);
+    --OKNO-H: calc(100vh - 220px);
     --KAND-W: calc(var(--OKNO-W) / var(--PALETA-W-BASE));
     --KAND-H: calc(var(--OKNO-H) / var(--PALETA-H-BASE));
     --PALETA-SKALA: clamp(0.25, min(var(--KAND-W), var(--KAND-H)), 1);
   }
-  .szesciokat_wybor{ --SKALA: var(--PALETA-SKALA); }
 }
 
-/* ≤370px — trochę więcej miejsca */
-@media (max-width: 370px){
+/* ultra-wąskie */
+@media (max-width:370px){
   .LATARKA_OVERLAY_WNETRZE{
     --OKNO-W: calc(100vw - 20px);
     --OKNO-H: calc(100vh - 240px);
@@ -70,8 +52,6 @@
     --PALETA-SKALA: clamp(0.25, min(var(--KAND-W), var(--KAND-H)), 1);
   }
 }
-
-/* ≤330px — pozwalamy zejść do 0.22 */
-@media (max-width: 330px){
+@media (max-width:330px){
   .LATARKA_OVERLAY_WNETRZE{ --PALETA-SKALA: clamp(0.22, min(var(--KAND-W), var(--KAND-H)), 1); }
 }
