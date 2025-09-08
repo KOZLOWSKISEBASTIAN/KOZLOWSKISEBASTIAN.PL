@@ -25,8 +25,8 @@
   const EKRAN_STROBOSKOP = $('EKRAN_STROBOSKOP');
   const EKRAN_SZYBKOSC   = $('EKRAN_SZYBKOSC');
 
-  const LISTA_KOLOROW   = $('LISTA_KOLOROW');
-  const DODAJ_HEX       = $('DODAJ_HEX');
+  const LISTA_KOLOROW     = $('LISTA_KOLOROW');
+  const DODAJ_HEX         = $('DODAJ_HEX');
   const MIESZANY_PRZYCISK = $('MIESZANY_PRZYCISK');
 
   const OVERLAY_DODAJ = $('OVERLAY_DODAJ');
@@ -112,7 +112,7 @@
             odznacz(btn);
             if (pobierzAktywnePrzyciski().length === 0){
               EKRAN_STALY?.classList.remove('TRYB_AKTYWNY');
-              resetTrybu();
+              resetTrybuEkran();
               return;
             }
           }
@@ -125,7 +125,7 @@
           odznacz(btn);
           if (pobierzAktywnePrzyciski().length === 0){
             EKRAN_SOS?.classList.remove('TRYB_AKTYWNY');
-            resetTrybu();
+            resetTrybuEkran();
             return;
           }
         } else {
@@ -138,7 +138,7 @@
           odznacz(btn);
           if (pobierzAktywnePrzyciski().length === 0){
             EKRAN_STROBOSKOP?.classList.remove('TRYB_AKTYWNY');
-            resetTrybu();
+            resetTrybuEkran();
             return;
           }
         } else { zaznacz(btn); }
@@ -183,7 +183,7 @@
     }else{
       SEKCJA_EKRAN.classList.remove('UKRYTY');
       SEKCJA_LATARKA.classList.add('UKRYTY');
-      wylaczLatarke();
+      // NIE wyłączamy latarki – ma działać równolegle z ekranem
     }
     pokazWierszeSuwakow();
   }
@@ -253,7 +253,7 @@
   function kolorStaly(){
     const aktywne = pobierzAktywneKolory();
     return aktywne[aktywne.length-1] || domyslnyKolorPoMotywie();
-    }
+  }
   function koloryStroboskop(){
     const aktywne = pobierzAktywneKolory();
     return (aktywne.length ? aktywne : [domyslnyKolorPoMotywie()]).slice();
@@ -272,14 +272,14 @@
 
   function przelaczEkran(tryb, btn, bezDomyslnego){
     if (STAN.trybEkranu === tryb){
-      resetTrybu();
+      resetTrybuEkran();
       btn?.classList.remove('TRYB_AKTYWNY');
       return;
     }
     [EKRAN_STALY,EKRAN_SOS,EKRAN_STROBOSKOP].forEach(b=>b?.classList.remove('TRYB_AKTYWNY'));
     btn?.classList.add('TRYB_AKTYWNY');
 
-    resetTrybu();
+    resetTrybuEkran();
     STAN.trybEkranu = tryb;
     STAN.indeksHue = 0;
     pokazWierszeSuwakow();
@@ -307,8 +307,8 @@
     }
   }
 
-  function resetTrybu(){
-    zatrzymajTimery();
+  function resetTrybuEkran(){
+    zatrzymajTimeryEkran();
     STAN.miks = false;
     STAN.pominPierwszeOdznaczenie = false;
     MIESZANY_PRZYCISK?.classList.remove('AKTYWNY');
@@ -319,9 +319,11 @@
     pokazWierszeSuwakow();
   }
 
-  function zatrzymajTimery(){
+  function zatrzymajTimeryEkran(){
     clearInterval(window.__ekranIntervalId); window.__ekranIntervalId = null;
     clearTimeout(window.__ekranSOSId);       window.__ekranSOSId = null;
+  }
+  function zatrzymajTimeryLatarka(){
     if (STAN.interwalTorch){ clearInterval(STAN.interwalTorch); STAN.interwalTorch = null; }
     if (STAN.timeoutTorch){  clearTimeout(STAN.timeoutTorch);   STAN.timeoutTorch  = null; }
   }
@@ -332,7 +334,7 @@
   }
 
   function startStroboskop(input){
-    zatrzymajTimery();
+    zatrzymajTimeryEkran();
     const baza = Number(input?.value)||200;
     let i=0, on=false;
     const kolorWyl = (motyw()==='CIEMNY' ? '#000000' : '#FFFFFF');
@@ -352,7 +354,7 @@
   }
 
   function startSOS(){
-    zatrzymajTimery();
+    zatrzymajTimeryEkran();
     let i=0;
     const tick = ()=>{
       const [c1,c2] = STAN.miks ? paraHueNastepna() : kolorySOS();
@@ -387,7 +389,7 @@
     } else if (!navigator.mediaDevices?.getUserMedia){
       pokazInfoLatarki('Brak wsparcia getUserMedia. Uzyj zakladki EKRAN.');
     } else if (STAN.wspieraTorch === false){
-      pokazInfoLatarki('Urządzenie nie wspiera trybu torch. Uzyj zakladki EKRAN.');
+      pokazInfoLatarki('Urzadzenie nie wspiera trybu torch. Uzyj zakladki EKRAN.');
     } else {
       pokazInfoLatarki('Wybierz tryb. Przy pierwszym uzyciu bedzie prosba o aparat.');
     }
@@ -433,7 +435,7 @@
   }
 
   async function wylaczLatarke(wylaczNakladke){
-    zatrzymajTimery();
+    zatrzymajTimeryLatarka();
     try{
       if (STAN.torWideo){
         const caps = STAN.torWideo.getCapabilities?.() || {};
@@ -446,7 +448,7 @@
   }
 
   function startLatarkaStroboskop(){
-    zatrzymajTimery();
+    zatrzymajTimeryLatarka();
     const delay = Number(LATARKA_SZYBKOSC?.value)||200;
     let on=false;
     STAN.interwalTorch = setInterval(async ()=>{
@@ -462,7 +464,7 @@
   }
 
   function startLatarkaSOS(){
-    zatrzymajTimery();
+    zatrzymajTimeryLatarka();
     let i=0;
     const tick = async ()=>{
       const on = (i%2===0);
@@ -482,7 +484,7 @@
   async function przelaczLatarke(tryb, btn){
     if (STAN.trybLatarki === tryb){
       STAN.trybLatarki=null; btn?.classList.remove('TRYB_AKTYWNY');
-      await wylaczLatarke(true);
+      await wylaczLatarke(false); // nie chowamy nakladki ekranu – ekran moze byc wlaczony niezaleznie
       pokazWierszeSuwakow();
       return;
     }
@@ -497,8 +499,7 @@
       } else {
         pokazInfoLatarki('Brak wsparcia latarki. Uzyj zakladki EKRAN.');
       }
-      aktywujZakladke('ekran');
-      przelaczEkran('staly', EKRAN_STALY);
+      // fallback – nie przelaczamy zakladek, ekran moze byc juz wlaczony
       ustawKolorEkranu('#FFFFFF');
       return;
     }
