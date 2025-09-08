@@ -1,8 +1,8 @@
 /* Baza geometrii palety (dopasowana do aktualnego JS) */
 :root{
-  --PALETA-W-BASE: 364px;   /* szerokosc calej siatki heksow */
-  --HEKS-W: 28px;           /* szerokosc pojedynczego heksa */
-  --HEKS-H: 32px;           /* wysokosc pojedynczego heksa */
+  --PALETA-W-BASE: 286px;   /* szerokosc calej siatki heksow */
+  --HEKS-W: 22px;           /* szerokosc pojedynczego heksa */
+  --HEKS-H: 22px;           /* wysokosc pojedynczego heksa */
   --WIERSZ-NAK: -14.5px;    /* nakladanie kolejnych wierszy */
   --PALETA-RZEDY: 13;       /* liczba wierszy */
   --OVERLAY-PAD: 16px;      /* padding wewnetrzny overlaya (po obu stronach) */
