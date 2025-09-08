@@ -7,8 +7,9 @@
   const SOLID_DEFAULT_DARK  = '#FFFFFF'; // CIEMNY
   const SOLID_DEFAULT_LIGHT = '#000000'; // JASNY
   const SOS_DEFAULTS  = ['#FFFFFF', '#000000'];
+  const SOS_SEQ = [200,200, 200,200, 200,600, 600,200, 600,200, 600,600, 200,200, 200,200, 200,1200];
 
-  // Sterowanie i zakładki
+  // UI
   const PANEL_ROOT = $('PANEL_ROOT');
   const BTN_PANEL_TOGGLE = $('BTN_PANEL_TOGGLE');
   const TAB_TORCH  = $('TAB_TORCH');
@@ -19,6 +20,8 @@
   const TORCH_SOS     = $('TORCH_SOS');
   const TORCH_STROBE  = $('TORCH_STROBE');
   const TORCH_SPEED   = $('TORCH_SZYBKOSC');
+  const TORCH_VIDEO   = $('TORCH_VIDEO');
+  const TORCH_INFO    = $('TORCH_INFO');
 
   // SCREEN
   const SCREEN_SOLID   = $('SCREEN_SOLID');
@@ -49,24 +52,27 @@
   const ROW_TORCH  = $('ROW_TORCH');
   const ROW_SCREEN = $('ROW_SCREEN');
 
+  // Stan
   const prevVal = new WeakMap();
   let clickSeq = 0;
-
   const S = {
     torchMode:null,
     screenMode:null,
     mixOn:false,
     hueIndex:0,
     overlayArmed:false,
-    suppressFirstSolidUnselect:false
+    suppressFirstSolidUnselect:false,
+    // torch internals
+    stream:null,
+    videoTrack:null,
+    supportsTorch:false,
+    torchInterval:null,
+    torchTimeout:null
   };
 
-  const SOS_SEQ = [200,200, 200,200, 200,600, 600,200, 600,200, 600,600, 200,200, 200,200, 200,1200];
-
   document.addEventListener('DOMContentLoaded', ()=>{
-    /* ===== POKAŻ/UKRYJ (naprawa) ===== */
+    /* ===== POKAŻ/UKRYJ ===== */
     if (BTN_PANEL_TOGGLE){
-      // ustaw etykietę zgodnie ze stanem
       BTN_PANEL_TOGGLE.textContent = PANEL_ROOT.classList.contains('ZWINIETY') ? 'POKAŻ' : 'UKRYJ';
       BTN_PANEL_TOGGLE.addEventListener('click', (e)=>{
         e.preventDefault();
@@ -95,7 +101,7 @@
     SCREEN_SOS   ?.addEventListener('click', ()=>toggleScreenMode('sos',   SCREEN_SOS));
     SCREEN_STROBE?.addEventListener('click', ()=>toggleScreenMode('strobe',SCREEN_STROBE));
 
-    /* ===== Paleta główna ===== */
+    /* ===== Paleta ===== */
     KOLORY_LISTA?.addEventListener('click',(e)=>{
       const btn = e.target.closest('.KOLOR'); if(!btn) return;
       spinHex(btn);
@@ -128,8 +134,7 @@
             }
           }
         } else {
-          deselectAll();
-          markActive(btn);
+          deselectAll(); markActive(btn);
           S.suppressFirstSolidUnselect = false;
         }
       } else if (S.screenMode === 'sos'){
@@ -143,10 +148,7 @@
         } else {
           markActive(btn);
           const aktywne = getActiveButtons();
-          if (aktywne.length > 2){
-            const naj = najstarszy(aktywne);
-            unmark(naj);
-          }
+          if (aktywne.length > 2){ const naj = najstarszy(aktywne); unmark(naj); }
         }
       } else if (S.screenMode === 'strobe'){
         if (btn.classList.contains('AKTYWNY')){
@@ -156,9 +158,7 @@
             resetTrybu();
             return;
           }
-        } else {
-          markActive(btn);
-        }
+        } else { markActive(btn); }
       }
 
       applyLivePreview(true);
@@ -171,45 +171,46 @@
       otworzOverlay();
     });
 
-    /* ===== Zamykanie OVERLAY kliknięciem „gdziekolwiek obok” (działa znów) ===== */
+    /* ===== Zamknięcia OVERLAY ===== */
     DODAJ_OVERLAY?.addEventListener('click', (ev)=>{
       const target = ev.target;
       const klikWHex = target.closest('.hex') || target.closest('.hexagon-picker');
       const klikWPole = target.closest('.LICZYDLO_POLE') || target.closest('input,textarea,select,button');
-      if (!klikWHex && !klikWPole){
-        zamknijOverlay();
-      }
+      if (!klikWHex && !klikWPole){ zamknijOverlay(); }
     });
     OVERLAY_PANEL?.addEventListener('click', (ev)=>{
       const klikWHex = ev.target.closest('.hex') || ev.target.closest('.hexagon-picker');
       const klikWPole = ev.target.closest('.LICZYDLO_POLE') || ev.target.closest('input,textarea,select,button');
-      if (klikWHex || klikWPole){
-        ev.stopPropagation();
-      }
+      if (klikWHex || klikWPole){ ev.stopPropagation(); }
     });
-    OVERLAY_BG?.addEventListener('click', (ev)=>{
-      if (ev.target === OVERLAY_BG) zamknijOverlay();
-    });
+    OVERLAY_BG?.addEventListener('click', (ev)=>{ if (ev.target === OVERLAY_BG) zamknijOverlay(); });
     document.addEventListener('keydown', (e)=>{ if(e.key==='Escape' && !DODAJ_OVERLAY.classList.contains('UKRYTY')) zamknijOverlay(); });
 
-    /* ===== Integracja pickera (dodawanie koloru) ===== */
+    /* ===== Picker → dodaj ===== */
     window.addEventListener('wybrano-kolor', e=>handlePicked(e.detail?.hex));
     window.addEventListener('color-picked',  e=>handlePicked(e.detail?.hex));
+
+    /* ===== Bezpieczeństwo: wyłącz latarkę gdy strona znika ===== */
+    document.addEventListener('visibilitychange', ()=>{ if (document.hidden) torchOff(true); });
+    window.addEventListener('pagehide', ()=>torchOff(true));
+    window.addEventListener('beforeunload', ()=>torchOff(true));
   });
 
-  /* ===== Zakładki ===== */
+  /* ========== Zakładki ========== */
   function aktywujZakladke(which){
     if(which==='torch'){
       SEKCJA_TORCH.classList.remove('UKRYTY');
       SEKCJA_SCREEN.classList.add('UKRYTY');
+      showTorchInfoIfNeeded();
     }else{
       SEKCJA_SCREEN.classList.remove('UKRYTY');
       SEKCJA_TORCH.classList.add('UKRYTY');
+      torchOff(); // wyłącz HW torch przy przejściu na EKRAN
     }
     updateSlidersVisibility();
   }
 
-  /* ===== Suwaki ===== */
+  /* ========== Slidery ========== */
   function initSlider(input){
     if(!input) return;
     prevVal.set(input, Number(input.value)||0);
@@ -221,9 +222,8 @@
       requestAnimationFrame(()=>{ setTimeout(()=> input.style.setProperty('--spin','0deg'), 60); });
       prevVal.set(input, now);
 
-      if(input===SCREEN_SPEED && S.screenMode==='strobe'){
-        startStrobe(SCREEN_SPEED);
-      }
+      if(input===SCREEN_SPEED && S.screenMode==='strobe') startStrobe(SCREEN_SPEED);
+      if(input===TORCH_SPEED  && S.torchMode==='strobe' && S.supportsTorch) startTorchStrobe();
     });
   }
   function updateSlidersVisibility(){
@@ -232,7 +232,7 @@
   }
   function showRow(row, show){ if(row) row.classList.toggle('UKRYTY', !show); }
 
-  /* ===== Overlay ===== */
+  /* ========== Overlay DODAJ ========== */
   function otworzOverlay(){
     DODAJ_OVERLAY.classList.remove('UKRYTY');
     DODAJ_OVERLAY.setAttribute('aria-hidden','false');
@@ -245,12 +245,12 @@
     S.overlayArmed=false;
   }
 
-  /* ===== Motyw / domyślne ===== */
+  /* ========== Motyw / domyślne ========== */
   function getTheme(){ return (document.documentElement.getAttribute('WYBOR_MOTYW')||'JASNY').toUpperCase(); }
   function getThemeDefault(){ return getTheme()==='CIEMNY' ? '#000000' : '#FFFFFF'; }
   function getSolidDefaultByTheme(){ return getTheme()==='CIEMNY' ? SOLID_DEFAULT_DARK : SOLID_DEFAULT_LIGHT; }
 
-  /* ===== Zaznaczenia palety ===== */
+  /* ========== Paleta ========== */
   function getActiveButtons(){ return $$('.KOLOR.AKTYWNY[data-kolor]', KOLORY_LISTA); }
   function getActiveColors(){
     return getActiveButtons()
@@ -276,7 +276,7 @@
   }
   function spinHex(el){ el.classList.remove('OBROT'); void el.offsetWidth; el.classList.add('OBROT'); }
 
-  /* ===== Kolor wynikowy per tryb ===== */
+  /* ========== Kolory dla ekranu ========== */
   function getSolidColor(){
     const aktywne = getActiveColors();
     return aktywne[aktywne.length-1] || getSolidDefaultByTheme();
@@ -293,12 +293,12 @@
     return SOS_DEFAULTS.slice();
   }
 
-  /* ===== RGB/MIX ===== */
+  /* ========== RGB/MIX ========== */
   function hueAt(i){ const h=((i%360)+360)%360; return `hsl(${h} 100% 50%)`; }
   function nextHue(){ const c=hueAt(S.hueIndex); S.hueIndex = (S.hueIndex+15)%360; return c; }
   function nextHuePair(){ const a=hueAt(S.hueIndex), b=hueAt((S.hueIndex+180)%360); S.hueIndex=(S.hueIndex+15)%360; return [a,b]; }
 
-  /* ===== Tryby SCREEN ===== */
+  /* ========== Tryby SCREEN (EKRAN) ========== */
   function toggleScreenMode(mode, btn, noDefault){
     if (S.screenMode === mode){
       resetTrybu();
@@ -351,6 +351,8 @@
   function stopTimers(){
     clearInterval(window.__screenIntervalId); window.__screenIntervalId = null;
     clearTimeout(window.__screenSOSId);       window.__screenSOSId = null;
+    if (S.torchInterval){ clearInterval(S.torchInterval); S.torchInterval = null; }
+    if (S.torchTimeout){  clearTimeout(S.torchTimeout);   S.torchTimeout  = null; }
   }
 
   function setScreenColor(hex){
@@ -401,16 +403,174 @@
     }
   }
 
-  /* ===== TORCH: UI ===== */
-  function toggleTorchMode(mode, btn){
-    if (S.torchMode === mode){ S.torchMode=null; btn?.classList.remove('TRYB_AKTYWNY'); updateSlidersVisibility(); return; }
-    [TORCH_SOLID,TORCH_SOS,TORCH_STROBE].forEach(b=>b?.classList.remove('TRYB_AKTYWNY'));
-    btn?.classList.add('TRYB_AKTYWNY');
-    S.torchMode = mode;
-    updateSlidersVisibility();
+  /* ========== TORCH (sprzętowa dioda LED) ========== */
+
+  function showTorchInfo(msg){
+    if (!TORCH_INFO) return;
+    TORCH_INFO.textContent = msg || '';
+    TORCH_INFO.classList.toggle('UKRYTY', !msg);
+  }
+  function showTorchInfoIfNeeded(){
+    // Pokaż info, dopóki nie wykryjemy wsparcia
+    if (!isSecureContext()){
+      showTorchInfo('Latarka wymaga HTTPS (strona musi być przez https://).');
+    } else if (isIOS()){
+      showTorchInfo('iOS/Safari nie udostępnia sterowania diodą LED w przeglądarce. Użyj zakładki EKRAN.');
+    } else if (!navigator.mediaDevices?.getUserMedia){
+      showTorchInfo('Twoja przeglądarka nie wspiera getUserMedia. Użyj zakładki EKRAN.');
+    } else if (S.supportsTorch === false){
+      showTorchInfo('Urządzenie/przeglądarka nie obsługuje trybu „torch”. Użyj zakładki EKRAN.');
+    } else {
+      showTorchInfo('Wybierz tryb (STAŁY/SOS/STROBOSKOP). Przy pierwszym użyciu poprosimy o dostęp do aparatu.');
+    }
   }
 
-  /* ===== Picker → dodaj i zamknij ===== */
+  function isSecureContext(){ return window.isSecureContext === true; }
+  function isIOS(){
+    const ua = navigator.userAgent || '';
+    return /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  }
+
+  async function ensureTorchStream(){
+    if (!isSecureContext()) throw new Error('HTTPS_REQUIRED');
+    if (!navigator.mediaDevices?.getUserMedia) throw new Error('NO_GUM');
+
+    // jeśli już mamy i działa – OK
+    if (S.videoTrack && S.stream) return;
+
+    // poproś o kamerę tylną (bez audio)
+    const constraints = {
+      video: {
+        facingMode: { ideal: 'environment' },
+        width: { ideal: 1280 },
+        height:{ ideal: 720 }
+      },
+      audio: false
+    };
+
+    const stream = await navigator.mediaDevices.getUserMedia(constraints);
+    const track = stream.getVideoTracks()[0];
+    if (!track) { throw new Error('NO_VIDEO_TRACK'); }
+
+    // czy wspiera torch?
+    const caps = track.getCapabilities?.() || {};
+    S.supportsTorch = !!caps.torch;
+
+    // przypnij do ukrytego <video>, żeby strumień żył
+    TORCH_VIDEO.srcObject = stream;
+    await TORCH_VIDEO.play().catch(()=>{ /* ignoruj autoplay block – i tak mamy stream */ });
+
+    S.stream = stream;
+    S.videoTrack = track;
+  }
+
+  async function torchOn(){
+    if (!S.videoTrack) await ensureTorchStream();
+    if (!S.videoTrack) return;
+
+    const caps = S.videoTrack.getCapabilities?.() || {};
+    S.supportsTorch = !!caps.torch;
+
+    if (S.supportsTorch){
+      await S.videoTrack.applyConstraints({ advanced: [{ torch: true }] }).catch(()=>{});
+    } else {
+      // fallback: rozjaśnij ekran
+      setScreenColor('#FFFFFF');
+    }
+  }
+
+  async function torchOff(forceScreenHide){
+    stopTimers();
+    try{
+      if (S.videoTrack){
+        const caps = S.videoTrack.getCapabilities?.() || {};
+        if (caps.torch){
+          await S.videoTrack.applyConstraints({ advanced: [{ torch: false }] }).catch(()=>{});
+        }
+      }
+    }catch(_){}
+    if (forceScreenHide){ SCREEN_OVERLAY.classList.add('UKRYTY'); }
+  }
+
+  function startTorchStrobe(){
+    stopTimers();
+    const delay = Number(TORCH_SPEED?.value)||200;
+    let on=false;
+    S.torchInterval = setInterval(async ()=>{
+      on = !on;
+      try{
+        if (S.videoTrack?.getCapabilities?.().torch){
+          await S.videoTrack.applyConstraints({ advanced: [{ torch: on }] });
+        } else {
+          // fallback – migaj ekranem
+          setScreenColor(on ? '#FFFFFF' : '#000000');
+        }
+      }catch(_){}
+    }, delay);
+  }
+
+  function startTorchSOS(){
+    stopTimers();
+    let i=0;
+    const tick = async ()=>{
+      const on = (i%2===0);
+      try{
+        if (S.videoTrack?.getCapabilities?.().torch){
+          await S.videoTrack.applyConstraints({ advanced: [{ torch: on }] });
+        } else {
+          setScreenColor(on ? '#FFFFFF' : '#000000');
+        }
+      }catch(_){}
+      const wait = SOS_SEQ[i++ % SOS_SEQ.length];
+      S.torchTimeout = setTimeout(tick, wait);
+    };
+    tick();
+  }
+
+  async function toggleTorchMode(mode, btn){
+    // klik = gest użytkownika → możemy prosić o uprawnienia
+    if (S.torchMode === mode){
+      S.torchMode=null; btn?.classList.remove('TRYB_AKTYWNY');
+      await torchOff(true);
+      updateSlidersVisibility();
+      return;
+    }
+    [TORCH_SOLID,TORCH_SOS,TORCH_STROBE].forEach(b=>b?.classList.remove('TRYB_AKTYWNY'));
+    btn?.classList.add('TRYB_AKTYWNY');
+
+    // przygotuj stream i sprawdź wsparcie
+    try{
+      await ensureTorchStream();
+    }catch(err){
+      if (String(err?.message)==='HTTPS_REQUIRED'){
+        showTorchInfo('Latarka wymaga HTTPS (strona musi być przez https://). Użyj zakładki EKRAN.');
+      } else {
+        showTorchInfo('Brak wsparcia dla latarki. Użyj zakładki EKRAN.');
+      }
+      // fallback – przełącz do EKRAN/STAŁY (białe tło)
+      aktywujZakladke('screen');
+      toggleScreenMode('solid', SCREEN_SOLID);
+      setScreenColor('#FFFFFF');
+      return;
+    }
+
+    S.torchMode = mode;
+    updateSlidersVisibility();
+    showTorchInfo(S.supportsTorch
+      ? 'Latarka działa. Aby wyłączyć – stuknij aktywny tryb.'
+      : 'Twoje urządzenie nie wspiera sterowania diodą LED – używamy rozświetlenia ekranu.');
+
+    if (mode === 'solid'){
+      await torchOn();
+      if (!S.supportsTorch) setScreenColor('#FFFFFF');
+    } else if (mode === 'sos'){
+      startTorchSOS();
+    } else if (mode === 'strobe'){
+      startTorchStrobe();
+    }
+  }
+
+  /* ========== Picker → dodaj i zamknij ========== */
   function handlePicked(hex){
     if (!hex) return;
     const norm = normalizeHex(hex);
@@ -423,7 +583,7 @@
     zamknijOverlay();
   }
 
-  /* ===== Pola (HEX/RGB) ===== */
+  /* ========== Pola (HEX/RGB) ========== */
   function updateBoxes(hex){
     const {r,g,b} = hexToRgb(hex);
     COLORBOX_HEX && (COLORBOX_HEX.value = `HEX:${hex.toUpperCase()}`);
