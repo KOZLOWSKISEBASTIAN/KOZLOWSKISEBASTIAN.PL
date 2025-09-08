@@ -1,10 +1,10 @@
-/* ===== BAZA (DESKTOP) — zostaje jak bylo ===== */
+/* ===== BAZA (DESKTOP) ===== */
 :root{
-  /* geometra palety zgodna z obecnym JS */
+  /* geometra palety zgodna z Twoim JS */
   --PALETA-W-BASE: 364px;   /* szerokosc siatki */
   --HEKS-W: 28px;           /* szerokosc heksa */
   --HEKS-H: 32px;           /* wysokosc heksa  */
-  --WIERSZ-NAK: -14.5px;    /* nakladanie wierszy (bazowe, ladne na desktop) */
+  --WIERSZ-NAK: -14.5px;    /* nakladanie wierszy (bazowe) */
   --PALETA-RZEDY: 13;       /* liczba wierszy */
 }
 
@@ -43,32 +43,58 @@
 .szesciokat_wiersz{ text-align:center; }
 .szesciokat_wiersz:not(:first-child){ margin-top:var(--WIERSZ-NAK); }
 
-/* ===== MOBILE (<1000px) — dopasowanie do ekranu i centrowanie ===== */
+/* ===== MOBILE (<1000px): dopasowanie do okna ===== */
 @media (max-width: 999px){
-  /* przeliczamy wysokosc bazowa palety z geometrii */
   .LATARKA_OVERLAY_WNETRZE{
+    /* wysokosc bazowa palety z geometrii */
     --PALETA-H-BASE: calc(var(--HEKS-H) + (var(--PALETA-RZEDY) - 1) * (var(--HEKS-H) + var(--WIERSZ-NAK)));
 
-    /* dostepna szerokosc/wysokosc wewnatrz okna (minus padding overlaya 2x16px
-       i rezerwa pionowa na pola HEX/RGB + marginesy ~220px) */
+    /* dostepna szerokosc i wysokosc (padding overlaya 2x16px, rezerwa pionowa ~220px) */
     --DOSTEPNE-W: calc(100vw - 32px);
     --DOSTEPNE-H: calc(100vh - 220px);
 
-    /* skale od szerokosci i wysokosci */
+    /* skale od W i H */
     --SKALA-W: calc(var(--DOSTEPNE-W) / var(--PALETA-W-BASE));
     --SKALA-H: calc(var(--DOSTEPNE-H) / var(--PALETA-H-BASE));
 
-    /* ostateczna skala: mniejsza z dwoch, ograniczona do [0.35, 1] */
-    --PALETA-SKALA: clamp(0.35, min(var(--SKALA-W), var(--SKALA-H)), 1);
+    /* finalna skala: mniejsza z dwoch, 0.25..1 (zwiekszylem zakres na ultra-male) */
+    --PALETA-SKALA: clamp(0.25, min(var(--SKALA-W), var(--SKALA-H)), 1);
   }
 
-  /* centrowanie palety poziomo; pion robi LATARKA.css */
   .WYBORKOLORU_OPAKOWANIE{ justify-content:center; }
   .szesciokat_wybor{ margin:0 auto; transform-origin:top center; }
 }
 
-/* ===== DESKTOP-EXTRA: jesli chcesz mocniejsze zazebienie na duzych ekranach =====
-   (Twoje -23px), to wlacz tu; mobile pozostanie skalowany i stabilny */
+/* ===== MALYCH EKRANOW WIECEJ (<=480px): wieksza pionowa rezerwa do pola HEX/RGB ===== */
+@media (max-width: 480px){
+  .LATARKA_OVERLAY_WNETRZE{
+    --DOSTEPNE-H: calc(100vh - 260px); /* troche wiecej miejsca na UI pod paleta */
+    --SKALA-H: calc(var(--DOSTEPNE-H) / var(--PALETA-H-BASE));
+    --PALETA-SKALA: clamp(0.25, min(var(--SKALA-W), var(--SKALA-H)), 1);
+  }
+}
+
+/* ===== ULTRA-WASKIE (<=350px): mniejszy padding, kotwica lewy-gorny, zero obciecia ===== */
+@media (max-width: 350px){
+  .LATARKA_OVERLAY_WNETRZE{
+    /* zyskajmy 8px z kazdej strony */
+    --DOSTEPNE-W: calc(100vw - 16px);
+    /* troche mniej rezerwy pionowej, zeby skala nie schodzila zbyt nisko */
+    --DOSTEPNE-H: calc(100vh - 240px);
+    --SKALA-W: calc(var(--DOSTEPNE-W) / var(--PALETA-W-BASE));
+    --SKALA-H: calc(var(--DOSTEPNE-H) / var(--PALETA-H-BASE));
+    --PALETA-SKALA: clamp(0.25, min(var(--SKALA-W), var(--SKALA-H)), 1);
+  }
+
+  /* kotwiczenie do lewego gornego rogu + brak auto-centrowania, zeby nic nie ucinalo po bokach */
+  .WYBORKOLORU_OPAKOWANIE{ justify-content:flex-start; }
+  .szesciokat_wybor{
+    margin:0;
+    transform-origin:top left;
+  }
+}
+
+/* ===== DESKTOP-EXTRA: Twoje mocniejsze zazebienie ===== */
 @media (min-width: 1000px){
   :root{ --WIERSZ-NAK: -23px; }
 }
