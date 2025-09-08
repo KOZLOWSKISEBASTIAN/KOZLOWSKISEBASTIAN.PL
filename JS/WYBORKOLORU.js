@@ -1,11 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const hexagonPicker = document.getElementById("hexagonPicker");
-  const inputHEX = document.getElementById("colorBoxHEX");
-  const inputRGB = document.getElementById("colorBoxRGB");
+  const wyborSzesciokat = document.getElementById("wyborSzesciokat");
+  const poleHEX = document.getElementById("POLE_HEX");
+  const poleRGB = document.getElementById("POLE_RGB");
 
-  // siatka jak w plikach źródłowych
-  const rowOffsets = [90, 75, 60, 45, 30, 15, 0, 15, 30, 45, 60, 75, 90];
-  const colorRows = [
+  const przesunieciaWierszy = [90, 75, 60, 45, 30, 15, 0, 15, 30, 45, 60, 75, 90];
+  const wierszeKolorow = [
     ["#003366","#336699","#3366CC","#003399","#000099","#0000CC","#000066"],
     ["#006666","#006699","#0099CC","#0066CC","#0033CC","#0000FF","#3333FF","#333399"],
     ["#669999","#009999","#33CCCC","#00CCFF","#0099FF","#0066FF","#3366FF","#3333CC","#666699"],
@@ -21,85 +20,79 @@ document.addEventListener("DOMContentLoaded", () => {
     ["#663300","#996600","#CC3300","#993300","#990000","#800000","#993333"]
   ];
 
-  let locked = false;
-  let currentColor = "#FFFFFF";
+  let zablokowany = false;
+  let aktualnyKolor = "#FFFFFF";
 
-  function setColor(hex) {
-    const rgb = hexToRgb(hex);
-    inputHEX.value = `HEX:${hex.toUpperCase()}`;
-    inputRGB.value = `RGB:${rgb.r},${rgb.g},${rgb.b}`;
-    currentColor = hex.toUpperCase();
+  function ustawKolor(hex) {
+    const rgb = hexNaRgb(hex);
+    poleHEX.value = `HEX:${hex.toUpperCase()}`;
+    poleRGB.value = `RGB:${rgb.r},${rgb.g},${rgb.b}`;
+    aktualnyKolor = hex.toUpperCase();
   }
 
-  function hexToRgb(hex) {
+  function hexNaRgb(hex) {
     const h = hex.replace('#','');
     const n = parseInt(h,16);
     return { r:(n>>16)&255, g:(n>>8)&255, b:n&255 };
   }
-  function rgbToHex(r,g,b) {
+  function rgbNaHex(r,g,b) {
     const to2 = v => v.toString(16).padStart(2,'0');
     return ('#'+to2(r)+to2(g)+to2(b)).toUpperCase();
   }
 
-  // Walidacja pól
-  inputHEX.addEventListener("blur", () => {
-    const m = inputHEX.value.trim().match(/#?[0-9a-f]{6}/i);
+  poleHEX.addEventListener("blur", () => {
+    const m = poleHEX.value.trim().match(/#?[0-9a-f]{6}/i);
     if (m){
       const hex = ('#'+m[0].replace('#','')).toUpperCase();
-      setColor(hex);
+      ustawKolor(hex);
     } else {
-      inputHEX.value = `HEX:${currentColor}`;
+      poleHEX.value = `HEX:${aktualnyKolor}`;
     }
   });
-  inputRGB.addEventListener("blur", () => {
-    const m = inputRGB.value.trim().match(/rgb:?(\s*)?(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/i);
+  poleRGB.addEventListener("blur", () => {
+    const m = poleRGB.value.trim().match(/rgb:?(\s*)?(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})/i);
     if (m){
       const r = Math.min(255, parseInt(m[2],10));
       const g = Math.min(255, parseInt(m[3],10));
       const b = Math.min(255, parseInt(m[4],10));
-      setColor(rgbToHex(r,g,b));
+      ustawKolor(rgbNaHex(r,g,b));
     } else {
-      const {r,g,b} = hexToRgb(currentColor);
-      inputRGB.value = `RGB:${r},${g},${b}`;
+      const {r,g,b} = hexNaRgb(aktualnyKolor);
+      poleRGB.value = `RGB:${r},${g},${b}`;
     }
   });
 
-  // Generowanie hexów + zdarzenia
-  let cols = 7;
-  rowOffsets.forEach((offset, rowIndex) => {
-    const rowDiv = document.createElement("div");
-    rowDiv.className = "hex-row";
-    rowDiv.style.marginLeft = offset + "px";
+  let kolumn = 7;
+  przesunieciaWierszy.forEach((offset, idx) => {
+    const wiersz = document.createElement("div");
+    wiersz.className = "szesciokat_wiersz";
+    wiersz.style.marginLeft = offset + "px";
 
-    for (let i=0; i<cols; i++) {
-      const color = (colorRows[rowIndex] && colorRows[rowIndex][i]) ? colorRows[rowIndex][i] : "#000000";
-      const hexDiv = document.createElement("div");
-      hexDiv.className = "hex";
-      hexDiv.style.backgroundColor = color;
+    for (let i=0; i<kolumn; i++) {
+      const kolor = (wierszeKolorow[idx] && wierszeKolorow[idx][i]) ? wierszeKolorow[idx][i] : "#000000";
+      const sze = document.createElement("div");
+      sze.className = "szesciokat";
+      sze.style.backgroundColor = kolor;
 
-      hexDiv.addEventListener("mouseover", () => {
-        if (!locked) setColor(color);
+      sze.addEventListener("mouseover", () => {
+        if (!zablokowany) ustawKolor(kolor);
       });
-      hexDiv.addEventListener("click", e => {
+      sze.addEventListener("click", e => {
         e.stopPropagation();
-        locked = true;
-        setColor(color);
-
-        // WYŚLIJ WYDARZENIE DO LATARKA.js (4) — natychmiastowe dodanie i zamknięcie
-        window.dispatchEvent(new CustomEvent('wybrano-kolor', { detail:{ hex: color } }));
+        zablokowany = true;
+        ustawKolor(kolor);
+        window.dispatchEvent(new CustomEvent('wybrano-kolor', { detail:{ hex: kolor } }));
       });
 
-      rowDiv.appendChild(hexDiv);
+      wiersz.appendChild(sze);
     }
-    hexagonPicker.appendChild(rowDiv);
-    cols += rowIndex < 6 ? 1 : -1;
+    wyborSzesciokat.appendChild(wiersz);
+    kolumn += idx < 6 ? 1 : -1;
   });
 
-  // odblokowanie po kliknięciu poza hex
   document.addEventListener("click", e => {
-    if (!e.target.closest(".hex")) locked = false;
+    if (!e.target.closest(".szesciokat")) zablokowany = false;
   });
 
-  // start
-  setColor("#FFFFFF");
+  ustawKolor("#FFFFFF");
 });
