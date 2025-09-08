@@ -104,7 +104,8 @@
   display:flex;
   flex-direction:column;
   align-items:center;
-  justify-content:center;
+  justify-content:flex-start;  /* ⬅ zamiast center: zaczynamy od góry */
+
   gap:16px;
   background:var(--TLO-PRZYCISK);
   padding:16px; 
