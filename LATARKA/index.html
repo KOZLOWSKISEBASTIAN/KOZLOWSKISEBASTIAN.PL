@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="pl">
 <head>
@@ -6,11 +7,14 @@
   <title>LATARKA</title>
   <meta name="color-scheme" content="dark light" />
 
+  <!-- WSPÓŁDZIELONE STYLE -->
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/HEXAGON.css" />
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KOLORY.css" />
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css" />
+  <!-- STRONA -->
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/LATARKA.css" />
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/WYBORKOLORU.css" />
+
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet" />
 </head>
 <body>
@@ -48,6 +52,12 @@
               <div class="ROW_FULL UKRYTY" id="ROW_TORCH">
                 <input id="TORCH_SZYBKOSC" type="range" min="50" max="1000" step="10" value="200" class="SUWAK SUWAK_HEX" />
               </div>
+
+              <!-- ukryty <video> utrzymuje strumień kamery przy życiu -->
+              <video id="TORCH_VIDEO" class="UKRYTY" playsinline muted></video>
+
+              <!-- komunikat o braku wsparcia / HTTP / iOS -->
+              <div id="TORCH_INFO" class="ROW_FULL UKRYTY" aria-live="polite"></div>
             </div>
 
             <!-- EKRAN (kolory + tryby) -->
@@ -95,11 +105,10 @@
           <div id="hexagonPicker" class="hexagon-picker"></div>
         </div>
 
-<div class="LATARKA_DODAJ_POLA">
-  <input id="colorBoxHEX" class="LATARKA_INPUT" type="text" placeholder="HEX">
-  <input id="colorBoxRGB" class="LATARKA_INPUT" type="text" placeholder="RGB">
-</div>
-
+        <div class="LATARKA_DODAJ_POLA">
+          <input id="colorBoxHEX" class="LATARKA_INPUT" type="text" placeholder="HEX">
+          <input id="colorBoxRGB" class="LATARKA_INPUT" type="text" placeholder="RGB">
+        </div>
 
       </div>
     </div>
