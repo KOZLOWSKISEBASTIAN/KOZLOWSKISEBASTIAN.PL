@@ -4,13 +4,11 @@
   --K-GAP: 1px;
   --BORDER: 0px;
   --SUWAK-H: 56px;
-  --KCIUK:   54px;
-  --MID:      2px;
+  --KCIUK: 54px;
+  --MID: 2px;
   --ALIGN-FIX:-2px;
-
   --HEX-RAMKA-JASNY:#000000;
   --HEX-RAMKA-CIEMNY:#B0B0B0;
-
   --SEKCJA-MAX: 720px;
 }
 
@@ -19,17 +17,14 @@
 *{ box-sizing:border-box }
 .UKRYTY{ display:none!important }
 
-/* ====== POKAŻ/UKRYJ ====== */
 .STEROWANIE_TOP{ display:grid; grid-template-columns:1fr; margin-bottom:calc(var(--ODSTEP)*.6); }
-#BTN_PANEL_TOGGLE{ justify-self:center; align-self:center; min-width:220px; }
-#PANEL_ROOT.ZWINIETY .RESZTA_NAGLOWEK{ display:none!important; }
-#PANEL_ROOT.ZWINIETY #WSZYSTKO{ display:none!important; }
+#PRZYCISK_PANEL_PRZELACZ{ justify-self:center; align-self:center; min-width:220px; }
+#PANEL_KORZEN.ZWINIETY .RESZTA_NAGLOWEK{ display:none!important; }
+#PANEL_KORZEN.ZWINIETY #WSZYSTKO{ display:none!important; }
 
-/* ====== TABS ====== */
 .STEROWANIE_TABS{ display:grid; grid-template-columns:1fr 1fr; gap:var(--ODSTEP); margin-bottom:var(--ODSTEP); }
-@media (min-width:999px){ .STEROWANIE_TABS{ display:none!important } #SEKCJA_TORCH{ display:none!important } }
+@media (min-width:999px){ .STEROWANIE_TABS{ display:none!important } #SEKCJA_LATARKA{ display:none!important } }
 
-/* ====== TRYBY / BLOKI ====== */
 .TRYMY3{ display:grid; grid-template-columns:repeat(3,1fr); gap:var(--ODSTEP); }
 .TRYMY3 .PRZYCISK{ width:100% }
 .BLOK{ margin-top: var(--ODSTEP) }
@@ -38,7 +33,6 @@
 .ROW_FULL{ margin-top:var(--ODSTEP) }
 .ROW_HEX{ display:grid; grid-template-columns:1fr; gap:var(--ODSTEP); }
 
-/* ====== PRZYCISKI (jak w PRZYBORNIK) ====== */
 .PRZYCISK{
   display:flex; align-items:center; justify-content:flex-start;
   width:100%; min-height:60px; border-radius:8px; padding-left: var(--padL,14px);
@@ -49,11 +43,9 @@
 @media (min-width:999px){ .PRZYCISK{ min-height:56px; } }
 .PRZYCISK:focus-visible{ outline:2px solid var(--AKCENT-TEKST); outline-offset:2px; }
 
-/* ====== MINI-HEXY ====== */
 @keyframes HEX_ROTATE{ from{transform:rotate(90deg)} to{transform:rotate(450deg)} }
 .KOLORY_LISTA{ display:flex; flex-wrap:wrap; gap:var(--K-GAP); }
-.KOLORY_LISTA .KOLOR{ -webkit-appearance:none; appearance:none; background:transparent; border:none; outline:none; box-shadow:none;
-  padding:0; margin:0; display:inline-block; -webkit-tap-highlight-color:transparent; }
+.KOLORY_LISTA .KOLOR{ -webkit-appearance:none; appearance:none; background:transparent; border:none; outline:none; box-shadow:none; padding:0; margin:0; display:inline-block; -webkit-tap-highlight-color:transparent; }
 .KOLOR{
   --hex: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
   --RING-SCALE: calc(1 - ((var(--BORDER) * 2) / var(--K-SIZE)));
@@ -63,7 +55,7 @@
 }
 .KOLOR::before{ content:""; position:absolute; inset:0; clip-path:inherit; background:transparent; z-index:0; }
 :root[WYBOR_MOTYW="JASNY"] .KOLOR.AKTYWNY::before{ background:var(--HEX-RAMKA-JASNY) }
-:root[WYBOR_MOTYW="CIEMNY"] .KOLOR.AKTYWNY::before{ background:var(--HEX-RAMKA-CIEMNY) }
+:root[WYBOR_MOTYW="CIEMNY"] .KOLOR.AKTYWNY::before{ background:var(--HEX-RAMKA_CIEMNY, var(--HEX-RAMKA-CIEMNY)) }
 .KOLOR::after{
   content:""; position:absolute; left:50%; top:50%; width:100%; height:100%;
   transform:translate(-50%,-50%) scale(var(--RING-SCALE));
@@ -73,10 +65,10 @@
 .KOLOR.KOLOR_MIX::after{ background:conic-gradient(red,yellow,lime,cyan,blue,magenta,red)!important; }
 .KOLOR.OBROT{ animation:HEX_ROTATE 380ms ease }
 
-/* ====== SUWAK ====== */
 .SUWAK_HEX{ --spin:0deg; }
 :root[WYBOR_MOTYW="JASNY"] .SUWAK_HEX{ color:#000000; }
 :root[WYBOR_MOTYW="CIEMNY"] .SUWAK_HEX{ color:#FF00FF; }
+
 .SUWAK{
   width:100%; height:var(--SUWAK-H);
   -webkit-appearance:none; appearance:none; outline:none; border-radius:8px;
@@ -100,11 +92,9 @@
 }
 :root[WYBOR_MOTYW="JASNY"] .SUWAK_HEX::-webkit-slider-thumb{ box-shadow: inset 0 0 0 3px #000; }
 
-/* ====== Tło świecenia ekranu ====== */
 .SCREEN_OVERLAY{ position:fixed; inset:0; z-index:0; pointer-events:none; background:#000; opacity:.96; transition:background 40ms linear; }
 .RAMKA,.KONTENER,.PANEL,.SIATKA,.PRZYBORNIK_SEKCJA{ position:relative; z-index:1 }
 
-/* ====== OVERLAY „DODAJ KOLOR” ====== */
 .LATARKA_OVERLAY{ position:fixed; inset:0; z-index:1000; display:flex; background:rgba(0,0,0,.7); }
 .LATARKA_OVERLAY.UKRYTY{ display:none!important; }
 .LATARKA_OVERLAY_TRESC{ width:100vw; height:100vh; display:grid; place-items:stretch; background:transparent; }
@@ -119,7 +109,6 @@
 :root[WYBOR_MOTYW="JASNY"] .LATARKA_OVERLAY_WNETRZE{ background:#F5F5F5; }
 :root[WYBOR_MOTYW="CIEMNY"] .LATARKA_OVERLAY_WNETRZE{ background:#333333; }
 
-/* ====== DODAJ: kontener pól HEX/RGB (grid 1fr | 1fr) ====== */
 .LATARKA_DODAJ_POLA, .color-boxes{
   display:grid !important;
   grid-template-columns:1fr 1fr !important;
@@ -130,11 +119,10 @@
   align-items:stretch !important;
 }
 
-/* ====== DODAJ: same pola – TNĄ wszystko inne (wysoka specyficzność) ====== */
 body .LATARKA_OVERLAY_WNETRZE .LATARKA_DODAJ_POLA input,
 body .LATARKA_OVERLAY_WNETRZE .color-boxes input,
-body .LATARKA_OVERLAY_WNETRZE #colorBoxHEX,
-body .LATARKA_OVERLAY_WNETRZE #colorBoxRGB{
+body .LATARKA_OVERLAY_WNETRZE #POLE_HEX,
+body .LATARKA_OVERLAY_WNETRZE #POLE_RGB{
   display:flex !important;
   align-items:center !important;
   justify-content:flex-start !important;
@@ -159,12 +147,11 @@ body .LATARKA_OVERLAY_WNETRZE #colorBoxRGB{
   appearance:none !important;
 }
 
-/* żeby żaden „globalny input” tego nie ruszał na mobile/desktop */
 @media (max-width:998px){
   body .LATARKA_OVERLAY_WNETRZE .LATARKA_DODAJ_POLA input,
   body .LATARKA_OVERLAY_WNETRZE .color-boxes input,
-  body .LATARKA_OVERLAY_WNETRZE #colorBoxHEX,
-  body .LATARKA_OVERLAY_WNETRZE #colorBoxRGB{
+  body .LATARKA_OVERLAY_WNETRZE #POLE_HEX,
+  body .LATARKA_OVERLAY_WNETRZE #POLE_RGB{
     height:44px !important;
     min-height:44px !important;
     max-height:44px !important;
@@ -172,7 +159,6 @@ body .LATARKA_OVERLAY_WNETRZE #colorBoxRGB{
   }
 }
 
-/* Overlay otwarty — ukryj przełączniki motywu */
 body.OVERLAY_OTWARTY #HEXAGON,
 body.OVERLAY_OTWARTY #WYLACZNIK,
 body.OVERLAY_OTWARTY #TROJKATY{ display:none!important; }
