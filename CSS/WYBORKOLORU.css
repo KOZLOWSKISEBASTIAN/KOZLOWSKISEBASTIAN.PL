@@ -1,39 +1,71 @@
+/* Baza geometrii palety (dopasowana do aktualnego JS) */
+:root{
+  --PALETA-W-BASE: 364px;   /* szerokosc calej siatki heksow */
+  --HEKS-W: 28px;           /* szerokosc pojedynczego heksa */
+  --HEKS-H: 32px;           /* wysokosc pojedynczego heksa */
+  --WIERSZ-NAK: -14.5px;    /* nakladanie kolejnych wierszy */
+  --PALETA-RZEDY: 13;       /* liczba wierszy */
+  --OVERLAY-PAD: 16px;      /* padding wewnetrzny overlaya (po obu stronach) */
+  /* Wysokosc bazowa palety wyliczona z geometrii: pierwszy wiersz daje HEKS-H,
+     kazdy kolejny doklada (HEKS-H + WIERSZ-NAK). Dla 13 wierszy wychodzi ~242px. */
+  --PALETA-H-BASE: calc(var(--HEKS-H) + (var(--PALETA-RZEDY) - 1) * (var(--HEKS-H) + var(--WIERSZ-NAK)));
+}
+
+/* Kontener na palete — centruje i ucina ewentualny nadmiar */
+.WYBORKOLORU_OPAKOWANIE{
+  width:100%;
+  max-width:var(--SEKCJA-MAX, 720px);
+  margin:0 auto;
+  display:flex;
+  justify-content:center;
+  overflow:hidden;
+}
+
+/* Sama paleta (bazowo 364px szerokosci) */
 .szesciokat_wybor{
   display:flex;
   flex-wrap:wrap;
-  width:364px;                /* baza (zachowujemy przesunięcia z JS) */
+  width:var(--PALETA-W-BASE);
   margin:auto;
   transform:scale(var(--PALETA-SKALA,1));
   transform-origin:top center;
+  will-change:transform;
 }
 
-/* pojedynczy heks */
+/* Pojedynczy heks */
 .szesciokat{
-  width:28px;
-  height:32px;
+  width:var(--HEKS-W);
+  height:var(--HEKS-H);
   margin:0;
   display:inline-block;
   clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   cursor:pointer;
 }
 
-/* wiersze siatki */
+/* Wiersze i ich nakladanie */
 .szesciokat_wiersz{ text-align:center; }
-.szesciokat_wiersz:not(:first-child){ margin-top:-14.5px; }
+.szesciokat_wiersz:not(:first-child){ margin-top:var(--WIERSZ-NAK); }
 
-/* Skala palety:
-   - desktop: 1 (bez zmian),
-   - małe ekrany: dopasowanie do szerokości widoku minus padding overlaya (2x16px). */
-.LATARKA_OVERLAY_WNETRZE{ --PALETA-SKALA: 1; }
+/* SKALOWANIE RESPONSYWNE
+   - szerokosc: dopasowanie do 100vw minus padding overlaya (po 16px z kazdej strony)
+   - wysokosc: dopasowanie do 100vh z rezerwa na pola HEX/RGB i UI (ok. 220px)
+   - efekt: bierzemy mniejsze z dwoch skal, ograniczamy do max 1 (never upscale) */
+.LATARKA_OVERLAY_WNETRZE{
+  --DOSTEPNE-W: calc(100vw - 2 * var(--OVERLAY-PAD));
+  --SKALA-W: calc(var(--DOSTEPNE-W) / var(--PALETA-W-BASE));
 
-@media (max-width: 420px){
-  .LATARKA_OVERLAY_WNETRZE{
-    --PALETA-SKALA: calc( (100vw - 32px) / 364 );
-  }
+  /* Rezerwa pionowa: UI, marginesy, przyciski pod paleta */
+  --REZERWA-H: 220px;
+  --DOSTEPNE-H: calc(100vh - var(--REZERWA-H));
+  --SKALA-H: calc(var(--DOSTEPNE-H) / var(--PALETA-H-BASE));
+
+  /* Docelowa skala */
+  --PALETA-SKALA: min(max(0.4, var(--SKALA-W)), max(0.4, var(--SKALA-H)), 1);
 }
 
-/* Dodatkowo – jeżeli kiedyś panel miałby inne wewnętrzne paddingi,
-   zabezpieczamy się lekkim ograniczeniem, by nie urosło ponad 1. */
-@media (min-width: 421px){
-  .LATARKA_OVERLAY_WNETRZE{ --PALETA-SKALA: min(var(--PALETA-SKALA), 1); }
+/* Minimalne bezpieczenstwo dla bardzo malych ekranow (unikamy < 0.4) */
+@media (max-width: 420px){
+  .LATARKA_OVERLAY_WNETRZE{
+    --PALETA-SKALA: min(max(0.4, var(--SKALA-W)), max(0.4, var(--SKALA-H)), 1);
+  }
 }
