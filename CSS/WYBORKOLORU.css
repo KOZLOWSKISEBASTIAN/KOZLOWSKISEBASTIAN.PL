@@ -1,16 +1,39 @@
 .szesciokat_wybor{
   display:flex;
   flex-wrap:wrap;
-  width:364px;
+  width:364px;                /* baza (zachowujemy przesunięcia z JS) */
   margin:auto;
+  transform:scale(var(--PALETA-SKALA,1));
+  transform-origin:top center;
 }
+
+/* pojedynczy heks */
 .szesciokat{
-  width:24px;
-  height:24px;
+  width:28px;
+  height:32px;
   margin:0;
   display:inline-block;
   clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   cursor:pointer;
 }
+
+/* wiersze siatki */
 .szesciokat_wiersz{ text-align:center; }
 .szesciokat_wiersz:not(:first-child){ margin-top:-14.5px; }
+
+/* Skala palety:
+   - desktop: 1 (bez zmian),
+   - małe ekrany: dopasowanie do szerokości widoku minus padding overlaya (2x16px). */
+.LATARKA_OVERLAY_WNETRZE{ --PALETA-SKALA: 1; }
+
+@media (max-width: 420px){
+  .LATARKA_OVERLAY_WNETRZE{
+    --PALETA-SKALA: calc( (100vw - 32px) / 364 );
+  }
+}
+
+/* Dodatkowo – jeżeli kiedyś panel miałby inne wewnętrzne paddingi,
+   zabezpieczamy się lekkim ograniczeniem, by nie urosło ponad 1. */
+@media (min-width: 421px){
+  .LATARKA_OVERLAY_WNETRZE{ --PALETA-SKALA: min(var(--PALETA-SKALA), 1); }
+}
