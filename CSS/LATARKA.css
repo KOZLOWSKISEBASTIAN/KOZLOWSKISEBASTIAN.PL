@@ -95,30 +95,34 @@
 .SCREEN_OVERLAY{ position:fixed; inset:0; z-index:0; pointer-events:none; background:#000; opacity:.96; transition:background 40ms linear; }
 .RAMKA,.KONTENER,.PANEL,.SIATKA,.PRZYBORNIK_SEKCJA{ position:relative; z-index:1 }
 
+/* ===== OVERLAY „DODAJ” — pionowe i poziome wycentrowanie ===== */
 .LATARKA_OVERLAY{ position:fixed; inset:0; z-index:1000; display:flex; background:rgba(0,0,0,.7); }
 .LATARKA_OVERLAY.UKRYTY{ display:none!important; }
 .LATARKA_OVERLAY_TRESC{ width:100vw; height:100vh; display:grid; place-items:stretch; background:transparent; }
 .LATARKA_OVERLAY_WNETRZE{
   width:100vw; height:100vh;
-  display:grid; gap:16px;
-  grid-template-rows: auto auto;
-  align-content:stretch; justify-items:center;
+  display:flex;                 /* flex dla centrowania */
+  flex-direction:column;
+  align-items:center;           /* poziom */
+  justify-content:center;       /* pion */
+  gap:16px;
   background:var(--TLO-PRZYCISK);
   padding:16px; overflow:auto; -webkit-overflow-scrolling:touch;
 }
 :root[WYBOR_MOTYW="JASNY"] .LATARKA_OVERLAY_WNETRZE{ background:#F5F5F5; }
 :root[WYBOR_MOTYW="CIEMNY"] .LATARKA_OVERLAY_WNETRZE{ background:#333333; }
 
-/* Wrapper palety – bez centrowania (żeby nie ucinalo), reszta bez zmian */
+/* paleta — wrapper (trzyma srodek poziomo) */
 .WYBORKOLORU_OPAKOWANIE{
   width:100%;
   max-width:var(--SEKCJA-MAX);
   margin:0 auto;
   display:flex;
-  justify-content:flex-start; /* <- jak wyzej */
+  justify-content:center;
   overflow:hidden;
 }
 
+/* pola HEX/RGB */
 .LATARKA_DODAJ_POLA, .color-boxes{
   display:grid !important;
   grid-template-columns:1fr 1fr !important;
@@ -128,7 +132,6 @@
   margin:0 auto !important;
   align-items:stretch !important;
 }
-
 body .LATARKA_OVERLAY_WNETRZE .LATARKA_DODAJ_POLA input,
 body .LATARKA_OVERLAY_WNETRZE .color-boxes input,
 body .LATARKA_OVERLAY_WNETRZE #POLE_HEX,
@@ -152,7 +155,6 @@ body .LATARKA_OVERLAY_WNETRZE #POLE_RGB{
   outline:none !important;
   padding:0 12px !important;
   box-sizing:border-box !important;
-  text-align:left !important;
   -webkit-appearance:none !important;
   appearance:none !important;
 }
@@ -169,6 +171,7 @@ body .LATARKA_OVERLAY_WNETRZE #POLE_RGB{
   }
 }
 
+/* gdy overlay jest otwarty – chowamy elementy motywu */
 body.OVERLAY_OTWARTY #HEXAGON,
 body.OVERLAY_OTWARTY #WYLACZNIK,
 body.OVERLAY_OTWARTY #TROJKATY{ display:none!important; }
