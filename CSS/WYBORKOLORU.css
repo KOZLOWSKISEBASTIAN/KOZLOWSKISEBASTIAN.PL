@@ -1,19 +1,16 @@
-.hexagon-picker {
-  display: flex;
-  flex-wrap: wrap;
-  width: 364px;
-  margin: auto;
+.szesciokat_wybor{
+  display:flex;
+  flex-wrap:wrap;
+  width:364px;
+  margin:auto;
 }
-
-.hex {
-  width: 28px;
-  height: 32px;
-
-  margin: 0;
-  display: inline-block;
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  cursor: pointer;
+.szesciokat{
+  width:28px;
+  height:32px;
+  margin:0;
+  display:inline-block;
+  clip-path:polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  cursor:pointer;
 }
-
-.hex-row { text-align: center; }
-.hex-row:not(:first-child) { margin-top: -14.5px;}
+.szesciokat_wiersz{ text-align:center; }
+.szesciokat_wiersz:not(:first-child){ margin-top:-14.5px; }
