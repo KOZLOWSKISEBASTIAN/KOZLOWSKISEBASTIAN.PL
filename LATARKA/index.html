@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="pl">
 <head>
@@ -7,13 +6,13 @@
   <title>LATARKA</title>
   <meta name="color-scheme" content="dark light" />
 
-  <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/HEXAGON.css" />
+  <!-- WSPÓŁDZIELONE STYLE -->
+  <script type="text/javascript" nonce="144ef15b0af04cef9e60f86a56a" src="//local.adguard.org?ts=1757285136621&amp;type=content-script&amp;dmn=chatgpt.com&amp;url=https%3A%2F%2Fchatgpt.com%2Fbackend-api%2Festuary%2Fcontent%3Fid%3Dfile-TDtnRfoEj9ZCrHUqWauCsH%26ts%3D488135%26p%3Dfs%26cid%3D1%26sig%3D820ddb9e99a3bc32f3d5e934d866f5ce6e425df4be63f5c60832c6c08e312e53%26v%3D0&amp;app=chrome.exe&amp;css=2&amp;js=1&amp;rel=0&amp;rji=0&amp;sbe=1&amp;stealth=0"></script><script type="text/javascript" nonce="144ef15b0af04cef9e60f86a56a" src="//local.adguard.org?ts=1757285136621&amp;name=AdGuard%20Assistant&amp;name=AdGuard%20Extra&amp;name=AdGuard%20Popup%20Blocker&amp;name=Web%20of%20Trust&amp;type=user-script"></script><link rel="stylesheet" href="CSS/HEXAGON.css" />
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/KOLORY.css" />
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/PRZYBORNIK.css" />
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/LICZYDLO.css" />
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/LATARKA.css" />
   <link rel="stylesheet" href="https://kozlowskisebastian.pl/CSS/WYBORKOLORU.css" />
-
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400&display=swap" rel="stylesheet" />
 </head>
 <body>
@@ -29,7 +28,6 @@
           <a class="PRZYCISK_PRZYBORNIK_POWROT" data-klucz="PRZYBORNIK">PRZYBORNIK</a>
         </div>
 
-        <!-- POKAŻ/UKRYJ -->
         <section class="SIATKA STEROWANIE_TOP">
           <button id="BTN_PANEL_TOGGLE" class="PRZYCISK">UKRYJ</button>
         </section>
@@ -99,12 +97,11 @@
           <div id="hexagonPicker" class="hexagon-picker"></div>
         </div>
 
-        <!-- Pola w jednej linii, bez zewnętrznych etykiet -->
-        <div class="LATARKA_KOLORY_BOXES">
-          <input id="colorBoxHEX" class="LICZYDLO_POLE" type="text" value="HEX:#FFFFFF" autocomplete="off" spellcheck="false">
-          <input id="colorBoxRGB" class="LICZYDLO_POLE" type="text" value="RGB:255,255,255" autocomplete="off" spellcheck="false">
-          <input id="colorBoxHSL" class="LICZYDLO_POLE" type="text" value="HSL:0,0%,100%" autocomplete="off" spellcheck="false">
-        </div>
+<div class="LATARKA_DODAJ_POLA">
+  <input id="colorBoxHEX" class="LATARKA_INPUT" type="text" placeholder="HEX">
+  <input id="colorBoxRGB" class="LATARKA_INPUT" type="text" placeholder="RGB">
+</div>
+
 
       </div>
     </div>
@@ -120,6 +117,7 @@
     <div class="TROJKAT TROJKAT_CIEMNY" title="CIEMNY MOTYW"></div>
   </div>
 
+  <!-- Skrypty -->
   <script src="https://kozlowskisebastian.pl/JS/HEXAGON.js"></script>
   <script src="https://kozlowskisebastian.pl/JS/MOTYWAUTO.js"></script>
   <script src="https://kozlowskisebastian.pl/JS/PRZYBORNIK.js"></script>
