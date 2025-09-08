@@ -1,4 +1,3 @@
-/* ======================= LATARKA.css ======================= */
 :root{
   --ODSTEP: 10px;
   --K-SIZE: 42px;
@@ -10,7 +9,7 @@
   --ALIGN-FIX:-2px;
 
   --HEX-RAMKA-JASNY:#000000;
-  --HEX-RAMKA-CIEMNY:#B0B0B0; /* poprawka */
+  --HEX-RAMKA-CIEMNY:#B0B0B0;
 
   --SEKCJA-MAX: 720px;
 }
@@ -30,48 +29,31 @@
 .STEROWANIE_TABS{ display:grid; grid-template-columns:1fr 1fr; gap:var(--ODSTEP); margin-bottom:var(--ODSTEP); }
 @media (min-width:999px){ .STEROWANIE_TABS{ display:none!important } #SEKCJA_TORCH{ display:none!important } }
 
-/* ====== TRYBY ====== */
+/* ====== TRYBY / BLOKI ====== */
 .TRYMY3{ display:grid; grid-template-columns:repeat(3,1fr); gap:var(--ODSTEP); }
 .TRYMY3 .PRZYCISK{ width:100% }
-
-/* ====== BLOKI ====== */
-.BLOK{ margin-top:var(--ODSTEP) }
+.BLOK{ margin-top: var(--ODSTEP) }
 .BLOK-PALETA{ display:grid; grid-template-columns:1fr minmax(180px,220px); gap:var(--ODSTEP); align-items:center; }
 @media (max-width:999px){ .BLOK-PALETA{ grid-template-columns:1fr } }
 .ROW_FULL{ margin-top:var(--ODSTEP) }
 .ROW_HEX{ display:grid; grid-template-columns:1fr; gap:var(--ODSTEP); }
 
-/* ====== PRZYCISKI ====== */
+/* ====== PRZYCISKI (jak w PRZYBORNIK) ====== */
 .PRZYCISK{
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  width:100%;
-  min-height:60px;
-  border-radius:8px;
-  padding-left: var(--padL,14px);
-  margin:0;
-  line-height:1;
-  border:0;
-  background:var(--TLO-PRZYCISK);
-  color:var(--TEKST-PRZYCISK);
-  font-weight:500;
-  font-size: var(--fs, var(--fs-base));
-  text-align:left;
-  white-space:nowrap;
+  display:flex; align-items:center; justify-content:flex-start;
+  width:100%; min-height:60px; border-radius:8px; padding-left: var(--padL,14px);
+  margin:0; line-height:1; border:0;
+  background:var(--TLO-PRZYCISK); color:var(--TEKST-PRZYCISK);
+  font-weight:500; font-size: var(--fs, var(--fs-base)); text-align:left; white-space:nowrap;
 }
-@media (min-width:999px){
-  .PRZYCISK{ min-height:56px; }
-}
+@media (min-width:999px){ .PRZYCISK{ min-height:56px; } }
 .PRZYCISK:focus-visible{ outline:2px solid var(--AKCENT-TEKST); outline-offset:2px; }
 
 /* ====== MINI-HEXY ====== */
 @keyframes HEX_ROTATE{ from{transform:rotate(90deg)} to{transform:rotate(450deg)} }
 .KOLORY_LISTA{ display:flex; flex-wrap:wrap; gap:var(--K-GAP); }
-.KOLORY_LISTA .KOLOR{
-  -webkit-appearance:none; appearance:none; background:transparent; border:none; outline:none; box-shadow:none;
-  padding:0; margin:0; display:inline-block; -webkit-tap-highlight-color:transparent;
-}
+.KOLORY_LISTA .KOLOR{ -webkit-appearance:none; appearance:none; background:transparent; border:none; outline:none; box-shadow:none;
+  padding:0; margin:0; display:inline-block; -webkit-tap-highlight-color:transparent; }
 .KOLOR{
   --hex: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
   --RING-SCALE: calc(1 - ((var(--BORDER) * 2) / var(--K-SIZE)));
@@ -95,7 +77,6 @@
 .SUWAK_HEX{ --spin:0deg; }
 :root[WYBOR_MOTYW="JASNY"] .SUWAK_HEX{ color:#000000; }
 :root[WYBOR_MOTYW="CIEMNY"] .SUWAK_HEX{ color:#FF00FF; }
-
 .SUWAK{
   width:100%; height:var(--SUWAK-H);
   -webkit-appearance:none; appearance:none; outline:none; border-radius:8px;
@@ -108,8 +89,6 @@
     linear-gradient(to bottom, transparent calc(50% - var(--MID)), rgba(0,0,0,1) calc(50% - var(--MID)), rgba(0,0,0,1) calc(50% + var(--MID)), transparent calc(50% + var(--MID))),
     var(--TLO-PRZYCISK);
 }
-
-/* kciuk */
 .SUWAK_HEX::-webkit-slider-thumb{
   -webkit-appearance:none; appearance:none;
   width:var(--KCIUK); height:var(--KCIUK);
@@ -137,28 +116,32 @@
   background:var(--TLO-PRZYCISK);
   padding:16px; overflow:auto;
 }
-
-/* JASNY/CIEMNY panele */
 :root[WYBOR_MOTYW="JASNY"] .LATARKA_OVERLAY_WNETRZE{ background:#F5F5F5; }
 :root[WYBOR_MOTYW="CIEMNY"] .LATARKA_OVERLAY_WNETRZE{ background:#333333; }
 
-/* ====== DODAJ: pola HEX/RGB ====== */
-.LATARKA_DODAJ_POLA{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:7px;
-  width:100%;
-  max-width:var(--SEKCJA-MAX);
-  margin:0 auto;
+/* ====== DODAJ: kontener pól HEX/RGB (grid 1fr | 1fr) ====== */
+.LATARKA_DODAJ_POLA, .color-boxes{
+  display:grid !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:7px !important;
+  width:100% !important;
+  max-width:var(--SEKCJA-MAX) !important;
+  margin:0 auto !important;
+  align-items:stretch !important;
 }
 
-/* Nadpisanie pól input – tak jak przyciski PRZYBORNIK */
-.LATARKA_DODAJ_POLA input[type="text"]{
+/* ====== DODAJ: same pola – TNĄ wszystko inne (wysoka specyficzność) ====== */
+body .LATARKA_OVERLAY_WNETRZE .LATARKA_DODAJ_POLA input,
+body .LATARKA_OVERLAY_WNETRZE .color-boxes input,
+body .LATARKA_OVERLAY_WNETRZE #colorBoxHEX,
+body .LATARKA_OVERLAY_WNETRZE #colorBoxRGB{
   display:flex !important;
   align-items:center !important;
   justify-content:flex-start !important;
   width:100% !important;
-  min-height:60px !important;
+  height:44px !important;
+  min-height:44px !important;
+  max-height:44px !important;
   margin:0 !important;
   border-radius:8px !important;
   border:0 !important;
@@ -166,18 +149,30 @@
   color:var(--AKCENT-TEKST) !important;
   font-family:'Montserrat','Poppins',sans-serif !important;
   font-weight:500 !important;
-  line-height:1 !important;
+  font-size:16px !important;
+  line-height:1.2 !important;
   outline:none !important;
-  padding:0 14px !important;
+  padding:0 12px !important;
   box-sizing:border-box !important;
   text-align:left !important;
-  font-size: var(--fs, var(--fs-base)) !important;
-}
-@media (min-width:999px){
-  .LATARKA_DODAJ_POLA input[type="text"]{ min-height:56px !important; }
+  -webkit-appearance:none !important;
+  appearance:none !important;
 }
 
-/* Overlay otwarty — ukryj przełączniki */
+/* żeby żaden „globalny input” tego nie ruszał na mobile/desktop */
+@media (max-width:998px){
+  body .LATARKA_OVERLAY_WNETRZE .LATARKA_DODAJ_POLA input,
+  body .LATARKA_OVERLAY_WNETRZE .color-boxes input,
+  body .LATARKA_OVERLAY_WNETRZE #colorBoxHEX,
+  body .LATARKA_OVERLAY_WNETRZE #colorBoxRGB{
+    height:44px !important;
+    min-height:44px !important;
+    max-height:44px !important;
+    font-size:16px !important;
+  }
+}
+
+/* Overlay otwarty — ukryj przełączniki motywu */
 body.OVERLAY_OTWARTY #HEXAGON,
 body.OVERLAY_OTWARTY #WYLACZNIK,
 body.OVERLAY_OTWARTY #TROJKATY{ display:none!important; }
