@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Podgląd kodu źródłowego</title>
+<style>
+  :root{
+    --tlo:#e9ecef;
+    --panel:#ffffff;
+    --atrament:#1b1f24;
+    --cichy:#5f6b76;
+    --linia:#d3d9df;
+    --akcent:#1f6f73;
+    --akcent-jasny:#e2f0ef;
+    --ostrzezenie:#8a5a12;
+    --ostrzezenie-tlo:#fbf1dc;
+    --num:#a6b0ba;
+    --tag:#1f6f73;
+    --atrybut:#8a5a12;
+    --tekst-str:#9c3b52;
+    --komentarz:#7c8791;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+    --ui: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--tlo);
+    color:var(--atrament);
+    font-family:var(--ui);
+    font-size:16px;
+    line-height:1.5;
+    display:flex;
+    flex-direction:column;
+    -webkit-text-size-adjust:100%;
+  }
+  header{
+    background:var(--panel);
+    border-bottom:1px solid var(--linia);
+    padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px)*0);
+    position:sticky;top:0;z-index:5;
+  }
+  h1{
+    font-size:15px;font-weight:600;margin:0 0 10px;
+    letter-spacing:-0.01em;
+  }
+  h1 span{color:var(--cichy);font-weight:400}
+  .pole{display:flex;gap:8px}
+  input[type=url]{
+    flex:1;min-width:0;
+    font-family:var(--mono);font-size:14px;
+    padding:11px 12px;
+    border:1px solid var(--linia);border-radius:8px;
+    background:#fbfcfd;color:var(--atrament);
+  }
+  input[type=url]:focus{outline:2px solid var(--akcent);outline-offset:-1px;border-color:var(--akcent)}
+  button{
+    font-family:inherit;font-size:15px;
+    border:1px solid var(--linia);border-radius:8px;
+    background:var(--panel);color:var(--atrament);
+    padding:10px 14px;cursor:pointer;
+  }
+  button:focus-visible{outline:2px solid var(--akcent);outline-offset:2px}
+  button:active{background:#eef1f3}
+  .glowny{background:var(--akcent);border-color:var(--akcent);color:#fff;font-weight:500;white-space:nowrap}
+  .glowny:active{background:#175457}
+  .pasek{
+    display:flex;gap:6px;flex-wrap:wrap;align-items:center;
+    padding:8px 14px;background:var(--panel);
+    border-bottom:1px solid var(--linia);
+  }
+  .pasek button{padding:7px 11px;font-size:14px}
+  .pasek button[aria-pressed=true]{background:var(--akcent-jasny);border-color:var(--akcent);color:var(--akcent)}
+  .info{
+    font-size:13px;color:var(--cichy);
+    padding:8px 14px;background:var(--panel);
+    border-bottom:1px solid var(--linia);
+    font-family:var(--mono);
+    word-break:break-all;
+  }
+  .uwaga{background:var(--ostrzezenie-tlo);color:var(--ostrzezenie);border-bottom-color:#ecdcb4}
+  main{flex:1;overflow:auto;-webkit-overflow-scrolling:touch}
+  #kod{
+    font-family:var(--mono);
+    font-size:13px;line-height:1.65;
+    padding:10px 0 60px;
+    min-height:100%;
+    tab-size:2;
+  }
+  .w{display:flex}
+  .w:target,.w:hover{background:#f2f5f7}
+  .n{
+    flex:0 0 auto;min-width:3.2em;
+    padding:0 10px 0 6px;text-align:right;
+    color:var(--num);user-select:none;
+    border-right:1px solid var(--linia);
+    position:sticky;left:0;background:var(--tlo);
+  }
+  .l{padding:0 14px;white-space:pre;flex:1}
+  body.zawijaj .l{white-space:pre-wrap;word-break:break-word}
+  .t-tag{color:var(--tag)}
+  .t-atr{color:var(--atrybut)}
+  .t-str{color:var(--tekst-str)}
+  .t-kom{color:var(--komentarz);font-style:italic}
+  .pusto{padding:28px 18px;color:var(--cichy);font-family:var(--ui);font-size:15px;max-width:44ch}
+  .pusto p{margin:0 0 12px}
+  .pusto code{font-family:var(--mono);font-size:13px;background:var(--panel);padding:2px 5px;border-radius:4px;border:1px solid var(--linia)}
+  #podglad{padding:18px;text-align:center;background:var(--panel);border-bottom:1px solid var(--linia)}
+  #podglad img{max-width:100%;max-height:45vh;background:
+    linear-gradient(45deg,#e4e8ec 25%,transparent 25%,transparent 75%,#e4e8ec 75%),
+    linear-gradient(45deg,#e4e8ec 25%,transparent 25%,transparent 75%,#e4e8ec 75%);
+    background-size:16px 16px;background-position:0 0,8px 8px}
+  [hidden]{display:none !important}
+  @media (prefers-reduced-motion:no-preference){
+    button{transition:background .12s ease}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Podgląd kodu źródłowego <span>— działa w Chrome na Androidzie</span></h1>
+  <div class="pole">
+    <input type="url" id="adres" inputmode="url" autocomplete="off" spellcheck="false"
+           placeholder="https://…" value="https://kozlowskisebastian.pl/GRAFIKA/NSZZ993_KOLOR.svg">
+    <button class="glowny" id="pobierz">Pokaż kod</button>
+  </div>
+</header>
+
+<div class="info" id="status" hidden></div>
+
+<div id="podglad" hidden><img id="obrazek" alt="Podgląd pliku graficznego"></div>
+
+<div class="pasek" id="narzedzia" hidden>
+  <button id="kopiuj">Kopiuj</button>
+  <button id="zapisz">Zapisz plik</button>
+  <button id="zawijanie" aria-pressed="false">Zawijaj wiersze</button>
+  <button id="grafika" hidden aria-pressed="false">Podgląd grafiki</button>
+</div>
+
+<main>
+  <div id="kod">
+    <div class="pusto">
+      <p>Wklej adres pliku lub strony i naciśnij <strong>Pokaż kod</strong>.</p>
+      <p>Pliki z tej samej domeny, na której stoi ta strona, wczytują się bezpośrednio. Obce adresy idą przez publiczne proxy — czasem wolniej, czasem odmówią.</p>
+      <p>Możesz też wkleić adres razem z przedrostkiem <code>view-source:</code> — zostanie odcięty.</p>
+    </div>
+  </div>
+</main>
+
+<script>
+(function(){
+  "use strict";
+
+  var adres    = document.getElementById('adres');
+  var przycisk = document.getElementById('pobierz');
+  var status   = document.getElementById('status');
+  var kod      = document.getElementById('kod');
+  var narzedzia= document.getElementById('narzedzia');
+  var podglad  = document.getElementById('podglad');
+  var obrazek  = document.getElementById('obrazek');
+  var btnKopiuj= document.getElementById('kopiuj');
+  var btnZapisz= document.getElementById('zapisz');
+  var btnZawin = document.getElementById('zawijanie');
+  var btnGraf  = document.getElementById('grafika');
+
+  var surowy = '';
+  var nazwaPliku = 'zrodlo.txt';
+
+  // ---- proxy używane tylko dla obcych domen ----
+  var proxy = [
+    { nazwa:'allorigins', buduj:function(u){ return 'https://api.allorigins.win/raw?url=' + encodeURIComponent(u); } },
+    { nazwa:'corsproxy',  buduj:function(u){ return 'https://corsproxy.io/?url=' + encodeURIComponent(u); } },
+    { nazwa:'codetabs',   buduj:function(u){ return 'https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(u); } }
+  ];
+
+  function pokazStatus(tekst, ostrzezenie){
+    status.textContent = tekst;
+    status.hidden = false;
+    status.classList.toggle('uwaga', !!ostrzezenie);
+  }
+
+  function normalizuj(wartosc){
+    var u = wartosc.trim();
+    if (!u) return null;
+    u = u.replace(/^view-source:/i, '');
+    if (!/^https?:\/\//i.test(u)) u = 'https://' + u;
+    try { return new URL(u); } catch(e){ return null; }
+  }
+
+  function esc(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // kolorowanie znaczników, per wiersz — bezpieczne, bo escapuje w replacerze
+  var wzor = /(<!--.*?-->)|(<\/?[A-Za-z][\w:.-]*)|("[^"]*"|'[^']*')|([A-Za-z_:][\w:.-]*)(?=\s*=)|(\/?>)/g;
+
+  function koloruj(wiersz){
+    var wynik = '';
+    var ostatni = 0;
+    wiersz.replace(wzor, function(dop, kom, tag, str, atr, zam, poz){
+      wynik += esc(wiersz.slice(ostatni, poz));
+      var klasa = kom ? 't-kom' : tag ? 't-tag' : str ? 't-str' : atr ? 't-atr' : 't-tag';
+      wynik += '<span class="' + klasa + '">' + esc(dop) + '</span>';
+      ostatni = poz + dop.length;
+      return dop;
+    });
+    wynik += esc(wiersz.slice(ostatni));
+    return wynik;
+  }
+
+  function rysuj(tekst){
+    var wiersze = tekst.split('\n');
+    var limit = 6000;
+    var czesc = wiersze.slice(0, limit);
+    var html = czesc.map(function(w, i){
+      return '<div class="w"><span class="n">' + (i+1) + '</span><span class="l">' +
+             (koloruj(w) || '&nbsp;') + '</span></div>';
+    }).join('');
+    if (wiersze.length > limit){
+      html += '<div class="pusto">Pokazano pierwsze ' + limit + ' z ' + wiersze.length +
+              ' wierszy. Użyj „Zapisz plik”, żeby mieć całość.</div>';
+    }
+    kod.innerHTML = html;
+    document.querySelector('main').scrollTop = 0;
+  }
+
+  function czasNaGrafike(url, tekst){
+    var sciezka = url.pathname.toLowerCase();
+    if (/\.svg$/.test(sciezka) || /^\s*<svg[\s>]/i.test(tekst.slice(0,400))) {
+      btnGraf.hidden = false;
+      obrazek.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(tekst);
+    } else {
+      btnGraf.hidden = true;
+      podglad.hidden = true;
+      btnGraf.setAttribute('aria-pressed','false');
+    }
+  }
+
+  async function sprobuj(url){
+    var same = url.origin === location.origin;
+    if (same){
+      var r = await fetch(url.href, { cache:'no-store' });
+      if (!r.ok) throw new Error('Serwer odpowiedział ' + r.status);
+      return { tekst: await r.text(), zrodlo: 'bezpośrednio (ta sama domena)' };
+    }
+    var bledy = [];
+    // najpierw bezpośrednio — może serwer wysyła nagłówek CORS
+    try {
+      var b = await fetch(url.href, { cache:'no-store' });
+      if (b.ok) return { tekst: await b.text(), zrodlo: 'bezpośrednio' };
+      bledy.push('bezpośrednio: ' + b.status);
+    } catch(e){ bledy.push('bezpośrednio: zablokowane przez CORS'); }
+
+    for (var i=0;i<proxy.length;i++){
+      try {
+        var p = await fetch(proxy[i].buduj(url.href), { cache:'no-store' });
+        if (!p.ok){ bledy.push(proxy[i].nazwa + ': ' + p.status); continue; }
+        var t = await p.text();
+        if (t) return { tekst:t, zrodlo:'przez proxy ' + proxy[i].nazwa };
+        bledy.push(proxy[i].nazwa + ': pusta odpowiedź');
+      } catch(e){ bledy.push(proxy[i].nazwa + ': brak połączenia'); }
+    }
+    throw new Error('Nie udało się pobrać. Próby — ' + bledy.join('; '));
+  }
+
+  async function wczytaj(){
+    var url = normalizuj(adres.value);
+    if (!url){ pokazStatus('To nie wygląda na poprawny adres. Sprawdź pisownię.', true); return; }
+
+    przycisk.disabled = true;
+    przycisk.textContent = 'Wczytuję…';
+    pokazStatus('Pobieram ' + url.href);
+    narzedzia.hidden = true;
+    podglad.hidden = true;
+
+    try {
+      var wynik = await sprobuj(url);
+      surowy = wynik.tekst;
+      nazwaPliku = (url.pathname.split('/').pop() || 'zrodlo') + (/\.\w+$/.test(url.pathname) ? '' : '.txt');
+
+      rysuj(surowy);
+      czasNaGrafike(url, surowy);
+      narzedzia.hidden = false;
+
+      var kb = (new Blob([surowy]).size / 1024).toFixed(1);
+      var lin = surowy.split('\n').length;
+      pokazStatus(lin + ' wierszy · ' + kb + ' kB · ' + wynik.zrodlo);
+    } catch(e){
+      kod.innerHTML = '<div class="pusto"><p>' + esc(e.message) + '</p>' +
+        '<p>Jeśli to twoja domena, wgraj ten plik na ten sam serwer — wtedy pobieranie pójdzie bezpośrednio, bez proxy.</p></div>';
+      pokazStatus('Nie pobrano pliku.', true);
+    } finally {
+      przycisk.disabled = false;
+      przycisk.textContent = 'Pokaż kod';
+    }
+  }
+
+  przycisk.addEventListener('click', wczytaj);
+  adres.addEventListener('keydown', function(e){ if (e.key === 'Enter') wczytaj(); });
+
+  btnKopiuj.addEventListener('click', async function(){
+    try {
+      await navigator.clipboard.writeText(surowy);
+      btnKopiuj.textContent = 'Skopiowano';
+    } catch(e){
+      var pom = document.createElement('textarea');
+      pom.value = surowy; pom.style.position='fixed'; pom.style.opacity='0';
+      document.body.appendChild(pom); pom.select();
+      btnKopiuj.textContent = document.execCommand('copy') ? 'Skopiowano' : 'Nie udało się';
+      document.body.removeChild(pom);
+    }
+    setTimeout(function(){ btnKopiuj.textContent = 'Kopiuj'; }, 1800);
+  });
+
+  btnZapisz.addEventListener('click', function(){
+    var blob = new Blob([surowy], { type:'text/plain;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = nazwaPliku;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(a.href); }, 4000);
+  });
+
+  btnZawin.addEventListener('click', function(){
+    var wl = document.body.classList.toggle('zawijaj');
+    btnZawin.setAttribute('aria-pressed', String(wl));
+  });
+
+  btnGraf.addEventListener('click', function(){
+    var wl = podglad.hidden;
+    podglad.hidden = !wl;
+    btnGraf.setAttribute('aria-pressed', String(wl));
+  });
+
+  // adres można podać też w linku: podglad-kodu.html?u=https://…
+  var param = new URLSearchParams(location.search).get('u');
+  if (param){ adres.value = param; wczytaj(); }
+})();
+</script>
+</body>
+</html>
